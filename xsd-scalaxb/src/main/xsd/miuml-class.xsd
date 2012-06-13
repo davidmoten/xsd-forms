@@ -1,0 +1,122 @@
+
+<schema targetNamespace="http://miuml.org/class" xmlns:t="http://miuml.org/class"
+	xmlns="http://www.w3.org/2001/XMLSchema">
+
+	<element name="domain" type="t:domain" />
+
+	<complexType name="domain">
+		<sequence>
+			<element name="class" type="t:class" minOccurs="0" maxOccurs="unbounded" />
+			<element name="relationship" type="t:relationship" minOccurs="0"
+				maxOccurs="unbounded" />
+			<element name="generalization" type="t:generalization"
+				minOccurs="0" maxOccurs="unbounded" />
+			<element name="association" type="t:association" minOccurs="0"
+				maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="class">
+		<sequence>
+			<element name="name" type="t:nonBlankString" />
+			<element name="attribute" type="t:attribute" maxOccurs="unbounded" />
+			<element name="identifier" type="t:identifier" maxOccurs="unbounded" />
+			<element name="operation" type="t:operation" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="attribute">
+		<sequence>
+			<element name="name" type="t:nonBlankString" />
+			<element name="type" type="t:attributeType" />
+			<element name="mandatory" type="boolean" minOccurs="0"
+				default="true" />
+		</sequence>
+	</complexType>
+
+	<simpleType name="attributeType">
+		<restriction base="string">
+			<enumeration value="decimal" />
+			<enumeration value="integer" />
+			<enumeration value="boolean" />
+			<enumeration value="timestamp" />
+			<enumeration value="date" />
+			<enumeration value="string" />
+		</restriction>
+	</simpleType>
+
+	<complexType name="identifier">
+		<sequence>
+			<element name="name" type="t:nonBlankString" />
+			<element name="attribute" type="t:identifierAttribute"
+				maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="identifierAttribute">
+		<sequence>
+			<element name="relationshipName" type="t:nonBlankString"
+				minOccurs="0" />
+			<element name="attributeName" type="t:nonBlankString" />
+		</sequence>
+	</complexType>
+
+	<complexType name="operation">
+		<sequence>
+			<element name="name" type="t:nonBlankString" />
+			<element name="parameter" type="t:parameter" minOccurs="0"
+				maxOccurs="unbounded" />
+			<element name="returns" type="t:nonBlankString" minOccurs="0" />
+		</sequence>
+	</complexType>
+
+	<complexType name="parameter">
+		<sequence>
+			<element name="name" type="t:nonBlankString" />
+			<element name="type" type="t:nonBlankString" />
+		</sequence>
+	</complexType>
+
+	<complexType name="relationship">
+		<sequence>
+			<element name="name" type="t:nonBlankString" />
+			<element name="className1" type="t:nonBlankString" />
+			<element name="className2" type="t:nonBlankString" />
+			<element name="multiplicity1" type="t:multiplicity" />
+			<element name="multiplicity2" type="t:multiplicity" />
+			<element name="verbClause1" type="t:nonBlankString" />
+			<element name="verbClause2" type="t:nonBlankString" />
+		</sequence>
+	</complexType>
+
+	<simpleType name="multiplicity">
+		<restriction base="string">
+			<enumeration value="ZERO_ONE" />
+			<enumeration value="ONE" />
+			<enumeration value="MANY" />
+			<enumeration value="ONE_MANY" />
+		</restriction>
+	</simpleType>
+
+	<complexType name="generalization">
+		<sequence>
+			<element name="name" type="t:nonBlankString" />
+			<element name="superClassName" type="t:nonBlankString" />
+			<element name="className" type="t:nonBlankString" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="association">
+		<sequence>
+			<element name="className" type="t:nonBlankString" />
+			<element name="relationshipName" type="t:nonBlankString" />
+		</sequence>
+	</complexType>
+
+	<simpleType name="nonBlankString">
+		<restriction base="string">
+			<pattern value=".*[^\s].*" />
+		</restriction>
+	</simpleType>
+
+</schema>

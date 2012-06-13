@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Class diagram</title>
+<!--
+	<link rel="stylesheet" href="http://jqueryui.com/demos/draggable/../../themes/base/jquery.ui.all.css">
+	<script src="http://jqueryui.com/demos/draggable/../../jquery-1.7.1.js"></script>
+	<script src="http://jqueryui.com/demos/draggable/../../ui/jquery.ui.core.js"></script>
+	<script src="http://jqueryui.com/demos/draggable/../../ui/jquery.ui.widget.js"></script>
+	<script src="http://jqueryui.com/demos/draggable/../../ui/jquery.ui.mouse.js"></script>
+	<script src="http://jqueryui.com/demos/draggable/../../ui/jquery.ui.draggable.js"></script>
+        <link rel="stylesheet" href="http://jqueryui.com/demos/draggable/../demos.css">
+-->
+	
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css"/>
+<style type=”text/css” media=”print”>
+.noprint {display:none}
+</style>
+
+<style>
+	body {font-family: Tahoma, Geneva, sans-serif;font-size:100%;}
+	.draggable { position:absolute; left:0px; top:0px; width: 150px; height: 150px; }
+	.className { border-bottom:thin solid grey; padding:0.5em;font-weight:bold; }
+	.attributes { padding:0.5em; }
+	.operations { padding:0.5em; border-top:thin solid grey;}
+	.operation { font-style:italic;}
+	.events { padding:0.5em; }
+	.event { font-style: italic;}
+	#canvas { position:absolute; left:50px; top: 50px; }
+	.relationshipName {position:absolute; left:100px;top:100px;background:white;padding:2px;}
+	.generalization {position:absolute; left:100px;top:100px;background:white;}
+	.verbClause1 {position:absolute; left:100px;top:100px;background:transparent;max-width:90px;}
+	.verbClause2 {position:absolute; left:100px;top:100px;background:transparent;max-width:90px;}
+	.multiplicity1 {position:absolute; left:100px;top:100px;transparent;}
+	.multiplicity2 {position:absolute; left:100px;top:100px;transparent;}
+	.cls {background:#F6F4D4; box-shadow: 5px 5px 5px #888;border:thin solid grey;}
+	.save {float:right; padding-right:2em;color:#0000EE;}
+	.restore {float:right; padding-right:2em; color:#0000EE;}
+</style>
+<script>
+
+	function midPoint(p1,p2) {
+		return {left: (p1.left + p2.left)/2, top:(p1.top + p2.top)/2 };
+	}
+
+	function weightedAverage(p1,p2, ratio) {
+		return {left: (p1.left * ratio + (1-ratio) * p2.left), top: (p1.top * ratio + (1-ratio) * p2.top)};	
+	}
+
+	function _testMidPoint() {
+		var p1 = {left:10, top:20};
+		var p2 = {left:40, top:100};
+		var result = midPoint(p1,p2);
+		if (result.left !== 25) alert("midPoint failed unit test 1!");
+		if (result.top !== 60) alert("midPoint failed unit test 2!");
+	}	
+
+	_testMidPoint();
+
+	function middle(element) {
+		return {left: element.offset().left + element.width()/2, 
+				top:  element.offset().top + element.height()/2 };
+	}
+
+	
+
+	/**
+	* Returns determinant of this matrix:
+	*    | a  b |
+	*    | c  d |
+	**/
+	function det(a,b,c,d) {
+		return a*d - b* c;
+	}
+
+	function _testDet() {
+		if (det(1,2,3,4) !== -2) alert("method det failed unit test!");
+	}
+
+	_testDet();
+
+    function lineIntersection(x1,y1,x2,y2,x3,y3,x4,y4) {
+		//See Wolfram Mathworld http://mathworld.wolfram.com/Line-LineIntersection.html
+		var denom = det(x1-x2,y1-y2,x3-x4,y3-y4);
+		if (denom == 0) return null;//lines are parallel
+
+		var d1 = det(x1,y1,x2,y2);
+		var d2 = det(x3,y3,x4,y4);
+		var x = det(d1,x1-x2,d2,x3-x4)/denom;
+		var y = det(d1,y1-y2,d2,y3-y4)/denom;
+		return {left:x, top: y};
+	}
+
+
+	function _testLineIntersection() {
+		var answer = lineIntersection(1,7,2,11,3,18,4,19);
+		if (answer.left !== 4) alert ("line intersection failed unit test 1!");
+		if (answer.top !== 19) alert ("line intersection failed unit test 2!");
+		answer = lineIntersection(1,7,2,11,3,15,4,19);
+		if (answer !== null) alert("line intersection failed unit test 3!");
+	}
+
+	_testLineIntersection();
+
+	function intersection(a,b,c,d) {
+		return lineIntersection(a.left, a.top, b.left, b.top, c.left, c.top, d.left, d.top);
+	}
+
+	function onElement(point, e) {
+		var p = e.offset();
+		var tolerance = 1;
+		return point.left >= p.left - tolerance 
+			&& point.top >= p.top - tolerance
+			&& point.left <= p.left + e.width() + tolerance 
+			&& point.top <= p.top + e.height() + tolerance;
+	}
+
+	function elementBorderIntersection(point, e) {
+		var mid = middle(e);
+		var p1 = e.offset();
+		var p2 = {left: p1.left + e.width(), top: p1.top };
+		var p3 = {left: p1.left + e.width(), top: p1.top + e.height() };
+		var p4 = {left: p1.left, top: p1.top + e.height() };
+		var i1 = intersection(p1,p2,mid, point); 
+		var i2 = intersection(p2,p3,mid, point); 
+		var i3 = intersection(p3,p4,mid, point); 
+		var i4 = intersection(p4,p1,mid, point); 
+		var intersections = [i1,i2,i3,i4];
+		var closestIndex=-1;
+		var closestDistance = -1;
+		for (var i=0;i<intersections.length;i++) {
+			if (intersections[i] !==null && onElement(intersections[i],e)) { 
+					var dist = distance(point, intersections[i]);
+					if (closestIndex == -1 || dist < closestDistance  ) {
+						closestIndex = i;
+						closestDistance = dist;
+				}
+			}
+		}
+		result = intersections[closestIndex];
+		result.side = closestIndex + 1;
+		return result;
+	}
+
+	function _testElementBorderIntersection() {
+		var e = {offset: function () { return {left:0, top:0}; },
+			     height: function () { return 100;},
+			     width: function () { return 120;}};
+		var answer;
+		answer = elementBorderIntersection({left:200, top:50},e);
+		if (answer.left !==120) alert("elementBorderIntersection failed unit test 1!");
+		if (answer.top !== 50) alert("elementBorderIntersection failed unit test 2!");
+		if (answer.side != 2) alert("elementBorderIntersection failed unit test 2.1");
+
+		answer = elementBorderIntersection({left:60, top:200},e);
+		if (answer.left !==60) alert("elementBorderIntersection failed unit test 3!");
+		if (answer.top !== 100) alert("elementBorderIntersection failed unit test 4!");
+		if (answer.side != 3) alert("elementBorderIntersection failed unit test 4.1");
+
+		answer = elementBorderIntersection({left:0, top:60},e);
+		if (answer.left !==0) alert("elementBorderIntersection failed unit test 5!");
+		if (answer.top !== 60) alert("elementBorderIntersection failed unit test 6!");
+		if (answer.side != 4) alert("elementBorderIntersection failed unit test 6.1");
+
+		answer = elementBorderIntersection({left:-100, top:50},e);
+		if (answer.left !==0) alert("elementBorderIntersection failed unit test 7!");
+		if (answer.top !== 50) alert("elementBorderIntersection failed unit test 7.1!");
+		if (answer.side != 4) alert("elementBorderIntersection failed unit test 7.2");
+
+	}
+
+	_testElementBorderIntersection();
+
+	function plus(p1, p2) {
+		return {left: (p1.left + p2.left), top:(p1.top + p2.top)};
+	}
+
+	function minus(p1, p2) {
+		return {left: (p1.left - p2.left), top:(p1.top - p2.top)};
+	}
+
+	function distance(p1,p2) { 
+		return Math.sqrt(Math.pow(p1.left-p2.left,2) + Math.pow(p1.top-p2.top,2)); 
+	}
+
+	function mark(p,ctx) {
+		ctx.fillRect(p.left-5, p.top-5, 10,10);	
+	}
+
+	function setPosition(element, x, y) {
+		element.css("left",x+"px");
+		element.css("top", y +"px");
+	}
+
+	function magnitude(p) {
+		return distance(p, {left:0, top:0});
+	}
+
+	function towards(p1, p2, distance) {
+		var p3 = cartesianToPolar(minus(p2,p1));
+		var p4 = {r: distance, theta:p3.theta};
+		var p5 = polarToCartesian(p4);
+		return plus(p5,p1);
+	}
+
+	function cartesianToPolar(p) {
+		return {r:magnitude(p), theta:Math.atan2(p.top, p.left)};
+	}
+
+	function polarToCartesian(p) {
+		return {left: p.r*Math.cos(p.theta), top: p.r*Math.sin(p.theta)};
+	}
+
+	function rotateAbout(p, origin, degrees) {
+		var p2 = minus(p, origin);
+		var p3 = cartesianToPolar(p2);
+		var p4 = {r:p3.r, theta: p3.theta + Math.PI/180.0*degrees};
+		var p5 = polarToCartesian(p4);
+		var p6 = plus(p5,origin);
+		return p6;
+	}
+
+	function unused_placeRelativeTo(element,a,b,c,weighting, degrees, labelOffset) {
+		var p = weightedAverage(a,b,weighting);
+		var q = rotateAbout(p, c, degrees);	
+		q = plus(q, labelOffset);					
+		setPosition(element,q.left, q.top);
+	}
+
+	var relationshipMidpoints = new Object();
+
+	function getRelationshipMidpoint(relationshipName) {
+		return relationshipMidpoints[relationshipName];
+	}
+
+	function placeVerbClause(e, p, inDirection) {
+		var x = cartesianToPolar(minus(inDirection,p));
+		if (p.side==1) { //top 
+			var delta;
+			if (Math.abs(x.theta)==Math.PI/2||x.theta==0) 
+				delta = 0;
+			else if (x.theta <-Math.PI/2) {
+				var t = Math.tan(Math.PI+x.theta);
+				delta = (e.height()+2 * 5)/t;
+			} else delta = 0;
+			setPosition(e, p.left - delta - 5 - e.width(), p.top -5 - e.height());		
+		}
+		else if (p.side==2) { //right
+			var delta;
+			if (Math.abs(x.theta)==Math.PI/2||x.theta==0) 
+				delta = 0;
+			else if (x.theta <=0) {
+				var t = Math.tan(Math.PI/2+x.theta);
+				delta = (e.width()+2 * 5)/t;
+			} else delta = 0;
+//console.log(e.text() + " theta="+ x.theta + " delta="+ + delta);
+			setPosition(e, p.left + 15, p.top -5 - delta - e.height());		
+		}
+		else if (p.side==3) {//bottom
+			var delta;
+			if (Math.abs(x.theta)==Math.PI/2||x.theta==0) 
+				delta = 0;
+			else if (x.theta >Math.PI/2) {
+				var t = Math.tan(Math.PI-x.theta);
+				delta = (e.height()+2 * 5)/t;
+			} else delta = 0;
+			setPosition(e, p.left -delta -e.width()-5, p.top + 10);		
+		}
+		else if (p.side==4) {//left
+			var delta;
+			if (Math.abs(x.theta)==Math.PI/2||x.theta==0) 
+				delta = 0;
+			else if (x.theta <=-Math.PI/2) {
+				var t = Math.tan(-Math.PI/2-x.theta);
+				delta = (e.width()+2 * 5)/t;
+			} else delta = 0;
+			setPosition(e, p.left - e.width() - 5, p.top -e.height()-delta - 5 );
+		}
+		else alert("should not get here");
+	}
+
+	function placeMultiplicity(e, p) {
+		if (p.side==1) //top
+			setPosition(e, p.left + 15, p.top - e.height() - 5);		
+		else if (p.side==2) //right
+			setPosition(e, p.left + 15, p.top + e.height() + 5);		
+		else if (p.side==3) //bottom
+			setPosition(e, p.left + 15, p.top + 10);		
+		else if (p.side==4) //bottom
+			setPosition(e, p.left - e.width() - 5, p.top + e.height() + 5);
+		else alert("should not get here");
+	}
+
+	function paintRelationships(c,ctx) {
+		$(".relationship").each(function(){
+			var rel = $(this);
+			var w1 = $("#"+rel.attr("className1"));
+			var w2 = $("#"+rel.attr("className2"));
+			var middle1 = middle(w1);
+			var middle2 = middle(w2);
+			var mid = midPoint(middle1,middle2);
+			var i1 = elementBorderIntersection(mid,w1);			
+			var i2 = elementBorderIntersection(mid,w2);
+			
+			var midAdjusted = minus(mid,c);
+			relationshipMidpoints[rel.attr("id")] = midAdjusted;
+			var p1 = minus(i1,c);
+			var p2 = minus(i2,c);	
+			ctx.moveTo(p1.left, p1.top );
+			ctx.lineTo(p2.left, p2.top);
+			
+			rel.find(".relationshipName").each(function() {
+				var label = $(this);				
+				label.text(rel.attr("id"));
+				setPosition(label, mid.left-10, mid.top - 10);
+			});
+			
+			var angle = 17;
+			rel.find(".verbClause1").each(function() {
+				placeVerbClause($(this),i1,mid);
+			});
+			rel.find(".verbClause2").each(function() {
+				placeVerbClause($(this),i2,mid)
+			});
+			rel.find(".multiplicity1").each(function() {
+				placeMultiplicity($(this), i1);
+			});
+			rel.find(".multiplicity2").each(function() {
+				placeMultiplicity($(this), i2);
+			});
+		});
+	}
+	
+	CanvasRenderingContext2D.prototype.dashedLineTo = 
+		function (fromX, fromY, toX, toY, pattern) {
+		  // Our growth rate for our line can be one of the following:
+		  //   (+,+), (+,-), (-,+), (-,-)
+		  // Because of this, our algorithm needs to understand if the x-coord and
+		  // y-coord should be getting smaller or larger and properly cap the values
+		  // based on (x,y).
+		  var lt = function (a, b) { return a <= b; };
+		  var gt = function (a, b) { return a >= b; };
+		  var capmin = function (a, b) { return Math.min(a, b); };
+		  var capmax = function (a, b) { return Math.max(a, b); };
+
+		  var checkX = { thereYet: gt, cap: capmin };
+		  var checkY = { thereYet: gt, cap: capmin };
+
+		  if (fromY - toY > 0) {
+			checkY.thereYet = lt;
+			checkY.cap = capmax;
+		  }
+		  if (fromX - toX > 0) {
+			checkX.thereYet = lt;
+			checkX.cap = capmax;
+		  }
+
+		  this.moveTo(fromX, fromY);
+		  var offsetX = fromX;
+		  var offsetY = fromY;
+		  var idx = 0, dash = true;
+		  while (!(checkX.thereYet(offsetX, toX) && checkY.thereYet(offsetY, toY))) {
+			var ang = Math.atan2(toY - fromY, toX - fromX);
+			var len = pattern[idx];
+
+			offsetX = checkX.cap(toX, offsetX + (Math.cos(ang) * len));
+			offsetY = checkY.cap(toY, offsetY + (Math.sin(ang) * len));
+
+			if (dash) this.lineTo(offsetX, offsetY);
+			else this.moveTo(offsetX, offsetY);
+
+			idx = (idx + 1) % pattern.length;
+			dash = !dash;
+		  }
+		};
+
+	function paintAssociationClasses(c, ctx) {
+		$(".associationClass").each(function () {
+			var e = $(this);
+			var w = $("#"+e.attr("id"));
+			var p1 = middle(w);
+			var p2 = getRelationshipMidpoint(e.attr("relationshipName"));
+			var mid = midPoint(p1,p2);
+			var i1 = elementBorderIntersection(mid,w);			
+			
+			p1 = minus(i1,c);
+			ctx.moveTo(p1.left, p1.top );
+			ctx.dashedLineTo(p1.left,p1.top,p2.left,p2.top,[5,5]);
+		});
+	}
+
+	function paintGeneralizations(c, ctx) {
+		$(".generalization").each(function () {
+			var gen = $(this);
+			var w1 = $("#"+gen.attr("subClassName"));
+			var w2 = $("#"+gen.attr("superClassName"));
+			var p1 = middle(w1);
+			var p2 = middle(w2);
+			var mid = midPoint(p1,p2);
+			var i1 = elementBorderIntersection(mid,w1);			
+			var i2 = elementBorderIntersection(mid,w2);
+			
+			p1 = minus(i1,c);
+			p2 = minus(i2,c);	
+
+			var arrowSize = 20;
+			var p2close = towards(p2,p1,5);
+			var p3 = towards(p2close,p1,arrowSize);
+			ctx.moveTo(p1.left, p1.top );
+			//draw arrow
+			var angle = 30;
+			var p4 = rotateAbout(p3,p2close,angle);
+			var p5 = rotateAbout(p3,p2close,-angle);
+			var midRear = midPoint(p4,p5);
+			ctx.lineTo(midRear.left, midRear.top);
+			ctx.lineTo(p4.left,p4.top);
+			ctx.lineTo(p2close.left,p2close.top);
+			ctx.lineTo(p5.left,p5.top);
+			ctx.lineTo(midRear.left,midRear.top);
+
+			var mid = plus(midPoint(p1,p2),c);
+
+			setPosition(gen,mid.left -10, mid.top -5);			
+			gen.text(gen.attr("groupName"));
+
+		});
+	}
+
+	function repaint() {
+		var canvas = $("#canvas")[0]; 
+		//canvas.width = 5*window.innerWidth;
+		//canvas.height = 5*window.innerHeight;
+		var c = $("#canvas").offset();
+		var ctx = canvas.getContext("2d");
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.beginPath();
+		relationshipMidpoints = new Object();
+		paintRelationships(c,ctx);
+		paintGeneralizations(c, ctx);
+		paintAssociationClasses(c,ctx);
+		ctx.stroke();
+		ctx.closePath();
+	}
+
+	var dragListener = 
+		{
+			start: function() {
+			 repaint();
+			},
+			drag: function() {
+			  repaint();
+			},
+			stop: function() {
+			  repaint();	
+			}
+		};
+
+	var resizeListener = 
+		{
+			start: function() {
+			 repaint();
+			},
+			resize: function() {
+			  repaint();
+			},
+			stop: function() {
+			  repaint();	
+			}
+		};
+
+	
+	function createDivs() {
+		$(".relationship").each(function() {
+			var e = $(this);	
+			e.append('<div class="relationshipName">'+e.attr("id")+"</div>"); 
+			e.append('<div class="verbClause1">'+e.attr("verbClause1")+"</div>");
+			e.append('<div class="verbClause2">'+e.attr("verbClause2")+"</div>"); 
+			e.append('<div class="multiplicity1">'+e.attr("multiplicity1")+"</div>"); 
+			e.append('<div class="multiplicity2">'+e.attr("multiplicity2")+"</div>");  
+		});
+		$(".cls").each(function() {
+			var e = $(this);	
+			e.prepend('<div class="className">'+e.attr("id")+"</div>"); 
+		});
+	}
+
+	function createSave() {
+		$("body").prepend("<div id='save' class='save noprint'>Save</div>");
+		$("#save").click(function () {
+			$('.cls').each(function() {
+				var e = $(this);
+				var id = e.attr("id");			
+				localStorage.setItem(id + ".left",e.css("left"));
+				localStorage.setItem(id + ".top",e.css("top"));
+				localStorage.setItem(id + ".width",e.css("width"));
+				localStorage.setItem(id + ".height",e.css("height"));
+			});
+		});
+	}
+
+	function createRestore() {
+		$("body").prepend("<div id='restore' class='restore noprint'>Restore</div>");
+		$("#restore").click(function () {
+			$('.cls').each(function() {
+				var e = $(this);
+				var id = e.attr("id");			
+				e.css("left",localStorage.getItem(id + ".left"));
+				e.css("top",localStorage.getItem(id + ".top"));
+				e.css("width",localStorage.getItem(id + ".width"));
+				e.css("height",localStorage.getItem(id + ".height"));
+			});
+			repaint();
+		});
+	}
+
+	function setup() {
+		$( ".draggable" ).draggable(dragListener).resizable(resizeListener);
+		createDivs();
+		createSave();
+		createRestore();		
+		repaint();
+	}
+
+	$(function() {
+		setup();
+	});
+</script>
+</head>
+
+<body>
+<canvas id="canvas" width="4000" height="4000"></canvas>
+
+<div id="Watch" class=" draggable cls" style="width: 280px; height: 155px; left: 245px; top: 259px; ">
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+    <div class="attribute">startTime: Timestamp</div>
+    <div class="attribute">finishTime: Timestamp {O}</div>
+  </div>
+  <div class="operations">
+	<div class="operation">isActive()</div>
+  </div>
+</div>
+
+<div id="WatchIdentifier" class="draggable cls" style="left: 842px; top: 253px; width:200px;  ">
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+    <div class="attribute">value: String {I1}</div>
+    <div class="attribute">id R01 {I1}</div>
+    <div class="attribute">type R02 {I1}</div>
+  </div>
+</div>
+
+<div id="WatchIdentifierType" class="draggable cls" style="width: 250px; left: 818px; top: 625px; ">
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+    <div class="attribute">name: String {U}</div>
+    <div class="attribute">ctsCraftType: String {O}</div>
+    <div class="attribute">ctsIdentifierType: String {O}</div>
+  </div>
+</div>
+
+<div id="DisappearsWatch" class="draggable cls" style="width: 330px; height: 110px; left: 57px; top: 55px;">
+  <div class="attributes">
+    <div class="attribute">thresholdHours: Decimal</div>
+    <div class="attribute">warningThresholdHours: Decimal {O}</div>
+  </div>
+</div>
+
+<div id="AppearsWatch" class="draggable cls" style="width: 250px; height: 89px; left: 74px; top: 523px; ">
+  <div class="attributes">
+    <div class="attribute">thresholdHours: Decimal</div>
+  </div>
+</div>
+
+<div id="R01" class="relationship" 
+	className1="WatchIdentifier" className2="WatchIdentifierType" 
+	verbClause1="classifies" verbClause2="classified by" 
+	multiplicity1="*" multiplicity2="1">
+</div>
+
+<div id="R02" class="relationship" 
+	className1="Watch" className2="WatchIdentifier" 
+	verbClause1="identifies" verbClause2="identified by something that is really long" 
+	multiplicity1="1" multiplicity2="1..*">
+</div>
+
+
+<div id="R03" class="relationship" 
+	className1="Watch" className2="Recipient" 
+	verbClause1="is notified about" verbClause2="notifies" 
+	multiplicity1="*" multiplicity2="*">
+</div>
+
+<div id="Recipient" class="draggable cls" style="width: 213px; height: 89px; left: 370px; top: 602px; ">
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+	<div class="attribute">name: String</div>
+  </div>
+</div>
+
+<div id="Notification" class="associationClass draggable cls"
+	relationshipName="R03" style="left: 581px; top: 406px; width:200px;">
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+	<div class="attribute">time: Timestamp</div>
+  </div>
+</div>
+
+<div id="G01-DisappearsWatch" groupName="G01" class="generalization" subClassName="DisappearsWatch" superClassName="Watch"></div>
+<div id="G01-AppearsWatch" groupName="G01" class="generalization" subClassName="AppearsWatch" superClassName="Watch"></div>
+
+</body>
+</html>
+

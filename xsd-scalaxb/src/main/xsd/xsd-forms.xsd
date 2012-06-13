@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://moten.david.org/xsd-forms"
+	targetNamespace="http://moten.david.org/xsd-forms"
+	elementFormDefault="qualified" version="1.0">
+
+	<attribute name="title" type="string">
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="before" type="string">
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="label" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="description" type="string">
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="validation" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="help" type="string">
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="after" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="visible" type="boolean">
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="text" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="width" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="css" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="selector" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="choiceLabel" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="addBlank" type="boolean" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="labelForAdd" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="labelForRemove" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	<attribute name="legend" type="string" >
+		<annotation>
+			<documentation>
+			</documentation>	
+		</annotation>	
+	</attribute>
+	
+</schema>

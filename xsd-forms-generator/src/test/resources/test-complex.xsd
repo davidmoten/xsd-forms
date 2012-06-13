@@ -1,0 +1,551 @@
+<xs:schema targetNamespace="http://www.amsa.gov.au/XML/Smartforms/form63"
+	xmlns="http://www.amsa.gov.au/XML/Smartforms/form63" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.w3.org/2001/XMLSchema" />
+	<xs:element name="form63" type="form63" />
+	<xs:complexType name="form63">
+		<xs:sequence>
+			<xs:element name="personalDetails" type="personalDetails" />
+			<xs:element name="certificateCurrentlyHeld" type="certificateCurrentlyHeld" />
+			<xs:element name="certificateAppliedFor" type="certificateAppliedFor" />
+			<xs:element name="qualifyingSeaService" type="qualifyingSeaService"
+				minOccurs="0" maxOccurs="17" />
+			<xs:element name="statementOfServiceAshore" type="statementOfServiceAshore" />
+			<xs:element name="courseDetails" type="courseDetails" />
+			<xs:element name="proofOfIdentity" type="xs:boolean" />
+			<!-- fix the naming for above element -->
+			<xs:element name="declaration" type="xs:boolean" />
+			<!-- fix the naming for above element -->
+			<xs:element name="methodOfLodgment" type="methodOfLodgment" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="personalDetails">
+		<xs:sequence>
+			<xs:element name="amsaPin" type="amsaPin" minOccurs="0" />
+			<xs:element name="dob" type="dob" />
+			<xs:element name="title" type="title" minOccurs="0" />
+			<xs:element name="familyName" type="familyName" />
+			<xs:element name="givenName" type="givenName" />
+			<xs:element name="heightCm" type="heightCm" />
+			<xs:element name="countryOfBirth" type="country" />
+			<xs:element name="nationality" type="nationality" />
+			<xs:element name="permanentResident" type="xs:boolean" />
+			<xs:element name="permanentAddress" type="address" />
+			<xs:element name="mailingAddress" type="address"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						If mailing address is not provided then use the permanent Address as
+						the mailing address.
+				</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="homeTelephone" type="telephoneNumber" />
+			<xs:element name="otherTelephone" type="telephoneNumber" minOccurs="0"/>
+			<xs:element name="emailAddress" type="emailAddress"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="amsaPin">
+		<xs:restriction base="xs:integer">
+			<xs:pattern value="[0-9]+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="dob">
+		<xs:restriction base="xs:date" />
+	</xs:simpleType>
+
+	<xs:simpleType name="title">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Mr" />
+			<xs:enumeration value="Mrs" />
+			<xs:enumeration value="Ms" />
+			<xs:enumeration value="Miss" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="familyName">
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="givenName">
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="heightCm">
+		<xs:restriction base="xs:decimal">
+			<xs:minExclusive value="0" />
+			<xs:maxExclusive value="400" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="nationality">
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:complexType name="address">
+		<xs:sequence>
+			<xs:element name="unitNumber" type="xs:string" />
+			<xs:element name="houseNumber" type="xs:string" />
+			<xs:element name="street" type="xs:string" />
+			<xs:element name="townSuburb" type="xs:string" />
+			<xs:element name="district" type="xs:string" />
+			<xs:element name="state" type="xs:string" />
+			<xs:element name="postcode" type="xs:string" />
+			<xs:element name="country" type="country" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="state">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ACT" />
+			<xs:enumeration value="NSW" />
+			<xs:enumeration value="NT" />
+			<xs:enumeration value="QLD" />
+			<xs:enumeration value="WA" />
+			<xs:enumeration value="VIC" />
+			<xs:enumeration value="TAS" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="telephoneNumber">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3})|(\(?\d{2,3}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="emailAddress">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="put pattern here!!!!!!!" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="certificateCurrentlyHeld">
+		<xs:sequence>
+			<xs:element name="gradeOfCertificate" type="gradeOfCertificate"
+				minOccurs="0" />
+			<xs:element name="subGradeOfCertificate" type="subGradeOfCertificate"
+				minOccurs="0" />
+			<xs:element name="certificateNumber" type="certificateNumber"
+				minOccurs="0" />
+			<xs:element name="countryOfIssue" type="country"
+				minOccurs="0" />
+			<xs:element name="dateOfIssue" type="xs:date" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="gradeOfCertificate">
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="subGradeOfCertificate">
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="certificateNumber">
+		<xs:restriction base="xs:integer">
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="dateOfIssue">
+		<xs:restriction base="xs:date" />
+	</xs:simpleType>
+
+	<xs:complexType name="certificateAppliedFor">
+		<xs:sequence>
+			<xs:element name="certOfCompetency" type="xs:boolean" />
+			<xs:element name="certOfRecognition" type="xs:boolean" />
+			<xs:element name="certOfCIRIRProf" type="xs:boolean" />
+			<xs:element name="certOfRating" type="xs:boolean" />
+			<xs:element name="certOfSafetyTraining" type="xs:boolean" />
+			<xs:element name="certOfShipSecurityOffice" type="xs:boolean" />
+			<xs:element name="STCWEndorsement" type="xs:boolean" />
+			<xs:element name="GMDSSCertificate" type="xs:boolean" />
+			<xs:element name="endorsment" type="xs:boolean" />
+			<xs:element name="servicesRequired" type="servicesRequired" />
+			<xs:element name="GMDSS" type="GMDSS" />
+			<xs:element name="endorsementApplicants" type="endorsementApplicants" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="certificateApplications">
+		<xs:sequence>
+			<xs:element name="appliedForCertOfCompetency" type="xs:boolean" />
+			<xs:element name="appliedForCertOfRecognition" type="xs:boolean" />
+			<xs:element name="appliedForCertOfCIRIRProf" type="xs:boolean" />
+			<xs:element name="appliedForCertOfRating" type="xs:boolean" />
+			<xs:element name="appliedForCertOfSafetyTraining" type="xs:boolean" />
+			<xs:element name="appliedForCertOfShipSecurityOffice" type="xs:boolean" />
+			<xs:element name="appliedForSTCWEndorsement" type="xs:boolean" />
+			<xs:element name="appliedForGMDSSGeneralOpsCert" type="xs:boolean" />
+			<xs:element name="appliedForGMDSSGeneralOpsCertOfRecognition" type="xs:boolean" />
+			<xs:element name="assessmentOfQualifyingServiceRequired" type="xs:boolean"/>
+			<xs:element name="oralExaminationRequiredAt" type="examinationCentre" minOccurs="0"/>
+			<xs:element name="issueOfCertRequiredOfGrade" type="gradeAppliedFor" minOccurs="0"/>
+			<xs:element name="endorsment" type="xs:boolean" />
+			<xs:element name="servicesRequired" type="servicesRequired" />
+			<xs:element name="GMDSS" type="GMDSS" />
+			<xs:element name="endorsementApplicants" type="endorsementApplicants" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="oralExamination">
+		<xs:sequence>
+			<xs:element name="examinationCentre" type="examinationCentre" />
+			<xs:element name="gradeAppliedFor" type="gradeAppliedFor" />
+			<xs:element name="steamEngine" type="xs:boolean" />
+			<xs:element name="motorEngine" type="xs:boolean" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+	<xs:complexType name="servicesRequired">
+		<xs:sequence>
+			<!-- C1 -->
+			<xs:element name="assessQualifyingService" type="xs:boolean" />
+			<xs:element name="oralExamination" type="xs:boolean" />
+			<xs:element name="issueOfCertificate" type="xs:boolean" />
+			<xs:element name="examinationCentre" type="examinationCentre" />
+			<xs:element name="gradeAppliedFor" type="gradeAppliedFor" />
+			<xs:element name="steamEngine" type="xs:boolean" />
+			<xs:element name="motorEngine" type="xs:boolean" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="examinationCentre">
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="gradeAppliedFor">
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:complexType name="GMDSS">
+		<xs:sequence>
+			<!-- C2 -->
+			<xs:element name="GeneralOpsCert" type="xs:boolean" />
+			<xs:element name="GeneralOpsCertOfRecognition" type="xs:boolean" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="endorsementApplicants">
+		<xs:sequence>
+			<!-- C3 -->
+			<xs:choice>
+				<xs:element name="tankerEndorsement" type="tankerEndorsement" />
+				<xs:element name="sailEndorsement" type="sailEndorsement" />
+			</xs:choice>
+			<xs:element name="highSpeedCraft" type="xs:boolean" />
+			<xs:element name="fastRescueCraft" type="xs:boolean" />
+			<xs:element name="shipSecurityCraft" type="xs:boolean" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="sailEndorsement">
+		<xs:sequence>
+			<xs:element name="foreAftSail" type="xs:boolean" />
+			<xs:element name="squareRiggedSail" type="xs:boolean" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="tankerEndorsement">
+		<xs:sequence>
+			<xs:element name="chemical" type="xs:boolean" />
+			<xs:element name="oil" type="xs:boolean" />
+			<xs:element name="gas" type="xs:boolean" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="qualifyingSeaService">
+		<xs:sequence>
+			<xs:element name="shipName" type="xs:string" />
+			<xs:element name="imoNumber" type="xs:integer" />
+			<xs:element name="grossTonnage" type="xs:integer" />
+			<xs:element name="chemOilGas" type="xs:string" />
+			<xs:element name="steamMotor" type="xs:string" />
+			<xs:element name="rankPosition" type="xs:string" />
+			<xs:element name="natureOfService" type="xs:string" />
+			<xs:element name="dateOn" type="xs:date" />
+			<xs:element name="dateOff" type="xs:date" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="statementOfServiceAshore">
+		<xs:sequence>
+			<xs:element name="numberOfTestimonials" type="xs:integer" />
+			<xs:element name="nameAddressOfFirmAndWorks" type="xs:string" />
+			<xs:element name="natureOfBusiness" type="xs:string" />
+			<xs:element name="natureOfWorkByApplicant" type="xs:string" />
+			<xs:element name="dateFrom" type="xs:date" />
+			<xs:element name="dateTo" type="xs:date" />
+			<xs:element name="periodYears" type="xs:integer" />
+			<xs:element name="periodMonths" type="xs:integer" />
+			<xs:element name="periodDays" type="xs:integer" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="courseDetails">
+		<xs:sequence>
+			<xs:element name="personalSafetyAndSocialResponsibility"
+				type="courseDetail" />
+			<xs:element name="personalSurvival" type="courseDetail" />
+			<xs:element name="proficiency" type="courseDetail" />
+			<xs:element name="elementary" type="courseDetail" />
+			<xs:element name="medicalFirstAidAtSea" type="courseDetail" />
+			<xs:element name="shipMastersMedicalCare" type="courseDetail" />
+			<xs:element name="firePreventionFireFighting" type="courseDetail" />
+			<xs:element name="advancedFireFighting" type="courseDetail" />
+			<xs:element name="tankerFamiliarization" type="courseDetail" />
+			<xs:element name="tankerSafetyGas" type="courseDetail" />
+			<xs:element name="tankerSafetyChemical" type="courseDetail" />
+			<xs:element name="tankerSafetyOil" type="courseDetail" />
+			<xs:element name="proficiencyFastRescueBoats" type="courseDetail" />
+			<xs:element name="GMDSSGOC" type="courseDetail" />
+			<xs:element name="shipSecurityOfficer" type="courseDetail" />
+			<xs:element name="approvedCourses" type="courseDetail" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="courseDetail">
+		<xs:sequence>
+			<xs:element name="dateOfIssue" type="xs:integer" />
+			<xs:element name="nameOfAMSAApprovedTrainingProvider"
+				type="nameOfAMSAApprovedTrainingProvider" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="nameOfAMSAApprovedTrainingProvider">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="None" />
+			<xs:enumeration value="Approved Training Provider Example 1" />
+			<xs:enumeration value="Approved Training Provider Example 2" />
+			<xs:enumeration value="Approved Training Provider Example 3" />
+			<xs:enumeration value="Approved Training Provider Example 4" />
+			<xs:enumeration value="Approved Training Provider Example 5" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="methodOfLodgment">
+		<xs:sequence>
+			<xs:element name="agreedToMailSubmissionCriteria" type="xs:boolean"/>
+			<xs:element name="agreedToPersonalSubmissionCriteria" type="xs:boolean"/>
+			<xs:element name="agreedToElectronicSubmissionCriteria" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- List source : http://geotags.com/iso3166/countries.html -->
+	<xs:simpleType name="country">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Afghanistan" />
+			<xs:enumeration value="Albania" />
+			<xs:enumeration value="Algeria" />
+			<xs:enumeration value="Andorra" />
+			<xs:enumeration value="Angola" />
+			<xs:enumeration value="Antigua &amp; Deps" />
+			<xs:enumeration value="Argentina" />
+			<xs:enumeration value="Armenia" />
+			<xs:enumeration value="Australia" />
+			<xs:enumeration value="Austria" />
+			<xs:enumeration value="Azerbaijan" />
+			<xs:enumeration value="Bahamas" />
+			<xs:enumeration value="Bahrain" />
+			<xs:enumeration value="Bangladesh" />
+			<xs:enumeration value="Barbados" />
+			<xs:enumeration value="Belarus" />
+			<xs:enumeration value="Belgium" />
+			<xs:enumeration value="Belize" />
+			<xs:enumeration value="Benin" />
+			<xs:enumeration value="Bhutan" />
+			<xs:enumeration value="Bolivia" />
+			<xs:enumeration value="Bosnia Herzegovina" />
+			<xs:enumeration value="Botswana" />
+			<xs:enumeration value="Brazil" />
+			<xs:enumeration value="Brunei" />
+			<xs:enumeration value="Bulgaria" />
+			<xs:enumeration value="Burkina" />
+			<xs:enumeration value="Burundi" />
+			<xs:enumeration value="Cambodia" />
+			<xs:enumeration value="Cameroon" />
+			<xs:enumeration value="Canada" />
+			<xs:enumeration value="Cape Verde" />
+			<xs:enumeration value="Central African Rep" />
+			<xs:enumeration value="Chad" />
+			<xs:enumeration value="Chile" />
+			<xs:enumeration value="China" />
+			<xs:enumeration value="Colombia" />
+			<xs:enumeration value="Comoros" />
+			<xs:enumeration value="Congo" />
+			<xs:enumeration value="Congo {Democratic Rep}" />
+			<xs:enumeration value="Costa Rica" />
+			<xs:enumeration value="Croatia" />
+			<xs:enumeration value="Cuba" />
+			<xs:enumeration value="Cyprus" />
+			<xs:enumeration value="Czech Republic" />
+			<xs:enumeration value="Denmark" />
+			<xs:enumeration value="Djibouti" />
+			<xs:enumeration value="Dominica" />
+			<xs:enumeration value="Dominican Republic" />
+			<xs:enumeration value="East Timor" />
+			<xs:enumeration value="Ecuador" />
+			<xs:enumeration value="Egypt" />
+			<xs:enumeration value="El Salvador" />
+			<xs:enumeration value="Equatorial Guinea" />
+			<xs:enumeration value="Eritrea" />
+			<xs:enumeration value="Estonia" />
+			<xs:enumeration value="Ethiopia" />
+			<xs:enumeration value="Fiji" />
+			<xs:enumeration value="Finland" />
+			<xs:enumeration value="France" />
+			<xs:enumeration value="Gabon" />
+			<xs:enumeration value="Gambia" />
+			<xs:enumeration value="Georgia" />
+			<xs:enumeration value="Germany" />
+			<xs:enumeration value="Ghana" />
+			<xs:enumeration value="Greece" />
+			<xs:enumeration value="Grenada" />
+			<xs:enumeration value="Guatemala" />
+			<xs:enumeration value="Guinea" />
+			<xs:enumeration value="Guinea-Bissau" />
+			<xs:enumeration value="Guyana" />
+			<xs:enumeration value="Haiti" />
+			<xs:enumeration value="Honduras" />
+			<xs:enumeration value="Hungary" />
+			<xs:enumeration value="Iceland" />
+			<xs:enumeration value="India" />
+			<xs:enumeration value="Indonesia" />
+			<xs:enumeration value="Iran" />
+			<xs:enumeration value="Iraq" />
+			<xs:enumeration value="Ireland {Republic}" />
+			<xs:enumeration value="Israel" />
+			<xs:enumeration value="Italy" />
+			<xs:enumeration value="Ivory Coast" />
+			<xs:enumeration value="Jamaica" />
+			<xs:enumeration value="Japan" />
+			<xs:enumeration value="Jordan" />
+			<xs:enumeration value="Kazakhstan" />
+			<xs:enumeration value="Kenya" />
+			<xs:enumeration value="Kiribati" />
+			<xs:enumeration value="Korea North" />
+			<xs:enumeration value="Korea South" />
+			<xs:enumeration value="Kosovo" />
+			<xs:enumeration value="Kuwait" />
+			<xs:enumeration value="Kyrgyzstan" />
+			<xs:enumeration value="Laos" />
+			<xs:enumeration value="Latvia" />
+			<xs:enumeration value="Lebanon" />
+			<xs:enumeration value="Lesotho" />
+			<xs:enumeration value="Liberia" />
+			<xs:enumeration value="Libya" />
+			<xs:enumeration value="Liechtenstein" />
+			<xs:enumeration value="Lithuania" />
+			<xs:enumeration value="Luxembourg" />
+			<xs:enumeration value="Macedonia" />
+			<xs:enumeration value="Madagascar" />
+			<xs:enumeration value="Malawi" />
+			<xs:enumeration value="Malaysia" />
+			<xs:enumeration value="Maldives" />
+			<xs:enumeration value="Mali" />
+			<xs:enumeration value="Malta" />
+			<xs:enumeration value="Marshall Islands" />
+			<xs:enumeration value="Mauritania" />
+			<xs:enumeration value="Mauritius" />
+			<xs:enumeration value="Mexico" />
+			<xs:enumeration value="Micronesia" />
+			<xs:enumeration value="Moldova" />
+			<xs:enumeration value="Monaco" />
+			<xs:enumeration value="Mongolia" />
+			<xs:enumeration value="Montenegro" />
+			<xs:enumeration value="Morocco" />
+			<xs:enumeration value="Mozambique" />
+			<xs:enumeration value="Myanmar, {Burma}" />
+			<xs:enumeration value="Namibia" />
+			<xs:enumeration value="Nauru" />
+			<xs:enumeration value="Nepal" />
+			<xs:enumeration value="Netherlands" />
+			<xs:enumeration value="New Zealand" />
+			<xs:enumeration value="Nicaragua" />
+			<xs:enumeration value="Niger" />
+			<xs:enumeration value="Nigeria" />
+			<xs:enumeration value="Norway" />
+			<xs:enumeration value="Oman" />
+			<xs:enumeration value="Pakistan" />
+			<xs:enumeration value="Palau" />
+			<xs:enumeration value="Panama" />
+			<xs:enumeration value="Papua New Guinea" />
+			<xs:enumeration value="Paraguay" />
+			<xs:enumeration value="Peru" />
+			<xs:enumeration value="Philippines" />
+			<xs:enumeration value="Poland" />
+			<xs:enumeration value="Portugal" />
+			<xs:enumeration value="Qatar" />
+			<xs:enumeration value="Romania" />
+			<xs:enumeration value="Russian Federation" />
+			<xs:enumeration value="Rwanda" />
+			<xs:enumeration value="St Kitts &amp; Nevis" />
+			<xs:enumeration value="St Lucia" />
+			<xs:enumeration value="Saint Vincent &amp; the Grenadines" />
+			<xs:enumeration value="Samoa" />
+			<xs:enumeration value="San Marino" />
+			<xs:enumeration value="Sao Tome &amp; Principe" />
+			<xs:enumeration value="Saudi Arabia" />
+			<xs:enumeration value="Senegal" />
+			<xs:enumeration value="Serbia" />
+			<xs:enumeration value="Seychelles" />
+			<xs:enumeration value="Sierra Leone" />
+			<xs:enumeration value="Singapore" />
+			<xs:enumeration value="Slovakia" />
+			<xs:enumeration value="Slovenia" />
+			<xs:enumeration value="Solomon Islands" />
+			<xs:enumeration value="Somalia" />
+			<xs:enumeration value="South Africa" />
+			<xs:enumeration value="Spain" />
+			<xs:enumeration value="Sri Lanka" />
+			<xs:enumeration value="Sudan" />
+			<xs:enumeration value="Suriname" />
+			<xs:enumeration value="Swaziland" />
+			<xs:enumeration value="Sweden" />
+			<xs:enumeration value="Switzerland" />
+			<xs:enumeration value="Syria" />
+			<xs:enumeration value="Taiwan" />
+			<xs:enumeration value="Tajikistan" />
+			<xs:enumeration value="Tanzania" />
+			<xs:enumeration value="Thailand" />
+			<xs:enumeration value="Togo" />
+			<xs:enumeration value="Tonga" />
+			<xs:enumeration value="Trinidad &amp; Tobago" />
+			<xs:enumeration value="Tunisia" />
+			<xs:enumeration value="Turkey" />
+			<xs:enumeration value="Turkmenistan" />
+			<xs:enumeration value="Tuvalu" />
+			<xs:enumeration value="Uganda" />
+			<xs:enumeration value="Ukraine" />
+			<xs:enumeration value="United Arab Emirates" />
+			<xs:enumeration value="United Kingdom" />
+			<xs:enumeration value="United States" />
+			<xs:enumeration value="Uruguay" />
+			<xs:enumeration value="Uzbekistan" />
+			<xs:enumeration value="Vanuatu" />
+			<xs:enumeration value="Vatican City" />
+			<xs:enumeration value="Venezuela" />
+			<xs:enumeration value="Vietnam" />
+			<xs:enumeration value="Yemen" />
+			<xs:enumeration value="Zambia" />
+			<xs:enumeration value="Zimbabwe" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

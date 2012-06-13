@@ -1,0 +1,141 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.moten.david</groupId>
+		<artifactId>xsd-forms</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>xsd-forms-generator</artifactId>
+	<name>${project.artifactId}</name>
+	<profiles>
+		<profile>
+			<id>selenium</id>
+			<activation>
+				<property>
+					<name>selenium</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<properties>
+				<surefire.excludes></surefire.excludes>
+			</properties>
+		</profile>
+		<profile>
+			<id>default</id>
+			<activation>
+				<property>
+					<name>selenium</name>
+					<value>!true</value>
+				</property>
+			</activation>
+			<properties>
+				<surefire.excludes>**/*SeleniumTest.*</surefire.excludes>
+			</properties>
+		</profile>
+	</profiles>
+	<dependencies>
+		<dependency>
+			<groupId>org.moten.david</groupId>
+			<artifactId>xsd-scalaxb</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.moten.david</groupId>
+			<artifactId>demo-scalaxb</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-server</artifactId>
+			<version>2.19.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium</artifactId>
+			<version>2.0rc2</version>
+			<type>pom</type>
+			<scope>test</scope>
+		</dependency>
+		<!-- <dependency> <groupId>org.scala-tools.testing</groupId> <artifactId>specs_${scala.version}</artifactId> 
+			<version>1.6.9</version> <scope>test</scope> </dependency> <dependency> <groupId>org.scalatest</groupId> 
+			<artifactId>scalatest_${scala.version}</artifactId> <version>1.6.1</version> 
+			<scope>test</scope> </dependency> <dependency> <groupId>javax.servlet</groupId> 
+			<artifactId>servlet-api</artifactId> <version>2.5</version> <scope>provided</scope> 
+			</dependency> -->
+	</dependencies>
+	<build>
+		<sourceDirectory>src/main/scala</sourceDirectory>
+		<testSourceDirectory>src/test/scala</testSourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.scala-tools</groupId>
+				<artifactId>maven-scala-plugin</artifactId>
+				<version>${scala.plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<args>
+								<arg>-make:transitive</arg>
+								<arg>-dependencyfile</arg>
+								<arg>${project.build.directory}/.scala_dependencies</arg>
+							</args>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<useFile>false</useFile>
+					<disableXmlReport>true</disableXmlReport>
+					<!-- If you have classpath issue like NoDefClassError,... -->
+					<!-- useManifestOnlyJar>false</useManifestOnlyJar -->
+					<includes>
+						<include>**/*Test.*</include>
+						<include>**/*Suite.*</include>
+					</includes>
+					<excludes>
+						<exclude>${surefire.excludes}</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>8.1.0.RC1</version>
+				<configuration>
+					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<webApp>
+						<contextPath>/</contextPath>
+						<baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
+							<resourcesAsCSV>src/main/webapp,target/generated-webapp</resourcesAsCSV>
+						</baseResource>
+					</webApp>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

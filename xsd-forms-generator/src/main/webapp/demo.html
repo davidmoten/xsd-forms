@@ -1,0 +1,3879 @@
+
+<html>
+<head>
+<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
+<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript">
+function openTag(name) {
+	return "<" + name + ">";
+}
+          
+function openTagWithNs(name, namespace) {
+    return "<" + name + " xmlns=\"http://org.moten.david/xsd-forms/demo\">";
+}
+
+function closeTag(name) {
+	return "</" + name + ">";
+}
+
+function getStartAt(previousItems, items) {
+	if (previousItems == null) return 0;
+
+	var startAt = 0;
+
+        for (var i=0; i<Math.min(previousItems.length,items.length); i++) {
+    		  if (!(items[i]==previousItems[i])) 
+    			  return startAt;
+    		  else 
+    			  startAt = i+1;
+    	}
+	return startAt;
+}
+
+function closePreviousItems(previousItems,startAt,s) {
+     if (previousItems!=null) {
+          for (var i=previousItems.length-2;i>=startAt;i--) {
+              s = s + "\n" + spaces(i*2) + closeTag(previousItems[i]);
+          }
+      }
+      return s;
+}
+
+function spaces(n) {
+    var s = "";
+    for (var i=0;i<n;i++)
+      s = s + " ";
+    return s;
+}
+
+function cloneAndReplaceIds(element, suffix){
+  var clone = element.clone();
+  clone.find("*[id]").andSelf().each(function() { 
+    var previousId = $(this).attr("id");
+    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
+    $(this).attr("id", newId); 
+  });
+  return clone;
+}
+    
+var repeatCount = 10000;
+
+$(function() {
+  $('input').filter('.datepickerclass').datepicker();
+  $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","dd/mm/yy");
+  $('input').filter('.datetimepickerclass').datetimepicker();
+  $('input').filter('.timepickerclass').timepicker({});
+
+  function callMethod(methodName, argument) {
+    var method = eval('(' + methodName + ')');
+    return method(argument);
+  }
+
+  $('#pre-submit').click( function () {
+    var s = "";
+    var previousItems = null;
+    $('*[number]').each( function(index) {
+      var thisId = this.id
+      var elem = $('#' + thisId)
+      // will do validations here
+      //if elem visible then do the validation for that element
+      if (elem.is(":visible")) 
+        elem.change();
+    });
+    var count = $('.item-error').filter(":visible").length
+    if (count>0) {
+      $('#validation-errors').show();
+      return;
+    }
+    else 
+      $('#validation-errors').hide();
+    $('div[enabled="true"]').each( function(index) { 
+      var inputId = this.id.replace("path-","");
+      var value = $('#'+ inputId).val()
+     
+      var items = $(this).text().split('|');
+      var startAt = getStartAt(previousItems, items);
+      
+      s = closePreviousItems(previousItems, startAt,s);
+      
+      for (var i=startAt; i<items.length; i++) {
+          var tag;
+          if (i==0)
+            tag = openTagWithNs(items[i],"ns");
+          else
+            tag = openTag(items[i]);
+    	  s = s + "\n" + spaces(i*2) + tag;
+      }
+      s = s + value 
+      s = s + closeTag(items[items.length-1]);
+      previousItems = items;
+    });
+    s = closePreviousItems(previousItems, 0,s);
+    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s = "<pre>" + s + "</pre>";
+    $('#submit-comments').html(s);
+  });
+
+  // text-element
+  var validate2 = function() {
+    return validate2WithSuffix("");  
+  }
+  
+  var validate2WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-2" + suffix);
+    var pathDiv = $("#c-item-path-2");
+
+    return ok;
+  }
+        
+  $("#c-item-2").change( function() {
+    var ok = validate2();
+    var error= $("#c-item-error-2");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // text-element-with-default
+  var validate3 = function() {
+    return validate3WithSuffix("");  
+  }
+  
+  var validate3WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-3" + suffix);
+    var pathDiv = $("#c-item-path-3");
+
+    return ok;
+  }
+        
+  $("#c-item-3").change( function() {
+    var ok = validate3();
+    var error= $("#c-item-error-3");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // long-text
+  var validate4 = function() {
+    return validate4WithSuffix("");  
+  }
+  
+  var validate4WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-4" + suffix);
+    var pathDiv = $("#c-item-path-4");
+
+    return ok;
+  }
+        
+  $("#c-item-4").change( function() {
+    var ok = validate4();
+    var error= $("#c-item-error-4");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // long-text-with-default
+  var validate5 = function() {
+    return validate5WithSuffix("");  
+  }
+  
+  var validate5WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-5" + suffix);
+    var pathDiv = $("#c-item-path-5");
+
+    return ok;
+  }
+        
+  $("#c-item-5").change( function() {
+    var ok = validate5();
+    var error= $("#c-item-error-5");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-element
+  var validate6 = function() {
+    return validate6WithSuffix("");  
+  }
+  
+  var validate6WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-6" + suffix);
+    var pathDiv = $("#c-item-path-6");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-6").change( function() {
+    var ok = validate6();
+    var error= $("#c-item-error-6");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-element-with-default
+  var validate7 = function() {
+    return validate7WithSuffix("");  
+  }
+  
+  var validate7WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-7" + suffix);
+    var pathDiv = $("#c-item-path-7");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-7").change( function() {
+    var ok = validate7();
+    var error= $("#c-item-error-7");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-element
+  var validate8 = function() {
+    return validate8WithSuffix("");  
+  }
+  
+  var validate8WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-8" + suffix);
+    var pathDiv = $("#c-item-path-8");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-8").change( function() {
+    var ok = validate8();
+    var error= $("#c-item-error-8");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-element-with-default
+  var validate9 = function() {
+    return validate9WithSuffix("");  
+  }
+  
+  var validate9WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-9" + suffix);
+    var pathDiv = $("#c-item-path-9");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-9").change( function() {
+    var ok = validate9();
+    var error= $("#c-item-error-9");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // date-element
+  var validate10 = function() {
+    return validate10WithSuffix("");  
+  }
+  
+  var validate10WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-10" + suffix);
+    var pathDiv = $("#c-item-path-10");
+
+    return ok;
+  }
+        
+  $("#c-item-10").change( function() {
+    var ok = validate10();
+    var error= $("#c-item-error-10");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // date-element-with-default2
+  var validate11 = function() {
+    return validate11WithSuffix("");  
+  }
+  
+  var validate11WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-11" + suffix);
+    var pathDiv = $("#c-item-path-11");
+
+    return ok;
+  }
+        
+  $("#c-item-11").change( function() {
+    var ok = validate11();
+    var error= $("#c-item-error-11");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // time-element
+  var validate12 = function() {
+    return validate12WithSuffix("");  
+  }
+  
+  var validate12WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-12" + suffix);
+    var pathDiv = $("#c-item-path-12");
+
+    return ok;
+  }
+        
+  $("#c-item-12").change( function() {
+    var ok = validate12();
+    var error= $("#c-item-error-12");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // time-element-with-default
+  var validate13 = function() {
+    return validate13WithSuffix("");  
+  }
+  
+  var validate13WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-13" + suffix);
+    var pathDiv = $("#c-item-path-13");
+
+    return ok;
+  }
+        
+  $("#c-item-13").change( function() {
+    var ok = validate13();
+    var error= $("#c-item-error-13");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // datetime-element
+  var validate14 = function() {
+    return validate14WithSuffix("");  
+  }
+  
+  var validate14WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-14" + suffix);
+    var pathDiv = $("#c-item-path-14");
+
+    return ok;
+  }
+        
+  $("#c-item-14").change( function() {
+    var ok = validate14();
+    var error= $("#c-item-error-14");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // datetime-element-with-default
+  var validate15 = function() {
+    return validate15WithSuffix("");  
+  }
+  
+  var validate15WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-15" + suffix);
+    var pathDiv = $("#c-item-path-15");
+
+    return ok;
+  }
+        
+  $("#c-item-15").change( function() {
+    var ok = validate15();
+    var error= $("#c-item-error-15");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // boolean-element
+  var validate16 = function() {
+    return validate16WithSuffix("");  
+  }
+  
+  var validate16WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-16" + suffix);
+    var pathDiv = $("#c-item-path-16");
+
+    return ok;
+  }
+        
+  $("#c-item-16").change( function() {
+    var ok = validate16();
+    var error= $("#c-item-error-16");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // boolean-element-with-default
+  var validate17 = function() {
+    return validate17WithSuffix("");  
+  }
+  
+  var validate17WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-17" + suffix);
+    var pathDiv = $("#c-item-path-17");
+
+    return ok;
+  }
+        
+  $("#c-item-17").change( function() {
+    var ok = validate17();
+    var error= $("#c-item-error-17");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-enumeration
+  var validate18 = function() {
+    return validate18WithSuffix("");  
+  }
+  
+  var validate18WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-18" + suffix);
+    var pathDiv = $("#c-item-path-18");
+
+    return ok;
+  }
+        
+  $("#c-item-18").change( function() {
+    var ok = validate18();
+    var error= $("#c-item-error-18");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-enumeration-unselected
+  var validate19 = function() {
+    return validate19WithSuffix("");  
+  }
+  
+  var validate19WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-19" + suffix);
+    var pathDiv = $("#c-item-path-19");
+
+    return ok;
+  }
+        
+  $("#c-item-19").change( function() {
+    var ok = validate19();
+    var error= $("#c-item-error-19");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-enumeration-with-labels
+  var validate20 = function() {
+    return validate20WithSuffix("");  
+  }
+  
+  var validate20WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-20" + suffix);
+    var pathDiv = $("#c-item-path-20");
+
+    return ok;
+  }
+        
+  $("#c-item-20").change( function() {
+    var ok = validate20();
+    var error= $("#c-item-error-20");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-enumeration
+  var validate21 = function() {
+    return validate21WithSuffix("");  
+  }
+  
+  var validate21WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-21" + suffix);
+    var pathDiv = $("#c-item-path-21");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-21").change( function() {
+    var ok = validate21();
+    var error= $("#c-item-error-21");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-enumeration
+  var validate22 = function() {
+    return validate22WithSuffix("");  
+  }
+  
+  var validate22WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-22" + suffix);
+    var pathDiv = $("#c-item-path-22");
+
+    return ok;
+  }
+        
+  $("#c-item-22").change( function() {
+    var ok = validate22();
+    var error= $("#c-item-error-22");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-enumeration-radio
+  var validate23 = function() {
+    return validate23WithSuffix("");  
+  }
+  
+  var validate23WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-23" + suffix);
+    var pathDiv = $("#c-item-path-23");
+
+    return ok;
+  }
+        
+  $("#c-item-23").change( function() {
+    var ok = validate23();
+    var error= $("#c-item-error-23");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+    $("#c-item-24").change( function() {
+      var v = $("#c-item-24");
+      var refersTo = $("#c-item-enclosing-25") 
+      if ("B" == v.val()) 
+        refersTo.show();
+      else
+        refersTo.hide();
+    })
+  
+
+  // make-visible-example
+  var validate24 = function() {
+    return validate24WithSuffix("");  
+  }
+  
+  var validate24WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-24" + suffix);
+    var pathDiv = $("#c-item-path-24");
+
+    return ok;
+  }
+        
+  $("#c-item-24").change( function() {
+    var ok = validate24();
+    var error= $("#c-item-error-24");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // further-details-for-option-b
+  var validate25 = function() {
+    return validate25WithSuffix("");  
+  }
+  
+  var validate25WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-25" + suffix);
+    var pathDiv = $("#c-item-path-25");
+
+    return ok;
+  }
+        
+  $("#c-item-25").change( function() {
+    var ok = validate25();
+    var error= $("#c-item-error-25");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // label-override
+  var validate26 = function() {
+    return validate26WithSuffix("");  
+  }
+  
+  var validate26WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-26" + suffix);
+    var pathDiv = $("#c-item-path-26");
+
+    return ok;
+  }
+        
+  $("#c-item-26").change( function() {
+    var ok = validate26();
+    var error= $("#c-item-error-26");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // with-all
+  var validate27 = function() {
+    return validate27WithSuffix("");  
+  }
+  
+  var validate27WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-27" + suffix);
+    var pathDiv = $("#c-item-path-27");
+
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+  
+    // pattern test
+    var regex0 = /^(a|b|c)[0-9]{3}$/ ;
+    if (regex0.test(v.val())) 
+      patternMatched = true;
+    if (!(patternMatched))
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-27").change( function() {
+    var ok = validate27();
+    var error= $("#c-item-error-27");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  $('#c-item-28').css('color','white');
+  $('#c-item-28').css('height','12em');
+  $('#c-item-28').css('width','12em');
+  $('#c-item-28').css('background','orange');
+
+  // css-override
+  var validate28 = function() {
+    return validate28WithSuffix("");  
+  }
+  
+  var validate28WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-28" + suffix);
+    var pathDiv = $("#c-item-path-28");
+
+    return ok;
+  }
+        
+  $("#c-item-28").change( function() {
+    var ok = validate28();
+    var error= $("#c-item-error-28");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-pattern
+  var validate29 = function() {
+    return validate29WithSuffix("");  
+  }
+  
+  var validate29WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-29" + suffix);
+    var pathDiv = $("#c-item-path-29");
+
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+  
+    // pattern test
+    var regex0 = /^(a|b|c)[0-9]{3}$/ ;
+    if (regex0.test(v.val())) 
+      patternMatched = true;
+    if (!(patternMatched))
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-29").change( function() {
+    var ok = validate29();
+    var error= $("#c-item-error-29");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-pattern-validation-msg
+  var validate30 = function() {
+    return validate30WithSuffix("");  
+  }
+  
+  var validate30WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-30" + suffix);
+    var pathDiv = $("#c-item-path-30");
+
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+  
+    // pattern test
+    var regex0 = /^(a|b|c)[0-9]{3}$/ ;
+    if (regex0.test(v.val())) 
+      patternMatched = true;
+    if (!(patternMatched))
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-30").change( function() {
+    var ok = validate30();
+    var error= $("#c-item-error-30");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-multiple-pattern
+  var validate31 = function() {
+    return validate31WithSuffix("");  
+  }
+  
+  var validate31WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-31" + suffix);
+    var pathDiv = $("#c-item-path-31");
+
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+  
+    // pattern test
+    var regex0 = /^AB$/ ;
+    if (regex0.test(v.val())) 
+      patternMatched = true;
+  
+    // pattern test
+    var regex1 = /^CD$/ ;
+    if (regex1.test(v.val())) 
+      patternMatched = true;
+    if (!(patternMatched))
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-31").change( function() {
+    var ok = validate31();
+    var error= $("#c-item-error-31");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-min-length-validation
+  var validate32 = function() {
+    return validate32WithSuffix("");  
+  }
+  
+  var validate32WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-32" + suffix);
+    var pathDiv = $("#c-item-path-32");
+
+    //length test
+    if (v.val().length <3)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-32").change( function() {
+    var ok = validate32();
+    var error= $("#c-item-error-32");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-min-length-validation
+  var validate33 = function() {
+    return validate33WithSuffix("");  
+  }
+  
+  var validate33WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-33" + suffix);
+    var pathDiv = $("#c-item-path-33");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //length test
+    if (v.val().length <3)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-33").change( function() {
+    var ok = validate33();
+    var error= $("#c-item-error-33");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-min-length-validation
+  var validate34 = function() {
+    return validate34WithSuffix("");  
+  }
+  
+  var validate34WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-34" + suffix);
+    var pathDiv = $("#c-item-path-34");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //length test
+    if (v.val().length <3)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-34").change( function() {
+    var ok = validate34();
+    var error= $("#c-item-error-34");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-max-length-validation
+  var validate35 = function() {
+    return validate35WithSuffix("");  
+  }
+  
+  var validate35WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-35" + suffix);
+    var pathDiv = $("#c-item-path-35");
+
+    //length test
+    if (v.val().length >4)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-35").change( function() {
+    var ok = validate35();
+    var error= $("#c-item-error-35");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-max-length-validation
+  var validate36 = function() {
+    return validate36WithSuffix("");  
+  }
+  
+  var validate36WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-36" + suffix);
+    var pathDiv = $("#c-item-path-36");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //length test
+    if (v.val().length >4)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-36").change( function() {
+    var ok = validate36();
+    var error= $("#c-item-error-36");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-max-length-validation
+  var validate37 = function() {
+    return validate37WithSuffix("");  
+  }
+  
+  var validate37WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-37" + suffix);
+    var pathDiv = $("#c-item-path-37");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //length test
+    if (v.val().length >4)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-37").change( function() {
+    var ok = validate37();
+    var error= $("#c-item-error-37");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-length-validation
+  var validate38 = function() {
+    return validate38WithSuffix("");  
+  }
+  
+  var validate38WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-38" + suffix);
+    var pathDiv = $("#c-item-path-38");
+
+    //length test
+    if (v.val().length !=4)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-38").change( function() {
+    var ok = validate38();
+    var error= $("#c-item-error-38");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-length-validation
+  var validate39 = function() {
+    return validate39WithSuffix("");  
+  }
+  
+  var validate39WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-39" + suffix);
+    var pathDiv = $("#c-item-path-39");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //length test
+    if (v.val().length !=4)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-39").change( function() {
+    var ok = validate39();
+    var error= $("#c-item-error-39");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-length-validation
+  var validate40 = function() {
+    return validate40WithSuffix("");  
+  }
+  
+  var validate40WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-40" + suffix);
+    var pathDiv = $("#c-item-path-40");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //length test
+    if (v.val().length !=4)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-40").change( function() {
+    var ok = validate40();
+    var error= $("#c-item-error-40");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-min-inclusive-validation
+  var validate41 = function() {
+    return validate41WithSuffix("");  
+  }
+  
+  var validate41WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-41" + suffix);
+    var pathDiv = $("#c-item-path-41");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //facet test
+    if ((+(v.val())) < 5)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-41").change( function() {
+    var ok = validate41();
+    var error= $("#c-item-error-41");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-min-inclusive-validation
+  var validate42 = function() {
+    return validate42WithSuffix("");  
+  }
+  
+  var validate42WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-42" + suffix);
+    var pathDiv = $("#c-item-path-42");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //facet test
+    if ((+(v.val())) < 5)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-42").change( function() {
+    var ok = validate42();
+    var error= $("#c-item-error-42");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-max-inclusive-validation
+  var validate43 = function() {
+    return validate43WithSuffix("");  
+  }
+  
+  var validate43WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-43" + suffix);
+    var pathDiv = $("#c-item-path-43");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //facet test
+    if ((+(v.val())) > 10)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-43").change( function() {
+    var ok = validate43();
+    var error= $("#c-item-error-43");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-max-inclusive-validation
+  var validate44 = function() {
+    return validate44WithSuffix("");  
+  }
+  
+  var validate44WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-44" + suffix);
+    var pathDiv = $("#c-item-path-44");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //facet test
+    if ((+(v.val())) > 10)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-44").change( function() {
+    var ok = validate44();
+    var error= $("#c-item-error-44");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-min-exclusive-validation
+  var validate45 = function() {
+    return validate45WithSuffix("");  
+  }
+  
+  var validate45WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-45" + suffix);
+    var pathDiv = $("#c-item-path-45");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //facet test
+    if ((+(v.val())) <=5)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-45").change( function() {
+    var ok = validate45();
+    var error= $("#c-item-error-45");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-min-exclusive-validation
+  var validate46 = function() {
+    return validate46WithSuffix("");  
+  }
+  
+  var validate46WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-46" + suffix);
+    var pathDiv = $("#c-item-path-46");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //facet test
+    if ((+(v.val())) <=5)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-46").change( function() {
+    var ok = validate46();
+    var error= $("#c-item-error-46");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // integer-max-exclusive-validation
+  var validate47 = function() {
+    return validate47WithSuffix("");  
+  }
+  
+  var validate47WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-47" + suffix);
+    var pathDiv = $("#c-item-path-47");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //facet test
+    if ((+(v.val())) >= 10)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-47").change( function() {
+    var ok = validate47();
+    var error= $("#c-item-error-47");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // decimal-max-exclusive-validation
+  var validate48 = function() {
+    return validate48WithSuffix("");  
+  }
+  
+  var validate48WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-48" + suffix);
+    var pathDiv = $("#c-item-path-48");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    //facet test
+    if ((+(v.val())) >= 10)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-48").change( function() {
+    var ok = validate48();
+    var error= $("#c-item-error-48");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  $("#c-choice-content-49-1").hide();
+
+  $("#c-choice-content-49-2").hide();
+
+  var choiceChange49 = function addChoiceChange49(suffix) {
+    $(":input[@name='c-item-input-49" + suffix + "']").change(function() {
+      var checked = $(':input[name=c-item-input-49' + suffix + ']:checked').attr("id");
+
+      if (checked == "c-item-49-1" + suffix) {
+        $("#c-choice-content-49-1" + suffix).show();
+        $("#c-choice-content-49-1" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#c-choice-content-49-1" + suffix).hide();
+        $("#c-choice-content-49-1" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+      if (checked == "c-item-49-2" + suffix) {
+        $("#c-choice-content-49-2" + suffix).show();
+        $("#c-choice-content-49-2" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#c-choice-content-49-2" + suffix).hide();
+        $("#c-choice-content-49-2" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+    })
+  }
+  
+  choiceChange49("");
+
+  // choice-1
+  var validate50 = function() {
+    return validate50WithSuffix("");  
+  }
+  
+  var validate50WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-50" + suffix);
+    var pathDiv = $("#c-item-path-50");
+
+    return ok;
+  }
+        
+  $("#c-item-50").change( function() {
+    var ok = validate50();
+    var error= $("#c-item-error-50");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // choice-2
+  var validate51 = function() {
+    return validate51WithSuffix("");  
+  }
+  
+  var validate51WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-51" + suffix);
+    var pathDiv = $("#c-item-path-51");
+
+    return ok;
+  }
+        
+  $("#c-item-51").change( function() {
+    var ok = validate51();
+    var error= $("#c-item-error-51");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing52 = $("#c-repeating-enclosing-52").clone();
+   
+  var lastRepeat52="c-repeating-enclosing-52";
+  $("#c-repeat-button-52").click(function() {
+    var clone = enclosing52.clone();
+    clone.insertAfter("#"+lastRepeat52);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^c-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat52=nextId;
+  })
+          
+
+  // max-occurs-example-1
+  var validate52 = function() {
+    return validate52WithSuffix("");  
+  }
+  
+  var validate52WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-52" + suffix);
+    var pathDiv = $("#c-item-path-52");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-52").change( function() {
+    var ok = validate52();
+    var error= $("#c-item-error-52");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing53 = $("#c-repeating-enclosing-53").clone();
+  $("#c-repeating-enclosing-53").hide(); 
+  var lastRepeat53="c-repeating-enclosing-53";
+  $("#c-repeat-button-53").click(function() {
+    var clone = enclosing53.clone();
+    clone.insertAfter("#"+lastRepeat53);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^c-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat53=nextId;
+  })
+          
+
+  // max-occurs-example-2
+  var validate53 = function() {
+    return validate53WithSuffix("");  
+  }
+  
+  var validate53WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-53" + suffix);
+    var pathDiv = $("#c-item-path-53");
+    	  
+    // base pattern test
+    var regex = /^\d+(\.\d*)?$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#c-item-53").change( function() {
+    var ok = validate53();
+    var error= $("#c-item-error-53");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#c-item-path-53").attr('enabled','false');
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing54 = $("#c-repeating-enclosing-54").clone();
+   
+  var lastRepeat54="c-repeating-enclosing-54";
+  $("#c-repeat-button-54").click(function() {
+    var clone = enclosing54.clone();
+    clone.insertAfter("#"+lastRepeat54);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^c-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat54=nextId;
+  })
+          
+
+  // max-occurs-example-3
+  var validate54 = function() {
+    return validate54WithSuffix("");  
+  }
+  
+  var validate54WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-54" + suffix);
+    var pathDiv = $("#c-item-path-54");
+
+    return ok;
+  }
+        
+  $("#c-item-54").change( function() {
+    var ok = validate54();
+    var error= $("#c-item-error-54");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing55 = $("#c-repeating-enclosing-55").clone();
+   
+  var lastRepeat55="c-repeating-enclosing-55";
+  $("#c-repeat-button-55").click(function() {
+    var clone = enclosing55.clone();
+    clone.insertAfter("#"+lastRepeat55);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^c-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat55=nextId;
+  })
+          
+
+  // A
+  var validate56 = function() {
+    return validate56WithSuffix("");  
+  }
+  
+  var validate56WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-56" + suffix);
+    var pathDiv = $("#c-item-path-56");
+
+    return ok;
+  }
+        
+  $("#c-item-56").change( function() {
+    var ok = validate56();
+    var error= $("#c-item-error-56");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // B
+  var validate57 = function() {
+    return validate57WithSuffix("");  
+  }
+  
+  var validate57WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-57" + suffix);
+    var pathDiv = $("#c-item-path-57");
+
+    return ok;
+  }
+        
+  $("#c-item-57").change( function() {
+    var ok = validate57();
+    var error= $("#c-item-error-57");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing58 = $("#c-repeating-enclosing-58").clone();
+   
+  var lastRepeat58="c-repeating-enclosing-58";
+  $("#c-repeat-button-58").click(function() {
+    var clone = enclosing58.clone();
+    clone.insertAfter("#"+lastRepeat58);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^c-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat58=nextId;
+  })
+          
+
+  $("#c-choice-content-58-1").hide();
+
+  $("#c-choice-content-58-2").hide();
+
+  var choiceChange58 = function addChoiceChange58(suffix) {
+    $(":input[@name='c-item-input-58" + suffix + "']").change(function() {
+      var checked = $(':input[name=c-item-input-58' + suffix + ']:checked').attr("id");
+
+      if (checked == "c-item-58-1" + suffix) {
+        $("#c-choice-content-58-1" + suffix).show();
+        $("#c-choice-content-58-1" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#c-choice-content-58-1" + suffix).hide();
+        $("#c-choice-content-58-1" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+      if (checked == "c-item-58-2" + suffix) {
+        $("#c-choice-content-58-2" + suffix).show();
+        $("#c-choice-content-58-2" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#c-choice-content-58-2" + suffix).hide();
+        $("#c-choice-content-58-2" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+    })
+  }
+  
+  choiceChange58("");
+
+  // A
+  var validate59 = function() {
+    return validate59WithSuffix("");  
+  }
+  
+  var validate59WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-59" + suffix);
+    var pathDiv = $("#c-item-path-59");
+
+    return ok;
+  }
+        
+  $("#c-item-59").change( function() {
+    var ok = validate59();
+    var error= $("#c-item-error-59");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // B
+  var validate60 = function() {
+    return validate60WithSuffix("");  
+  }
+  
+  var validate60WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-60" + suffix);
+    var pathDiv = $("#c-item-path-60");
+
+    return ok;
+  }
+        
+  $("#c-item-60").change( function() {
+    var ok = validate60();
+    var error= $("#c-item-error-60");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing61 = $("#c-repeating-enclosing-61").clone();
+   
+  var lastRepeat61="c-repeating-enclosing-61";
+  $("#c-repeat-button-61").click(function() {
+    var clone = enclosing61.clone();
+    clone.insertAfter("#"+lastRepeat61);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^c-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat61=nextId;
+  })
+          
+
+  // A
+  var validate62 = function() {
+    return validate62WithSuffix("");  
+  }
+  
+  var validate62WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-62" + suffix);
+    var pathDiv = $("#c-item-path-62");
+
+    return ok;
+  }
+        
+  $("#c-item-62").change( function() {
+    var ok = validate62();
+    var error= $("#c-item-error-62");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // B
+  var validate63 = function() {
+    return validate63WithSuffix("");  
+  }
+  
+  var validate63WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-63" + suffix);
+    var pathDiv = $("#c-item-path-63");
+
+    return ok;
+  }
+        
+  $("#c-item-63").change( function() {
+    var ok = validate63();
+    var error= $("#c-item-error-63");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // optional
+  var validate64 = function() {
+    return validate64WithSuffix("");  
+  }
+  
+  var validate64WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-64" + suffix);
+    var pathDiv = $("#c-item-path-64");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#c-item-64").change( function() {
+    var ok = validate64();
+    var error= $("#c-item-error-64");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#c-item-path-64").attr('enabled','false');
+
+  // anonymous-simple-type
+  var validate65 = function() {
+    return validate65WithSuffix("");  
+  }
+  
+  var validate65WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-65" + suffix);
+    var pathDiv = $("#c-item-path-65");
+    var patternMatched =false;
+  
+    // pattern test
+    var regex0 = /^[0-9]{0,4}$/ ;
+    if (regex0.test(v.val())) 
+      patternMatched = true;
+    if (!(patternMatched))
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-65").change( function() {
+    var ok = validate65();
+    var error= $("#c-item-error-65");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // first
+  var validate67 = function() {
+    return validate67WithSuffix("");  
+  }
+  
+  var validate67WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-67" + suffix);
+    var pathDiv = $("#c-item-path-67");
+
+    return ok;
+  }
+        
+  $("#c-item-67").change( function() {
+    var ok = validate67();
+    var error= $("#c-item-error-67");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // second
+  var validate68 = function() {
+    return validate68WithSuffix("");  
+  }
+  
+  var validate68WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-68" + suffix);
+    var pathDiv = $("#c-item-path-68");
+
+    return ok;
+  }
+        
+  $("#c-item-68").change( function() {
+    var ok = validate68();
+    var error= $("#c-item-error-68");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // A
+  var validate70 = function() {
+    return validate70WithSuffix("");  
+  }
+  
+  var validate70WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-70" + suffix);
+    var pathDiv = $("#c-item-path-70");
+
+    return ok;
+  }
+        
+  $("#c-item-70").change( function() {
+    var ok = validate70();
+    var error= $("#c-item-error-70");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // B
+  var validate71 = function() {
+    return validate71WithSuffix("");  
+  }
+  
+  var validate71WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-71" + suffix);
+    var pathDiv = $("#c-item-path-71");
+
+    return ok;
+  }
+        
+  $("#c-item-71").change( function() {
+    var ok = validate71();
+    var error= $("#c-item-error-71");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // C
+  var validate72 = function() {
+    return validate72WithSuffix("");  
+  }
+  
+  var validate72WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-72" + suffix);
+    var pathDiv = $("#c-item-path-72");
+
+    return ok;
+  }
+        
+  $("#c-item-72").change( function() {
+    var ok = validate72();
+    var error= $("#c-item-error-72");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // option
+  var validate73 = function() {
+    return validate73WithSuffix("");  
+  }
+  
+  var validate73WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-73" + suffix);
+    var pathDiv = $("#c-item-path-73");
+
+    return ok;
+  }
+        
+  $("#c-item-73").change( function() {
+    var ok = validate73();
+    var error= $("#c-item-error-73");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // string-field
+  var validate75 = function() {
+    return validate75WithSuffix("");  
+  }
+  
+  var validate75WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-75" + suffix);
+    var pathDiv = $("#c-item-path-75");
+
+    return ok;
+  }
+        
+  $("#c-item-75").change( function() {
+    var ok = validate75();
+    var error= $("#c-item-error-75");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing77 = $("#c-repeating-enclosing-77").clone();
+   
+  var lastRepeat77="c-repeating-enclosing-77";
+  $("#c-repeat-button-77").click(function() {
+    var clone = enclosing77.clone();
+    clone.insertAfter("#"+lastRepeat77);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^c-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat77=nextId;
+  })
+          
+
+  // string-field
+  var validate77 = function() {
+    return validate77WithSuffix("");  
+  }
+  
+  var validate77WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-77" + suffix);
+    var pathDiv = $("#c-item-path-77");
+
+    return ok;
+  }
+        
+  $("#c-item-77").change( function() {
+    var ok = validate77();
+    var error= $("#c-item-error-77");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing78 = $("#c-repeating-enclosing-78").clone();
+   
+  var lastRepeat78="c-repeating-enclosing-78";
+  $("#c-repeat-button-78").click(function() {
+    var clone = enclosing78.clone();
+    clone.insertAfter("#"+lastRepeat78);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^c-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat78=nextId;
+  })
+          
+
+  // A
+  var validate79 = function() {
+    return validate79WithSuffix("");  
+  }
+  
+  var validate79WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-79" + suffix);
+    var pathDiv = $("#c-item-path-79");
+
+    return ok;
+  }
+        
+  $("#c-item-79").change( function() {
+    var ok = validate79();
+    var error= $("#c-item-error-79");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // B
+  var validate80 = function() {
+    return validate80WithSuffix("");  
+  }
+  
+  var validate80WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-80" + suffix);
+    var pathDiv = $("#c-item-path-80");
+
+    return ok;
+  }
+        
+  $("#c-item-80").change( function() {
+    var ok = validate80();
+    var error= $("#c-item-error-80");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // C
+  var validate81 = function() {
+    return validate81WithSuffix("");  
+  }
+  
+  var validate81WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-81" + suffix);
+    var pathDiv = $("#c-item-path-81");
+
+    return ok;
+  }
+        
+  $("#c-item-81").change( function() {
+    var ok = validate81();
+    var error= $("#c-item-error-81");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // option
+  var validate82 = function() {
+    return validate82WithSuffix("");  
+  }
+  
+  var validate82WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-82" + suffix);
+    var pathDiv = $("#c-item-path-82");
+
+    return ok;
+  }
+        
+  $("#c-item-82").change( function() {
+    var ok = validate82();
+    var error= $("#c-item-error-82");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // A
+  var validate84 = function() {
+    return validate84WithSuffix("");  
+  }
+  
+  var validate84WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-84" + suffix);
+    var pathDiv = $("#c-item-path-84");
+
+    return ok;
+  }
+        
+  $("#c-item-84").change( function() {
+    var ok = validate84();
+    var error= $("#c-item-error-84");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // B
+  var validate85 = function() {
+    return validate85WithSuffix("");  
+  }
+  
+  var validate85WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-85" + suffix);
+    var pathDiv = $("#c-item-path-85");
+
+    return ok;
+  }
+        
+  $("#c-item-85").change( function() {
+    var ok = validate85();
+    var error= $("#c-item-error-85");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // C
+  var validate86 = function() {
+    return validate86WithSuffix("");  
+  }
+  
+  var validate86WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-86" + suffix);
+    var pathDiv = $("#c-item-path-86");
+
+    return ok;
+  }
+        
+  $("#c-item-86").change( function() {
+    var ok = validate86();
+    var error= $("#c-item-error-86");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  // option
+  var validate87 = function() {
+    return validate87WithSuffix("");  
+  }
+  
+  var validate87WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-87" + suffix);
+    var pathDiv = $("#c-item-path-87");
+
+    return ok;
+  }
+        
+  $("#c-item-87").change( function() {
+    var ok = validate87();
+    var error= $("#c-item-error-87");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  $("#form").submit(function () { return false; }); // so it won't submit
+
+    });
+</script>
+<script type="text/javascript" src="js/xsd-forms-override.js"></script>
+</head>
+<body>
+<div class="form">
+<form method="POST" action="form.html" name="form">
+
+  <div class="sequence">
+    <div class="repeating-title">
+    </div>
+    <div id="c-repeating-enclosing-1" class="repeating-enclosing">
+      <div class="sequence-label"></div>
+      <div id="c-sequence-1" class="sequence-content">
+        <div id="c-item-enclosing-2" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-2" class="repeating-enclosing">
+            <div class="item-title">Demonstration of xsd-forms features</div>
+            <div class="item-before">This page demonstrates the main features of generated forms using xsd-forms. The schema used to generate this form is demo.xsd.</div>
+            <div class="item-number">2</div>
+            <label class="item-label" for="c-item-input-2">Text Element</label>
+            <div class="item-input">
+              <input number="2" name="c-item-input-2" id="c-item-2" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-2" class="item-error">Invalid</div>
+              <div id="c-item-path-2" class="item-path" enabled="true">main|text-element</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-3" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-3" class="repeating-enclosing">
+            <div class="item-number">3</div>
+            <label class="item-label" for="c-item-input-3">Text Element With Default</label>
+            <div class="item-input">
+              <input number="3" name="c-item-input-3" id="c-item-3" class=" item-input-text" type="text" value="default">
+              </input>
+              <div id="c-item-error-3" class="item-error">Invalid</div>
+              <div id="c-item-path-3" class="item-path" enabled="true">main|text-element-with-default</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-4" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-4" class="repeating-enclosing">
+            <div class="item-number">4</div>
+            <label class="item-label" for="c-item-input-4">Long Text</label>
+            <div class="item-input">
+              <textarea id="c-item-4" class=" item-input-textarea" name="c-item-input-4" number="4"></textarea>
+              <div id="c-item-error-4" class="item-error">Invalid</div>
+              <div id="c-item-path-4" class="item-path" enabled="true">main|long-text</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-5" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-5" class="repeating-enclosing">
+            <div class="item-number">5</div>
+            <label class="item-label" for="c-item-input-5">Long Text With Default</label>
+            <div class="item-input">
+              <textarea id="c-item-5" class=" item-input-textarea" name="c-item-input-5" number="5">default</textarea>
+              <div id="c-item-error-5" class="item-error">Invalid</div>
+              <div id="c-item-path-5" class="item-path" enabled="true">main|long-text-with-default</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-6" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-6" class="repeating-enclosing">
+            <div class="item-title">Numbers</div>
+            <div class="item-number">6</div>
+            <label class="item-label" for="c-item-input-6">Decimal Element<em>*</em></label>
+            <div class="item-input">
+              <input number="6" name="c-item-input-6" id="c-item-6" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-6" class="item-error">Invalid</div>
+              <div id="c-item-path-6" class="item-path" enabled="true">main|decimal-element</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-7" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-7" class="repeating-enclosing">
+            <div class="item-number">7</div>
+            <label class="item-label" for="c-item-input-7">Decimal Element With Default<em>*</em></label>
+            <div class="item-input">
+              <input number="7" name="c-item-input-7" id="c-item-7" class=" item-input-text" type="text" value="10.0435">
+              </input>
+              <div id="c-item-error-7" class="item-error">Invalid</div>
+              <div id="c-item-path-7" class="item-path" enabled="true">main|decimal-element-with-default</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-8" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-8" class="repeating-enclosing">
+            <div class="item-number">8</div>
+            <label class="item-label" for="c-item-input-8">Integer Element<em>*</em></label>
+            <div class="item-input">
+              <input number="8" name="c-item-input-8" id="c-item-8" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-8" class="item-error">Invalid</div>
+              <div id="c-item-path-8" class="item-path" enabled="true">main|integer-element</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-9" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-9" class="repeating-enclosing">
+            <div class="item-number">9</div>
+            <label class="item-label" for="c-item-input-9">Integer Element With Default<em>*</em></label>
+            <div class="item-input">
+              <input number="9" name="c-item-input-9" id="c-item-9" class=" item-input-text" type="text" value="123">
+              </input>
+              <div id="c-item-error-9" class="item-error">Invalid</div>
+              <div id="c-item-path-9" class="item-path" enabled="true">main|integer-element-with-default</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-10" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-10" class="repeating-enclosing">
+            <div class="item-title">Dates and times</div>
+            <div class="item-number">10</div>
+            <label class="item-label" for="c-item-input-10">Date Element<em>*</em></label>
+            <div class="item-input">
+              <input number="10" name="c-item-input-10" id="c-item-10" class="datepickerclass  item-input-text" type="text">
+              </input>
+              <div id="c-item-error-10" class="item-error">Invalid</div>
+              <div id="c-item-path-10" class="item-path" enabled="true">main|date-element</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-11" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-11" class="repeating-enclosing">
+            <div class="item-number">11</div>
+            <label class="item-label" for="c-item-input-11">Date Element With Default2<em>*</em></label>
+            <div class="item-input">
+              <input number="11" name="c-item-input-11" id="c-item-11" class="datepickerclass  item-input-text" type="text" value="1973-06-12">
+              </input>
+              <div id="c-item-error-11" class="item-error">Invalid</div>
+              <div id="c-item-path-11" class="item-path" enabled="true">main|date-element-with-default2</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-12" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-12" class="repeating-enclosing">
+            <div class="item-number">12</div>
+            <label class="item-label" for="c-item-input-12">Time Element<em>*</em></label>
+            <div class="item-input">
+              <input number="12" name="c-item-input-12" id="c-item-12" class="timepickerclass  item-input-text" type="text">
+              </input>
+              <div id="c-item-error-12" class="item-error">Invalid</div>
+              <div id="c-item-path-12" class="item-path" enabled="true">main|time-element</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-13" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-13" class="repeating-enclosing">
+            <div class="item-number">13</div>
+            <label class="item-label" for="c-item-input-13">Time Element With Default<em>*</em></label>
+            <div class="item-input">
+              <input number="13" name="c-item-input-13" id="c-item-13" class="timepickerclass  item-input-text" type="text" value="21:55:00">
+              </input>
+              <div id="c-item-error-13" class="item-error">Invalid</div>
+              <div id="c-item-path-13" class="item-path" enabled="true">main|time-element-with-default</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-14" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-14" class="repeating-enclosing">
+            <div class="item-number">14</div>
+            <label class="item-label" for="c-item-input-14">datetime element TODO<em>*</em></label>
+            <div class="item-input">
+              <input number="14" name="c-item-input-14" id="c-item-14" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-14" class="item-error">Invalid</div>
+              <div id="c-item-path-14" class="item-path" enabled="true">main|datetime-element</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-15" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-15" class="repeating-enclosing">
+            <div class="item-number">15</div>
+            <label class="item-label" for="c-item-input-15">Datetime element with default TODO<em>*</em></label>
+            <div class="item-input">
+              <input number="15" name="c-item-input-15" id="c-item-15" class=" item-input-text" type="text" value="2002-05-30T09:30:10.5">
+              </input>
+              <div id="c-item-error-15" class="item-error">Invalid</div>
+              <div id="c-item-path-15" class="item-path" enabled="true">main|datetime-element-with-default</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-16" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-16" class="repeating-enclosing">
+            <div class="item-title">Booleans</div>
+            <div class="item-number">16</div>
+            <label class="item-label" for="c-item-input-16">Boolean Element<em>*</em></label>
+            <div class="item-input">
+              <input number="16" name="c-item-input-16" id="c-item-16" class=" item-input-text" type="checkbox">
+              </input>
+              <div id="c-item-error-16" class="item-error">Invalid</div>
+              <div id="c-item-path-16" class="item-path" enabled="true">main|boolean-element</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-17" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-17" class="repeating-enclosing">
+            <div class="item-number">17</div>
+            <label class="item-label" for="c-item-input-17">Boolean Element With Default<em>*</em></label>
+            <div class="item-input">
+              <input number="17" name="c-item-input-17" checked="true" id="c-item-17" class=" item-input-text" type="checkbox" value="true">
+              </input>
+              <div id="c-item-error-17" class="item-error">Invalid</div>
+              <div id="c-item-path-17" class="item-path" enabled="true">main|boolean-element-with-default</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-18" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-18" class="repeating-enclosing">
+            <div class="item-title">Enumerations</div>
+            <div class="item-number">18</div>
+            <label class="item-label" for="c-item-input-18">String Enumeration</label>
+            <div class="item-input">
+              <select id="c-item-18" class="select" name="c-item-input-18" number="18">
+                <option value="option-1">option-1</option>
+                <option value="option-2">option-2</option>
+              </select>
+              <div id="c-item-error-18" class="item-error">Invalid</div>
+              <div id="c-item-path-18" class="item-path" enabled="true">main|string-enumeration</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-19" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-19" class="repeating-enclosing">
+            <div class="item-number">19</div>
+            <label class="item-label" for="c-item-input-19">String Enumeration Unselected</label>
+            <div class="item-input">
+              <select id="c-item-19" class="select" name="c-item-input-19" number="19">
+                <option value="">Select one...</option>
+                <option value="option-1">option-1</option>
+                <option value="option-2">option-2</option>
+              </select>
+              <div id="c-item-error-19" class="item-error">Invalid</div>
+              <div id="c-item-path-19" class="item-path" enabled="true">main|string-enumeration-unselected</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-20" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-20" class="repeating-enclosing">
+            <div class="item-number">20</div>
+            <label class="item-label" for="c-item-input-20">String Enumeration With Labels</label>
+            <div class="item-input">
+              <select id="c-item-20" class="select" name="c-item-input-20" number="20">
+                <option value="A">Option A</option>
+                <option value="B">Option B</option>
+              </select>
+              <div id="c-item-error-20" class="item-error">Invalid</div>
+              <div id="c-item-path-20" class="item-path" enabled="true">main|string-enumeration-with-labels</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-21" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-21" class="repeating-enclosing">
+            <div class="item-number">21</div>
+            <label class="item-label" for="c-item-input-21">Decimal enumeration</label>
+            <div class="item-input">
+              <select id="c-item-21" class="select" name="c-item-input-21" number="21">
+                <option value="1.5">One Point Five</option>
+                <option value="2.0">Two Point Zero</option>
+              </select>
+              <div id="c-item-error-21" class="item-error">Invalid</div>
+              <div id="c-item-path-21" class="item-path" enabled="true">main|decimal-enumeration</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-22" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-22" class="repeating-enclosing">
+            <div class="item-number">22</div>
+            <label class="item-label" for="c-item-input-22">Integer Enumeration</label>
+            <div class="item-input">
+              <select id="c-item-22" class="select" name="c-item-input-22" number="22">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+              <div id="c-item-error-22" class="item-error">Invalid</div>
+              <div id="c-item-path-22" class="item-path" enabled="true">main|integer-enumeration</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-23" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-23" class="repeating-enclosing">
+            <div class="item-number">23</div>
+            <label class="item-label" for="c-item-input-23">String Enumeration Radio</label>
+            <div class="item-input">
+              <input number="23" name="c-item-input-23" id="c-item-23-0" class="select" type="radio" value="Option A">Option A</input>
+              <input number="23" name="c-item-input-23" id="c-item-23-1" class="select" type="radio" value="Option B">Option B</input>
+              <div id="c-item-error-23" class="item-error">Invalid</div>
+              <div id="c-item-path-23" class="item-path" enabled="true">main|string-enumeration-radio</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-24" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-24" class="repeating-enclosing">
+            <div class="item-title">Make visible example</div>
+            <div class="item-before">When Option B is selected then the next (makeVisible=1) input element will be made visible so that Further Details for Option B can be captured. The Further Details element should have i:visible=false annotation.</div>
+            <div class="item-number">24</div>
+            <label class="item-label" for="c-item-input-24">Make Visible Example</label>
+            <div class="item-input">
+              <select id="c-item-24" class="select" name="c-item-input-24" number="24">
+                <option value="A">Option A</option>
+                <option value="B">Option B</option>
+              </select>
+              <div id="c-item-error-24" class="item-error">Invalid</div>
+              <div id="c-item-path-24" class="item-path" enabled="true">main|make-visible-example</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-25" class="item-enclosing invisible">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-25" class="repeating-enclosing">
+            <div class="item-number">25</div>
+            <label class="item-label" for="c-item-input-25">Further Details For Option B</label>
+            <div class="item-input">
+              <input number="25" name="c-item-input-25" id="c-item-25" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-25" class="item-error">Invalid</div>
+              <div id="c-item-path-25" class="item-path" enabled="true">main|further-details-for-option-b</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-26" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-26" class="repeating-enclosing">
+            <div class="item-title">Labels, before, after, title, description</div>
+            <div class="item-number">26</div>
+            <label class="item-label" for="c-item-input-26">Label overriden</label>
+            <div class="item-input">
+              <input number="26" name="c-item-input-26" id="c-item-26" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-26" class="item-error">Invalid</div>
+              <div id="c-item-path-26" class="item-path" enabled="true">main|label-override</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-27" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-27" class="repeating-enclosing">
+            <div class="item-title">'title' message</div>
+            <div class="item-before">'before' message</div>
+            <div class="item-number">27</div>
+            <label class="item-label" for="c-item-input-27">With all comments<em>*</em></label>
+            <div class="item-input">
+              <input number="27" name="c-item-input-27" id="c-item-27" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">description of the field here</div>
+              <div id="c-item-error-27" class="item-error">Invalid format, must start with a,b or c and be followed by 3 digits.</div>
+              <div id="c-item-path-27" class="item-path" enabled="true">main|with-all</div>
+              <div class="item-after">'after' message</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-28" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-28" class="repeating-enclosing">
+            <div class="item-title">CSS override of input elements</div>
+            <div class="item-number">28</div>
+            <label class="item-label" for="c-item-input-28">Css Override</label>
+            <div class="item-input">
+              <textarea id="c-item-28" class=" item-input-textarea" name="c-item-input-28" number="28"></textarea>
+              <div id="c-item-error-28" class="item-error">Invalid</div>
+              <div id="c-item-path-28" class="item-path" enabled="true">main|css-override</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-29" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-29" class="repeating-enclosing">
+            <div class="item-title">Patterns validation</div>
+            <div class="item-number">29</div>
+            <label class="item-label" for="c-item-input-29">String Pattern<em>*</em></label>
+            <div class="item-input">
+              <input number="29" name="c-item-input-29" id="c-item-29" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">a,b, or c followed by 3 digits</div>
+              <div id="c-item-error-29" class="item-error">Invalid</div>
+              <div id="c-item-path-29" class="item-path" enabled="true">main|string-pattern</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-30" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-30" class="repeating-enclosing">
+            <div class="item-number">30</div>
+            <label class="item-label" for="c-item-input-30">String Pattern Validation Msg<em>*</em></label>
+            <div class="item-input">
+              <input number="30" name="c-item-input-30" id="c-item-30" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">a,b, or c followed by 3 digits</div>
+              <div id="c-item-error-30" class="item-error">Invalid format, must start with a,b or c and be followed by 3 digits.</div>
+              <div id="c-item-path-30" class="item-path" enabled="true">main|string-pattern-validation-msg</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-31" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-31" class="repeating-enclosing">
+            <div class="item-title">Multiple pattern validation</div>
+            <div class="item-number">31</div>
+            <label class="item-label" for="c-item-input-31">String multiple pattern<em>*</em></label>
+            <div class="item-input">
+              <input number="31" name="c-item-input-31" id="c-item-31" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">AB or CD (multiple patterns is logical OR)</div>
+              <div id="c-item-error-31" class="item-error">Invalid format, must be AB or CD.</div>
+              <div id="c-item-path-31" class="item-path" enabled="true">main|string-multiple-pattern</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-32" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-32" class="repeating-enclosing">
+            <div class="item-title">Min length validation</div>
+            <div class="item-number">32</div>
+            <label class="item-label" for="c-item-input-32">String Min Length Validation</label>
+            <div class="item-input">
+              <input number="32" name="c-item-input-32" id="c-item-32" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">minimum 3 characters</div>
+              <div id="c-item-error-32" class="item-error">Invalid format, must have a minimum of 3 characters.</div>
+              <div id="c-item-path-32" class="item-path" enabled="true">main|string-min-length-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-33" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-33" class="repeating-enclosing">
+            <div class="item-number">33</div>
+            <label class="item-label" for="c-item-input-33">Integer Min Length Validation</label>
+            <div class="item-input">
+              <input number="33" name="c-item-input-33" id="c-item-33" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">minimum 3 digits</div>
+              <div id="c-item-error-33" class="item-error">Invalid format, must have a minimum of 3 digits.</div>
+              <div id="c-item-path-33" class="item-path" enabled="true">main|integer-min-length-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-34" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-34" class="repeating-enclosing">
+            <div class="item-number">34</div>
+            <label class="item-label" for="c-item-input-34">Decimal Min Length Validation</label>
+            <div class="item-input">
+              <input number="34" name="c-item-input-34" id="c-item-34" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">minimum 3 characters</div>
+              <div id="c-item-error-34" class="item-error">Invalid format, must have a minimum of 3 characters.</div>
+              <div id="c-item-path-34" class="item-path" enabled="true">main|decimal-min-length-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-35" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-35" class="repeating-enclosing">
+            <div class="item-title">Max length validation</div>
+            <div class="item-number">35</div>
+            <label class="item-label" for="c-item-input-35">String Max Length Validation</label>
+            <div class="item-input">
+              <input number="35" name="c-item-input-35" id="c-item-35" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">maximum 4 characters</div>
+              <div id="c-item-error-35" class="item-error">Invalid format, must have a maximum of 4 characters.</div>
+              <div id="c-item-path-35" class="item-path" enabled="true">main|string-max-length-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-36" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-36" class="repeating-enclosing">
+            <div class="item-number">36</div>
+            <label class="item-label" for="c-item-input-36">Integer Max Length Validation</label>
+            <div class="item-input">
+              <input number="36" name="c-item-input-36" id="c-item-36" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">maximum 4 digits</div>
+              <div id="c-item-error-36" class="item-error">Invalid format, must have a maximum of 4 digits.</div>
+              <div id="c-item-path-36" class="item-path" enabled="true">main|integer-max-length-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-37" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-37" class="repeating-enclosing">
+            <div class="item-number">37</div>
+            <label class="item-label" for="c-item-input-37">Decimal Max Length Validation</label>
+            <div class="item-input">
+              <input number="37" name="c-item-input-37" id="c-item-37" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">maximum 4 characters</div>
+              <div id="c-item-error-37" class="item-error">Invalid format, must have a maximum of 4 characters.</div>
+              <div id="c-item-path-37" class="item-path" enabled="true">main|decimal-max-length-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-38" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-38" class="repeating-enclosing">
+            <div class="item-title">Length validation</div>
+            <div class="item-number">38</div>
+            <label class="item-label" for="c-item-input-38">String Length Validation</label>
+            <div class="item-input">
+              <input number="38" name="c-item-input-38" id="c-item-38" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">exactly 4 characters</div>
+              <div id="c-item-error-38" class="item-error">Invalid format, must have exactly 4 characters.</div>
+              <div id="c-item-path-38" class="item-path" enabled="true">main|string-length-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-39" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-39" class="repeating-enclosing">
+            <div class="item-number">39</div>
+            <label class="item-label" for="c-item-input-39">Integer Length Validation</label>
+            <div class="item-input">
+              <input number="39" name="c-item-input-39" id="c-item-39" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">exactly 4 digits</div>
+              <div id="c-item-error-39" class="item-error">Invalid format, must have exactly 4 digits.</div>
+              <div id="c-item-path-39" class="item-path" enabled="true">main|integer-length-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-40" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-40" class="repeating-enclosing">
+            <div class="item-number">40</div>
+            <label class="item-label" for="c-item-input-40">Decimal Length Validation</label>
+            <div class="item-input">
+              <input number="40" name="c-item-input-40" id="c-item-40" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">exactly 4 characters</div>
+              <div id="c-item-error-40" class="item-error">Invalid format, must be a decimal value with exactly 4 characters.</div>
+              <div id="c-item-path-40" class="item-path" enabled="true">main|decimal-length-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-41" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-41" class="repeating-enclosing">
+            <div class="item-title">Min inclusive validation</div>
+            <div class="item-number">41</div>
+            <label class="item-label" for="c-item-input-41">Integer Min Inclusive Validation</label>
+            <div class="item-input">
+              <input number="41" name="c-item-input-41" id="c-item-41" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">5 or more</div>
+              <div id="c-item-error-41" class="item-error">Invalid format, must be greater than or equal to 5.</div>
+              <div id="c-item-path-41" class="item-path" enabled="true">main|integer-min-inclusive-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-42" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-42" class="repeating-enclosing">
+            <div class="item-number">42</div>
+            <label class="item-label" for="c-item-input-42">Decimal Min Inclusive Validation</label>
+            <div class="item-input">
+              <input number="42" name="c-item-input-42" id="c-item-42" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">5 or more</div>
+              <div id="c-item-error-42" class="item-error">Invalid format, must be greater than or equal to 5.</div>
+              <div id="c-item-path-42" class="item-path" enabled="true">main|decimal-min-inclusive-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-43" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-43" class="repeating-enclosing">
+            <div class="item-title">Max inclusive validation</div>
+            <div class="item-number">43</div>
+            <label class="item-label" for="c-item-input-43">Integer Max Inclusive Validation</label>
+            <div class="item-input">
+              <input number="43" name="c-item-input-43" id="c-item-43" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">maximum value of 10</div>
+              <div id="c-item-error-43" class="item-error">Invalid format, must less than or equal to 10.</div>
+              <div id="c-item-path-43" class="item-path" enabled="true">main|integer-max-inclusive-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-44" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-44" class="repeating-enclosing">
+            <div class="item-number">44</div>
+            <label class="item-label" for="c-item-input-44">Decimal Max Inclusive Validation</label>
+            <div class="item-input">
+              <input number="44" name="c-item-input-44" id="c-item-44" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">maximum value of 10</div>
+              <div id="c-item-error-44" class="item-error">Invalid format, must less than or equal to 10.</div>
+              <div id="c-item-path-44" class="item-path" enabled="true">main|decimal-max-inclusive-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-45" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-45" class="repeating-enclosing">
+            <div class="item-title">Min exclusive validation</div>
+            <div class="item-number">45</div>
+            <label class="item-label" for="c-item-input-45">Integer Min Exclusive Validation</label>
+            <div class="item-input">
+              <input number="45" name="c-item-input-45" id="c-item-45" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">greater than 5</div>
+              <div id="c-item-error-45" class="item-error">Invalid format, must be greater than 5.</div>
+              <div id="c-item-path-45" class="item-path" enabled="true">main|integer-min-exclusive-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-46" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-46" class="repeating-enclosing">
+            <div class="item-number">46</div>
+            <label class="item-label" for="c-item-input-46">Decimal Min Exclusive Validation</label>
+            <div class="item-input">
+              <input number="46" name="c-item-input-46" id="c-item-46" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">greater than 5</div>
+              <div id="c-item-error-46" class="item-error">Invalid format, must be greater than 5.</div>
+              <div id="c-item-path-46" class="item-path" enabled="true">main|decimal-min-exclusive-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-47" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-47" class="repeating-enclosing">
+            <div class="item-title">Max exclusive validation</div>
+            <div class="item-number">47</div>
+            <label class="item-label" for="c-item-input-47">Integer Max Exclusive Validation</label>
+            <div class="item-input">
+              <input number="47" name="c-item-input-47" id="c-item-47" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">less than 10</div>
+              <div id="c-item-error-47" class="item-error">Invalid format, must be an integer less than 10.</div>
+              <div id="c-item-path-47" class="item-path" enabled="true">main|integer-max-exclusive-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-48" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-48" class="repeating-enclosing">
+            <div class="item-number">48</div>
+            <label class="item-label" for="c-item-input-48">Decimal Max Exclusive Validation</label>
+            <div class="item-input">
+              <input number="48" name="c-item-input-48" id="c-item-48" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">less than 10</div>
+              <div id="c-item-error-48" class="item-error">Invalid format, must be less than 10.</div>
+              <div id="c-item-path-48" class="item-path" enabled="true">main|decimal-max-exclusive-validation</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-49" class="choice">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-49" class="repeating-enclosing">
+            <div class="choice-label">Anonymous choice, displayed after</div>
+            <div id="c-div-choice-item-49-1" class="div-choice-item">
+              <input number="49" name="c-item-input-49" id="c-item-49-1" class="choice-item" type="radio" value="number">Choice 1</input>
+            </div>
+            <div id="c-div-choice-item-49-2" class="div-choice-item">
+              <input number="49" name="c-item-input-49" id="c-item-49-2" class="choice-item" type="radio" value="number">Choice 2</input>
+            </div>
+            <div id="c-choice-content-49-1" class="invisible">
+              <div id="c-item-enclosing-50" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-50" class="repeating-enclosing">
+                  <div class="item-number">50</div>
+                  <label class="item-label" for="c-item-input-50"></label>
+                  <div class="item-input">
+                    <input number="50" name="c-item-input-50" id="c-item-50" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-50" class="item-error">Invalid</div>
+                    <div id="c-item-path-50" class="item-path" enabled="true">main|anonymous-choice-displayed-after|choice-1</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="c-choice-content-49-2" class="invisible">
+              <div id="c-item-enclosing-51" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-51" class="repeating-enclosing">
+                  <div class="item-number">51</div>
+                  <label class="item-label" for="c-item-input-51"><em>*</em></label>
+                  <div class="item-input">
+                    <input number="51" name="c-item-input-51" id="c-item-51" class="datepickerclass  item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-51" class="item-error">Invalid</div>
+                    <div id="c-item-path-51" class="item-path" enabled="true">main|anonymous-choice-displayed-after|choice-2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-52" class="item-enclosing">
+          <div class="repeating-title">Repeatable item</div>
+          <div id="c-repeat-button-52" class="repeat-button white small">+</div>
+          <div id="c-repeating-enclosing-52" class="repeating-enclosing">
+            <div class="item-number">52</div>
+            <label class="item-label" for="c-item-input-52">Number<em>*</em></label>
+            <div class="item-input">
+              <input number="52" name="c-item-input-52" id="c-item-52" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-52" class="item-error">Invalid</div>
+              <div id="c-item-path-52" class="item-path" enabled="true">main|max-occurs-example-1</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-53" class="item-enclosing">
+          <div class="repeating-title">Repeatable item minOccurs=0</div>
+          <div id="c-repeat-button-53" class="repeat-button white small">+</div>
+          <div id="c-repeating-enclosing-53" class="repeating-enclosing">
+            <div class="item-number">53</div>
+            <label class="item-label" for="c-item-input-53">Number</label>
+            <div class="item-input">
+              <input number="53" name="c-item-input-53" id="c-item-53" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-53" class="item-error">Invalid</div>
+              <div id="c-item-path-53" class="item-path" enabled="true">main|max-occurs-example-2</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-54" class="item-enclosing">
+          <div class="repeating-title">Repeatable item with button label</div>
+          <div id="c-repeat-button-54" class="repeat-button white small">Another</div>
+          <div id="c-repeating-enclosing-54" class="repeating-enclosing">
+            <div class="item-number">54</div>
+            <label class="item-label" for="c-item-input-54">String</label>
+            <div class="item-input">
+              <input number="54" name="c-item-input-54" id="c-item-54" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-54" class="item-error">Invalid</div>
+              <div id="c-item-path-54" class="item-path" enabled="true">main|max-occurs-example-3</div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="repeating-title">Repeatable complex type</div>
+          <div id="c-repeat-button-55" class="repeat-button white small">+</div>
+          <div id="c-repeating-enclosing-55" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="c-sequence-55" class="sequence-content">
+              <div id="c-item-enclosing-56" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-56" class="repeating-enclosing">
+                  <div class="item-number">56</div>
+                  <label class="item-label" for="c-item-input-56">A</label>
+                  <div class="item-input">
+                    <input number="56" name="c-item-input-56" id="c-item-56" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-56" class="item-error">Invalid</div>
+                    <div id="c-item-path-56" class="item-path" enabled="true">main|max-occurs-example-4|A</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-57" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-57" class="repeating-enclosing">
+                  <div class="item-number">57</div>
+                  <label class="item-label" for="c-item-input-57">B</label>
+                  <div class="item-input">
+                    <input number="57" name="c-item-input-57" id="c-item-57" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-57" class="item-error">Invalid</div>
+                    <div id="c-item-path-57" class="item-path" enabled="true">main|max-occurs-example-4|B</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-58" class="choice">
+          <div class="repeating-title">Repeatable choice</div>
+          <div id="c-repeat-button-58" class="repeat-button white small">+</div>
+          <div id="c-repeating-enclosing-58" class="repeating-enclosing">
+            <div class="choice-label"></div>
+            <div id="c-div-choice-item-58-1" class="div-choice-item">
+              <input number="58" name="c-item-input-58" id="c-item-58-1" class="choice-item" type="radio" value="number">A</input>
+            </div>
+            <div id="c-div-choice-item-58-2" class="div-choice-item">
+              <input number="58" name="c-item-input-58" id="c-item-58-2" class="choice-item" type="radio" value="number">B</input>
+            </div>
+            <div id="c-choice-content-58-1" class="invisible">
+              <div id="c-item-enclosing-59" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-59" class="repeating-enclosing">
+                  <div class="item-number">59</div>
+                  <label class="item-label" for="c-item-input-59">A</label>
+                  <div class="item-input">
+                    <input number="59" name="c-item-input-59" id="c-item-59" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-59" class="item-error">Invalid</div>
+                    <div id="c-item-path-59" class="item-path" enabled="true">main|max-occurs-example-5|A</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="c-choice-content-58-2" class="invisible">
+              <div id="c-item-enclosing-60" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-60" class="repeating-enclosing">
+                  <div class="item-number">60</div>
+                  <label class="item-label" for="c-item-input-60">B</label>
+                  <div class="item-input">
+                    <input number="60" name="c-item-input-60" id="c-item-60" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-60" class="item-error">Invalid</div>
+                    <div id="c-item-path-60" class="item-path" enabled="true">main|max-occurs-example-5|B</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="repeating-title">Repeatable complex type with title</div>
+          <div id="c-repeat-button-61" class="repeat-button white small">+</div>
+          <div id="c-repeating-enclosing-61" class="repeating-enclosing">
+            <div class="sequence-label">Two items</div>
+            <div id="c-sequence-61" class="sequence-content">
+              <div id="c-item-enclosing-62" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-62" class="repeating-enclosing">
+                  <div class="item-number">62</div>
+                  <label class="item-label" for="c-item-input-62">A</label>
+                  <div class="item-input">
+                    <input number="62" name="c-item-input-62" id="c-item-62" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-62" class="item-error">Invalid</div>
+                    <div id="c-item-path-62" class="item-path" enabled="true">main|max-occurs-example-6|A</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-63" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-63" class="repeating-enclosing">
+                  <div class="item-number">63</div>
+                  <label class="item-label" for="c-item-input-63">B</label>
+                  <div class="item-input">
+                    <input number="63" name="c-item-input-63" id="c-item-63" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-63" class="item-error">Invalid</div>
+                    <div id="c-item-path-63" class="item-path" enabled="true">main|max-occurs-example-6|B</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-64" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-64" class="repeating-enclosing">
+            <div class="item-title">Optional elements</div>
+            <div class="item-before">Setting minOccurs=0 on an element means that if the entry is left blank at submit then the xml element will be excluded from the final xml.</div>
+            <div class="item-number">64</div>
+            <label class="item-label" for="c-item-input-64">Optional string</label>
+            <div class="item-input">
+              <input number="64" name="c-item-input-64" id="c-item-64" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-64" class="item-error">Invalid</div>
+              <div id="c-item-path-64" class="item-path" enabled="true">main|optional</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-65" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-65" class="repeating-enclosing">
+            <div class="item-title">Anonymous simple type</div>
+            <div class="item-number">65</div>
+            <label class="item-label" for="c-item-input-65">Up to four digits</label>
+            <div class="item-input">
+              <input number="65" name="c-item-input-65" id="c-item-65" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-error-65" class="item-error">Invalid</div>
+              <div id="c-item-path-65" class="item-path" enabled="true">main|anonymous-simple-type</div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-66" class="repeating-enclosing">
+            <div class="sequence-label">Named complex type</div>
+            <div id="c-sequence-66" class="sequence-content">
+              <div id="c-item-enclosing-67" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-67" class="repeating-enclosing">
+                  <div class="item-number">67</div>
+                  <label class="item-label" for="c-item-input-67">First</label>
+                  <div class="item-input">
+                    <input number="67" name="c-item-input-67" id="c-item-67" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-67" class="item-error">Invalid</div>
+                    <div id="c-item-path-67" class="item-path" enabled="true">main|named-complex-type|first</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-68" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-68" class="repeating-enclosing">
+                  <div class="item-number">68</div>
+                  <label class="item-label" for="c-item-input-68">Second</label>
+                  <div class="item-input">
+                    <input number="68" name="c-item-input-68" id="c-item-68" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-68" class="item-error">Invalid</div>
+                    <div id="c-item-path-68" class="item-path" enabled="true">main|named-complex-type|second</div>
+                  </div>
+                </div>
+              </div>
+              <div class="sequence">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-69" class="repeating-enclosing">
+                  <div class="sequence-label">Nested named complex type</div>
+                  <div id="c-sequence-69" class="sequence-content">
+                    <div id="c-item-enclosing-70" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="c-repeating-enclosing-70" class="repeating-enclosing">
+                        <div class="item-number">70</div>
+                        <label class="item-label" for="c-item-input-70">A</label>
+                        <div class="item-input">
+                          <input number="70" name="c-item-input-70" id="c-item-70" class=" item-input-text" type="text">
+                          </input>
+                          <div id="c-item-error-70" class="item-error">Invalid</div>
+                          <div id="c-item-path-70" class="item-path" enabled="true">main|named-complex-type|nested|A</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="c-item-enclosing-71" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="c-repeating-enclosing-71" class="repeating-enclosing">
+                        <div class="item-number">71</div>
+                        <label class="item-label" for="c-item-input-71">B</label>
+                        <div class="item-input">
+                          <input number="71" name="c-item-input-71" id="c-item-71" class=" item-input-text" type="text">
+                          </input>
+                          <div id="c-item-error-71" class="item-error">Invalid</div>
+                          <div id="c-item-path-71" class="item-path" enabled="true">main|named-complex-type|nested|B</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="c-item-enclosing-72" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="c-repeating-enclosing-72" class="repeating-enclosing">
+                        <div class="item-number">72</div>
+                        <label class="item-label" for="c-item-input-72">C<em>*</em></label>
+                        <div class="item-input">
+                          <input number="72" name="c-item-input-72" id="c-item-72" class=" item-input-text" type="checkbox">
+                          </input>
+                          <div id="c-item-error-72" class="item-error">Invalid</div>
+                          <div id="c-item-path-72" class="item-path" enabled="true">main|named-complex-type|nested|C</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="c-item-enclosing-73" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="c-repeating-enclosing-73" class="repeating-enclosing">
+                        <div class="item-number">73</div>
+                        <label class="item-label" for="c-item-input-73">Option</label>
+                        <div class="item-input">
+                          <select id="c-item-73" class="select" name="c-item-input-73" number="73">
+                            <option value="option-1">option-1</option>
+                            <option value="option-2">option-2</option>
+                          </select>
+                          <div id="c-item-error-73" class="item-error">Invalid</div>
+                          <div id="c-item-path-73" class="item-path" enabled="true">main|named-complex-type|nested|option</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-74" class="repeating-enclosing">
+            <div class="sequence-label">Anonymous complex type</div>
+            <div id="c-sequence-74" class="sequence-content">
+              <div id="c-item-enclosing-75" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-75" class="repeating-enclosing">
+                  <div class="item-number">75</div>
+                  <label class="item-label" for="c-item-input-75">Value</label>
+                  <div class="item-input">
+                    <input number="75" name="c-item-input-75" id="c-item-75" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-75" class="item-error">Invalid</div>
+                    <div id="c-item-path-75" class="item-path" enabled="true">main|anonymous-complex-type|string-field</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-76" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="c-sequence-76" class="sequence-content">
+              <div id="c-item-enclosing-77" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeat-button-77" class="repeat-button white small">+</div>
+                <div id="c-repeating-enclosing-77" class="repeating-enclosing">
+                  <div class="item-number">77</div>
+                  <label class="item-label" for="c-item-input-77">Anon complex type with repeat</label>
+                  <div class="item-input">
+                    <input number="77" name="c-item-input-77" id="c-item-77" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-77" class="item-error">Invalid</div>
+                    <div id="c-item-path-77" class="item-path" enabled="true">main|anonymous-complex-type-with-repeat|string-field</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeat-button-78" class="repeat-button white small">+</div>
+          <div id="c-repeating-enclosing-78" class="repeating-enclosing">
+            <div class="sequence-label">Named complex type with repeat TODO</div>
+            <div id="c-sequence-78" class="sequence-content">
+              <div id="c-item-enclosing-79" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-79" class="repeating-enclosing">
+                  <div class="item-number">79</div>
+                  <label class="item-label" for="c-item-input-79">A</label>
+                  <div class="item-input">
+                    <input number="79" name="c-item-input-79" id="c-item-79" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-79" class="item-error">Invalid</div>
+                    <div id="c-item-path-79" class="item-path" enabled="true">main|named-complex-type-with-repeat|A</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-80" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-80" class="repeating-enclosing">
+                  <div class="item-number">80</div>
+                  <label class="item-label" for="c-item-input-80">B</label>
+                  <div class="item-input">
+                    <input number="80" name="c-item-input-80" id="c-item-80" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-error-80" class="item-error">Invalid</div>
+                    <div id="c-item-path-80" class="item-path" enabled="true">main|named-complex-type-with-repeat|B</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-81" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-81" class="repeating-enclosing">
+                  <div class="item-number">81</div>
+                  <label class="item-label" for="c-item-input-81">C<em>*</em></label>
+                  <div class="item-input">
+                    <input number="81" name="c-item-input-81" id="c-item-81" class=" item-input-text" type="checkbox">
+                    </input>
+                    <div id="c-item-error-81" class="item-error">Invalid</div>
+                    <div id="c-item-path-81" class="item-path" enabled="true">main|named-complex-type-with-repeat|C</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-82" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-82" class="repeating-enclosing">
+                  <div class="item-number">82</div>
+                  <label class="item-label" for="c-item-input-82">Option</label>
+                  <div class="item-input">
+                    <select id="c-item-82" class="select" name="c-item-input-82" number="82">
+                      <option value="option-1">option-1</option>
+                      <option value="option-2">option-2</option>
+                    </select>
+                    <div id="c-item-error-82" class="item-error">Invalid</div>
+                    <div id="c-item-path-82" class="item-path" enabled="true">main|named-complex-type-with-repeat|option</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-83" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="c-sequence-83" class="sequence-content">
+              <fieldset id="c-fieldset-83" class="fieldset">
+                <legend >Fieldset example</legend>
+                <div id="c-item-enclosing-84" class="item-enclosing">
+                  <div class="repeating-title">
+                  </div>
+                  <div id="c-repeating-enclosing-84" class="repeating-enclosing">
+                    <div class="item-number">84</div>
+                    <label class="item-label" for="c-item-input-84">A</label>
+                    <div class="item-input">
+                      <input number="84" name="c-item-input-84" id="c-item-84" class=" item-input-text" type="text">
+                      </input>
+                      <div id="c-item-error-84" class="item-error">Invalid</div>
+                      <div id="c-item-path-84" class="item-path" enabled="true">main|fieldset-example|A</div>
+                    </div>
+                  </div>
+                </div>
+                <div id="c-item-enclosing-85" class="item-enclosing">
+                  <div class="repeating-title">
+                  </div>
+                  <div id="c-repeating-enclosing-85" class="repeating-enclosing">
+                    <div class="item-number">85</div>
+                    <label class="item-label" for="c-item-input-85">B</label>
+                    <div class="item-input">
+                      <input number="85" name="c-item-input-85" id="c-item-85" class=" item-input-text" type="text">
+                      </input>
+                      <div id="c-item-error-85" class="item-error">Invalid</div>
+                      <div id="c-item-path-85" class="item-path" enabled="true">main|fieldset-example|B</div>
+                    </div>
+                  </div>
+                </div>
+                <div id="c-item-enclosing-86" class="item-enclosing">
+                  <div class="repeating-title">
+                  </div>
+                  <div id="c-repeating-enclosing-86" class="repeating-enclosing">
+                    <div class="item-number">86</div>
+                    <label class="item-label" for="c-item-input-86">C<em>*</em></label>
+                    <div class="item-input">
+                      <input number="86" name="c-item-input-86" id="c-item-86" class=" item-input-text" type="checkbox">
+                      </input>
+                      <div id="c-item-error-86" class="item-error">Invalid</div>
+                      <div id="c-item-path-86" class="item-path" enabled="true">main|fieldset-example|C</div>
+                    </div>
+                  </div>
+                </div>
+                <div id="c-item-enclosing-87" class="item-enclosing">
+                  <div class="repeating-title">
+                  </div>
+                  <div id="c-repeating-enclosing-87" class="repeating-enclosing">
+                    <div class="item-number">87</div>
+                    <label class="item-label" for="c-item-input-87">Option</label>
+                    <div class="item-input">
+                      <select id="c-item-87" class="select" name="c-item-input-87" number="87">
+                        <option value="option-1">option-1</option>
+                        <option value="option-2">option-2</option>
+                      </select>
+                      <div id="c-item-error-87" class="item-error">Invalid</div>
+                      <div id="c-item-path-87" class="item-path" enabled="true">main|fieldset-example|option</div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<input id="submit" class="submit" type="submit"></input>-->
+      <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="pre-submit" class="pre-submit">Submit</div>
+    		<p><div id="submit-comments"></div></p>
+</form>
+</div>
+</body>
+</html>

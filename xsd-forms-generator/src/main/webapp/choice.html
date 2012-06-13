@@ -1,0 +1,94 @@
+
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css"/>
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var choice9=$(":input[@name='choice-item-9']");
+         $("#choice-content-9-1").hide();
+         $("#choice-content-9-2").hide();
+    	choice9.change( function() {
+          var checked = $(':input[name=choice-item-9]:checked').attr("id");
+         
+		  if (checked == "choice-item-9-1")
+            $("#choice-content-9-1").show();
+          else 
+            $("#choice-content-9-1").hide();
+          if (checked == "choice-item-9-2")
+            $("#choice-content-9-2").show();
+          else 
+            $("#choice-content-9-2").hide();
+        })
+    });
+
+
+</script>
+</head>
+<body>
+<div class="form">
+<form method="POST" action="form.html" name="form">
+
+  <div class="sequence">
+    <div class="sequence-label">Personal details</div>
+    <div id="sequence-0" class="sequence-content">
+      <div class="choice">
+        <div class="choice-label">Primary Contact</div>
+        <div id="div-div-choice-item-9-9" class="div-choice-item">
+          <input name="choice-item-9" id="choice-item-9-1" class="choice-item" type="radio" value="number">Address</input><br/>
+          <input name="choice-item-9" id="choice-item-9-2" class="choice-item" type="radio" value="number">Phone<em>*</em></input>
+        </div>
+        
+        <div class="choice-content" id="choice-content-9-1">
+	        <div class="item-number">10</div>
+	        <div class="item-label">Address</div>
+	        <div class="item-input">
+	          <textarea id="item-10" class=" item-input-textarea" name="item-input-textarea10">
+	          </textarea>
+	          <div id="item-error-10" class="item-error">Invalid</div>
+	        </div>
+        </div>
+        
+        <div id="div-div-choice-item-9-9" class="div-choice-item">
+          
+        </div>
+        
+        <div class="choice-content" id="choice-content-9-2">
+	        <div class="sequence">
+	          <div class="sequence-label">Phone</div>
+	          <div id="sequence-10" class="sequence-content">
+	            <div id="item-enclosing-11" class="item-enclosing">
+	              <div class="item-number">11</div>
+	              <div class="item-label">Phone<em>*</em></div>
+	              <div class="item-input">
+	                <input id="item-11" class=" item-input-text" name="item-input-text-11" type="text"></input>
+	                <div id="item-error-11" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
+	              </div>
+	            </div>
+	            <div id="item-enclosing-12" class="item-enclosing">
+	              <div class="item-number">12</div>
+	              <div class="item-label">Type</div>
+	              <div class="item-input">
+	                <select id="select-12" class="select">
+	                  <option value="home">home</option>
+	                  <option value="work">work</option>
+	                  <option value="mobile">mobile</option>
+	                </select>
+	              </div>
+	            </div>
+	          </div>
+	          <div id="add-sequence-10" class="group-add white small">Add another phone</div>
+	        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<input id="submit" class="submit" type="submit"></input>-->
+</form>
+</div>
+</body>
+</html>
