@@ -187,6 +187,14 @@ $(function() {
       
       s = closePreviousItems(previousItems, startAt,s);
       
+      //handle closing multiple repeated elements see https://github.com/davidmoten/xsd-forms/issues/1
+      if (items.length>1 && startAt==items.length) {
+          var tag;
+          s = s + spaces((startAt-1)*2);
+          tag = openTag(items[items.length-1]);
+          s = s + "\n" + spaces(i*2) + tag;
+      }
+      
       for (var i=startAt; i<items.length; i++) {
           var tag;
           if (i==0)
@@ -199,7 +207,6 @@ $(function() {
       s = s + closeTag(items[items.length-1]);
       previousItems = items;
     });
-    //TODO handle closing multiple repeated elements see https://github.com/davidmoten/xsd-forms/issues/1
     s = closePreviousItems(previousItems, 0,s);
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
