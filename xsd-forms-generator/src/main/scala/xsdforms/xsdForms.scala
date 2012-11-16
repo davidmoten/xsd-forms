@@ -199,6 +199,7 @@ $(function() {
       s = s + closeTag(items[items.length-1]);
       previousItems = items;
     });
+    //TODO handle closing multiple repeated elements see https://github.com/davidmoten/xsd-forms/issues/1
     s = closePreviousItems(previousItems, 0,s);
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
