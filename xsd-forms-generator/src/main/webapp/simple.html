@@ -1,0 +1,239 @@
+
+<html>
+<head>
+<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
+<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript">
+function openTag(name) {
+	return "<" + name + ">";
+}
+          
+function openTagWithNs(name, namespace) {
+    return "<" + name + " xmlns=\"http://org.moten.david/example\">";
+}
+
+function closeTag(name) {
+	return "</" + name + ">";
+}
+
+function getStartAt(previousItems, items) {
+	if (previousItems == null) return 0;
+
+	var startAt = 0;
+
+        for (var i=0; i<Math.min(previousItems.length,items.length); i++) {
+    		  if (!(items[i]==previousItems[i])) 
+    			  return startAt;
+    		  else 
+    			  startAt = i+1;
+    	}
+	return startAt;
+}
+
+function closePreviousItems(previousItems,startAt,s) {
+     if (previousItems!=null) {
+          for (var i=previousItems.length-2;i>=startAt;i--) {
+              s = s + "\n" + spaces(i*2) + closeTag(previousItems[i]);
+          }
+      }
+      return s;
+}
+
+function spaces(n) {
+    var s = "";
+    for (var i=0;i<n;i++)
+      s = s + " ";
+    return s;
+}
+
+function cloneAndReplaceIds(element, suffix){
+  var clone = element.clone();
+  clone.find("*[id]").andSelf().each(function() { 
+    var previousId = $(this).attr("id");
+    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
+    $(this).attr("id", newId); 
+  });
+  return clone;
+}
+    
+var repeatCount = 10000;
+
+$(function() {
+  $('input').filter('.datepickerclass').datepicker();
+  $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","dd/mm/yy");
+  $('input').filter('.datetimepickerclass').datetimepicker();
+  $('input').filter('.timepickerclass').timepicker({});
+
+  function callMethod(methodName, argument) {
+    var method = eval('(' + methodName + ')');
+    return method(argument);
+  }
+
+  $('#pre-submit').click( function () {
+    var s = "";
+    var previousItems = null;
+    $('*[number]').each( function(index) {
+      var thisId = this.id
+      var elem = $('#' + thisId)
+      // will do validations here
+      //if elem visible then do the validation for that element
+      if (elem.is(":visible")) 
+        elem.change();
+    });
+    var count = $('.item-error').filter(":visible").length
+    if (count>0) {
+      $('#validation-errors').show();
+      return;
+    }
+    else 
+      $('#validation-errors').hide();
+    $('div[enabled="true"]').each( function(index) { 
+      var inputId = this.id.replace("path-","");
+      var value = $('#'+ inputId).val()
+     
+      var items = $(this).text().split('|');
+      var startAt = getStartAt(previousItems, items);
+      
+      s = closePreviousItems(previousItems, startAt,s);
+      
+      for (var i=startAt; i<items.length; i++) {
+          var tag;
+          if (i==0)
+            tag = openTagWithNs(items[i],"ns");
+          else
+            tag = openTag(items[i]);
+    	  s = s + "\n" + spaces(i*2) + tag;
+      }
+      s = s + value 
+      s = s + closeTag(items[items.length-1]);
+      previousItems = items;
+    });
+    s = closePreviousItems(previousItems, 0,s);
+    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s = "<pre>" + s + "</pre>";
+    $('#submit-comments').html(s);
+  });
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing2 = $("#a-repeating-enclosing-2").clone();
+   
+  var lastRepeat2="a-repeating-enclosing-2";
+  $("#a-repeat-button-2").click(function() {
+    var clone = enclosing2.clone();
+    clone.insertAfter("#"+lastRepeat2);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^a-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "a-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#a-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat2=nextId;
+  })
+          
+
+  // name
+  var validate2 = function() {
+    return validate2WithSuffix("");  
+  }
+  
+  var validate2WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#a-item-2" + suffix);
+    var pathDiv = $("#a-item-path-2");
+
+    return ok;
+  }
+        
+  $("#a-item-2").change( function() {
+    var ok = validate2();
+    var error= $("#a-item-error-2");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  $("#form").submit(function () { return false; }); // so it won't submit
+
+    });
+</script>
+<script type="text/javascript" src="js/xsd-forms-override.js"></script>
+</head>
+<body>
+<div class="form">
+<form method="POST" action="form.html" name="form">
+
+  <div class="sequence">
+    <div class="repeating-title">
+    </div>
+    <div id="a-repeating-enclosing-1" class="repeating-enclosing">
+      <div class="sequence-label">Personal details</div>
+      <div id="a-sequence-1" class="sequence-content">
+        <div id="a-item-enclosing-2" class="item-enclosing">
+          <div class="repeating-title">
+          </div>
+          <div id="a-repeat-button-2" class="repeat-button white small">+</div>
+          <div id="a-repeating-enclosing-2" class="repeating-enclosing">
+            <div class="item-number">2</div>
+            <label class="item-label" for="a-item-input-2">Full name</label>
+            <div class="item-input">
+              <input number="2" name="a-item-input-2" id="a-item-2" class=" item-input-text" type="text">
+              </input>
+              <div id="a-item-error-2" class="item-error">Invalid</div>
+              <div id="a-item-path-2" class="item-path" enabled="true">person|name</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<input id="submit" class="submit" type="submit"></input>-->
+      <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="pre-submit" class="pre-submit">Submit</div>
+    		<p><div id="submit-comments"></div></p>
+</form>
+</div>
+</body>
+</html>

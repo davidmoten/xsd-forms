@@ -77,6 +77,16 @@ package xsdforms {
         rootElement = "person",
         outputFile = new File("target/generated-webapp/person-form.html"))
     }
+    
+    @Test
+    def generateSimpleForm() {
+      println("generating simple form")
+      generate(
+        idPrefix = "a-",
+        schemaInputStream = TstUtil.getClass().getResourceAsStream("/simple.xsd"),
+        rootElement = "person",
+        outputFile = new File("target/generated-webapp/simple-form.html"))
+    }
 
     @Test
     def generateCensusForm {
