@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<scala.version>2.9.2</scala.version>
 		<scala.plugin.version>2.15.2</scala.plugin.version>
-		<compiler.plugin.version>2.3.2</compiler.plugin.version>
+		<compiler.plugin.version>3.1</compiler.plugin.version>
 	</properties>
 
 	<modules>
@@ -47,6 +47,7 @@
 		</plugins>
 	</build>
 
+<!--
 	<repositories>
 		<repository>
 			<id>scala-tools.org</id>
@@ -62,6 +63,7 @@
 			<url>https://oss.sonatype.org/content/groups/scala-tools</url>
 		</pluginRepository>
 	</pluginRepositories>
+-->
 
 	<distributionManagement>
 		<site>
