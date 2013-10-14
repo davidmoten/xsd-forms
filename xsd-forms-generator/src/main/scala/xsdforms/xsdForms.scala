@@ -336,7 +336,7 @@ $(function() {
       "inline" == getAnnotation(choice.group, "choice").mkString
 
     private def choiceIndexDelimiter = "-"
-      
+
     private def addChoiceHideOnStart(
       particles: Seq[ParticleOption], number: String) {
 
@@ -353,17 +353,17 @@ $(function() {
       particles: Seq[ParticleOption], number: String) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
-      
+
       addScriptWithMargin(
         """
-|var choiceChange"""+number+""" = function addChoiceChange"""+number+"""(suffix) {
+|var choiceChange""" + number + """ = function addChoiceChange""" + number + """(suffix) {
 |  $(":input[@name='""" + getChoiceItemName(number) + """" + suffix + "']").change(function() {
 |    var checked = $(':input[name=""" + getChoiceItemName(number) + """' + suffix + ']:checked').attr("id");""")
 
       forEachParticle(x => {
         val index = x._2 + 1
         val choiceContentId =
-          idPrefix + """choice-content-""" + number + choiceIndexDelimiter  + index
+          idPrefix + """choice-content-""" + number + choiceIndexDelimiter + index
         addScriptWithMargin(
           """
 |    if (checked == """" + getChoiceItemId(number, index) + """" + suffix) {
@@ -373,14 +373,14 @@ $(function() {
 |    else {
 |      $("#""" + choiceContentId + """" + suffix).hide();
 |      $("#""" + choiceContentId + """" + suffix).find('.item-path').attr('enabled','false');
-|    }"""
-      )})
-addScriptWithMargin(
-"""
+|    }""")
+      })
+      addScriptWithMargin(
+        """
 |  })
 |}
 |
-|choiceChange"""+number+"""("");""")
+|choiceChange""" + number + """("");""")
 
     }
 
@@ -392,7 +392,7 @@ addScriptWithMargin(
         }
       stack.push(ChoiceItemEntry(e, p, number))
 
-      html.div(id = Some(idPrefix + "choice-content-" + number + choiceIndexDelimiter + index), classes=List("invisible"))
+      html.div(id = Some(idPrefix + "choice-content-" + number + choiceIndexDelimiter + index), classes = List("invisible"))
     }
 
     def getChoiceLabel(e: Element, p: ParticleOption): String = {
@@ -652,7 +652,7 @@ addScriptWithMargin(
       val en = getEnumeration(r)
       val isRadio = getAnnotation(e, "selector") match {
         case Some("radio") => true
-        case None => false
+        case _ => false
       }
 
       val initializeBlank = getAnnotation(e, "addBlank") match {
