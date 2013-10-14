@@ -301,7 +301,7 @@ $(function() {
       repeatingTitle(e, number, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
       repeatingEnclosing(e, number)
       addMaxOccurs(e, number)
-      val particles = choice.group.arg1.map(_.value)
+      val particles = choice.group.particleOption3.map(_.value)
       addChoiceHideOnStart(particles, number)
       addChoiceShowHideScriptOnSelection(particles, number)
 
@@ -486,7 +486,7 @@ addScriptWithMargin(
       val number = nextNumber
 
       addItemHtmlOpening(e, number, Some(typ))
-      typ.arg1.value match {
+      typ.simpleDerivationOption3.value match {
         case x: Restriction => simpleType(e, x, number)
         case _ => unexpected
       }
@@ -663,19 +663,19 @@ addScriptWithMargin(
     }
 
     private def getEnumeration(typ: SimpleType): Seq[(String, NoFixedFacet)] =
-      typ.arg1.value match {
+      typ.simpleDerivationOption3.value match {
         case x: Restriction =>
           getEnumeration(x)
         case _ => unexpected
       }
 
     private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
-      r.arg1.arg2.seq.map(
+      r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
         _.value match {
           case y: NoFixedFacet => {
             val label = getAnnotation(y, "label") match {
               case Some(x) => x
-              case None => y.value
+              case None => y.valueAttribute
             }
             Some((label, y))
           }
@@ -704,7 +704,7 @@ addScriptWithMargin(
         if (initializeBlank)
           html.option(content = Some("Select one..."), value = "").closeTag
         en.foreach { x =>
-          html.option(content = Some(x._1), value = x._2.value).closeTag
+          html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
           getAnnotation(x._2, "makeVisible") match {
             case Some(y: String) => {
               val refersTo = number.toInt + y.toInt
@@ -712,7 +712,7 @@ addScriptWithMargin(
 |  $("#""" + idPrefix + """item-""" + number + """").change( function() {
 |    var v = $("#""" + idPrefix + """item-""" + number + """");
 |    var refersTo = $("#""" + getItemEnclosingId(refersTo + "") + """") 
-|    if ("""" + x._2.value + """" == v.val()) 
+|    if ("""" + x._2.valueAttribute + """" == v.val()) 
 |      refersTo.show();
 |    else
 |      refersTo.hide();
@@ -803,7 +803,7 @@ addScriptWithMargin(
     }
 
     private def createLengthTestScriptlet(r: Restriction) = {
-      r.arg1.arg2.seq.flatMap(f => {
+      r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
         val start = """
 |  //length test
 |  if (v.val().length """
@@ -811,11 +811,11 @@ addScriptWithMargin(
 |    ok = false;"""
         f match {
           case DataRecord(xs, Some("minLength"), x: NumFacet) =>
-            Some(start + "<" + x.value + finish)
+            Some(start + "<" + x.valueAttribute + finish)
           case DataRecord(xs, Some("maxLength"), x: NumFacet) =>
-            Some(start + ">" + x.value + finish)
+            Some(start + ">" + x.valueAttribute + finish)
           case DataRecord(xs, Some("length"), x: NumFacet) =>
-            Some(start + "!=" + x.value + finish)
+            Some(start + "!=" + x.valueAttribute + finish)
           case _ => None
         }
       }).mkString("")
@@ -831,19 +831,19 @@ addScriptWithMargin(
       }
 
     private def createFacetTestScriptlet(r: Restriction) = {
-      r.arg1.arg2.seq.flatMap(f => {
+      r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
         val start = "\n|  //facet test\n|  if ((+(v.val())) "
         val finish = ")\n|    ok = false;"
 
         f match {
           case DataRecord(xs, Some("minInclusive"), x: Facet) =>
-            Some(start + "< " + x.value + finish)
+            Some(start + "< " + x.valueAttribute + finish)
           case DataRecord(xs, Some("maxInclusive"), x: Facet) =>
-            Some(start + "> " + x.value + finish)
+            Some(start + "> " + x.valueAttribute + finish)
           case DataRecord(xs, Some("minExclusive"), x: Facet) =>
-            Some(start + "<=" + x.value + finish)
+            Some(start + "<=" + x.valueAttribute + finish)
           case DataRecord(xs, Some("maxExclusive"), x: Facet) =>
-            Some(start + ">= " + x.value + finish)
+            Some(start + ">= " + x.valueAttribute + finish)
           case _ => None
         }
       }).mkString("")
@@ -906,9 +906,9 @@ addScriptWithMargin(
     private def addScriptWithMargin(s: String) = addScript(stripMargin(s))
 
     private def getPatterns(r: Restriction) =
-      r.arg1.arg2.seq.flatMap(f => {
+      r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
         f match {
-          case DataRecord(xs, Some("pattern"), x: Pattern) => Some(x.value)
+          case DataRecord(xs, Some("pattern"), x: Pattern) => Some(x.valueAttribute)
           case _ => None
         }
       })
@@ -1015,7 +1015,7 @@ addScriptWithMargin(
         val mandatory = typ match {
           case None => mustOccur && !isText
           case Some(x) => (
-            x.arg1.value match {
+            x.simpleDerivationOption3.value match {
               case y: Restriction =>
                 (getInputType(y) != "text") || isMandatory(e, y)
               case _ =>
@@ -1060,17 +1060,17 @@ addScriptWithMargin(
     import XsdUtil._
 
     private val topLevelElements =
-      s.schemasequence1.flatMap(_.arg1.value match {
+      s.schemasequence1.flatMap(_.schemaTopOption1.value match {
         case y: TopLevelElement => Some(y)
         case _ => None
       })
 
-    private val topLevelComplexTypes = s.schemasequence1.flatMap(_.arg1.value match {
+    private val topLevelComplexTypes = s.schemasequence1.flatMap(_.schemaTopOption1.value match {
       case y: TopLevelComplexType => Some(y)
       case _ => None
     })
 
-    private val topLevelSimpleTypes = s.schemasequence1.flatMap(_.arg1.value match {
+    private val topLevelSimpleTypes = s.schemasequence1.flatMap(_.schemaTopOption1.value match {
       case y: TopLevelSimpleType => Some(y)
       case _ => None
     })
@@ -1151,19 +1151,19 @@ addScriptWithMargin(
     }
 
     private def process(e: Element, x: ComplexType) {
-      x.arg1.value match {
+      x.complexTypeModelOption3.value match {
         case x: ComplexContent =>
           unexpected
         case x: SimpleContent =>
           unexpected
         case x: ComplexTypeModelSequence1 =>
-          x.arg1.getOrElse(unexpected).value match {
+          x.typeDefParticleOption1.getOrElse(unexpected).value match {
             case y: GroupRef =>
               unexpected
             case y: ExplicitGroupable =>
-              if (matches(x.arg1.get, qn("sequence")))
+              if (matches(x.typeDefParticleOption1.get, qn("sequence")))
                 process(e, Sequence(y))
-              else if (matches(x.arg1.get, qn("choice")))
+              else if (matches(x.typeDefParticleOption1.get, qn("choice")))
                 process(e, Choice(y))
               else unexpected
             case _ => unexpected
@@ -1177,7 +1177,7 @@ addScriptWithMargin(
 
     private def process(e: Element, x: Sequence) {
       visitor.startSequence(e, x)
-      x.group.arg1.foreach(y => process(e, toQName(y), y.value))
+      x.group.particleOption3.foreach(y => process(e, toQName(y), y.value))
       visitor.endSequence
     }
 
@@ -1198,7 +1198,7 @@ addScriptWithMargin(
     private def process(e: Element, x: Choice) {
       visitor.startChoice(e, x)
       var index = 0
-      x.group.arg1.foreach(y => {
+      x.group.particleOption3.foreach(y => {
         index = index + 1
         visitor.startChoiceItem(e, y.value, index)
         process(e, toQName(y), y.value)
