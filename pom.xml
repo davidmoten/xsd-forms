@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.moten.david</groupId>
@@ -21,7 +22,7 @@
 		<module>demo-scalaxb</module>
 		<module>xsd-forms-generator</module>
 		<module>xsd-forms-maven-plugin</module>
-        </modules>
+	</modules>
 
 	<dependencies>
 		<dependency>
@@ -48,7 +49,8 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -56,6 +58,23 @@
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.scalaxb</groupId>
+										<artifactId>
+											scalaxb-maven-plugin
+										</artifactId>
+										<versionRange>
+											[0.6.6,)
+										</versionRange>
+										<goals>
+											<goal>generate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>
@@ -84,23 +103,11 @@
 		</pluginManagement>
 	</build>
 
-<!--
-	<repositories>
-		<repository>
-			<id>scala-tools.org</id>
-			<name>Scala-Tools Maven2 Repository</name>
-			<url>https://oss.sonatype.org/content/groups/scala-tools</url>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>scala-tools.org</id>
-			<name>Scala-Tools Maven2 Repository</name>
-			<url>https://oss.sonatype.org/content/groups/scala-tools</url>
-		</pluginRepository>
-	</pluginRepositories>
--->
+	<!-- <repositories> <repository> <id>scala-tools.org</id> <name>Scala-Tools 
+		Maven2 Repository</name> <url>https://oss.sonatype.org/content/groups/scala-tools</url> 
+		</repository> </repositories> <pluginRepositories> <pluginRepository> <id>scala-tools.org</id> 
+		<name>Scala-Tools Maven2 Repository</name> <url>https://oss.sonatype.org/content/groups/scala-tools</url> 
+		</pluginRepository> </pluginRepositories> -->
 
 	<distributionManagement>
 		<site>
