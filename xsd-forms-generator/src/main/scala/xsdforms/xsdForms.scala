@@ -55,7 +55,7 @@ package xsdforms {
     val children: MutableList[Node] = MutableList();
   }
   private case class NodeSequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
-  private case class NodeChoice(e: Element, override val children: MutableList[Node]) extends NodeGroup
+  private case class NodeChoice(e: Element, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
   private case class NodeSimpleType(e: Element, typ: SimpleType) extends Node
   private case class NodeBaseType(e: Element, typ: BaseType) extends Node
 
@@ -99,9 +99,9 @@ package xsdforms {
     }
 
     override def startChoice(e: Element, choice: Choice) {
-      val choice = NodeChoice(e, MutableList())
-      addChild(choice);
-      stack.push(choice);
+      val chc = NodeChoice(e, choice, MutableList())
+      addChild(chc);
+      stack.push(chc);
     }
 
     override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
@@ -340,7 +340,7 @@ $(function() {
       element: Element, number: String,
       usesFieldset: Boolean) extends StackEntry
     private case class ChoiceEntry(
-      element: Element, choice: Choice, number: String) extends StackEntry
+      element: Element, number: String) extends StackEntry
     private case class ChoiceItemEntry(
       element: Element, p: ParticleOption, number: String) extends StackEntry
 
@@ -393,7 +393,7 @@ $(function() {
       val choiceInline = displayChoiceInline(choice)
 
       val number = nextNumber
-      stack.push(ChoiceEntry(e, choice, number))
+      stack.push(ChoiceEntry(e, number))
 
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
       repeatingTitle(e, number, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
@@ -485,7 +485,7 @@ $(function() {
     def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
       val number =
         stack.head match {
-          case ChoiceEntry(_, _, id) => id
+          case ChoiceEntry(_, id) => id
           case _ => unexpected
         }
       stack.push(ChoiceItemEntry(e, p, number))
