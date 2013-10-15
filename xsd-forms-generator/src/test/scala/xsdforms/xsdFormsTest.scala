@@ -77,7 +77,7 @@ package xsdforms {
         rootElement = "person",
         outputFile = new File("target/generated-webapp/person-form.html"))
     }
-    
+
     @Test
     def generateSimpleForm() {
       println("generating simple form")
@@ -482,11 +482,11 @@ package xsdforms {
       val input = driver.findElement(By.id("c-item-" + itemNo))
       //put integer in so passes validation on submission
       input.sendKeys("456\n")
- 
-      val input1 = driver.findElement(By.id("c-item-"+itemNo + "-10001"))
-      val error1 = driver.findElement(By.id("c-item-error-"+itemNo + "-10001"))
-      val input2 = driver.findElement(By.id("c-item-"+itemNo + "-10002"))
-      val error2 = driver.findElement(By.id("c-item-error-"+itemNo + "-10002"))
+
+      val input1 = driver.findElement(By.id("c-item-" + itemNo + "-10001"))
+      val error1 = driver.findElement(By.id("c-item-error-" + itemNo + "-10001"))
+      val input2 = driver.findElement(By.id("c-item-" + itemNo + "-10002"))
+      val error2 = driver.findElement(By.id("c-item-error-" + itemNo + "-10002"))
 
       input1.sendKeys("123\n")
       assertFalse(error1.isDisplayed)
@@ -499,7 +499,7 @@ package xsdforms {
       assertFalse(error2.isDisplayed)
     }
 
-    private def testRepeatWhenMinOccursIsZero(driver:WebDriver, itemNo:Int) {
+    private def testRepeatWhenMinOccursIsZero(driver: WebDriver, itemNo: Int) {
       //default input should not be visible because minOccurs=0
       val input = driver.findElement(By.id("c-repeating-enclosing-" + itemNo))
       assertFalse(input.isDisplayed)
@@ -511,16 +511,16 @@ package xsdforms {
       input1.sendKeys("123\n")
     }
 
-    private def testChoiceRepeat(driver:WebDriver, itemNo: Int) {
+    private def testChoiceRepeat(driver: WebDriver, itemNo: Int) {
       val input = driver.findElement(By.id("c-repeating-enclosing-" + itemNo))
       assertTrue(input.isDisplayed)
       val button = driver.findElement(By.id("c-repeat-button-" + itemNo))
       button.click;
       val input1 = driver.findElement(By.id("c-item-" + itemNo + "-1-10004"))
       assertTrue(input1.isDisplayed)
-      assertEquals("c-item-input-" + itemNo + "-10004",input1.getAttribute("name"))
+      assertEquals("c-item-input-" + itemNo + "-10004", input1.getAttribute("name"))
     }
-    
+
     private def checkDisplayedById(driver: WebDriver, id: String) {
       val item = driver.findElement(By.id(id))
       assertTrue(item.isDisplayed)
@@ -568,4 +568,33 @@ package xsdforms {
     }
   }
 
+  @Test
+  class TreeVisitorTest {
+    @Test
+    def test() {
+      generate(
+        idPrefix = "a-",
+        schemaInputStream = TstUtil.getClass().getResourceAsStream("/test.xsd"),
+        rootElement = "person",
+        outputFile = new File("target/generated-webapp/person-form.html"))
+    }
+
+    def generate(
+      idPrefix: String,
+      schemaInputStream: InputStream,
+      rootElement: String,
+      outputFile: File,
+      extraScript: Option[String] = None) {
+
+      import scala.xml._
+
+      val schema = scalaxb.fromXML[Schema](
+        XML.load(schemaInputStream))
+      val ns = schema.targetNamespace.get.toString
+      val visitor = new TreeCreatingVisitor()
+
+      new Traversor(schema, rootElement, visitor).process
+      println("generated")
+    }
+  }
 }

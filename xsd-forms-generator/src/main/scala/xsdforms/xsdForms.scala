@@ -48,6 +48,51 @@ package xsdforms {
     def baseType(e: Element, typ: BaseType)
   }
 
+  import scala.collection.mutable.MutableList
+
+  private trait Node
+  private trait NodeGroup extends Node {
+    val children: MutableList[Node] = MutableList();
+  }
+  private case class MySequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
+  private case class MyChoice(e: Element, override val children: MutableList[Node]) extends NodeGroup
+  private case class MySimpleType(e: Element, typ: SimpleType) extends Node
+  private case class MyBaseType(e: Element, typ: BaseType) extends Node
+
+  class TreeCreatingVisitor extends Visitor {
+    import Util._
+    private var tree: Option[Node] = None
+    private val stack = new scala.collection.mutable.Stack[Node]
+
+    override def startSequence(e: Element, sequence: Sequence) {
+      val seq = MySequence(e, MutableList())
+      addChild(seq);
+      stack.push(seq);
+    }
+
+    private def addChild(node: Node) {
+      if (tree.isEmpty) tree = Some(node);
+      else
+        stack.top match {
+          case g: NodeGroup => g.children += node
+          case _ => unexpected
+        }
+    }
+
+    override def endSequence {
+
+    }
+
+    override def startChoice(e: Element, choice: Choice) {
+
+    }
+    override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {}
+    override def endChoiceItem {}
+    override def endChoice {}
+    override def simpleType(e: Element, typ: SimpleType) {}
+    override def baseType(e: Element, typ: BaseType) {}
+  }
+
   /**
    * **************************************************************
    *
@@ -65,6 +110,7 @@ package xsdforms {
     private var number = 0
     val margin = "  "
 
+    private sealed trait Entry
     private sealed trait StackEntry
     private val stack = new scala.collection.mutable.Stack[StackEntry]
     private val path = new scala.collection.mutable.Stack[String]
