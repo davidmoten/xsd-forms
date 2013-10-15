@@ -5,7 +5,7 @@ package xsdforms {
   import javax.xml.namespace.QName
   import scalaxb._
 
-  private case class BaseType(qName: QName)
+  case class BaseType(qName: QName)
 
   object Util {
     def unexpected(s: String) = throw new RuntimeException(s)
@@ -50,14 +50,14 @@ package xsdforms {
 
   import scala.collection.mutable.MutableList
 
-  private trait Node
-  private trait NodeGroup extends Node {
+  trait Node
+  trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList();
   }
-  private case class NodeSequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
-  private case class NodeChoice(e: Element, override val children: MutableList[Node]) extends NodeGroup
-  private case class NodeSimpleType(e: Element, typ: SimpleType) extends Node
-  private case class NodeBaseType(e: Element, typ: BaseType) extends Node
+  case class NodeSequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeChoice(e: Element, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeSimpleType(e: Element, typ: SimpleType) extends Node
+  case class NodeBaseType(e: Element, typ: BaseType) extends Node
 
   /**
    * **************************************************************
@@ -125,6 +125,24 @@ package xsdforms {
       val s = NodeBaseType(e, typ)
       addChild(s)
     }
+
+    private def toString(node: Node, margin: String): String = {
+      node match {
+        case NodeBaseType(e, typ) => margin + "NodeBaseType=" + e.name.get
+        case NodeSimpleType(e, typ) => margin + "NodeSimpleType=" + e.name.get
+        case n: NodeGroup => margin + n.getClass.getSimpleName + "=\n" +
+          n.children.map(c => toString(c, margin + "  ")).mkString("\n")
+        case _ => unexpected
+      }
+    }
+
+    override def toString: String = {
+      if (tree.isEmpty)
+        ""
+      else
+        toString(tree.get, "")
+    }
+
   }
 
   /**

@@ -594,6 +594,7 @@ package xsdforms {
       val visitor = new TreeCreatingVisitor()
 
       new Traversor(schema, rootElement, visitor).process
+      println("tree:\n"+ visitor)
       println("generated")
     }
   }
