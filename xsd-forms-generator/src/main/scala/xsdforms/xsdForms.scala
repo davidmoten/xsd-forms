@@ -103,6 +103,7 @@ package xsdforms {
       addChild(choice);
       stack.push(choice);
     }
+
     override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
 
     }
