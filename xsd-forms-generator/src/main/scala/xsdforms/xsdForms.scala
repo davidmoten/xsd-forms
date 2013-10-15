@@ -59,7 +59,16 @@ package xsdforms {
   private case class MySimpleType(e: Element, typ: SimpleType) extends Node
   private case class MyBaseType(e: Element, typ: BaseType) extends Node
 
+  /**
+   * **************************************************************
+   *
+   *   TreeCreatingVisitor
+   *
+   *
+   * **************************************************************
+   */
   class TreeCreatingVisitor extends Visitor {
+
     import Util._
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
@@ -70,6 +79,12 @@ package xsdforms {
       stack.push(seq);
     }
 
+    /**
+     * If tree is empty then sets tree to existing node. If not empty then adds node
+     * to children of top of stack.
+     *
+     * @param node
+     */
     private def addChild(node: Node) {
       if (tree.isEmpty) tree = Some(node);
       else
@@ -80,17 +95,33 @@ package xsdforms {
     }
 
     override def endSequence {
-
+      stack.pop
     }
 
     override def startChoice(e: Element, choice: Choice) {
+      val choice = MyChoice(e, MutableList())
+      addChild(choice);
+      stack.push(choice);
+    }
+    override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
 
     }
-    override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {}
-    override def endChoiceItem {}
-    override def endChoice {}
-    override def simpleType(e: Element, typ: SimpleType) {}
-    override def baseType(e: Element, typ: BaseType) {}
+
+    override def endChoiceItem {
+
+    }
+
+    override def endChoice {
+      stack.pop
+    }
+
+    override def simpleType(e: Element, typ: SimpleType) {
+
+    }
+
+    override def baseType(e: Element, typ: BaseType) {
+
+    }
   }
 
   /**
