@@ -145,6 +145,15 @@ package xsdforms {
 
   }
 
+  /**
+   * **************************************************************
+   *
+   *   TreeToHtmlConverter
+   *
+   *
+   * **************************************************************
+   */
+
   object TreeToHtmlConverter {
 
     def toHtml(node: Node): String = {
