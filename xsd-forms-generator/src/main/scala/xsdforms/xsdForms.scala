@@ -38,7 +38,7 @@ package xsdforms {
    */
 
   trait Visitor {
-    def startSequence(e: Element, sequence: Sequence)
+    def startSequence(e: Element)
     def endSequence
     def startChoice(e: Element, choice: Choice)
     def startChoiceItem(e: Element, p: ParticleOption, index: Int)
@@ -73,7 +73,7 @@ package xsdforms {
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
 
-    override def startSequence(e: Element, sequence: Sequence) {
+    override def startSequence(e: Element) {
       val seq = NodeSequence(e, MutableList())
       addChild(seq)
       stack.push(seq)
@@ -337,7 +337,7 @@ $(function() {
 </html>"""
 
     private case class SequenceEntry(
-      element: Element, sequence: Sequence, number: String,
+      element: Element, number: String,
       usesFieldset: Boolean) extends StackEntry
     private case class ChoiceEntry(
       element: Element, choice: Choice, number: String) extends StackEntry
@@ -346,14 +346,14 @@ $(function() {
 
     private def currentNumber = number + ""
 
-    def startSequence(e: Element, sequence: Sequence) {
+    def startSequence(e: Element) {
       path.push(e.name.get)
 
       val number = nextNumber
       val legend = getAnnotation(e, "legend")
       val usesFieldset = legend.isDefined
 
-      stack.push(SequenceEntry(e, sequence, number, usesFieldset))
+      stack.push(SequenceEntry(e, number, usesFieldset))
 
       val label = getAnnotation(e, "label").mkString
 
@@ -1274,7 +1274,7 @@ $(function() {
     }
 
     private def process(e: Element, x: Sequence) {
-      visitor.startSequence(e, x)
+      visitor.startSequence(e)
       x.group.particleOption3.foreach(y => process(e, toQName(y), y.value))
       visitor.endSequence
     }
