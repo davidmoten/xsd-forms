@@ -145,6 +145,14 @@ package xsdforms {
 
   }
 
+  object TreeToHtmlConverter {
+
+    def toHtml(node: Node): String = {
+      return ""
+    }
+
+  }
+
   /**
    * **************************************************************
    *
@@ -346,7 +354,7 @@ $(function() {
 
     private def currentNumber = number + ""
 
-    def startSequence(e: Element) {
+    override def startSequence(e: Element) {
       path.push(e.name.get)
 
       val number = nextNumber
@@ -370,7 +378,7 @@ $(function() {
         html.fieldset(legend = legend, classes = List("fieldset"), id = Some(idPrefix + "fieldset-" + number))
     }
 
-    def endSequence {
+    override def endSequence {
       stack.pop match {
         case e: SequenceEntry => {
           html.closeTag
@@ -388,7 +396,7 @@ $(function() {
     private def getChoiceItemName(number: String) = idPrefix + "item-input-" + number
     private def getChoiceItemId(number: String, index: Int) = getItemId(number) + choiceIndexDelimiter + index
 
-    def startChoice(e: Element, choice: Choice) {
+    override def startChoice(e: Element, choice: Choice) {
       path.push(e.name.get)
       val choiceInline = displayChoiceInline(choice)
 
@@ -482,7 +490,7 @@ $(function() {
 
     }
 
-    def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
+    override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
       val number =
         stack.head match {
           case ChoiceEntry(_, id) => id
@@ -493,7 +501,7 @@ $(function() {
       html.div(id = Some(idPrefix + "choice-content-" + number + choiceIndexDelimiter + index), classes = List("invisible"))
     }
 
-    def getChoiceLabel(e: Element, p: ParticleOption): String = {
+    private def getChoiceLabel(e: Element, p: ParticleOption): String = {
       val labels =
         p match {
           case x: Element => {
@@ -504,18 +512,18 @@ $(function() {
       labels.head
     }
 
-    def getLabel(e: Element, p: ParticleOption): String =
+    private def getLabel(e: Element, p: ParticleOption): String =
       p match {
         case x: Element => getLabel(x, None)
         case _ => getLabel(e, None)
       }
 
-    def endChoiceItem {
+    override def endChoiceItem {
       stack.pop
       html.closeTag
     }
 
-    def endChoice {
+    override def endChoice {
       path.pop
       stack.pop match {
         case e: ChoiceEntry =>
@@ -558,7 +566,7 @@ $(function() {
         classes = List("repeating-enclosing"))
     }
 
-    def addItemHtmlOpening(e: Element, number: String, typ: Option[SimpleType]) {
+    private def addItemHtmlOpening(e: Element, number: String, typ: Option[SimpleType]) {
       html
         .div(
           classes = List("item-enclosing") ++ getVisibility(e),
@@ -579,7 +587,7 @@ $(function() {
         .div(classes = List("item-input"))
     }
 
-    def simpleType(e: Element, typ: SimpleType) {
+    override def simpleType(e: Element, typ: SimpleType) {
       path.push(e.name.get)
       val number = nextNumber
 
@@ -603,7 +611,7 @@ $(function() {
       number + ""
     }
 
-    def baseType(e: Element, typ: BaseType) {
+    override def baseType(e: Element, typ: BaseType) {
       path.push(e.name.get)
       val number = nextNumber
       addItemHtmlOpening(e, number, None)
@@ -620,17 +628,17 @@ $(function() {
     implicit def toQN(qName: QName) =
       QN(qName.getNamespaceURI(), qName.getLocalPart())
 
-    def getItemId(number: String) = idPrefix + "item-" + number
+    private def getItemId(number: String) = idPrefix + "item-" + number
 
-    def getItemEnclosingId(number: String) =
+    private def getItemEnclosingId(number: String) =
       idPrefix + "item-enclosing-" + number
 
-    def getItemErrorId(number: String) =
+    private def getItemErrorId(number: String) =
       idPrefix + "item-error-" + number
 
-    def getPathId(number: String) = idPrefix + "item-path-" + number
+    private def getPathId(number: String) = idPrefix + "item-path-" + number
 
-    def simpleType(e: Element, r: Restriction, number: String) {
+    private def simpleType(e: Element, r: Restriction, number: String) {
       val qn = toQN(r.base.get)
 
       addInput(e, qn, r, number)
