@@ -5,7 +5,7 @@ package xsdforms {
   import javax.xml.namespace.QName
   import scalaxb._
 
-  case class BaseType(qName: QName)
+  private case class BaseType(qName: QName);
 
   object Util {
     def unexpected(s: String) = throw new RuntimeException(s)
@@ -50,14 +50,14 @@ package xsdforms {
 
   import scala.collection.mutable.MutableList
 
-  trait Node
-  trait NodeGroup extends Node {
+  private trait Node
+  private trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList();
   }
-  case class NodeSequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
-  case class NodeChoice(e: Element, override val children: MutableList[Node]) extends NodeGroup
-  case class NodeSimpleType(e: Element, typ: SimpleType) extends Node
-  case class NodeBaseType(e: Element, typ: BaseType) extends Node
+  private case class NodeSequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
+  private case class NodeChoice(e: Element, override val children: MutableList[Node]) extends NodeGroup
+  private case class NodeSimpleType(e: Element, typ: SimpleType) extends Node
+  private case class NodeBaseType(e: Element, typ: BaseType) extends Node
 
   /**
    * **************************************************************
