@@ -54,10 +54,10 @@ package xsdforms {
   private trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList();
   }
-  private case class MySequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
-  private case class MyChoice(e: Element, override val children: MutableList[Node]) extends NodeGroup
-  private case class MySimpleType(e: Element, typ: SimpleType) extends Node
-  private case class MyBaseType(e: Element, typ: BaseType) extends Node
+  private case class NodeSequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
+  private case class NodeChoice(e: Element, override val children: MutableList[Node]) extends NodeGroup
+  private case class NodeSimpleType(e: Element, typ: SimpleType) extends Node
+  private case class NodeBaseType(e: Element, typ: BaseType) extends Node
 
   /**
    * **************************************************************
@@ -74,9 +74,9 @@ package xsdforms {
     private val stack = new scala.collection.mutable.Stack[Node]
 
     override def startSequence(e: Element, sequence: Sequence) {
-      val seq = MySequence(e, MutableList())
-      addChild(seq);
-      stack.push(seq);
+      val seq = NodeSequence(e, MutableList())
+      addChild(seq)
+      stack.push(seq)
     }
 
     /**
@@ -99,17 +99,17 @@ package xsdforms {
     }
 
     override def startChoice(e: Element, choice: Choice) {
-      val choice = MyChoice(e, MutableList())
+      val choice = NodeChoice(e, MutableList())
       addChild(choice);
       stack.push(choice);
     }
 
     override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
-
+      // do nothing
     }
 
     override def endChoiceItem {
-
+      //do nothing
     }
 
     override def endChoice {
@@ -117,11 +117,13 @@ package xsdforms {
     }
 
     override def simpleType(e: Element, typ: SimpleType) {
-
+      val s = NodeSimpleType(e, typ)
+      addChild(s)
     }
 
     override def baseType(e: Element, typ: BaseType) {
-
+      val s = NodeBaseType(e, typ)
+      addChild(s)
     }
   }
 
