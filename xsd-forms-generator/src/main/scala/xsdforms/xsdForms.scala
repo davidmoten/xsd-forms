@@ -69,7 +69,7 @@ package xsdforms {
    *
    * **************************************************************
    */
-  
+
   class TreeCreatingVisitor extends Visitor {
 
     import Util._
@@ -147,7 +147,7 @@ package xsdforms {
     }
 
   }
-  
+
   /**
    * **************************************************************
    *
@@ -157,14 +157,23 @@ package xsdforms {
    * **************************************************************
    */
 
-  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String]) {
+  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree:Node) {
 
-    def toHtml(node: Node): String = {
-      doNode(node);
-      html.toString
-    }
+    import XsdUtil._
+    import Util._
+    private val script = new StringBuilder
 
-    private def doNode(node: Node)  {
+    private var number = 0
+    val margin = "  "
+
+    private sealed trait Entry
+    private sealed trait StackEntry
+    private val html = new Html
+
+    //process the abstract syntax tree
+    doNode(tree)
+
+    private def doNode(node: Node) {
       node match {
         case n: NodeSimpleType => doNode(n)
         case n: NodeBaseType => doNode(n)
@@ -190,29 +199,28 @@ package xsdforms {
         .closeTag
     }
 
-    private def doNode(node: NodeBaseType)  {
+    private def doNode(node: NodeBaseType) {
       val e = node.element
       val typ = node.typ
-    	val number = elementNumber(e)
-    	addItemHtmlOpening(e, number, None)
-    	simpleType(e, new MyRestriction(typ.qName), number + "")
-    	html
-    	.closeTag
-    	.closeTag
-    	.closeTag
+      val number = elementNumber(e)
+      addItemHtmlOpening(e, number, None)
+      simpleType(e, new MyRestriction(typ.qName), number + "")
+      html
+        .closeTag
+        .closeTag
+        .closeTag
     }
-    
-    private def doNodes(nodes:MutableList[Node]) {
+
+    private def doNodes(nodes: MutableList[Node]) {
       nodes.foreach(doNode(_))
     }
 
-    private def doNode(node: NodeSequence)  {
+    private def doNode(node: NodeSequence) {
       val e = node.element
 
       val number = elementNumber(e)
       val legend = getAnnotation(e, "legend")
       val usesFieldset = legend.isDefined
-
 
       val label = getAnnotation(e, "label").mkString
 
@@ -227,18 +235,18 @@ package xsdforms {
           classes = List("sequence-content"))
       if (usesFieldset)
         html.fieldset(legend = legend, classes = List("fieldset"), id = Some(idPrefix + "fieldset-" + number))
-   
-        doNodes(node.children)
-        
-          html.closeTag
-          if (usesFieldset)
-            html.closeTag
-          html
-            .closeTag
-            .closeTag
+
+      doNodes(node.children)
+
+      html.closeTag
+      if (usesFieldset)
+        html.closeTag
+      html
+        .closeTag
+        .closeTag
     }
-    
-    private def doNode(node: NodeChoice)  {
+
+    private def doNode(node: NodeChoice) {
       val choice = node.choice
       val e = node.element
       val choiceInline = displayChoiceInline(choice)
@@ -277,35 +285,20 @@ package xsdforms {
         html.closeTag
         html.closeTag
       })
-      
-      node.children.zipWithIndex.foreach{ case (n,index)=>{
-       html.div(id = Some(idPrefix + "choice-content-" + number + choiceIndexDelimiter + (index+1)), classes = List("invisible"))
-       doNode(n)
-       html.closeTag
-      }}
-      
+
+      node.children.zipWithIndex.foreach {
+        case (n, index) => {
+          html.div(id = Some(idPrefix + "choice-content-" + number + choiceIndexDelimiter + (index + 1)), classes = List("invisible"))
+          doNode(n)
+          html.closeTag
+        }
+      }
+
       html.closeTag.closeTag
 
     }
-    
-     
-    
-   
 
-    
-    import XsdUtil._
-    import Util._
-    private val script = new StringBuilder
-
-    private var number = 0
-    val margin = "  "
-
-    private sealed trait Entry
-    private sealed trait StackEntry
-    private val stack = new scala.collection.mutable.Stack[StackEntry]
-    private val html = new Html
-
-    override def toString = html.toString
+    override def toString = text
 
     private def addScript(s: String) {
       script.append(s)
@@ -480,12 +473,9 @@ $(function() {
 
     private def currentNumber = number + ""
 
-    
-
     private def getChoiceItemName(number: String) = idPrefix + "item-input-" + number
     private def getChoiceItemId(number: String, index: Int) = getItemId(number) + choiceIndexDelimiter + index
 
-    
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
 
@@ -538,7 +528,6 @@ $(function() {
 
     }
 
-    
     private def getChoiceLabel(e: Element, p: ParticleOption): String = {
       val labels =
         p match {
@@ -555,8 +544,6 @@ $(function() {
         case x: Element => getLabel(x, None)
         case _ => getLabel(e, None)
       }
-
-   
 
     private class MyRestriction(qName: QName)
       extends Restriction(None, SimpleRestrictionModelSequence(), None, Some(qName), Map())
@@ -626,8 +613,6 @@ $(function() {
       }
     }
 
-
-
     private def getTextType(e: Element) =
       getAnnotation(e, "text")
 
@@ -635,7 +620,6 @@ $(function() {
       number += 1
       number + ""
     }
-
 
     case class QN(namespace: String, localPart: String)
 
@@ -1153,7 +1137,6 @@ $(function() {
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
 
-    
   }
 
   /**
