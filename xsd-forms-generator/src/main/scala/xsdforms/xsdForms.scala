@@ -154,34 +154,35 @@ package xsdforms {
       s.append(createXmlExtractorScriptlet(node));
       return s.toString
     }
-    
-    private def createXmlExtractorScriptlet(node:Node): String = {
+
+    private def createXmlExtractorScriptlet(node: Node): String = {
       val s = new StringBuilder
       node match {
-        case n:NodeSimpleType => createXmlExtractorScriptlet(n)
-        case n:NodeBaseType => createXmlExtractorScriptlet(n)
-        case n:NodeSequence => createXmlExtractorScriptlet(n)
-        case n:NodeChoice => createXmlExtractorScriptlet(n)
+        case n: NodeSimpleType => createXmlExtractorScriptlet(n)
+        case n: NodeBaseType => createXmlExtractorScriptlet(n)
+        case n: NodeSequence => createXmlExtractorScriptlet(n)
+        case n: NodeChoice => createXmlExtractorScriptlet(n)
         case _ => Util.unexpected
       }
       s.toString
     }
-    
-    private def createXmlExtactorScriptlet(node:NodeSimpleType) = {
+
+    private def createXmlExtactorScriptlet(node: NodeSimpleType) = {
       val s = new StringBuilder
       s.toString
     }
 
-     private def createXmlExtactorScriptlet(node:NodeBaseType) = {
+    private def createXmlExtactorScriptlet(node: NodeBaseType) = {
+      val s = new StringBuilder
+      s.toString
+    }
+
+    private def createXmlExtactorScriptlet(node: NodeSequence) = {
       val s = new StringBuilder
       s.toString
     }
     
-     private def createXmlExtactorScriptlet(node:NodeSequence) = {
-      val s = new StringBuilder
-      s.toString
-    }
-       private def createXmlExtactorScriptlet(node:NodeChoice) = {
+    private def createXmlExtactorScriptlet(node: NodeChoice) = {
       val s = new StringBuilder
       s.toString
     }
