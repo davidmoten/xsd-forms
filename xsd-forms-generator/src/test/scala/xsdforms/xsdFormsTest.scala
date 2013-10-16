@@ -594,8 +594,12 @@ package xsdforms {
       val visitor = new TreeCreatingVisitor()
 
       new Traversor(schema, rootElement, visitor).process
-      println("tree:\n"+ visitor)
+      println("tree:\n" + visitor)
+      
+      val text = new TreeToHtmlConverter(ns,idPrefix,extraScript, visitor.rootNode).text
+      println(text)
       println("generated")
     }
   }
+  
 }

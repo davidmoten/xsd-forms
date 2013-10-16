@@ -5,7 +5,7 @@ package xsdforms {
   import javax.xml.namespace.QName
   import scalaxb._
 
-  private case class BaseType(qName: QName);
+  
 
   object Util {
     def unexpected(s: String) = throw new RuntimeException(s)
@@ -50,16 +50,17 @@ package xsdforms {
 
   import scala.collection.mutable.MutableList
 
-  private trait Node {
+   trait Node {
     val element: Element
   }
-  private trait NodeGroup extends Node {
+  trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList()
   }
-  private case class NodeSequence(element: Element, override val children: MutableList[Node]) extends NodeGroup
-  private case class NodeChoice(element: Element, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
-  private case class NodeSimpleType(element: Element, typ: SimpleType) extends Node
-  private case class NodeBaseType(element: Element, typ: BaseType) extends Node
+  case class BaseType(qName: QName);
+  case class NodeSequence(element: Element, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeChoice(element: Element, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeSimpleType(element: Element, typ: SimpleType) extends Node
+  case class NodeBaseType(element: Element, typ: BaseType) extends Node
 
   /**
    * **************************************************************
@@ -146,8 +147,14 @@ package xsdforms {
         toString(tree.get, "")
     }
 
+    def rootNode:Node = tree.get;
+    
   }
 
+  object TreeToHtmlConverter {
+    
+  }
+  
   /**
    * **************************************************************
    *
@@ -170,6 +177,9 @@ package xsdforms {
     private sealed trait StackEntry
     private val html = new Html
 
+    import scala.collection.mutable.HashMap
+    private val elementNumbers = new HashMap[Element, String]()
+    
     //process the abstract syntax tree
     doNode(tree)
 
@@ -597,10 +607,6 @@ $(function() {
           classes = List("item-label"), content = Some(getLabel(e, typ))).closeTag
         .div(classes = List("item-input"))
     }
-
-    import scala.collection.mutable.HashMap
-
-    private val elementNumbers = new HashMap[Element, String]()
 
     private def elementNumber(e: Element) = {
       val n = elementNumbers.get(e);
