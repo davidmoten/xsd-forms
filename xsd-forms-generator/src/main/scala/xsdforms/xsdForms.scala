@@ -50,14 +50,16 @@ package xsdforms {
 
   import scala.collection.mutable.MutableList
 
-  private trait Node
-  private trait NodeGroup extends Node {
-    val children: MutableList[Node] = MutableList();
+  private trait Node {
+    val element: Element
   }
-  private case class NodeSequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
-  private case class NodeChoice(e: Element, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
-  private case class NodeSimpleType(e: Element, typ: SimpleType) extends Node
-  private case class NodeBaseType(e: Element, typ: BaseType) extends Node
+  private trait NodeGroup extends Node {
+    val children: MutableList[Node] = MutableList()
+  }
+  private case class NodeSequence(element: Element, override val children: MutableList[Node]) extends NodeGroup
+  private case class NodeChoice(element: Element, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
+  private case class NodeSimpleType(element: Element, typ: SimpleType) extends Node
+  private case class NodeBaseType(element: Element, typ: BaseType) extends Node
 
   /**
    * **************************************************************
@@ -148,9 +150,41 @@ package xsdforms {
   object TreeToHtmlConverter {
 
     def toHtml(node: Node): String = {
-      return ""
+      val s = new StringBuilder
+      s.append(createXmlExtractorScriptlet(node));
+      return s.toString
+    }
+    
+    private def createXmlExtractorScriptlet(node:Node): String = {
+      val s = new StringBuilder
+      node match {
+        case n:NodeSimpleType => createXmlExtractorScriptlet(n)
+        case n:NodeBaseType => createXmlExtractorScriptlet(n)
+        case n:NodeSequence => createXmlExtractorScriptlet(n)
+        case n:NodeChoice => createXmlExtractorScriptlet(n)
+        case _ => Util.unexpected
+      }
+      s.toString
+    }
+    
+    private def createXmlExtactorScriptlet(node:NodeSimpleType) = {
+      val s = new StringBuilder
+      s.toString
     }
 
+     private def createXmlExtactorScriptlet(node:NodeBaseType) = {
+      val s = new StringBuilder
+      s.toString
+    }
+    
+     private def createXmlExtactorScriptlet(node:NodeSequence) = {
+      val s = new StringBuilder
+      s.toString
+    }
+       private def createXmlExtactorScriptlet(node:NodeChoice) = {
+      val s = new StringBuilder
+      s.toString
+    }
   }
 
   /**
