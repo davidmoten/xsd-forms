@@ -175,9 +175,31 @@ package xsdforms {
     }
 
     private def doNode(node: NodeSimpleType) {
+      val e = node.element
+      val typ = node.typ
+      val number = elementNumber(e)
+
+      addItemHtmlOpening(e, number, Some(typ))
+      typ.simpleDerivationOption3.value match {
+        case x: Restriction => simpleType(e, x, number)
+        case _ => Util.unexpected
+      }
+      html
+        .closeTag
+        .closeTag
+        .closeTag
     }
 
     private def doNode(node: NodeBaseType)  {
+      val e = node.element
+      val typ = node.typ
+    	val number = elementNumber(e)
+    	addItemHtmlOpening(e, number, None)
+    	simpleType(e, new MyRestriction(typ.qName), number + "")
+    	html
+    	.closeTag
+    	.closeTag
+    	.closeTag
     }
     
     private def doNodes(nodes:MutableList[Node]) {
@@ -217,7 +239,59 @@ package xsdforms {
     }
     
     private def doNode(node: NodeChoice)  {
+      val choice = node.choice
+      val e = node.element
+      val choiceInline = displayChoiceInline(choice)
+
+      val number = elementNumber(e)
+
+      html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
+      repeatingTitle(e, number, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
+      repeatingEnclosing(e, number)
+      addMaxOccurs(e, number)
+      val particles = choice.group.particleOption3.map(_.value)
+      addChoiceHideOnStart(particles, number)
+      addChoiceShowHideScriptOnSelection(particles, number)
+
+      html.div(
+        classes = List("choice-label"),
+        content = Some(getAnnotation(choice.group, "label").mkString))
+        .closeTag
+
+      val forEachParticle = particles.zipWithIndex.foreach _
+
+      forEachParticle(x => {
+        val particle = x._1
+        val index = x._2 + 1
+        html.div(
+          id = Some(idPrefix + "div-choice-item-" + number + choiceIndexDelimiter + index),
+          classes = List("div-choice-item"))
+        html.input(
+          id = Some(getChoiceItemId(number, index)),
+          name = getChoiceItemName(number),
+          classes = List("choice-item"),
+          typ = Some("radio"),
+          value = Some("number"),
+          content = Some(getChoiceLabel(e, particle)),
+          number = Some(number))
+        html.closeTag
+        html.closeTag
+      })
+      
+      node.children.zipWithIndex.foreach{ case (n,index)=>{
+       html.div(id = Some(idPrefix + "choice-content-" + number + choiceIndexDelimiter + (index+1)), classes = List("invisible"))
+       doNode(n)
+       html.closeTag
+      }}
+      
+      html.closeTag.closeTag
+
     }
+    
+     
+    
+   
+
     
     import XsdUtil._
     import Util._
@@ -229,7 +303,6 @@ package xsdforms {
     private sealed trait Entry
     private sealed trait StackEntry
     private val stack = new scala.collection.mutable.Stack[StackEntry]
-    private val path = new scala.collection.mutable.Stack[String]
     private val html = new Html
 
     override def toString = html.toString
@@ -412,48 +485,7 @@ $(function() {
     private def getChoiceItemName(number: String) = idPrefix + "item-input-" + number
     private def getChoiceItemId(number: String, index: Int) = getItemId(number) + choiceIndexDelimiter + index
 
-    override def startChoice(e: Element, choice: Choice) {
-      path.push(e.name.get)
-      val choiceInline = displayChoiceInline(choice)
-
-      val number = elementNumber(e)
-      stack.push(ChoiceEntry(e, number))
-
-      html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
-      repeatingTitle(e, number, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
-      repeatingEnclosing(e, number)
-      addMaxOccurs(e, number)
-      val particles = choice.group.particleOption3.map(_.value)
-      addChoiceHideOnStart(particles, number)
-      addChoiceShowHideScriptOnSelection(particles, number)
-
-      html.div(
-        classes = List("choice-label"),
-        content = Some(getAnnotation(choice.group, "label").mkString))
-        .closeTag
-
-      val forEachParticle = particles.zipWithIndex.foreach _
-
-      forEachParticle(x => {
-        val particle = x._1
-        val index = x._2 + 1
-        html.div(
-          id = Some(idPrefix + "div-choice-item-" + number + choiceIndexDelimiter + index),
-          classes = List("div-choice-item"))
-        html.input(
-          id = Some(getChoiceItemId(number, index)),
-          name = getChoiceItemName(number),
-          classes = List("choice-item"),
-          typ = Some("radio"),
-          value = Some("number"),
-          content = Some(getChoiceLabel(e, particle)),
-          number = Some(number))
-        html.closeTag
-        html.closeTag
-      })
-
-    }
-
+    
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
 
@@ -506,17 +538,7 @@ $(function() {
 
     }
 
-    override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
-      val number =
-        stack.head match {
-          case ChoiceEntry(_, id) => id
-          case _ => unexpected
-        }
-      stack.push(ChoiceItemEntry(e, p, number))
-
-      html.div(id = Some(idPrefix + "choice-content-" + number + choiceIndexDelimiter + index), classes = List("invisible"))
-    }
-
+    
     private def getChoiceLabel(e: Element, p: ParticleOption): String = {
       val labels =
         p match {
@@ -534,21 +556,7 @@ $(function() {
         case _ => getLabel(e, None)
       }
 
-    override def endChoiceItem {
-      stack.pop
-      html.closeTag
-    }
-
-    override def endChoice {
-      path.pop
-      stack.pop match {
-        case e: ChoiceEntry =>
-          html
-            .closeTag
-            .closeTag
-        case _ => unexpected
-      }
-    }
+   
 
     private class MyRestriction(qName: QName)
       extends Restriction(None, SimpleRestrictionModelSequence(), None, Some(qName), Map())
@@ -618,21 +626,7 @@ $(function() {
       }
     }
 
-    override def simpleType(e: Element, typ: SimpleType) {
-      path.push(e.name.get)
-      val number = elementNumber(e)
 
-      addItemHtmlOpening(e, number, Some(typ))
-      typ.simpleDerivationOption3.value match {
-        case x: Restriction => simpleType(e, x, number)
-        case _ => unexpected
-      }
-      html
-        .closeTag
-        .closeTag
-        .closeTag
-      path.pop
-    }
 
     private def getTextType(e: Element) =
       getAnnotation(e, "text")
@@ -642,17 +636,6 @@ $(function() {
       number + ""
     }
 
-    override def baseType(e: Element, typ: BaseType) {
-      path.push(e.name.get)
-      val number = elementNumber(e)
-      addItemHtmlOpening(e, number, None)
-      simpleType(e, new MyRestriction(typ.qName), number + "")
-      html
-        .closeTag
-        .closeTag
-        .closeTag
-      path.pop
-    }
 
     case class QN(namespace: String, localPart: String)
 
@@ -679,8 +662,6 @@ $(function() {
       addDescription(e)
 
       addError(e, getItemErrorId(number))
-
-      addPath(number)
 
       addHelp(e)
 
@@ -881,15 +862,6 @@ $(function() {
         content = Some(getAnnotation(e, "validation").getOrElse("Invalid")))
         .closeTag
 
-    }
-
-    private def addPath(number: String) {
-      html.div(
-        classes = List("item-path"),
-        id = Some(getPathId(number)),
-        enabledAttr = Some("true"),
-        content = Some(path.reverse.mkString("|")))
-        .closeTag
     }
 
     private def addHelp(e: Element) {
