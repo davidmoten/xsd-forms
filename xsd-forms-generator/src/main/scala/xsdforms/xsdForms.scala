@@ -357,7 +357,7 @@ $(function() {
     override def startSequence(e: Element) {
       path.push(e.name.get)
 
-      val number = nextNumber
+      val number = elementNumber(e)
       val legend = getAnnotation(e, "legend")
       val usesFieldset = legend.isDefined
 
@@ -400,7 +400,7 @@ $(function() {
       path.push(e.name.get)
       val choiceInline = displayChoiceInline(choice)
 
-      val number = nextNumber
+      val number = elementNumber(e)
       stack.push(ChoiceEntry(e, number))
 
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
@@ -587,9 +587,24 @@ $(function() {
         .div(classes = List("item-input"))
     }
 
+    import scala.collection.mutable.HashMap
+
+    private val elementNumbers = new HashMap[Element, String]()
+
+    private def elementNumber(e: Element) = {
+      val n = elementNumbers.get(e);
+      if (n.isDefined)
+        n.get
+      else {
+        val newNumber = nextNumber
+        elementNumbers(e) = newNumber
+        newNumber
+      }
+    }
+
     override def simpleType(e: Element, typ: SimpleType) {
       path.push(e.name.get)
-      val number = nextNumber
+      val number = elementNumber(e)
 
       addItemHtmlOpening(e, number, Some(typ))
       typ.simpleDerivationOption3.value match {
@@ -613,7 +628,7 @@ $(function() {
 
     override def baseType(e: Element, typ: BaseType) {
       path.push(e.name.get)
-      val number = nextNumber
+      val number = elementNumber(e)
       addItemHtmlOpening(e, number, None)
       simpleType(e, new MyRestriction(typ.qName), number + "")
       html
