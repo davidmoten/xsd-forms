@@ -338,8 +338,8 @@ package xsdforms {
     private def xmlStart(node: Node) =
       "'<" + node.element.name.getOrElse("?") + namespace(node) + ">'"
     private def xml(node: Node, value: String) = {
-      xmlStart(node) + " + "
-      value +
+      xmlStart(node) + " + " +
+        value +
         " + \"</" + node.element.name.getOrElse("?") + ">\""
     }
 
