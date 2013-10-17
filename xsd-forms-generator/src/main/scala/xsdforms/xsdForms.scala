@@ -327,7 +327,7 @@ package xsdforms {
 
     }
 
-    private def refById(id: String) = "$(#\"" + id + "\")"
+    private def refById(id: String) = "$(\"#" + id + "\")"
     private def valById(id: String) = refById(id) + ".val()"
     private def xml(node: Node, value: String) =
       "\"<" + node.element.name.getOrElse("?") + ">\" + " + value + " + \"</" + node.element.name.getOrElse("?") + ">\""
@@ -356,10 +356,13 @@ package xsdforms {
             val s = new StringBuilder
       s.append("""
  |    var xml = ""; 
- |    //now add sequence children""")
-      node.children.foreach { n =>
+ |    //now optionally add selected child if any
+ |    var checked = $(':input[name=""" + getChoiceItemName(node) + """' + suffix + ']:checked').attr("id");
+ """)
+ 
+      node.children.zipWithIndex.foreach { case (n,index) =>
         s.append("""
- |     if (true) xml += """ + xmlFunctionName(n) + "() + \"\\n\"");
+ |    if (checked == """" + getChoiceItemId(node, index+1) +  """") xml += """ + xmlFunctionName(n) + "() + \"\\n\"");
       }
       addXmlExtractScriptlet(node, s.toString());
     }
@@ -549,8 +552,10 @@ $(function() {
 </html>"""
 
 
-    private def getChoiceItemName(number: String) = idPrefix + "item-input-" + number
-    private def getChoiceItemId(number: String, index: Int) = getItemId(number) + choiceIndexDelimiter + index
+    private def getChoiceItemName(node:Node):String = getChoiceItemName(elementNumber(node.element)) 
+    private def getChoiceItemName(number: String):String = idPrefix + "item-input-" + number
+    private def getChoiceItemId(node:Node, index: Int):String = getChoiceItemId(elementNumber(node.element),index)
+    private def getChoiceItemId(number: String, index: Int):String = getItemId(number) + choiceIndexDelimiter + index
 
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
