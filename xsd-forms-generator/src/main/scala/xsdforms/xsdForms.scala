@@ -353,7 +353,15 @@ package xsdforms {
     }
 
     private def addXmlExtractScriplet(node: NodeChoice) {
-      addXmlExtractScriptlet(node, "|    //TODO choice implementation");
+            val s = new StringBuilder
+      s.append("""
+ |    var xml = ""; 
+ |    //now add sequence children""")
+      node.children.foreach { n =>
+        s.append("""
+ |     if (true) xml += """ + xmlFunctionName(n) + "() + \"\\n\"");
+      }
+      addXmlExtractScriptlet(node, s.toString());
     }
 
     private def xmlFunctionName(node: Node) = {
@@ -540,12 +548,6 @@ $(function() {
 </body>
 </html>"""
 
-    private case class ChoiceEntry(
-      element: Element, number: String) extends StackEntry
-    private case class ChoiceItemEntry(
-      element: Element, p: ParticleOption, number: String) extends StackEntry
-
-    private def currentNumber = number + ""
 
     private def getChoiceItemName(number: String) = idPrefix + "item-input-" + number
     private def getChoiceItemId(number: String, index: Int) = getItemId(number) + choiceIndexDelimiter + index
