@@ -5,7 +5,14 @@ package xsdforms {
   import javax.xml.namespace.QName
   import scalaxb._
 
-  
+  /**
+   * **************************************************************
+   *
+   *   Util
+   *
+   *
+   * **************************************************************
+   */
 
   object Util {
     def unexpected(s: String) = throw new RuntimeException(s)
@@ -18,15 +25,6 @@ package xsdforms {
     val xs = "http://www.w3.org/2001/XMLSchema"
     val appInfoSchema = "http://moten.david.org/xsd-forms"
   }
-
-  case class Sequence(group: ExplicitGroupable)
-  case class Choice(group: ExplicitGroupable)
-
-  //every element is either a sequence, choice or simpleType
-  // simpleTypes may be based on string, decimal, boolean, date, datetime
-  // and may be restricted to a regex pattern, have min, max ranges
-  // or be an enumeration. all elements may have  minOccurs and maxOccurs
-  //attributes.
 
   /**
    * **************************************************************
@@ -48,15 +46,32 @@ package xsdforms {
     def baseType(e: Element, typ: BaseType)
   }
 
+  //every element is either a sequence, choice or simpleType
+  // simpleTypes may be based on string, decimal, boolean, date, datetime
+  // and may be restricted to a regex pattern, have min, max ranges
+  // or be an enumeration. all elements may have  minOccurs and maxOccurs
+  //attributes.
+  case class Sequence(group: ExplicitGroupable)
+  case class Choice(group: ExplicitGroupable)
+  case class BaseType(qName: QName);
+
+  /**
+   * **************************************************************
+   *
+   *   Tree
+   *
+   *
+   * **************************************************************
+   */
+
   import scala.collection.mutable.MutableList
 
-   trait Node {
+  trait Node {
     val element: Element
   }
   trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList()
   }
-  case class BaseType(qName: QName);
   case class NodeSequence(element: Element, override val children: MutableList[Node]) extends NodeGroup
   case class NodeChoice(element: Element, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
   case class NodeSimpleType(element: Element, typ: SimpleType) extends Node
@@ -147,11 +162,10 @@ package xsdforms {
         toString(tree.get, "")
     }
 
-    def rootNode:Node = tree.get;
-    
+    def rootNode: Node = tree.get;
+
   }
 
-  
   /**
    * **************************************************************
    *
@@ -161,7 +175,7 @@ package xsdforms {
    * **************************************************************
    */
 
-  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree:Node) {
+  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
 
     import XsdUtil._
     import Util._
@@ -176,7 +190,7 @@ package xsdforms {
 
     import scala.collection.mutable.HashMap
     private val elementNumbers = new HashMap[Element, String]()
-    
+
     //process the abstract syntax tree
     doNode(tree)
 
@@ -1141,7 +1155,6 @@ $(function() {
     }
 
   }
-
 
   /**
    * **************************************************************
