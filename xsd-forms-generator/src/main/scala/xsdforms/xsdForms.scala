@@ -1110,7 +1110,10 @@ $(function() {
     private def stripMargin(s: String) =
       s.stripMargin.replaceAll("\n", "\n" + margin)
 
-    private def isMultiple(e: Element) =
+    private def isMultiple(node:Node):Boolean = 
+      isMultiple(node.element)
+    
+    private def isMultiple(e: Element):Boolean =
       (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
     private def addMaxOccurs(e: Element, number: String) {
