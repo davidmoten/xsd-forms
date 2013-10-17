@@ -261,6 +261,8 @@ package xsdforms {
       if (usesFieldset)
         html.fieldset(legend = legend, classes = List("fieldset"), id = Some(idPrefix + "fieldset-" + number))
 
+      addXmlExtractScriplet(node)
+        
       doNodes(node.children)
 
       html.closeTag
@@ -270,7 +272,7 @@ package xsdforms {
         .closeTag
         .closeTag
 
-      addXmlExtractScriplet(node)
+      
     }
 
     private def doNode(node: NodeChoice) {
