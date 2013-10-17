@@ -329,7 +329,7 @@ package xsdforms {
     }
 
     private def refById(id: String) = "$(\"#" + id + "\")"
-    private def valById(id: String) = refById(id) + ".val()"
+    private def valById(id: String) = refById(id) + ".val().encodeHTML()"
     private def xml(node: Node, value: String) =
       "\"<" + node.element.name.getOrElse("?") + ">\" + " + value + " + \"</" + node.element.name.getOrElse("?") + ">\""
 
@@ -414,6 +414,16 @@ package xsdforms {
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript">
+
+if (!String.prototype.encodeHTML) {
+  String.prototype.encodeHTML = function () {
+    return this.replace(/&/g, '&amp;')
+               .replace(/</g, '&lt;')
+               .replace(/>/g, '&gt;')
+               .replace(/"/g, '&quot;');
+  };
+}
+
 function openTag(name) {
 	return "<" + name + ">";
 }
