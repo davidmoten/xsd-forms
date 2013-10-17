@@ -27,7 +27,7 @@ package xsdforms {
 
       //println(schema.toString.replaceAll("\\(", "(\n"))
 
-      new Traversor(schema, rootElement, visitor).process
+      new SchemaTraversor(schema, rootElement, visitor).traverse
       //println(visitor.text)
       outputFile.getParentFile().mkdirs
       val fos = new java.io.FileOutputStream(outputFile);
@@ -593,7 +593,7 @@ package xsdforms {
       val ns = schema.targetNamespace.get.toString
       val visitor = new TreeCreatingVisitor()
 
-      new Traversor(schema, rootElement, visitor).process
+      new SchemaTraversor(schema, rootElement, visitor).traverse
       println("tree:\n" + visitor)
       
       val text = new TreeToHtmlConverter(ns,idPrefix,extraScript, visitor.rootNode).text

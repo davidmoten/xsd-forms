@@ -151,9 +151,6 @@ package xsdforms {
     
   }
 
-  object TreeToHtmlConverter {
-    
-  }
   
   /**
    * **************************************************************
@@ -2168,7 +2165,7 @@ $(function() {
    * **************************************************************
    */
 
-  class Traversor(s: Schema, rootElement: String, visitor: Visitor) {
+  class SchemaTraversor(s: Schema, rootElement: String, visitor: Visitor) {
     import Util._
     import XsdUtil._
 
@@ -2219,7 +2216,7 @@ $(function() {
     /**
      * Visits the element definition tree.
      */
-    def process {
+    def traverse {
 
       val element = topLevelElements.find(
         _.name match {
