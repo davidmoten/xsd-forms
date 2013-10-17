@@ -218,6 +218,8 @@ package xsdforms {
         .closeTag
         .closeTag
         .closeTag
+
+      addXmlExtractScriplet(node)
     }
 
     private def doNode(node: NodeBaseType) {
@@ -230,6 +232,8 @@ package xsdforms {
         .closeTag
         .closeTag
         .closeTag
+
+      addXmlExtractScriplet(node)
     }
 
     private def doNodes(nodes: MutableList[Node]) {
@@ -265,6 +269,8 @@ package xsdforms {
       html
         .closeTag
         .closeTag
+
+      addXmlExtractScriplet(node)
     }
 
     private def doNode(node: NodeChoice) {
@@ -317,6 +323,53 @@ package xsdforms {
 
       html.closeTag.closeTag
 
+      addXmlExtractScriplet(node)
+
+    }
+
+    private def refById(id: String) = "$(#\"" + id + "\")"
+    private def valById(id: String) = refById(id) + ".val()"
+    private def xml(node: Node, value: String) =
+      "\"<" + node.element.name.getOrElse("?") + ">\" + " + value + " + \"</" + node.element.name.getOrElse("?") + ">\""
+
+    private def addXmlExtractScriplet(node: NodeSimpleType) {
+      addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node))));
+    }
+
+    private def addXmlExtractScriplet(node: NodeBaseType) {
+      addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node))));
+    }
+
+    private def addXmlExtractScriplet(node: NodeSequence) {
+      val s = new StringBuilder
+      s.append("""
+ |    var xml = ""; 
+ |    //now add sequence children""")
+      node.children.foreach { n =>
+        s.append("""
+ |    xml += """ + xmlFunctionName(n) + "() + \"\\n\"");
+      }
+      addXmlExtractScriptlet(node, s.toString());
+    }
+
+    private def addXmlExtractScriplet(node: NodeChoice) {
+      addXmlExtractScriptlet(node, "|    //TODO choice implementation");
+    }
+
+    private def xmlFunctionName(node: Node) = {
+      val number = elementNumber(node.element)
+      "getXml" + number
+    }
+
+    private def addXmlExtractScriptlet(node: Node, functionBody: String) {
+      val functionName = xmlFunctionName(node)
+      addScriptWithMargin(
+        """
+|//extract xml from element <""" + node.element.name.getOrElse("?") + """>
+|function """ + functionName + """() {
+""" + functionBody + """
+|}
+| """)
     }
 
     override def toString = text
@@ -643,6 +696,7 @@ $(function() {
     implicit def toQN(qName: QName) =
       QN(qName.getNamespaceURI(), qName.getLocalPart())
 
+    private def getItemId(node: Node): String = getItemId(elementNumber(node.element))
     private def getItemId(number: String) = idPrefix + "item-" + number
 
     private def getItemEnclosingId(number: String) =
