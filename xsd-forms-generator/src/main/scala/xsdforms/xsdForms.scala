@@ -330,8 +330,18 @@ package xsdforms {
 
     private def refById(id: String) = "$(\"#" + id + "\")"
     private def valById(id: String) = refById(id) + ".val().encodeHTML()"
-    private def xml(node: Node, value: String) =
-      "\"<" + node.element.name.getOrElse("?") + ">\" + " + value + " + \"</" + node.element.name.getOrElse("?") + ">\""
+    private def namespace(node: Node) =
+      if (elementNumber(node.element).equals("1"))
+        " xmlns=\"" + targetNamespace + "\""
+      else
+        ""
+    private def xmlStart(node: Node) =
+      "'<" + node.element.name.getOrElse("?") + namespace(node) + ">'"
+    private def xml(node: Node, value: String) = {
+      xmlStart(node) + " + "
+      value +
+        " + \"</" + node.element.name.getOrElse("?") + ">\""
+    }
 
     private def addXmlExtractScriplet(node: NodeSimpleType) {
       addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node))));
@@ -344,21 +354,22 @@ package xsdforms {
     private def addXmlExtractScriplet(node: NodeSequence) {
       val s = new StringBuilder
       s.append("""
- |    var xml = "<""" + node.element.name.get + """>"; 
+ |    var xml = """ + xmlStart(node) + """; 
  |    //now add sequence children""")
       node.children.foreach { n =>
         s.append("""
  |    xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
       }
       s.append("""
- |    xml+="</""" + node.element.name.get + """>";""")
+ |    xml+="</""" + node.element.name.get + """>";
+ |    return xml;""")
       addXmlExtractScriptlet(node, s.toString());
     }
 
     private def addXmlExtractScriplet(node: NodeChoice) {
       val s = new StringBuilder
       s.append("""
- |    var xml = "<""" + node.element.name.get + """>"; 
+ |    var xml = """ + xmlStart(node) + """; 
  |    //now optionally add selected child if any
  |    var checked = $(':input[name=""" + getChoiceItemName(node) + """' + suffix + ']:checked').attr("id");
  """)
@@ -369,7 +380,8 @@ package xsdforms {
  |    if (checked == """" + getChoiceItemId(node, index + 1) + """") xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
       }
       s.append("""
- |    xml+="</""" + node.element.name.get + """>";""")
+ |    xml+="</""" + node.element.name.get + """>";
+ |    return xml;""")
       addXmlExtractScriptlet(node, s.toString());
     }
 
@@ -490,7 +502,6 @@ $(function() {
   }
 
   $('#pre-submit').click( function () {
-    var s = "";
     var previousItems = null;
     $('*[number]').each( function(index) {
       var thisId = this.id
@@ -507,36 +518,7 @@ $(function() {
     }
     else 
       $('#validation-errors').hide();
-    $('div[enabled="true"]').each( function(index) { 
-      var inputId = this.id.replace("path-","");
-      var value = $('#'+ inputId).val()
-     
-      var items = $(this).text().split('|');
-      var startAt = getStartAt(previousItems, items);
-      
-      s = closePreviousItems(previousItems, startAt,s);
-      
-      //handle closing multiple repeated elements see https://github.com/davidmoten/xsd-forms/issues/1
-      if (items.length>1 && startAt==items.length) {
-          var tag;
-          s = s + spaces((startAt-1)*2);
-          tag = openTag(items[items.length-1]);
-          s = s + "\n" + spaces(i*2) + tag;
-      }
-      
-      for (var i=startAt; i<items.length; i++) {
-          var tag;
-          if (i==0)
-            tag = openTagWithNs(items[i],"ns");
-          else
-            tag = openTag(items[i]);
-    	  s = s + "\n" + spaces(i*2) + tag;
-      }
-      s = s + value 
-      s = s + closeTag(items[items.length-1]);
-      previousItems = items;
-    });
-    s = closePreviousItems(previousItems, 0,s);
+    var s = getXml1();
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
     $('#submit-comments').html(s);
@@ -1110,10 +1092,10 @@ $(function() {
     private def stripMargin(s: String) =
       s.stripMargin.replaceAll("\n", "\n" + margin)
 
-    private def isMultiple(node:Node):Boolean = 
+    private def isMultiple(node: Node): Boolean =
       isMultiple(node.element)
-    
-    private def isMultiple(e: Element):Boolean =
+
+    private def isMultiple(e: Element): Boolean =
       (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
     private def addMaxOccurs(e: Element, number: String) {

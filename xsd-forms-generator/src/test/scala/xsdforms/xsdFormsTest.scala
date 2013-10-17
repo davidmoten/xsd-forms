@@ -22,20 +22,15 @@ package xsdforms {
 
       val schema = scalaxb.fromXML[Schema](
         XML.load(schemaInputStream))
+
       val ns = schema.targetNamespace.get.toString
-//      val visitor = new HtmlVisitor(ns, idPrefix, extraScript)
-//
-//      //println(schema.toString.replaceAll("\\(", "(\n"))
-//
-//      new SchemaTraversor(schema, rootElement, visitor).traverse
-//      //println(visitor.text)
-//		val text = visitor.text      
+
       val visitor = new TreeCreatingVisitor()
 
       new SchemaTraversor(schema, rootElement, visitor).traverse
       println("tree:\n" + visitor)
-      
-      val text = new TreeToHtmlConverter(ns,idPrefix,extraScript, visitor.rootNode).text
+
+      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
       outputFile.getParentFile().mkdirs
       val fos = new java.io.FileOutputStream(outputFile);
       fos.write(text.getBytes)
@@ -602,8 +597,8 @@ package xsdforms {
 
       new SchemaTraversor(schema, rootElement, visitor).traverse
       println("tree:\n" + visitor)
-      
-      val text = new TreeToHtmlConverter(ns,idPrefix,extraScript, visitor.rootNode).text
+
+      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
       println(text)
       println("generated")
 
@@ -614,5 +609,5 @@ package xsdforms {
       fos.close
     }
   }
-  
+
 }
