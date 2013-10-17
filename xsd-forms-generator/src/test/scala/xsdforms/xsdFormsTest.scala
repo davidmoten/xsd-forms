@@ -573,10 +573,10 @@ package xsdforms {
     @Test
     def test() {
       generate(
-        idPrefix = "a-",
-        schemaInputStream = TstUtil.getClass().getResourceAsStream("/test.xsd"),
-        rootElement = "person",
-        outputFile = new File("target/generated-webapp/person-form.html"))
+        idPrefix = "c-",
+        schemaInputStream = TstUtil.getClass().getResourceAsStream("/demo.xsd"),
+        rootElement = "main",
+        outputFile = new File("target/demo/demo-form-tree.html"))
     }
 
     def generate(
@@ -599,6 +599,12 @@ package xsdforms {
       val text = new TreeToHtmlConverter(ns,idPrefix,extraScript, visitor.rootNode).text
       println(text)
       println("generated")
+
+      //write results to a file
+      outputFile.getParentFile().mkdirs
+      val fos = new java.io.FileOutputStream(outputFile);
+      fos.write(text.getBytes)
+      fos.close
     }
   }
   
