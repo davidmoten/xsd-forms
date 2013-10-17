@@ -262,7 +262,7 @@ package xsdforms {
         html.fieldset(legend = legend, classes = List("fieldset"), id = Some(idPrefix + "fieldset-" + number))
 
       addXmlExtractScriplet(node)
-        
+
       doNodes(node.children)
 
       html.closeTag
@@ -272,7 +272,6 @@ package xsdforms {
         .closeTag
         .closeTag
 
-      
     }
 
     private def doNode(node: NodeChoice) {
@@ -345,27 +344,32 @@ package xsdforms {
     private def addXmlExtractScriplet(node: NodeSequence) {
       val s = new StringBuilder
       s.append("""
- |    var xml = ""; 
+ |    var xml = "<""" + node.element.name.get + """>"; 
  |    //now add sequence children""")
       node.children.foreach { n =>
         s.append("""
- |    xml += """ + xmlFunctionName(n) + "() + \"\\n\"");
+ |    xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
       }
+      s.append("""
+ |    xml+="</""" + node.element.name.get + """>";""")
       addXmlExtractScriptlet(node, s.toString());
     }
 
     private def addXmlExtractScriplet(node: NodeChoice) {
-            val s = new StringBuilder
+      val s = new StringBuilder
       s.append("""
- |    var xml = ""; 
+ |    var xml = "<""" + node.element.name.get + """>"; 
  |    //now optionally add selected child if any
  |    var checked = $(':input[name=""" + getChoiceItemName(node) + """' + suffix + ']:checked').attr("id");
  """)
- 
-      node.children.zipWithIndex.foreach { case (n,index) =>
-        s.append("""
- |    if (checked == """" + getChoiceItemId(node, index+1) +  """") xml += """ + xmlFunctionName(n) + "() + \"\\n\"");
+
+      node.children.zipWithIndex.foreach {
+        case (n, index) =>
+          s.append("""
+ |    if (checked == """" + getChoiceItemId(node, index + 1) + """") xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
       }
+      s.append("""
+ |    xml+="</""" + node.element.name.get + """>";""")
       addXmlExtractScriptlet(node, s.toString());
     }
 
@@ -553,11 +557,10 @@ $(function() {
 </body>
 </html>"""
 
-
-    private def getChoiceItemName(node:Node):String = getChoiceItemName(elementNumber(node.element)) 
-    private def getChoiceItemName(number: String):String = idPrefix + "item-input-" + number
-    private def getChoiceItemId(node:Node, index: Int):String = getChoiceItemId(elementNumber(node.element),index)
-    private def getChoiceItemId(number: String, index: Int):String = getItemId(number) + choiceIndexDelimiter + index
+    private def getChoiceItemName(node: Node): String = getChoiceItemName(elementNumber(node.element))
+    private def getChoiceItemName(number: String): String = idPrefix + "item-input-" + number
+    private def getChoiceItemId(node: Node, index: Int): String = getChoiceItemId(elementNumber(node.element), index)
+    private def getChoiceItemId(number: String, index: Int): String = getItemId(number) + choiceIndexDelimiter + index
 
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
