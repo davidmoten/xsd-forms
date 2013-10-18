@@ -9,6 +9,17 @@
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript">
+
+function encodeHTML(s) {
+    if (typeof(myVariable) != "undefined")
+	    return s.replace(/&/g, '&amp;')
+	               .replace(/</g, '&lt;')
+	               .replace(/>/g, '&gt;')
+	               .replace(/"/g, '&quot;');
+     else 
+          return s; 
+}
+
 function openTag(name) {
 	return "<" + name + ">";
 }
@@ -75,7 +86,6 @@ $(function() {
   }
 
   $('#pre-submit').click( function () {
-    var s = "";
     var previousItems = null;
     $('*[number]').each( function(index) {
       var thisId = this.id
@@ -92,40 +102,82 @@ $(function() {
     }
     else 
       $('#validation-errors').hide();
-    $('div[enabled="true"]').each( function(index) { 
-      var inputId = this.id.replace("path-","");
-      var value = $('#'+ inputId).val()
-     
-      var items = $(this).text().split('|');
-      var startAt = getStartAt(previousItems, items);
-      
-      s = closePreviousItems(previousItems, startAt,s);
-      
-      //handle closing multiple repeated elements see https://github.com/davidmoten/xsd-forms/issues/1
-      if (items.length>1 && startAt==items.length) {
-          var tag;
-          s = s + spaces((startAt-1)*2);
-          tag = openTag(items[items.length-1]);
-          s = s + "\n" + spaces(i*2) + tag;
-      }
-      
-      for (var i=startAt; i<items.length; i++) {
-          var tag;
-          if (i==0)
-            tag = openTagWithNs(items[i],"ns");
-          else
-            tag = openTag(items[i]);
-    	  s = s + "\n" + spaces(i*2) + tag;
-      }
-      s = s + value 
-      s = s + closeTag(items[items.length-1]);
-      previousItems = items;
-    });
-    s = closePreviousItems(previousItems, 0,s);
+    var s = getXml1();
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
     $('#submit-comments').html(s);
   });
+
+  //extract xml from element <main>
+  function getXml1() {
+  
+      var xml = '<main xmlns="http://org.moten.david/xsd-forms/demo">' + "\n"; 
+      //now add sequence children
+      xml += getXml2() + "\n";
+      xml += getXml3() + "\n";
+      xml += getXml4() + "\n";
+      xml += getXml5() + "\n";
+      xml += getXml6() + "\n";
+      xml += getXml7() + "\n";
+      xml += getXml8() + "\n";
+      xml += getXml9() + "\n";
+      xml += getXml10() + "\n";
+      xml += getXml11() + "\n";
+      xml += getXml12() + "\n";
+      xml += getXml13() + "\n";
+      xml += getXml14() + "\n";
+      xml += getXml15() + "\n";
+      xml += getXml16() + "\n";
+      xml += getXml17() + "\n";
+      xml += getXml18() + "\n";
+      xml += getXml19() + "\n";
+      xml += getXml20() + "\n";
+      xml += getXml21() + "\n";
+      xml += getXml22() + "\n";
+      xml += getXml23() + "\n";
+      xml += getXml24() + "\n";
+      xml += getXml25() + "\n";
+      xml += getXml26() + "\n";
+      xml += getXml27() + "\n";
+      xml += getXml28() + "\n";
+      xml += getXml29() + "\n";
+      xml += getXml30() + "\n";
+      xml += getXml31() + "\n";
+      xml += getXml32() + "\n";
+      xml += getXml33() + "\n";
+      xml += getXml34() + "\n";
+      xml += getXml35() + "\n";
+      xml += getXml36() + "\n";
+      xml += getXml37() + "\n";
+      xml += getXml38() + "\n";
+      xml += getXml39() + "\n";
+      xml += getXml40() + "\n";
+      xml += getXml41() + "\n";
+      xml += getXml42() + "\n";
+      xml += getXml43() + "\n";
+      xml += getXml44() + "\n";
+      xml += getXml45() + "\n";
+      xml += getXml46() + "\n";
+      xml += getXml47() + "\n";
+      xml += getXml48() + "\n";
+      xml += getXml49() + "\n";
+      xml += getXml52() + "\n";
+      xml += getXml53() + "\n";
+      xml += getXml54() + "\n";
+      xml += getXml55() + "\n";
+      xml += getXml58() + "\n";
+      xml += getXml59() + "\n";
+      xml += getXml60() + "\n";
+      xml += getXml61() + "\n";
+      xml += getXml62() + "\n";
+      xml += getXml68() + "\n";
+      xml += getXml70() + "\n";
+      xml += getXml72() + "\n";
+      xml += getXml73() + "\n";
+      xml+="</main>";
+      return xml;
+  }
+   
 
   // text-element
   var validate2 = function() {
@@ -150,6 +202,12 @@ $(function() {
   })
   
 
+  //extract xml from element <text-element>
+  function getXml2() {
+      return '<text-element>' + encodeHTML($("#c-item-2").val()) + "</text-element>"
+  }
+   
+
   // text-element-with-default
   var validate3 = function() {
     return validate3WithSuffix("");  
@@ -172,6 +230,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <text-element-with-default>
+  function getXml3() {
+      return '<text-element-with-default>' + encodeHTML($("#c-item-3").val()) + "</text-element-with-default>"
+  }
+   
 
   // long-text
   var validate4 = function() {
@@ -196,6 +260,12 @@ $(function() {
   })
   
 
+  //extract xml from element <long-text>
+  function getXml4() {
+      return '<long-text>' + encodeHTML($("#c-item-4").val()) + "</long-text>"
+  }
+   
+
   // long-text-with-default
   var validate5 = function() {
     return validate5WithSuffix("");  
@@ -218,6 +288,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <long-text-with-default>
+  function getXml5() {
+      return '<long-text-with-default>' + encodeHTML($("#c-item-5").val()) + "</long-text-with-default>"
+  }
+   
 
   // decimal-element
   var validate6 = function() {
@@ -247,6 +323,12 @@ $(function() {
   })
   
 
+  //extract xml from element <decimal-element>
+  function getXml6() {
+      return '<decimal-element>' + encodeHTML($("#c-item-6").val()) + "</decimal-element>"
+  }
+   
+
   // decimal-element-with-default
   var validate7 = function() {
     return validate7WithSuffix("");  
@@ -274,6 +356,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <decimal-element-with-default>
+  function getXml7() {
+      return '<decimal-element-with-default>' + encodeHTML($("#c-item-7").val()) + "</decimal-element-with-default>"
+  }
+   
 
   // integer-element
   var validate8 = function() {
@@ -303,6 +391,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-element>
+  function getXml8() {
+      return '<integer-element>' + encodeHTML($("#c-item-8").val()) + "</integer-element>"
+  }
+   
+
   // integer-element-with-default
   var validate9 = function() {
     return validate9WithSuffix("");  
@@ -331,6 +425,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-element-with-default>
+  function getXml9() {
+      return '<integer-element-with-default>' + encodeHTML($("#c-item-9").val()) + "</integer-element-with-default>"
+  }
+   
+
   // date-element
   var validate10 = function() {
     return validate10WithSuffix("");  
@@ -353,6 +453,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <date-element>
+  function getXml10() {
+      return '<date-element>' + encodeHTML($("#c-item-10").val()) + "</date-element>"
+  }
+   
 
   // date-element-with-default2
   var validate11 = function() {
@@ -377,6 +483,12 @@ $(function() {
   })
   
 
+  //extract xml from element <date-element-with-default2>
+  function getXml11() {
+      return '<date-element-with-default2>' + encodeHTML($("#c-item-11").val()) + "</date-element-with-default2>"
+  }
+   
+
   // time-element
   var validate12 = function() {
     return validate12WithSuffix("");  
@@ -399,6 +511,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <time-element>
+  function getXml12() {
+      return '<time-element>' + encodeHTML($("#c-item-12").val()) + "</time-element>"
+  }
+   
 
   // time-element-with-default
   var validate13 = function() {
@@ -423,6 +541,12 @@ $(function() {
   })
   
 
+  //extract xml from element <time-element-with-default>
+  function getXml13() {
+      return '<time-element-with-default>' + encodeHTML($("#c-item-13").val()) + "</time-element-with-default>"
+  }
+   
+
   // datetime-element
   var validate14 = function() {
     return validate14WithSuffix("");  
@@ -445,6 +569,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <datetime-element>
+  function getXml14() {
+      return '<datetime-element>' + encodeHTML($("#c-item-14").val()) + "</datetime-element>"
+  }
+   
 
   // datetime-element-with-default
   var validate15 = function() {
@@ -469,6 +599,12 @@ $(function() {
   })
   
 
+  //extract xml from element <datetime-element-with-default>
+  function getXml15() {
+      return '<datetime-element-with-default>' + encodeHTML($("#c-item-15").val()) + "</datetime-element-with-default>"
+  }
+   
+
   // boolean-element
   var validate16 = function() {
     return validate16WithSuffix("");  
@@ -491,6 +627,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <boolean-element>
+  function getXml16() {
+      return '<boolean-element>' + encodeHTML($("#c-item-16").val()) + "</boolean-element>"
+  }
+   
 
   // boolean-element-with-default
   var validate17 = function() {
@@ -515,6 +657,12 @@ $(function() {
   })
   
 
+  //extract xml from element <boolean-element-with-default>
+  function getXml17() {
+      return '<boolean-element-with-default>' + encodeHTML($("#c-item-17").val()) + "</boolean-element-with-default>"
+  }
+   
+
   // string-enumeration
   var validate18 = function() {
     return validate18WithSuffix("");  
@@ -537,6 +685,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <string-enumeration>
+  function getXml18() {
+      return '<string-enumeration>' + encodeHTML($("#c-item-18").val()) + "</string-enumeration>"
+  }
+   
 
   // string-enumeration-unselected
   var validate19 = function() {
@@ -561,6 +715,12 @@ $(function() {
   })
   
 
+  //extract xml from element <string-enumeration-unselected>
+  function getXml19() {
+      return '<string-enumeration-unselected>' + encodeHTML($("#c-item-19").val()) + "</string-enumeration-unselected>"
+  }
+   
+
   // string-enumeration-with-labels
   var validate20 = function() {
     return validate20WithSuffix("");  
@@ -583,6 +743,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <string-enumeration-with-labels>
+  function getXml20() {
+      return '<string-enumeration-with-labels>' + encodeHTML($("#c-item-20").val()) + "</string-enumeration-with-labels>"
+  }
+   
 
   // decimal-enumeration
   var validate21 = function() {
@@ -612,6 +778,12 @@ $(function() {
   })
   
 
+  //extract xml from element <decimal-enumeration>
+  function getXml21() {
+      return '<decimal-enumeration>' + encodeHTML($("#c-item-21").val()) + "</decimal-enumeration>"
+  }
+   
+
   // integer-enumeration
   var validate22 = function() {
     return validate22WithSuffix("");  
@@ -635,6 +807,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-enumeration>
+  function getXml22() {
+      return '<integer-enumeration>' + encodeHTML($("#c-item-22").val()) + "</integer-enumeration>"
+  }
+   
+
   // string-enumeration-radio
   var validate23 = function() {
     return validate23WithSuffix("");  
@@ -657,6 +835,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <string-enumeration-radio>
+  function getXml23() {
+      return '<string-enumeration-radio>' + encodeHTML($("#c-item-23").val()) + "</string-enumeration-radio>"
+  }
+   
 
     $("#c-item-24").change( function() {
       var v = $("#c-item-24");
@@ -691,6 +875,12 @@ $(function() {
   })
   
 
+  //extract xml from element <make-visible-example>
+  function getXml24() {
+      return '<make-visible-example>' + encodeHTML($("#c-item-24").val()) + "</make-visible-example>"
+  }
+   
+
   // further-details-for-option-b
   var validate25 = function() {
     return validate25WithSuffix("");  
@@ -714,6 +904,12 @@ $(function() {
   })
   
 
+  //extract xml from element <further-details-for-option-b>
+  function getXml25() {
+      return '<further-details-for-option-b>' + encodeHTML($("#c-item-25").val()) + "</further-details-for-option-b>"
+  }
+   
+
   // label-override
   var validate26 = function() {
     return validate26WithSuffix("");  
@@ -736,6 +932,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <label-override>
+  function getXml26() {
+      return '<label-override>' + encodeHTML($("#c-item-26").val()) + "</label-override>"
+  }
+   
 
   // with-all
   var validate27 = function() {
@@ -771,6 +973,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <with-all>
+  function getXml27() {
+      return '<with-all>' + encodeHTML($("#c-item-27").val()) + "</with-all>"
+  }
+   
   $('#c-item-28').css('color','white');
   $('#c-item-28').css('height','12em');
   $('#c-item-28').css('width','12em');
@@ -798,6 +1006,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <css-override>
+  function getXml28() {
+      return '<css-override>' + encodeHTML($("#c-item-28").val()) + "</css-override>"
+  }
+   
 
   // string-pattern
   var validate29 = function() {
@@ -834,6 +1048,12 @@ $(function() {
   })
   
 
+  //extract xml from element <string-pattern>
+  function getXml29() {
+      return '<string-pattern>' + encodeHTML($("#c-item-29").val()) + "</string-pattern>"
+  }
+   
+
   // string-pattern-validation-msg
   var validate30 = function() {
     return validate30WithSuffix("");  
@@ -868,6 +1088,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <string-pattern-validation-msg>
+  function getXml30() {
+      return '<string-pattern-validation-msg>' + encodeHTML($("#c-item-30").val()) + "</string-pattern-validation-msg>"
+  }
+   
 
   // string-multiple-pattern
   var validate31 = function() {
@@ -909,6 +1135,12 @@ $(function() {
   })
   
 
+  //extract xml from element <string-multiple-pattern>
+  function getXml31() {
+      return '<string-multiple-pattern>' + encodeHTML($("#c-item-31").val()) + "</string-multiple-pattern>"
+  }
+   
+
   // string-min-length-validation
   var validate32 = function() {
     return validate32WithSuffix("");  
@@ -935,6 +1167,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <string-min-length-validation>
+  function getXml32() {
+      return '<string-min-length-validation>' + encodeHTML($("#c-item-32").val()) + "</string-min-length-validation>"
+  }
+   
 
   // integer-min-length-validation
   var validate33 = function() {
@@ -968,6 +1206,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-min-length-validation>
+  function getXml33() {
+      return '<integer-min-length-validation>' + encodeHTML($("#c-item-33").val()) + "</integer-min-length-validation>"
+  }
+   
+
   // decimal-min-length-validation
   var validate34 = function() {
     return validate34WithSuffix("");  
@@ -1000,6 +1244,12 @@ $(function() {
   })
   
 
+  //extract xml from element <decimal-min-length-validation>
+  function getXml34() {
+      return '<decimal-min-length-validation>' + encodeHTML($("#c-item-34").val()) + "</decimal-min-length-validation>"
+  }
+   
+
   // string-max-length-validation
   var validate35 = function() {
     return validate35WithSuffix("");  
@@ -1026,6 +1276,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <string-max-length-validation>
+  function getXml35() {
+      return '<string-max-length-validation>' + encodeHTML($("#c-item-35").val()) + "</string-max-length-validation>"
+  }
+   
 
   // integer-max-length-validation
   var validate36 = function() {
@@ -1059,6 +1315,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-max-length-validation>
+  function getXml36() {
+      return '<integer-max-length-validation>' + encodeHTML($("#c-item-36").val()) + "</integer-max-length-validation>"
+  }
+   
+
   // decimal-max-length-validation
   var validate37 = function() {
     return validate37WithSuffix("");  
@@ -1091,6 +1353,12 @@ $(function() {
   })
   
 
+  //extract xml from element <decimal-max-length-validation>
+  function getXml37() {
+      return '<decimal-max-length-validation>' + encodeHTML($("#c-item-37").val()) + "</decimal-max-length-validation>"
+  }
+   
+
   // string-length-validation
   var validate38 = function() {
     return validate38WithSuffix("");  
@@ -1117,6 +1385,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <string-length-validation>
+  function getXml38() {
+      return '<string-length-validation>' + encodeHTML($("#c-item-38").val()) + "</string-length-validation>"
+  }
+   
 
   // integer-length-validation
   var validate39 = function() {
@@ -1150,6 +1424,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-length-validation>
+  function getXml39() {
+      return '<integer-length-validation>' + encodeHTML($("#c-item-39").val()) + "</integer-length-validation>"
+  }
+   
+
   // decimal-length-validation
   var validate40 = function() {
     return validate40WithSuffix("");  
@@ -1181,6 +1461,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <decimal-length-validation>
+  function getXml40() {
+      return '<decimal-length-validation>' + encodeHTML($("#c-item-40").val()) + "</decimal-length-validation>"
+  }
+   
 
   // integer-min-inclusive-validation
   var validate41 = function() {
@@ -1214,6 +1500,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-min-inclusive-validation>
+  function getXml41() {
+      return '<integer-min-inclusive-validation>' + encodeHTML($("#c-item-41").val()) + "</integer-min-inclusive-validation>"
+  }
+   
+
   // decimal-min-inclusive-validation
   var validate42 = function() {
     return validate42WithSuffix("");  
@@ -1245,6 +1537,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <decimal-min-inclusive-validation>
+  function getXml42() {
+      return '<decimal-min-inclusive-validation>' + encodeHTML($("#c-item-42").val()) + "</decimal-min-inclusive-validation>"
+  }
+   
 
   // integer-max-inclusive-validation
   var validate43 = function() {
@@ -1278,6 +1576,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-max-inclusive-validation>
+  function getXml43() {
+      return '<integer-max-inclusive-validation>' + encodeHTML($("#c-item-43").val()) + "</integer-max-inclusive-validation>"
+  }
+   
+
   // decimal-max-inclusive-validation
   var validate44 = function() {
     return validate44WithSuffix("");  
@@ -1309,6 +1613,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <decimal-max-inclusive-validation>
+  function getXml44() {
+      return '<decimal-max-inclusive-validation>' + encodeHTML($("#c-item-44").val()) + "</decimal-max-inclusive-validation>"
+  }
+   
 
   // integer-min-exclusive-validation
   var validate45 = function() {
@@ -1342,6 +1652,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-min-exclusive-validation>
+  function getXml45() {
+      return '<integer-min-exclusive-validation>' + encodeHTML($("#c-item-45").val()) + "</integer-min-exclusive-validation>"
+  }
+   
+
   // decimal-min-exclusive-validation
   var validate46 = function() {
     return validate46WithSuffix("");  
@@ -1373,6 +1689,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <decimal-min-exclusive-validation>
+  function getXml46() {
+      return '<decimal-min-exclusive-validation>' + encodeHTML($("#c-item-46").val()) + "</decimal-min-exclusive-validation>"
+  }
+   
 
   // integer-max-exclusive-validation
   var validate47 = function() {
@@ -1406,6 +1728,12 @@ $(function() {
   })
   
 
+  //extract xml from element <integer-max-exclusive-validation>
+  function getXml47() {
+      return '<integer-max-exclusive-validation>' + encodeHTML($("#c-item-47").val()) + "</integer-max-exclusive-validation>"
+  }
+   
+
   // decimal-max-exclusive-validation
   var validate48 = function() {
     return validate48WithSuffix("");  
@@ -1437,6 +1765,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <decimal-max-exclusive-validation>
+  function getXml48() {
+      return '<decimal-max-exclusive-validation>' + encodeHTML($("#c-item-48").val()) + "</decimal-max-exclusive-validation>"
+  }
+   
 
   $("#c-choice-content-49-1").hide();
 
@@ -1492,6 +1826,12 @@ $(function() {
   })
   
 
+  //extract xml from element <choice-1>
+  function getXml50() {
+      return '<choice-1>' + encodeHTML($("#c-item-50").val()) + "</choice-1>"
+  }
+   
+
   // choice-2
   var validate51 = function() {
     return validate51WithSuffix("");  
@@ -1514,6 +1854,27 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <choice-2>
+  function getXml51() {
+      return '<choice-2>' + encodeHTML($("#c-item-51").val()) + "</choice-2>"
+  }
+   
+
+  //extract xml from element <anonymous-choice-displayed-after>
+  function getXml49() {
+  
+      var xml = '<anonymous-choice-displayed-after>' + "\n"; 
+      //now optionally add selected child if any
+      var suffix=""; //what is suffix used for?
+      var checked = $(':input[name=c-item-input-49' + suffix + ']:checked').attr("id");
+   
+      if (checked == "c-item-49-1") xml += getXml50() + "\n";
+      if (checked == "c-item-49-2") xml += getXml51() + "\n";
+      xml+="</anonymous-choice-displayed-after>";
+      return xml;
+  }
+   
 
   
               
@@ -1595,6 +1956,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <max-occurs-example-1>
+  function getXml52() {
+      return '<max-occurs-example-1>' + encodeHTML($("#c-item-52").val()) + "</max-occurs-example-1>"
+  }
+   
 
   
               
@@ -1683,6 +2050,12 @@ $(function() {
   //disable item-path due to minOccurs=0 and default is empty  
   $("#c-item-path-53").attr('enabled','false');
 
+  //extract xml from element <max-occurs-example-2>
+  function getXml53() {
+      return '<max-occurs-example-2>' + encodeHTML($("#c-item-53").val()) + "</max-occurs-example-2>"
+  }
+   
+
   
               
   //make a hidden copy of the enclosing item
@@ -1759,6 +2132,12 @@ $(function() {
   })
   
 
+  //extract xml from element <max-occurs-example-3>
+  function getXml54() {
+      return '<max-occurs-example-3>' + encodeHTML($("#c-item-54").val()) + "</max-occurs-example-3>"
+  }
+   
+
   
               
   //make a hidden copy of the enclosing item
@@ -1812,6 +2191,18 @@ $(function() {
   })
           
 
+  //extract xml from element <max-occurs-example-4>
+  function getXml55() {
+  
+      var xml = '<max-occurs-example-4>' + "\n"; 
+      //now add sequence children
+      xml += getXml56() + "\n";
+      xml += getXml57() + "\n";
+      xml+="</max-occurs-example-4>";
+      return xml;
+  }
+   
+
   // A
   var validate56 = function() {
     return validate56WithSuffix("");  
@@ -1835,6 +2226,12 @@ $(function() {
   })
   
 
+  //extract xml from element <A>
+  function getXml56() {
+      return '<A>' + encodeHTML($("#c-item-56").val()) + "</A>"
+  }
+   
+
   // B
   var validate57 = function() {
     return validate57WithSuffix("");  
@@ -1857,6 +2254,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <B>
+  function getXml57() {
+      return '<B>' + encodeHTML($("#c-item-57").val()) + "</B>"
+  }
+   
 
   
               
@@ -1943,60 +2346,87 @@ $(function() {
   choiceChange58("");
 
   // A
-  var validate59 = function() {
-    return validate59WithSuffix("");  
+  var validate56 = function() {
+    return validate56WithSuffix("");  
   }
   
-  var validate59WithSuffix = function (suffix) {
+  var validate56WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-59" + suffix);
-    var pathDiv = $("#c-item-path-59");
+    var v = $("#c-item-56" + suffix);
+    var pathDiv = $("#c-item-path-56");
 
     return ok;
   }
         
-  $("#c-item-59").change( function() {
-    var ok = validate59();
-    var error= $("#c-item-error-59");
+  $("#c-item-56").change( function() {
+    var ok = validate56();
+    var error= $("#c-item-error-56");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <A>
+  function getXml56() {
+      return '<A>' + encodeHTML($("#c-item-56").val()) + "</A>"
+  }
+   
 
   // B
-  var validate60 = function() {
-    return validate60WithSuffix("");  
+  var validate57 = function() {
+    return validate57WithSuffix("");  
   }
   
-  var validate60WithSuffix = function (suffix) {
+  var validate57WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-60" + suffix);
-    var pathDiv = $("#c-item-path-60");
+    var v = $("#c-item-57" + suffix);
+    var pathDiv = $("#c-item-path-57");
 
     return ok;
   }
         
-  $("#c-item-60").change( function() {
-    var ok = validate60();
-    var error= $("#c-item-error-60");
+  $("#c-item-57").change( function() {
+    var ok = validate57();
+    var error= $("#c-item-error-57");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <B>
+  function getXml57() {
+      return '<B>' + encodeHTML($("#c-item-57").val()) + "</B>"
+  }
+   
+
+  //extract xml from element <max-occurs-example-5>
+  function getXml58() {
+  
+      var xml = '<max-occurs-example-5>' + "\n"; 
+      //now optionally add selected child if any
+      var suffix=""; //what is suffix used for?
+      var checked = $(':input[name=c-item-input-58' + suffix + ']:checked').attr("id");
+   
+      if (checked == "c-item-58-1") xml += getXml56() + "\n";
+      if (checked == "c-item-58-2") xml += getXml57() + "\n";
+      xml+="</max-occurs-example-5>";
+      return xml;
+  }
+   
 
   
               
   //make a hidden copy of the enclosing item
-  var enclosing61 = $("#c-repeating-enclosing-61").clone();
+  var enclosing59 = $("#c-repeating-enclosing-59").clone();
    
-  var lastRepeat61="c-repeating-enclosing-61";
-  $("#c-repeat-button-61").click(function() {
-    var clone = enclosing61.clone();
-    clone.insertAfter("#"+lastRepeat61);
+  var lastRepeat59="c-repeating-enclosing-59";
+  $("#c-repeat-button-59").click(function() {
+    var clone = enclosing59.clone();
+    clone.insertAfter("#"+lastRepeat59);
     var map = {};
     clone.find('*').andSelf().each( function(index) {  
       var id = $(this).attr("id");
@@ -2037,26 +2467,38 @@ $(function() {
       }
     })
     var nextId = clone.attr("id");
-    lastRepeat61=nextId;
+    lastRepeat59=nextId;
   })
           
 
+  //extract xml from element <max-occurs-example-6>
+  function getXml59() {
+  
+      var xml = '<max-occurs-example-6>' + "\n"; 
+      //now add sequence children
+      xml += getXml56() + "\n";
+      xml += getXml57() + "\n";
+      xml+="</max-occurs-example-6>";
+      return xml;
+  }
+   
+
   // A
-  var validate62 = function() {
-    return validate62WithSuffix("");  
+  var validate56 = function() {
+    return validate56WithSuffix("");  
   }
   
-  var validate62WithSuffix = function (suffix) {
+  var validate56WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-62" + suffix);
-    var pathDiv = $("#c-item-path-62");
+    var v = $("#c-item-56" + suffix);
+    var pathDiv = $("#c-item-path-56");
 
     return ok;
   }
         
-  $("#c-item-62").change( function() {
-    var ok = validate62();
-    var error= $("#c-item-error-62");
+  $("#c-item-56").change( function() {
+    var ok = validate56();
+    var error= $("#c-item-error-56");
     if (!(ok)) 
       error.show();
     else 
@@ -2064,7 +2506,127 @@ $(function() {
   })
   
 
+  //extract xml from element <A>
+  function getXml56() {
+      return '<A>' + encodeHTML($("#c-item-56").val()) + "</A>"
+  }
+   
+
   // B
+  var validate57 = function() {
+    return validate57WithSuffix("");  
+  }
+  
+  var validate57WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-57" + suffix);
+    var pathDiv = $("#c-item-path-57");
+
+    return ok;
+  }
+        
+  $("#c-item-57").change( function() {
+    var ok = validate57();
+    var error= $("#c-item-error-57");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <B>
+  function getXml57() {
+      return '<B>' + encodeHTML($("#c-item-57").val()) + "</B>"
+  }
+   
+
+  // optional
+  var validate60 = function() {
+    return validate60WithSuffix("");  
+  }
+  
+  var validate60WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-60" + suffix);
+    var pathDiv = $("#c-item-path-60");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#c-item-60").change( function() {
+    var ok = validate60();
+    var error= $("#c-item-error-60");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#c-item-path-60").attr('enabled','false');
+
+  //extract xml from element <optional>
+  function getXml60() {
+      return '<optional>' + encodeHTML($("#c-item-60").val()) + "</optional>"
+  }
+   
+
+  // anonymous-simple-type
+  var validate61 = function() {
+    return validate61WithSuffix("");  
+  }
+  
+  var validate61WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-61" + suffix);
+    var pathDiv = $("#c-item-path-61");
+    var patternMatched =false;
+  
+    // pattern test
+    var regex0 = /^[0-9]{0,4}$/ ;
+    if (regex0.test(v.val())) 
+      patternMatched = true;
+    if (!(patternMatched))
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#c-item-61").change( function() {
+    var ok = validate61();
+    var error= $("#c-item-error-61");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <anonymous-simple-type>
+  function getXml61() {
+      return '<anonymous-simple-type>' + encodeHTML($("#c-item-61").val()) + "</anonymous-simple-type>"
+  }
+   
+
+  //extract xml from element <named-complex-type>
+  function getXml62() {
+  
+      var xml = '<named-complex-type>' + "\n"; 
+      //now add sequence children
+      xml += getXml63() + "\n";
+      xml += getXml64() + "\n";
+      xml += getXml65() + "\n";
+      xml+="</named-complex-type>";
+      return xml;
+  }
+   
+
+  // first
   var validate63 = function() {
     return validate63WithSuffix("");  
   }
@@ -2087,7 +2649,13 @@ $(function() {
   })
   
 
-  // optional
+  //extract xml from element <first>
+  function getXml63() {
+      return '<first>' + encodeHTML($("#c-item-63").val()) + "</first>"
+  }
+   
+
+  // second
   var validate64 = function() {
     return validate64WithSuffix("");  
   }
@@ -2096,10 +2664,6 @@ $(function() {
     var ok = true;
     var v = $("#c-item-64" + suffix);
     var pathDiv = $("#c-item-path-64");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
 
     return ok;
   }
@@ -2113,33 +2677,43 @@ $(function() {
       error.hide();
   })
   
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#c-item-path-64").attr('enabled','false');
 
-  // anonymous-simple-type
-  var validate65 = function() {
-    return validate65WithSuffix("");  
+  //extract xml from element <second>
+  function getXml64() {
+      return '<second>' + encodeHTML($("#c-item-64").val()) + "</second>"
+  }
+   
+
+  //extract xml from element <nested>
+  function getXml65() {
+  
+      var xml = '<nested>' + "\n"; 
+      //now add sequence children
+      xml += getXml56() + "\n";
+      xml += getXml57() + "\n";
+      xml += getXml66() + "\n";
+      xml += getXml67() + "\n";
+      xml+="</nested>";
+      return xml;
+  }
+   
+
+  // A
+  var validate56 = function() {
+    return validate56WithSuffix("");  
   }
   
-  var validate65WithSuffix = function (suffix) {
+  var validate56WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-65" + suffix);
-    var pathDiv = $("#c-item-path-65");
-    var patternMatched =false;
-  
-    // pattern test
-    var regex0 = /^[0-9]{0,4}$/ ;
-    if (regex0.test(v.val())) 
-      patternMatched = true;
-    if (!(patternMatched))
-      ok = false;
+    var v = $("#c-item-56" + suffix);
+    var pathDiv = $("#c-item-path-56");
 
     return ok;
   }
         
-  $("#c-item-65").change( function() {
-    var ok = validate65();
-    var error= $("#c-item-error-65");
+  $("#c-item-56").change( function() {
+    var ok = validate56();
+    var error= $("#c-item-error-56");
     if (!(ok)) 
       error.show();
     else 
@@ -2147,7 +2721,71 @@ $(function() {
   })
   
 
-  // first
+  //extract xml from element <A>
+  function getXml56() {
+      return '<A>' + encodeHTML($("#c-item-56").val()) + "</A>"
+  }
+   
+
+  // B
+  var validate57 = function() {
+    return validate57WithSuffix("");  
+  }
+  
+  var validate57WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-57" + suffix);
+    var pathDiv = $("#c-item-path-57");
+
+    return ok;
+  }
+        
+  $("#c-item-57").change( function() {
+    var ok = validate57();
+    var error= $("#c-item-error-57");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <B>
+  function getXml57() {
+      return '<B>' + encodeHTML($("#c-item-57").val()) + "</B>"
+  }
+   
+
+  // C
+  var validate66 = function() {
+    return validate66WithSuffix("");  
+  }
+  
+  var validate66WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#c-item-66" + suffix);
+    var pathDiv = $("#c-item-path-66");
+
+    return ok;
+  }
+        
+  $("#c-item-66").change( function() {
+    var ok = validate66();
+    var error= $("#c-item-error-66");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <C>
+  function getXml66() {
+      return '<C>' + encodeHTML($("#c-item-66").val()) + "</C>"
+  }
+   
+
+  // option
   var validate67 = function() {
     return validate67WithSuffix("");  
   }
@@ -2170,22 +2808,39 @@ $(function() {
   })
   
 
-  // second
-  var validate68 = function() {
-    return validate68WithSuffix("");  
+  //extract xml from element <option>
+  function getXml67() {
+      return '<option>' + encodeHTML($("#c-item-67").val()) + "</option>"
+  }
+   
+
+  //extract xml from element <anonymous-complex-type>
+  function getXml68() {
+  
+      var xml = '<anonymous-complex-type>' + "\n"; 
+      //now add sequence children
+      xml += getXml69() + "\n";
+      xml+="</anonymous-complex-type>";
+      return xml;
+  }
+   
+
+  // string-field
+  var validate69 = function() {
+    return validate69WithSuffix("");  
   }
   
-  var validate68WithSuffix = function (suffix) {
+  var validate69WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-68" + suffix);
-    var pathDiv = $("#c-item-path-68");
+    var v = $("#c-item-69" + suffix);
+    var pathDiv = $("#c-item-path-69");
 
     return ok;
   }
         
-  $("#c-item-68").change( function() {
-    var ok = validate68();
-    var error= $("#c-item-error-68");
+  $("#c-item-69").change( function() {
+    var ok = validate69();
+    var error= $("#c-item-error-69");
     if (!(ok)) 
       error.show();
     else 
@@ -2193,30 +2848,77 @@ $(function() {
   })
   
 
-  // A
-  var validate70 = function() {
-    return validate70WithSuffix("");  
+  //extract xml from element <string-field>
+  function getXml69() {
+      return '<string-field>' + encodeHTML($("#c-item-69").val()) + "</string-field>"
   }
-  
-  var validate70WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#c-item-70" + suffix);
-    var pathDiv = $("#c-item-path-70");
+   
 
-    return ok;
+  //extract xml from element <anonymous-complex-type-with-repeat>
+  function getXml70() {
+  
+      var xml = '<anonymous-complex-type-with-repeat>' + "\n"; 
+      //now add sequence children
+      xml += getXml71() + "\n";
+      xml+="</anonymous-complex-type-with-repeat>";
+      return xml;
   }
-        
-  $("#c-item-70").change( function() {
-    var ok = validate70();
-    var error= $("#c-item-error-70");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
+   
+
+  
+              
+  //make a hidden copy of the enclosing item
+  var enclosing71 = $("#c-repeating-enclosing-71").clone();
+   
+  var lastRepeat71="c-repeating-enclosing-71";
+  $("#c-repeat-button-71").click(function() {
+    var clone = enclosing71.clone();
+    clone.insertAfter("#"+lastRepeat71);
+    var map = {};
+    clone.find('*').andSelf().each( function(index) {  
+      var id = $(this).attr("id");
+      if (typeof id === "undefined") 
+        return;
+      if (id.match(/^.*-\d+$/)) {
+        //extract the number
+        //extract the number from a choice id pattern first
+        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+        //if not found then extract from a standard id pattern
+        if (number == id)
+          number = id.replace(/^.*-(\d+)$/,"$1");
+        if (map[number] == null) {
+          repeatCount++;
+          map[number]=repeatCount;
+        }
+        var suffix = "-" + map[number];
+        var newId = id + suffix;
+        $(this).attr("id",newId);
+        //TODO fix up label for attribute (points to name attribute of input element)
+        if (id.match(/^c-item(-\d+)?-\d+$/)) {
+          var input = $('#'+newId);  
+          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+          if (numberFromId == id)
+            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
+           
+          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
+          input.change( function() {
+            console.log("changed " + newId);
+            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
+            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
+            if (!(ok)) 
+              error.show();
+            else 
+              error.hide();
+          })
+        }
+      }
+    })
+    var nextId = clone.attr("id");
+    lastRepeat71=nextId;
   })
-  
+          
 
-  // B
+  // string-field
   var validate71 = function() {
     return validate71WithSuffix("");  
   }
@@ -2239,84 +2941,21 @@ $(function() {
   })
   
 
-  // C
-  var validate72 = function() {
-    return validate72WithSuffix("");  
+  //extract xml from element <string-field>
+  function getXml71() {
+      return '<string-field>' + encodeHTML($("#c-item-71").val()) + "</string-field>"
   }
-  
-  var validate72WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#c-item-72" + suffix);
-    var pathDiv = $("#c-item-path-72");
-
-    return ok;
-  }
-        
-  $("#c-item-72").change( function() {
-    var ok = validate72();
-    var error= $("#c-item-error-72");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // option
-  var validate73 = function() {
-    return validate73WithSuffix("");  
-  }
-  
-  var validate73WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#c-item-73" + suffix);
-    var pathDiv = $("#c-item-path-73");
-
-    return ok;
-  }
-        
-  $("#c-item-73").change( function() {
-    var ok = validate73();
-    var error= $("#c-item-error-73");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // string-field
-  var validate75 = function() {
-    return validate75WithSuffix("");  
-  }
-  
-  var validate75WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#c-item-75" + suffix);
-    var pathDiv = $("#c-item-path-75");
-
-    return ok;
-  }
-        
-  $("#c-item-75").change( function() {
-    var ok = validate75();
-    var error= $("#c-item-error-75");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
+   
 
   
               
   //make a hidden copy of the enclosing item
-  var enclosing77 = $("#c-repeating-enclosing-77").clone();
+  var enclosing72 = $("#c-repeating-enclosing-72").clone();
    
-  var lastRepeat77="c-repeating-enclosing-77";
-  $("#c-repeat-button-77").click(function() {
-    var clone = enclosing77.clone();
-    clone.insertAfter("#"+lastRepeat77);
+  var lastRepeat72="c-repeating-enclosing-72";
+  $("#c-repeat-button-72").click(function() {
+    var clone = enclosing72.clone();
+    clone.insertAfter("#"+lastRepeat72);
     var map = {};
     clone.find('*').andSelf().each( function(index) {  
       var id = $(this).attr("id");
@@ -2357,269 +2996,269 @@ $(function() {
       }
     })
     var nextId = clone.attr("id");
-    lastRepeat77=nextId;
+    lastRepeat72=nextId;
   })
           
 
-  // string-field
-  var validate77 = function() {
-    return validate77WithSuffix("");  
+  //extract xml from element <named-complex-type-with-repeat>
+  function getXml72() {
+  
+      var xml = '<named-complex-type-with-repeat>' + "\n"; 
+      //now add sequence children
+      xml += getXml56() + "\n";
+      xml += getXml57() + "\n";
+      xml += getXml66() + "\n";
+      xml += getXml67() + "\n";
+      xml+="</named-complex-type-with-repeat>";
+      return xml;
   }
-  
-  var validate77WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#c-item-77" + suffix);
-    var pathDiv = $("#c-item-path-77");
-
-    return ok;
-  }
-        
-  $("#c-item-77").change( function() {
-    var ok = validate77();
-    var error= $("#c-item-error-77");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  
-              
-  //make a hidden copy of the enclosing item
-  var enclosing78 = $("#c-repeating-enclosing-78").clone();
    
-  var lastRepeat78="c-repeating-enclosing-78";
-  $("#c-repeat-button-78").click(function() {
-    var clone = enclosing78.clone();
-    clone.insertAfter("#"+lastRepeat78);
-    var map = {};
-    clone.find('*').andSelf().each( function(index) {  
-      var id = $(this).attr("id");
-      if (typeof id === "undefined") 
-        return;
-      if (id.match(/^.*-\d+$/)) {
-        //extract the number
-        //extract the number from a choice id pattern first
-        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
-        //if not found then extract from a standard id pattern
-        if (number == id)
-          number = id.replace(/^.*-(\d+)$/,"$1");
-        if (map[number] == null) {
-          repeatCount++;
-          map[number]=repeatCount;
-        }
-        var suffix = "-" + map[number];
-        var newId = id + suffix;
-        $(this).attr("id",newId);
-        //TODO fix up label for attribute (points to name attribute of input element)
-        if (id.match(/^c-item(-\d+)?-\d+$/)) {
-          var input = $('#'+newId);  
-          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
-          if (numberFromId == id)
-            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
-           
-          input.attr("name", "c-item-input-" + numberFromId + "-" + map[numberFromId]);
-          input.change( function() {
-            console.log("changed " + newId);
-            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
-            var error= $("#c-item-error-" + numberFromId  + "-" + map[numberFromId]);
-            if (!(ok)) 
-              error.show();
-            else 
-              error.hide();
-          })
-        }
-      }
-    })
-    var nextId = clone.attr("id");
-    lastRepeat78=nextId;
-  })
-          
 
   // A
-  var validate79 = function() {
-    return validate79WithSuffix("");  
+  var validate56 = function() {
+    return validate56WithSuffix("");  
   }
   
-  var validate79WithSuffix = function (suffix) {
+  var validate56WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-79" + suffix);
-    var pathDiv = $("#c-item-path-79");
+    var v = $("#c-item-56" + suffix);
+    var pathDiv = $("#c-item-path-56");
 
     return ok;
   }
         
-  $("#c-item-79").change( function() {
-    var ok = validate79();
-    var error= $("#c-item-error-79");
+  $("#c-item-56").change( function() {
+    var ok = validate56();
+    var error= $("#c-item-error-56");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <A>
+  function getXml56() {
+      return '<A>' + encodeHTML($("#c-item-56").val()) + "</A>"
+  }
+   
 
   // B
-  var validate80 = function() {
-    return validate80WithSuffix("");  
+  var validate57 = function() {
+    return validate57WithSuffix("");  
   }
   
-  var validate80WithSuffix = function (suffix) {
+  var validate57WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-80" + suffix);
-    var pathDiv = $("#c-item-path-80");
+    var v = $("#c-item-57" + suffix);
+    var pathDiv = $("#c-item-path-57");
 
     return ok;
   }
         
-  $("#c-item-80").change( function() {
-    var ok = validate80();
-    var error= $("#c-item-error-80");
+  $("#c-item-57").change( function() {
+    var ok = validate57();
+    var error= $("#c-item-error-57");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <B>
+  function getXml57() {
+      return '<B>' + encodeHTML($("#c-item-57").val()) + "</B>"
+  }
+   
 
   // C
-  var validate81 = function() {
-    return validate81WithSuffix("");  
+  var validate66 = function() {
+    return validate66WithSuffix("");  
   }
   
-  var validate81WithSuffix = function (suffix) {
+  var validate66WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-81" + suffix);
-    var pathDiv = $("#c-item-path-81");
+    var v = $("#c-item-66" + suffix);
+    var pathDiv = $("#c-item-path-66");
 
     return ok;
   }
         
-  $("#c-item-81").change( function() {
-    var ok = validate81();
-    var error= $("#c-item-error-81");
+  $("#c-item-66").change( function() {
+    var ok = validate66();
+    var error= $("#c-item-error-66");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <C>
+  function getXml66() {
+      return '<C>' + encodeHTML($("#c-item-66").val()) + "</C>"
+  }
+   
 
   // option
-  var validate82 = function() {
-    return validate82WithSuffix("");  
+  var validate67 = function() {
+    return validate67WithSuffix("");  
   }
   
-  var validate82WithSuffix = function (suffix) {
+  var validate67WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-82" + suffix);
-    var pathDiv = $("#c-item-path-82");
+    var v = $("#c-item-67" + suffix);
+    var pathDiv = $("#c-item-path-67");
 
     return ok;
   }
         
-  $("#c-item-82").change( function() {
-    var ok = validate82();
-    var error= $("#c-item-error-82");
+  $("#c-item-67").change( function() {
+    var ok = validate67();
+    var error= $("#c-item-error-67");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <option>
+  function getXml67() {
+      return '<option>' + encodeHTML($("#c-item-67").val()) + "</option>"
+  }
+   
+
+  //extract xml from element <fieldset-example>
+  function getXml73() {
+  
+      var xml = '<fieldset-example>' + "\n"; 
+      //now add sequence children
+      xml += getXml56() + "\n";
+      xml += getXml57() + "\n";
+      xml += getXml66() + "\n";
+      xml += getXml67() + "\n";
+      xml+="</fieldset-example>";
+      return xml;
+  }
+   
 
   // A
-  var validate84 = function() {
-    return validate84WithSuffix("");  
+  var validate56 = function() {
+    return validate56WithSuffix("");  
   }
   
-  var validate84WithSuffix = function (suffix) {
+  var validate56WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-84" + suffix);
-    var pathDiv = $("#c-item-path-84");
+    var v = $("#c-item-56" + suffix);
+    var pathDiv = $("#c-item-path-56");
 
     return ok;
   }
         
-  $("#c-item-84").change( function() {
-    var ok = validate84();
-    var error= $("#c-item-error-84");
+  $("#c-item-56").change( function() {
+    var ok = validate56();
+    var error= $("#c-item-error-56");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <A>
+  function getXml56() {
+      return '<A>' + encodeHTML($("#c-item-56").val()) + "</A>"
+  }
+   
 
   // B
-  var validate85 = function() {
-    return validate85WithSuffix("");  
+  var validate57 = function() {
+    return validate57WithSuffix("");  
   }
   
-  var validate85WithSuffix = function (suffix) {
+  var validate57WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-85" + suffix);
-    var pathDiv = $("#c-item-path-85");
+    var v = $("#c-item-57" + suffix);
+    var pathDiv = $("#c-item-path-57");
 
     return ok;
   }
         
-  $("#c-item-85").change( function() {
-    var ok = validate85();
-    var error= $("#c-item-error-85");
+  $("#c-item-57").change( function() {
+    var ok = validate57();
+    var error= $("#c-item-error-57");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <B>
+  function getXml57() {
+      return '<B>' + encodeHTML($("#c-item-57").val()) + "</B>"
+  }
+   
 
   // C
-  var validate86 = function() {
-    return validate86WithSuffix("");  
+  var validate66 = function() {
+    return validate66WithSuffix("");  
   }
   
-  var validate86WithSuffix = function (suffix) {
+  var validate66WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-86" + suffix);
-    var pathDiv = $("#c-item-path-86");
+    var v = $("#c-item-66" + suffix);
+    var pathDiv = $("#c-item-path-66");
 
     return ok;
   }
         
-  $("#c-item-86").change( function() {
-    var ok = validate86();
-    var error= $("#c-item-error-86");
+  $("#c-item-66").change( function() {
+    var ok = validate66();
+    var error= $("#c-item-error-66");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <C>
+  function getXml66() {
+      return '<C>' + encodeHTML($("#c-item-66").val()) + "</C>"
+  }
+   
 
   // option
-  var validate87 = function() {
-    return validate87WithSuffix("");  
+  var validate67 = function() {
+    return validate67WithSuffix("");  
   }
   
-  var validate87WithSuffix = function (suffix) {
+  var validate67WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#c-item-87" + suffix);
-    var pathDiv = $("#c-item-path-87");
+    var v = $("#c-item-67" + suffix);
+    var pathDiv = $("#c-item-path-67");
 
     return ok;
   }
         
-  $("#c-item-87").change( function() {
-    var ok = validate87();
-    var error= $("#c-item-error-87");
+  $("#c-item-67").change( function() {
+    var ok = validate67();
+    var error= $("#c-item-error-67");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
+
+  //extract xml from element <option>
+  function getXml67() {
+      return '<option>' + encodeHTML($("#c-item-67").val()) + "</option>"
+  }
+   
 
   $("#form").submit(function () { return false; }); // so it won't submit
 
@@ -2649,7 +3288,6 @@ $(function() {
               <input number="2" name="c-item-input-2" id="c-item-2" class=" item-input-text" type="text">
               </input>
               <div id="c-item-error-2" class="item-error">Invalid</div>
-              <div id="c-item-path-2" class="item-path" enabled="true">main|text-element</div>
             </div>
           </div>
         </div>
@@ -2663,7 +3301,6 @@ $(function() {
               <input number="3" name="c-item-input-3" id="c-item-3" class=" item-input-text" type="text" value="default">
               </input>
               <div id="c-item-error-3" class="item-error">Invalid</div>
-              <div id="c-item-path-3" class="item-path" enabled="true">main|text-element-with-default</div>
             </div>
           </div>
         </div>
@@ -2676,7 +3313,6 @@ $(function() {
             <div class="item-input">
               <textarea id="c-item-4" class=" item-input-textarea" name="c-item-input-4" number="4"></textarea>
               <div id="c-item-error-4" class="item-error">Invalid</div>
-              <div id="c-item-path-4" class="item-path" enabled="true">main|long-text</div>
             </div>
           </div>
         </div>
@@ -2689,7 +3325,6 @@ $(function() {
             <div class="item-input">
               <textarea id="c-item-5" class=" item-input-textarea" name="c-item-input-5" number="5">default</textarea>
               <div id="c-item-error-5" class="item-error">Invalid</div>
-              <div id="c-item-path-5" class="item-path" enabled="true">main|long-text-with-default</div>
             </div>
           </div>
         </div>
@@ -2704,7 +3339,6 @@ $(function() {
               <input number="6" name="c-item-input-6" id="c-item-6" class=" item-input-text" type="text">
               </input>
               <div id="c-item-error-6" class="item-error">Invalid</div>
-              <div id="c-item-path-6" class="item-path" enabled="true">main|decimal-element</div>
             </div>
           </div>
         </div>
@@ -2718,7 +3352,6 @@ $(function() {
               <input number="7" name="c-item-input-7" id="c-item-7" class=" item-input-text" type="text" value="10.0435">
               </input>
               <div id="c-item-error-7" class="item-error">Invalid</div>
-              <div id="c-item-path-7" class="item-path" enabled="true">main|decimal-element-with-default</div>
             </div>
           </div>
         </div>
@@ -2732,7 +3365,6 @@ $(function() {
               <input number="8" name="c-item-input-8" id="c-item-8" class=" item-input-text" type="text">
               </input>
               <div id="c-item-error-8" class="item-error">Invalid</div>
-              <div id="c-item-path-8" class="item-path" enabled="true">main|integer-element</div>
             </div>
           </div>
         </div>
@@ -2746,7 +3378,6 @@ $(function() {
               <input number="9" name="c-item-input-9" id="c-item-9" class=" item-input-text" type="text" value="123">
               </input>
               <div id="c-item-error-9" class="item-error">Invalid</div>
-              <div id="c-item-path-9" class="item-path" enabled="true">main|integer-element-with-default</div>
             </div>
           </div>
         </div>
@@ -2761,7 +3392,6 @@ $(function() {
               <input number="10" name="c-item-input-10" id="c-item-10" class="datepickerclass  item-input-text" type="text">
               </input>
               <div id="c-item-error-10" class="item-error">Invalid</div>
-              <div id="c-item-path-10" class="item-path" enabled="true">main|date-element</div>
             </div>
           </div>
         </div>
@@ -2775,7 +3405,6 @@ $(function() {
               <input number="11" name="c-item-input-11" id="c-item-11" class="datepickerclass  item-input-text" type="text" value="1973-06-12">
               </input>
               <div id="c-item-error-11" class="item-error">Invalid</div>
-              <div id="c-item-path-11" class="item-path" enabled="true">main|date-element-with-default2</div>
             </div>
           </div>
         </div>
@@ -2789,7 +3418,6 @@ $(function() {
               <input number="12" name="c-item-input-12" id="c-item-12" class="timepickerclass  item-input-text" type="text">
               </input>
               <div id="c-item-error-12" class="item-error">Invalid</div>
-              <div id="c-item-path-12" class="item-path" enabled="true">main|time-element</div>
             </div>
           </div>
         </div>
@@ -2803,7 +3431,6 @@ $(function() {
               <input number="13" name="c-item-input-13" id="c-item-13" class="timepickerclass  item-input-text" type="text" value="21:55:00">
               </input>
               <div id="c-item-error-13" class="item-error">Invalid</div>
-              <div id="c-item-path-13" class="item-path" enabled="true">main|time-element-with-default</div>
             </div>
           </div>
         </div>
@@ -2817,7 +3444,6 @@ $(function() {
               <input number="14" name="c-item-input-14" id="c-item-14" class=" item-input-text" type="text">
               </input>
               <div id="c-item-error-14" class="item-error">Invalid</div>
-              <div id="c-item-path-14" class="item-path" enabled="true">main|datetime-element</div>
             </div>
           </div>
         </div>
@@ -2831,7 +3457,6 @@ $(function() {
               <input number="15" name="c-item-input-15" id="c-item-15" class=" item-input-text" type="text" value="2002-05-30T09:30:10.5">
               </input>
               <div id="c-item-error-15" class="item-error">Invalid</div>
-              <div id="c-item-path-15" class="item-path" enabled="true">main|datetime-element-with-default</div>
             </div>
           </div>
         </div>
@@ -2846,7 +3471,6 @@ $(function() {
               <input number="16" name="c-item-input-16" id="c-item-16" class=" item-input-text" type="checkbox">
               </input>
               <div id="c-item-error-16" class="item-error">Invalid</div>
-              <div id="c-item-path-16" class="item-path" enabled="true">main|boolean-element</div>
             </div>
           </div>
         </div>
@@ -2860,7 +3484,6 @@ $(function() {
               <input number="17" name="c-item-input-17" checked="true" id="c-item-17" class=" item-input-text" type="checkbox" value="true">
               </input>
               <div id="c-item-error-17" class="item-error">Invalid</div>
-              <div id="c-item-path-17" class="item-path" enabled="true">main|boolean-element-with-default</div>
             </div>
           </div>
         </div>
@@ -2877,7 +3500,6 @@ $(function() {
                 <option value="option-2">option-2</option>
               </select>
               <div id="c-item-error-18" class="item-error">Invalid</div>
-              <div id="c-item-path-18" class="item-path" enabled="true">main|string-enumeration</div>
             </div>
           </div>
         </div>
@@ -2894,7 +3516,6 @@ $(function() {
                 <option value="option-2">option-2</option>
               </select>
               <div id="c-item-error-19" class="item-error">Invalid</div>
-              <div id="c-item-path-19" class="item-path" enabled="true">main|string-enumeration-unselected</div>
             </div>
           </div>
         </div>
@@ -2910,7 +3531,6 @@ $(function() {
                 <option value="B">Option B</option>
               </select>
               <div id="c-item-error-20" class="item-error">Invalid</div>
-              <div id="c-item-path-20" class="item-path" enabled="true">main|string-enumeration-with-labels</div>
             </div>
           </div>
         </div>
@@ -2926,7 +3546,6 @@ $(function() {
                 <option value="2.0">Two Point Zero</option>
               </select>
               <div id="c-item-error-21" class="item-error">Invalid</div>
-              <div id="c-item-path-21" class="item-path" enabled="true">main|decimal-enumeration</div>
             </div>
           </div>
         </div>
@@ -2942,7 +3561,6 @@ $(function() {
                 <option value="2">2</option>
               </select>
               <div id="c-item-error-22" class="item-error">Invalid</div>
-              <div id="c-item-path-22" class="item-path" enabled="true">main|integer-enumeration</div>
             </div>
           </div>
         </div>
@@ -2956,7 +3574,6 @@ $(function() {
               <input number="23" name="c-item-input-23" id="c-item-23-0" class="select" type="radio" value="Option A">Option A</input>
               <input number="23" name="c-item-input-23" id="c-item-23-1" class="select" type="radio" value="Option B">Option B</input>
               <div id="c-item-error-23" class="item-error">Invalid</div>
-              <div id="c-item-path-23" class="item-path" enabled="true">main|string-enumeration-radio</div>
             </div>
           </div>
         </div>
@@ -2974,7 +3591,6 @@ $(function() {
                 <option value="B">Option B</option>
               </select>
               <div id="c-item-error-24" class="item-error">Invalid</div>
-              <div id="c-item-path-24" class="item-path" enabled="true">main|make-visible-example</div>
             </div>
           </div>
         </div>
@@ -2988,7 +3604,6 @@ $(function() {
               <input number="25" name="c-item-input-25" id="c-item-25" class=" item-input-text" type="text">
               </input>
               <div id="c-item-error-25" class="item-error">Invalid</div>
-              <div id="c-item-path-25" class="item-path" enabled="true">main|further-details-for-option-b</div>
             </div>
           </div>
         </div>
@@ -3003,7 +3618,6 @@ $(function() {
               <input number="26" name="c-item-input-26" id="c-item-26" class=" item-input-text" type="text">
               </input>
               <div id="c-item-error-26" class="item-error">Invalid</div>
-              <div id="c-item-path-26" class="item-path" enabled="true">main|label-override</div>
             </div>
           </div>
         </div>
@@ -3020,7 +3634,6 @@ $(function() {
               </input>
               <div class="item-description">description of the field here</div>
               <div id="c-item-error-27" class="item-error">Invalid format, must start with a,b or c and be followed by 3 digits.</div>
-              <div id="c-item-path-27" class="item-path" enabled="true">main|with-all</div>
               <div class="item-after">'after' message</div>
             </div>
           </div>
@@ -3035,7 +3648,6 @@ $(function() {
             <div class="item-input">
               <textarea id="c-item-28" class=" item-input-textarea" name="c-item-input-28" number="28"></textarea>
               <div id="c-item-error-28" class="item-error">Invalid</div>
-              <div id="c-item-path-28" class="item-path" enabled="true">main|css-override</div>
             </div>
           </div>
         </div>
@@ -3051,7 +3663,6 @@ $(function() {
               </input>
               <div class="item-description">a,b, or c followed by 3 digits</div>
               <div id="c-item-error-29" class="item-error">Invalid</div>
-              <div id="c-item-path-29" class="item-path" enabled="true">main|string-pattern</div>
             </div>
           </div>
         </div>
@@ -3066,7 +3677,6 @@ $(function() {
               </input>
               <div class="item-description">a,b, or c followed by 3 digits</div>
               <div id="c-item-error-30" class="item-error">Invalid format, must start with a,b or c and be followed by 3 digits.</div>
-              <div id="c-item-path-30" class="item-path" enabled="true">main|string-pattern-validation-msg</div>
             </div>
           </div>
         </div>
@@ -3082,7 +3692,6 @@ $(function() {
               </input>
               <div class="item-description">AB or CD (multiple patterns is logical OR)</div>
               <div id="c-item-error-31" class="item-error">Invalid format, must be AB or CD.</div>
-              <div id="c-item-path-31" class="item-path" enabled="true">main|string-multiple-pattern</div>
             </div>
           </div>
         </div>
@@ -3098,7 +3707,6 @@ $(function() {
               </input>
               <div class="item-description">minimum 3 characters</div>
               <div id="c-item-error-32" class="item-error">Invalid format, must have a minimum of 3 characters.</div>
-              <div id="c-item-path-32" class="item-path" enabled="true">main|string-min-length-validation</div>
             </div>
           </div>
         </div>
@@ -3113,7 +3721,6 @@ $(function() {
               </input>
               <div class="item-description">minimum 3 digits</div>
               <div id="c-item-error-33" class="item-error">Invalid format, must have a minimum of 3 digits.</div>
-              <div id="c-item-path-33" class="item-path" enabled="true">main|integer-min-length-validation</div>
             </div>
           </div>
         </div>
@@ -3128,7 +3735,6 @@ $(function() {
               </input>
               <div class="item-description">minimum 3 characters</div>
               <div id="c-item-error-34" class="item-error">Invalid format, must have a minimum of 3 characters.</div>
-              <div id="c-item-path-34" class="item-path" enabled="true">main|decimal-min-length-validation</div>
             </div>
           </div>
         </div>
@@ -3144,7 +3750,6 @@ $(function() {
               </input>
               <div class="item-description">maximum 4 characters</div>
               <div id="c-item-error-35" class="item-error">Invalid format, must have a maximum of 4 characters.</div>
-              <div id="c-item-path-35" class="item-path" enabled="true">main|string-max-length-validation</div>
             </div>
           </div>
         </div>
@@ -3159,7 +3764,6 @@ $(function() {
               </input>
               <div class="item-description">maximum 4 digits</div>
               <div id="c-item-error-36" class="item-error">Invalid format, must have a maximum of 4 digits.</div>
-              <div id="c-item-path-36" class="item-path" enabled="true">main|integer-max-length-validation</div>
             </div>
           </div>
         </div>
@@ -3174,7 +3778,6 @@ $(function() {
               </input>
               <div class="item-description">maximum 4 characters</div>
               <div id="c-item-error-37" class="item-error">Invalid format, must have a maximum of 4 characters.</div>
-              <div id="c-item-path-37" class="item-path" enabled="true">main|decimal-max-length-validation</div>
             </div>
           </div>
         </div>
@@ -3190,7 +3793,6 @@ $(function() {
               </input>
               <div class="item-description">exactly 4 characters</div>
               <div id="c-item-error-38" class="item-error">Invalid format, must have exactly 4 characters.</div>
-              <div id="c-item-path-38" class="item-path" enabled="true">main|string-length-validation</div>
             </div>
           </div>
         </div>
@@ -3205,7 +3807,6 @@ $(function() {
               </input>
               <div class="item-description">exactly 4 digits</div>
               <div id="c-item-error-39" class="item-error">Invalid format, must have exactly 4 digits.</div>
-              <div id="c-item-path-39" class="item-path" enabled="true">main|integer-length-validation</div>
             </div>
           </div>
         </div>
@@ -3220,7 +3821,6 @@ $(function() {
               </input>
               <div class="item-description">exactly 4 characters</div>
               <div id="c-item-error-40" class="item-error">Invalid format, must be a decimal value with exactly 4 characters.</div>
-              <div id="c-item-path-40" class="item-path" enabled="true">main|decimal-length-validation</div>
             </div>
           </div>
         </div>
@@ -3236,7 +3836,6 @@ $(function() {
               </input>
               <div class="item-description">5 or more</div>
               <div id="c-item-error-41" class="item-error">Invalid format, must be greater than or equal to 5.</div>
-              <div id="c-item-path-41" class="item-path" enabled="true">main|integer-min-inclusive-validation</div>
             </div>
           </div>
         </div>
@@ -3251,7 +3850,6 @@ $(function() {
               </input>
               <div class="item-description">5 or more</div>
               <div id="c-item-error-42" class="item-error">Invalid format, must be greater than or equal to 5.</div>
-              <div id="c-item-path-42" class="item-path" enabled="true">main|decimal-min-inclusive-validation</div>
             </div>
           </div>
         </div>
@@ -3267,7 +3865,6 @@ $(function() {
               </input>
               <div class="item-description">maximum value of 10</div>
               <div id="c-item-error-43" class="item-error">Invalid format, must less than or equal to 10.</div>
-              <div id="c-item-path-43" class="item-path" enabled="true">main|integer-max-inclusive-validation</div>
             </div>
           </div>
         </div>
@@ -3282,7 +3879,6 @@ $(function() {
               </input>
               <div class="item-description">maximum value of 10</div>
               <div id="c-item-error-44" class="item-error">Invalid format, must less than or equal to 10.</div>
-              <div id="c-item-path-44" class="item-path" enabled="true">main|decimal-max-inclusive-validation</div>
             </div>
           </div>
         </div>
@@ -3298,7 +3894,6 @@ $(function() {
               </input>
               <div class="item-description">greater than 5</div>
               <div id="c-item-error-45" class="item-error">Invalid format, must be greater than 5.</div>
-              <div id="c-item-path-45" class="item-path" enabled="true">main|integer-min-exclusive-validation</div>
             </div>
           </div>
         </div>
@@ -3313,7 +3908,6 @@ $(function() {
               </input>
               <div class="item-description">greater than 5</div>
               <div id="c-item-error-46" class="item-error">Invalid format, must be greater than 5.</div>
-              <div id="c-item-path-46" class="item-path" enabled="true">main|decimal-min-exclusive-validation</div>
             </div>
           </div>
         </div>
@@ -3329,7 +3923,6 @@ $(function() {
               </input>
               <div class="item-description">less than 10</div>
               <div id="c-item-error-47" class="item-error">Invalid format, must be an integer less than 10.</div>
-              <div id="c-item-path-47" class="item-path" enabled="true">main|integer-max-exclusive-validation</div>
             </div>
           </div>
         </div>
@@ -3344,7 +3937,6 @@ $(function() {
               </input>
               <div class="item-description">less than 10</div>
               <div id="c-item-error-48" class="item-error">Invalid format, must be less than 10.</div>
-              <div id="c-item-path-48" class="item-path" enabled="true">main|decimal-max-exclusive-validation</div>
             </div>
           </div>
         </div>
@@ -3370,7 +3962,6 @@ $(function() {
                     <input number="50" name="c-item-input-50" id="c-item-50" class=" item-input-text" type="text">
                     </input>
                     <div id="c-item-error-50" class="item-error">Invalid</div>
-                    <div id="c-item-path-50" class="item-path" enabled="true">main|anonymous-choice-displayed-after|choice-1</div>
                   </div>
                 </div>
               </div>
@@ -3386,7 +3977,6 @@ $(function() {
                     <input number="51" name="c-item-input-51" id="c-item-51" class="datepickerclass  item-input-text" type="text">
                     </input>
                     <div id="c-item-error-51" class="item-error">Invalid</div>
-                    <div id="c-item-path-51" class="item-path" enabled="true">main|anonymous-choice-displayed-after|choice-2</div>
                   </div>
                 </div>
               </div>
@@ -3403,7 +3993,6 @@ $(function() {
               <input number="52" name="c-item-input-52" id="c-item-52" class=" item-input-text" type="text">
               </input>
               <div id="c-item-error-52" class="item-error">Invalid</div>
-              <div id="c-item-path-52" class="item-path" enabled="true">main|max-occurs-example-1</div>
             </div>
           </div>
         </div>
@@ -3417,7 +4006,6 @@ $(function() {
               <input number="53" name="c-item-input-53" id="c-item-53" class=" item-input-text" type="text">
               </input>
               <div id="c-item-error-53" class="item-error">Invalid</div>
-              <div id="c-item-path-53" class="item-path" enabled="true">main|max-occurs-example-2</div>
             </div>
           </div>
         </div>
@@ -3431,7 +4019,6 @@ $(function() {
               <input number="54" name="c-item-input-54" id="c-item-54" class=" item-input-text" type="text">
               </input>
               <div id="c-item-error-54" class="item-error">Invalid</div>
-              <div id="c-item-path-54" class="item-path" enabled="true">main|max-occurs-example-3</div>
             </div>
           </div>
         </div>
@@ -3451,7 +4038,6 @@ $(function() {
                     <input number="56" name="c-item-input-56" id="c-item-56" class=" item-input-text" type="text">
                     </input>
                     <div id="c-item-error-56" class="item-error">Invalid</div>
-                    <div id="c-item-path-56" class="item-path" enabled="true">main|max-occurs-example-4|A</div>
                   </div>
                 </div>
               </div>
@@ -3465,7 +4051,6 @@ $(function() {
                     <input number="57" name="c-item-input-57" id="c-item-57" class=" item-input-text" type="text">
                     </input>
                     <div id="c-item-error-57" class="item-error">Invalid</div>
-                    <div id="c-item-path-57" class="item-path" enabled="true">main|max-occurs-example-4|B</div>
                   </div>
                 </div>
               </div>
@@ -3484,33 +4069,31 @@ $(function() {
               <input number="58" name="c-item-input-58" id="c-item-58-2" class="choice-item" type="radio" value="number">B</input>
             </div>
             <div id="c-choice-content-58-1" class="invisible">
-              <div id="c-item-enclosing-59" class="item-enclosing">
+              <div id="c-item-enclosing-56" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-59" class="repeating-enclosing">
-                  <div class="item-number">59</div>
-                  <label class="item-label" for="c-item-input-59">A</label>
+                <div id="c-repeating-enclosing-56" class="repeating-enclosing">
+                  <div class="item-number">56</div>
+                  <label class="item-label" for="c-item-input-56">A</label>
                   <div class="item-input">
-                    <input number="59" name="c-item-input-59" id="c-item-59" class=" item-input-text" type="text">
+                    <input number="56" name="c-item-input-56" id="c-item-56" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-59" class="item-error">Invalid</div>
-                    <div id="c-item-path-59" class="item-path" enabled="true">main|max-occurs-example-5|A</div>
+                    <div id="c-item-error-56" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
             </div>
             <div id="c-choice-content-58-2" class="invisible">
-              <div id="c-item-enclosing-60" class="item-enclosing">
+              <div id="c-item-enclosing-57" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-60" class="repeating-enclosing">
-                  <div class="item-number">60</div>
-                  <label class="item-label" for="c-item-input-60">B</label>
+                <div id="c-repeating-enclosing-57" class="repeating-enclosing">
+                  <div class="item-number">57</div>
+                  <label class="item-label" for="c-item-input-57">B</label>
                   <div class="item-input">
-                    <input number="60" name="c-item-input-60" id="c-item-60" class=" item-input-text" type="text">
+                    <input number="57" name="c-item-input-57" id="c-item-57" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-60" class="item-error">Invalid</div>
-                    <div id="c-item-path-60" class="item-path" enabled="true">main|max-occurs-example-5|B</div>
+                    <div id="c-item-error-57" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
@@ -3519,167 +4102,157 @@ $(function() {
         </div>
         <div class="sequence">
           <div class="repeating-title">Repeatable complex type with title</div>
-          <div id="c-repeat-button-61" class="repeat-button white small">+</div>
-          <div id="c-repeating-enclosing-61" class="repeating-enclosing">
+          <div id="c-repeat-button-59" class="repeat-button white small">+</div>
+          <div id="c-repeating-enclosing-59" class="repeating-enclosing">
             <div class="sequence-label">Two items</div>
-            <div id="c-sequence-61" class="sequence-content">
-              <div id="c-item-enclosing-62" class="item-enclosing">
+            <div id="c-sequence-59" class="sequence-content">
+              <div id="c-item-enclosing-56" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-62" class="repeating-enclosing">
-                  <div class="item-number">62</div>
-                  <label class="item-label" for="c-item-input-62">A</label>
+                <div id="c-repeating-enclosing-56" class="repeating-enclosing">
+                  <div class="item-number">56</div>
+                  <label class="item-label" for="c-item-input-56">A</label>
                   <div class="item-input">
-                    <input number="62" name="c-item-input-62" id="c-item-62" class=" item-input-text" type="text">
+                    <input number="56" name="c-item-input-56" id="c-item-56" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-62" class="item-error">Invalid</div>
-                    <div id="c-item-path-62" class="item-path" enabled="true">main|max-occurs-example-6|A</div>
+                    <div id="c-item-error-56" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
-              <div id="c-item-enclosing-63" class="item-enclosing">
+              <div id="c-item-enclosing-57" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-63" class="repeating-enclosing">
-                  <div class="item-number">63</div>
-                  <label class="item-label" for="c-item-input-63">B</label>
+                <div id="c-repeating-enclosing-57" class="repeating-enclosing">
+                  <div class="item-number">57</div>
+                  <label class="item-label" for="c-item-input-57">B</label>
                   <div class="item-input">
-                    <input number="63" name="c-item-input-63" id="c-item-63" class=" item-input-text" type="text">
+                    <input number="57" name="c-item-input-57" id="c-item-57" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-63" class="item-error">Invalid</div>
-                    <div id="c-item-path-63" class="item-path" enabled="true">main|max-occurs-example-6|B</div>
+                    <div id="c-item-error-57" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div id="c-item-enclosing-64" class="item-enclosing">
+        <div id="c-item-enclosing-60" class="item-enclosing">
           <div class="repeating-title">
           </div>
-          <div id="c-repeating-enclosing-64" class="repeating-enclosing">
+          <div id="c-repeating-enclosing-60" class="repeating-enclosing">
             <div class="item-title">Optional elements</div>
             <div class="item-before">Setting minOccurs=0 on an element means that if the entry is left blank at submit then the xml element will be excluded from the final xml.</div>
-            <div class="item-number">64</div>
-            <label class="item-label" for="c-item-input-64">Optional string</label>
+            <div class="item-number">60</div>
+            <label class="item-label" for="c-item-input-60">Optional string</label>
             <div class="item-input">
-              <input number="64" name="c-item-input-64" id="c-item-64" class=" item-input-text" type="text">
+              <input number="60" name="c-item-input-60" id="c-item-60" class=" item-input-text" type="text">
               </input>
-              <div id="c-item-error-64" class="item-error">Invalid</div>
-              <div id="c-item-path-64" class="item-path" enabled="true">main|optional</div>
+              <div id="c-item-error-60" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
-        <div id="c-item-enclosing-65" class="item-enclosing">
+        <div id="c-item-enclosing-61" class="item-enclosing">
           <div class="repeating-title">
           </div>
-          <div id="c-repeating-enclosing-65" class="repeating-enclosing">
+          <div id="c-repeating-enclosing-61" class="repeating-enclosing">
             <div class="item-title">Anonymous simple type</div>
-            <div class="item-number">65</div>
-            <label class="item-label" for="c-item-input-65">Up to four digits</label>
+            <div class="item-number">61</div>
+            <label class="item-label" for="c-item-input-61">Up to four digits</label>
             <div class="item-input">
-              <input number="65" name="c-item-input-65" id="c-item-65" class=" item-input-text" type="text">
+              <input number="61" name="c-item-input-61" id="c-item-61" class=" item-input-text" type="text">
               </input>
-              <div id="c-item-error-65" class="item-error">Invalid</div>
-              <div id="c-item-path-65" class="item-path" enabled="true">main|anonymous-simple-type</div>
+              <div id="c-item-error-61" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
         <div class="sequence">
           <div class="repeating-title">
           </div>
-          <div id="c-repeating-enclosing-66" class="repeating-enclosing">
+          <div id="c-repeating-enclosing-62" class="repeating-enclosing">
             <div class="sequence-label">Named complex type</div>
-            <div id="c-sequence-66" class="sequence-content">
-              <div id="c-item-enclosing-67" class="item-enclosing">
+            <div id="c-sequence-62" class="sequence-content">
+              <div id="c-item-enclosing-63" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-67" class="repeating-enclosing">
-                  <div class="item-number">67</div>
-                  <label class="item-label" for="c-item-input-67">First</label>
+                <div id="c-repeating-enclosing-63" class="repeating-enclosing">
+                  <div class="item-number">63</div>
+                  <label class="item-label" for="c-item-input-63">First</label>
                   <div class="item-input">
-                    <input number="67" name="c-item-input-67" id="c-item-67" class=" item-input-text" type="text">
+                    <input number="63" name="c-item-input-63" id="c-item-63" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-67" class="item-error">Invalid</div>
-                    <div id="c-item-path-67" class="item-path" enabled="true">main|named-complex-type|first</div>
+                    <div id="c-item-error-63" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
-              <div id="c-item-enclosing-68" class="item-enclosing">
+              <div id="c-item-enclosing-64" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-68" class="repeating-enclosing">
-                  <div class="item-number">68</div>
-                  <label class="item-label" for="c-item-input-68">Second</label>
+                <div id="c-repeating-enclosing-64" class="repeating-enclosing">
+                  <div class="item-number">64</div>
+                  <label class="item-label" for="c-item-input-64">Second</label>
                   <div class="item-input">
-                    <input number="68" name="c-item-input-68" id="c-item-68" class=" item-input-text" type="text">
+                    <input number="64" name="c-item-input-64" id="c-item-64" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-68" class="item-error">Invalid</div>
-                    <div id="c-item-path-68" class="item-path" enabled="true">main|named-complex-type|second</div>
+                    <div id="c-item-error-64" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
               <div class="sequence">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-69" class="repeating-enclosing">
+                <div id="c-repeating-enclosing-65" class="repeating-enclosing">
                   <div class="sequence-label">Nested named complex type</div>
-                  <div id="c-sequence-69" class="sequence-content">
-                    <div id="c-item-enclosing-70" class="item-enclosing">
+                  <div id="c-sequence-65" class="sequence-content">
+                    <div id="c-item-enclosing-56" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="c-repeating-enclosing-70" class="repeating-enclosing">
-                        <div class="item-number">70</div>
-                        <label class="item-label" for="c-item-input-70">A</label>
+                      <div id="c-repeating-enclosing-56" class="repeating-enclosing">
+                        <div class="item-number">56</div>
+                        <label class="item-label" for="c-item-input-56">A</label>
                         <div class="item-input">
-                          <input number="70" name="c-item-input-70" id="c-item-70" class=" item-input-text" type="text">
+                          <input number="56" name="c-item-input-56" id="c-item-56" class=" item-input-text" type="text">
                           </input>
-                          <div id="c-item-error-70" class="item-error">Invalid</div>
-                          <div id="c-item-path-70" class="item-path" enabled="true">main|named-complex-type|nested|A</div>
+                          <div id="c-item-error-56" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="c-item-enclosing-71" class="item-enclosing">
+                    <div id="c-item-enclosing-57" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="c-repeating-enclosing-71" class="repeating-enclosing">
-                        <div class="item-number">71</div>
-                        <label class="item-label" for="c-item-input-71">B</label>
+                      <div id="c-repeating-enclosing-57" class="repeating-enclosing">
+                        <div class="item-number">57</div>
+                        <label class="item-label" for="c-item-input-57">B</label>
                         <div class="item-input">
-                          <input number="71" name="c-item-input-71" id="c-item-71" class=" item-input-text" type="text">
+                          <input number="57" name="c-item-input-57" id="c-item-57" class=" item-input-text" type="text">
                           </input>
-                          <div id="c-item-error-71" class="item-error">Invalid</div>
-                          <div id="c-item-path-71" class="item-path" enabled="true">main|named-complex-type|nested|B</div>
+                          <div id="c-item-error-57" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="c-item-enclosing-72" class="item-enclosing">
+                    <div id="c-item-enclosing-66" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="c-repeating-enclosing-72" class="repeating-enclosing">
-                        <div class="item-number">72</div>
-                        <label class="item-label" for="c-item-input-72">C<em>*</em></label>
+                      <div id="c-repeating-enclosing-66" class="repeating-enclosing">
+                        <div class="item-number">66</div>
+                        <label class="item-label" for="c-item-input-66">C<em>*</em></label>
                         <div class="item-input">
-                          <input number="72" name="c-item-input-72" id="c-item-72" class=" item-input-text" type="checkbox">
+                          <input number="66" name="c-item-input-66" id="c-item-66" class=" item-input-text" type="checkbox">
                           </input>
-                          <div id="c-item-error-72" class="item-error">Invalid</div>
-                          <div id="c-item-path-72" class="item-path" enabled="true">main|named-complex-type|nested|C</div>
+                          <div id="c-item-error-66" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="c-item-enclosing-73" class="item-enclosing">
+                    <div id="c-item-enclosing-67" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="c-repeating-enclosing-73" class="repeating-enclosing">
-                        <div class="item-number">73</div>
-                        <label class="item-label" for="c-item-input-73">Option</label>
+                      <div id="c-repeating-enclosing-67" class="repeating-enclosing">
+                        <div class="item-number">67</div>
+                        <label class="item-label" for="c-item-input-67">Option</label>
                         <div class="item-input">
-                          <select id="c-item-73" class="select" name="c-item-input-73" number="73">
+                          <select id="c-item-67" class="select" name="c-item-input-67" number="67">
                             <option value="option-1">option-1</option>
                             <option value="option-2">option-2</option>
                           </select>
-                          <div id="c-item-error-73" class="item-error">Invalid</div>
-                          <div id="c-item-path-73" class="item-path" enabled="true">main|named-complex-type|nested|option</div>
+                          <div id="c-item-error-67" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
@@ -3692,20 +4265,19 @@ $(function() {
         <div class="sequence">
           <div class="repeating-title">
           </div>
-          <div id="c-repeating-enclosing-74" class="repeating-enclosing">
+          <div id="c-repeating-enclosing-68" class="repeating-enclosing">
             <div class="sequence-label">Anonymous complex type</div>
-            <div id="c-sequence-74" class="sequence-content">
-              <div id="c-item-enclosing-75" class="item-enclosing">
+            <div id="c-sequence-68" class="sequence-content">
+              <div id="c-item-enclosing-69" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-75" class="repeating-enclosing">
-                  <div class="item-number">75</div>
-                  <label class="item-label" for="c-item-input-75">Value</label>
+                <div id="c-repeating-enclosing-69" class="repeating-enclosing">
+                  <div class="item-number">69</div>
+                  <label class="item-label" for="c-item-input-69">Value</label>
                   <div class="item-input">
-                    <input number="75" name="c-item-input-75" id="c-item-75" class=" item-input-text" type="text">
+                    <input number="69" name="c-item-input-69" id="c-item-69" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-75" class="item-error">Invalid</div>
-                    <div id="c-item-path-75" class="item-path" enabled="true">main|anonymous-complex-type|string-field</div>
+                    <div id="c-item-error-69" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
@@ -3715,21 +4287,20 @@ $(function() {
         <div class="sequence">
           <div class="repeating-title">
           </div>
-          <div id="c-repeating-enclosing-76" class="repeating-enclosing">
+          <div id="c-repeating-enclosing-70" class="repeating-enclosing">
             <div class="sequence-label"></div>
-            <div id="c-sequence-76" class="sequence-content">
-              <div id="c-item-enclosing-77" class="item-enclosing">
+            <div id="c-sequence-70" class="sequence-content">
+              <div id="c-item-enclosing-71" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeat-button-77" class="repeat-button white small">+</div>
-                <div id="c-repeating-enclosing-77" class="repeating-enclosing">
-                  <div class="item-number">77</div>
-                  <label class="item-label" for="c-item-input-77">Anon complex type with repeat</label>
+                <div id="c-repeat-button-71" class="repeat-button white small">+</div>
+                <div id="c-repeating-enclosing-71" class="repeating-enclosing">
+                  <div class="item-number">71</div>
+                  <label class="item-label" for="c-item-input-71">Anon complex type with repeat</label>
                   <div class="item-input">
-                    <input number="77" name="c-item-input-77" id="c-item-77" class=" item-input-text" type="text">
+                    <input number="71" name="c-item-input-71" id="c-item-71" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-77" class="item-error">Invalid</div>
-                    <div id="c-item-path-77" class="item-path" enabled="true">main|anonymous-complex-type-with-repeat|string-field</div>
+                    <div id="c-item-error-71" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
@@ -3739,65 +4310,61 @@ $(function() {
         <div class="sequence">
           <div class="repeating-title">
           </div>
-          <div id="c-repeat-button-78" class="repeat-button white small">+</div>
-          <div id="c-repeating-enclosing-78" class="repeating-enclosing">
+          <div id="c-repeat-button-72" class="repeat-button white small">+</div>
+          <div id="c-repeating-enclosing-72" class="repeating-enclosing">
             <div class="sequence-label">Named complex type with repeat TODO</div>
-            <div id="c-sequence-78" class="sequence-content">
-              <div id="c-item-enclosing-79" class="item-enclosing">
+            <div id="c-sequence-72" class="sequence-content">
+              <div id="c-item-enclosing-56" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-79" class="repeating-enclosing">
-                  <div class="item-number">79</div>
-                  <label class="item-label" for="c-item-input-79">A</label>
+                <div id="c-repeating-enclosing-56" class="repeating-enclosing">
+                  <div class="item-number">56</div>
+                  <label class="item-label" for="c-item-input-56">A</label>
                   <div class="item-input">
-                    <input number="79" name="c-item-input-79" id="c-item-79" class=" item-input-text" type="text">
+                    <input number="56" name="c-item-input-56" id="c-item-56" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-79" class="item-error">Invalid</div>
-                    <div id="c-item-path-79" class="item-path" enabled="true">main|named-complex-type-with-repeat|A</div>
+                    <div id="c-item-error-56" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
-              <div id="c-item-enclosing-80" class="item-enclosing">
+              <div id="c-item-enclosing-57" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-80" class="repeating-enclosing">
-                  <div class="item-number">80</div>
-                  <label class="item-label" for="c-item-input-80">B</label>
+                <div id="c-repeating-enclosing-57" class="repeating-enclosing">
+                  <div class="item-number">57</div>
+                  <label class="item-label" for="c-item-input-57">B</label>
                   <div class="item-input">
-                    <input number="80" name="c-item-input-80" id="c-item-80" class=" item-input-text" type="text">
+                    <input number="57" name="c-item-input-57" id="c-item-57" class=" item-input-text" type="text">
                     </input>
-                    <div id="c-item-error-80" class="item-error">Invalid</div>
-                    <div id="c-item-path-80" class="item-path" enabled="true">main|named-complex-type-with-repeat|B</div>
+                    <div id="c-item-error-57" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
-              <div id="c-item-enclosing-81" class="item-enclosing">
+              <div id="c-item-enclosing-66" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-81" class="repeating-enclosing">
-                  <div class="item-number">81</div>
-                  <label class="item-label" for="c-item-input-81">C<em>*</em></label>
+                <div id="c-repeating-enclosing-66" class="repeating-enclosing">
+                  <div class="item-number">66</div>
+                  <label class="item-label" for="c-item-input-66">C<em>*</em></label>
                   <div class="item-input">
-                    <input number="81" name="c-item-input-81" id="c-item-81" class=" item-input-text" type="checkbox">
+                    <input number="66" name="c-item-input-66" id="c-item-66" class=" item-input-text" type="checkbox">
                     </input>
-                    <div id="c-item-error-81" class="item-error">Invalid</div>
-                    <div id="c-item-path-81" class="item-path" enabled="true">main|named-complex-type-with-repeat|C</div>
+                    <div id="c-item-error-66" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
-              <div id="c-item-enclosing-82" class="item-enclosing">
+              <div id="c-item-enclosing-67" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="c-repeating-enclosing-82" class="repeating-enclosing">
-                  <div class="item-number">82</div>
-                  <label class="item-label" for="c-item-input-82">Option</label>
+                <div id="c-repeating-enclosing-67" class="repeating-enclosing">
+                  <div class="item-number">67</div>
+                  <label class="item-label" for="c-item-input-67">Option</label>
                   <div class="item-input">
-                    <select id="c-item-82" class="select" name="c-item-input-82" number="82">
+                    <select id="c-item-67" class="select" name="c-item-input-67" number="67">
                       <option value="option-1">option-1</option>
                       <option value="option-2">option-2</option>
                     </select>
-                    <div id="c-item-error-82" class="item-error">Invalid</div>
-                    <div id="c-item-path-82" class="item-path" enabled="true">main|named-complex-type-with-repeat|option</div>
+                    <div id="c-item-error-67" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
@@ -3807,66 +4374,62 @@ $(function() {
         <div class="sequence">
           <div class="repeating-title">
           </div>
-          <div id="c-repeating-enclosing-83" class="repeating-enclosing">
+          <div id="c-repeating-enclosing-73" class="repeating-enclosing">
             <div class="sequence-label"></div>
-            <div id="c-sequence-83" class="sequence-content">
-              <fieldset id="c-fieldset-83" class="fieldset">
+            <div id="c-sequence-73" class="sequence-content">
+              <fieldset id="c-fieldset-73" class="fieldset">
                 <legend >Fieldset example</legend>
-                <div id="c-item-enclosing-84" class="item-enclosing">
+                <div id="c-item-enclosing-56" class="item-enclosing">
                   <div class="repeating-title">
                   </div>
-                  <div id="c-repeating-enclosing-84" class="repeating-enclosing">
-                    <div class="item-number">84</div>
-                    <label class="item-label" for="c-item-input-84">A</label>
+                  <div id="c-repeating-enclosing-56" class="repeating-enclosing">
+                    <div class="item-number">56</div>
+                    <label class="item-label" for="c-item-input-56">A</label>
                     <div class="item-input">
-                      <input number="84" name="c-item-input-84" id="c-item-84" class=" item-input-text" type="text">
+                      <input number="56" name="c-item-input-56" id="c-item-56" class=" item-input-text" type="text">
                       </input>
-                      <div id="c-item-error-84" class="item-error">Invalid</div>
-                      <div id="c-item-path-84" class="item-path" enabled="true">main|fieldset-example|A</div>
+                      <div id="c-item-error-56" class="item-error">Invalid</div>
                     </div>
                   </div>
                 </div>
-                <div id="c-item-enclosing-85" class="item-enclosing">
+                <div id="c-item-enclosing-57" class="item-enclosing">
                   <div class="repeating-title">
                   </div>
-                  <div id="c-repeating-enclosing-85" class="repeating-enclosing">
-                    <div class="item-number">85</div>
-                    <label class="item-label" for="c-item-input-85">B</label>
+                  <div id="c-repeating-enclosing-57" class="repeating-enclosing">
+                    <div class="item-number">57</div>
+                    <label class="item-label" for="c-item-input-57">B</label>
                     <div class="item-input">
-                      <input number="85" name="c-item-input-85" id="c-item-85" class=" item-input-text" type="text">
+                      <input number="57" name="c-item-input-57" id="c-item-57" class=" item-input-text" type="text">
                       </input>
-                      <div id="c-item-error-85" class="item-error">Invalid</div>
-                      <div id="c-item-path-85" class="item-path" enabled="true">main|fieldset-example|B</div>
+                      <div id="c-item-error-57" class="item-error">Invalid</div>
                     </div>
                   </div>
                 </div>
-                <div id="c-item-enclosing-86" class="item-enclosing">
+                <div id="c-item-enclosing-66" class="item-enclosing">
                   <div class="repeating-title">
                   </div>
-                  <div id="c-repeating-enclosing-86" class="repeating-enclosing">
-                    <div class="item-number">86</div>
-                    <label class="item-label" for="c-item-input-86">C<em>*</em></label>
+                  <div id="c-repeating-enclosing-66" class="repeating-enclosing">
+                    <div class="item-number">66</div>
+                    <label class="item-label" for="c-item-input-66">C<em>*</em></label>
                     <div class="item-input">
-                      <input number="86" name="c-item-input-86" id="c-item-86" class=" item-input-text" type="checkbox">
+                      <input number="66" name="c-item-input-66" id="c-item-66" class=" item-input-text" type="checkbox">
                       </input>
-                      <div id="c-item-error-86" class="item-error">Invalid</div>
-                      <div id="c-item-path-86" class="item-path" enabled="true">main|fieldset-example|C</div>
+                      <div id="c-item-error-66" class="item-error">Invalid</div>
                     </div>
                   </div>
                 </div>
-                <div id="c-item-enclosing-87" class="item-enclosing">
+                <div id="c-item-enclosing-67" class="item-enclosing">
                   <div class="repeating-title">
                   </div>
-                  <div id="c-repeating-enclosing-87" class="repeating-enclosing">
-                    <div class="item-number">87</div>
-                    <label class="item-label" for="c-item-input-87">Option</label>
+                  <div id="c-repeating-enclosing-67" class="repeating-enclosing">
+                    <div class="item-number">67</div>
+                    <label class="item-label" for="c-item-input-67">Option</label>
                     <div class="item-input">
-                      <select id="c-item-87" class="select" name="c-item-input-87" number="87">
+                      <select id="c-item-67" class="select" name="c-item-input-67" number="67">
                         <option value="option-1">option-1</option>
                         <option value="option-2">option-2</option>
                       </select>
-                      <div id="c-item-error-87" class="item-error">Invalid</div>
-                      <div id="c-item-path-87" class="item-path" enabled="true">main|fieldset-example|option</div>
+                      <div id="c-item-error-67" class="item-error">Invalid</div>
                     </div>
                   </div>
                 </div>

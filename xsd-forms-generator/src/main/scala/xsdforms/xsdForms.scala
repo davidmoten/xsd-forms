@@ -348,7 +348,7 @@ package xsdforms {
     }
 
     private def refById(id: String) = "$(\"#" + id + "\")"
-    private def valById(id: String) = refById(id) + ".val().encodeHTML()"
+    private def valById(id: String) = "encodeHTML("+refById(id) + ".val())"
     private def namespace(node: Node) =
       if (elementNumber(node.element).equals("1"))
         " xmlns=\"" + targetNamespace + "\""
@@ -373,7 +373,7 @@ package xsdforms {
     private def addXmlExtractScriplet(node: NodeSequence) {
       val s = new StringBuilder
       s.append("""
- |    var xml = """ + xmlStart(node) + """; 
+ |    var xml = """ + xmlStart(node) + """ + "\n"; 
  |    //now add sequence children""")
       node.children.foreach { n =>
         s.append("""
@@ -388,8 +388,9 @@ package xsdforms {
     private def addXmlExtractScriplet(node: NodeChoice) {
       val s = new StringBuilder
       s.append("""
- |    var xml = """ + xmlStart(node) + """; 
+ |    var xml = """ + xmlStart(node) + """ + "\n"; 
  |    //now optionally add selected child if any
+ |    var suffix=""; //what is suffix used for?
  |    var checked = $(':input[name=""" + getChoiceItemName(node) + """' + suffix + ']:checked').attr("id");
  """)
 
@@ -446,13 +447,14 @@ package xsdforms {
 <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript">
 
-if (!String.prototype.encodeHTML) {
-  String.prototype.encodeHTML = function () {
-    return this.replace(/&/g, '&amp;')
-               .replace(/</g, '&lt;')
-               .replace(/>/g, '&gt;')
-               .replace(/"/g, '&quot;');
-  };
+function encodeHTML(s) {
+    if (typeof(myVariable) != "undefined")
+	    return s.replace(/&/g, '&amp;')
+	               .replace(/</g, '&lt;')
+	               .replace(/>/g, '&gt;')
+	               .replace(/"/g, '&quot;');
+     else 
+          return s; 
 }
 
 function openTag(name) {

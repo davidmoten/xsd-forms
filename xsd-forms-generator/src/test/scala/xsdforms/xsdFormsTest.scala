@@ -563,6 +563,7 @@ package xsdforms {
       println("xml=" + xml)
       assertFalse(errors.isDisplayed());
       assertTrue(xml.getText.trim.contains("xmlns"))
+      fail
 
       //TODO generate objects from demo schema and attempt unmarshal of xml
       //      val text = xml.getText.replaceAll("xmlns=\".*\"", "")
