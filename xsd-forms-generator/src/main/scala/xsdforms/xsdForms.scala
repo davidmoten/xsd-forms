@@ -191,8 +191,27 @@ package xsdforms {
     import scala.collection.mutable.HashMap
     private val elementNumbers = new HashMap[Element, String]()
 
+    //assign element numbers so that order of display on page 
+    //will match order of element numbers. To do this must 
+    //traverse children before siblings
+    assignElementNumbers(tree)
+    
     //process the abstract syntax tree
     doNode(tree)
+    
+    
+    /**
+     * Traverse children before siblings to provide element 
+     * numbers matching page display order.
+     * @param node
+     */
+    private def assignElementNumbers(node:Node) {
+      elementNumber(node)
+      node match {
+        case n:NodeGroup => n.children.foreach {assignElementNumbers(_)} 
+        case _ => ;
+      }
+    }
 
     private def doNode(node: Node) {
       node match {
@@ -676,7 +695,9 @@ $(function() {
         .div(classes = List("item-input"))
     }
 
-    private def elementNumber(e: Element) = {
+    private def elementNumber(node:Node):String = elementNumber(node.element)
+    
+    private def elementNumber(e: Element):String = {
       val n = elementNumbers.get(e);
       if (n.isDefined)
         n.get
