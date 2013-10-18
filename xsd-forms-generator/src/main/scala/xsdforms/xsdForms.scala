@@ -723,7 +723,8 @@ $(function() {
       QN(qName.getNamespaceURI(), qName.getLocalPart())
 
     private def getItemId(node: Node): String = getItemId(elementNumber(node.element))
-    private def getItemId(number: String) = idPrefix + "item-" + number
+    private def getItemId(element: Element): String = getItemId(elementNumber(element))
+    private def getItemId(number: String): String = idPrefix + "item-" + number
 
     private def getItemEnclosingId(number: String) =
       idPrefix + "item-enclosing-" + number
@@ -771,16 +772,14 @@ $(function() {
 
       val number = elementNumber(e)
 
-      val itemId = getItemId(number)
-
       if (isEnumeration(r))
         addEnumeration(e, r)
       else
-        addTextField(e, r, itemId, getExtraClasses(qn))
+        addTextField(e, r, getExtraClasses(qn))
 
-      addWidthScript(e, itemId)
+      addWidthScript(e)
 
-      addCssScript(e, itemId)
+      addCssScript(e)
     }
 
     private def getExtraClasses(qn: QN) = qn match {
@@ -791,10 +790,11 @@ $(function() {
     }
 
     private def addTextField(
-      e: Element, r: Restriction, itemId: String,
+      e: Element, r: Restriction,
       extraClasses: String) {
       val number = elementNumber(e)
       val inputType = getInputType(r)
+      val itemId = getItemId(number)
       getTextType(e) match {
         case Some("textarea") =>
           html.textarea(
@@ -822,7 +822,8 @@ $(function() {
       }
     }
 
-    private def addWidthScript(e: Element, itemId: String) {
+    private def addWidthScript(e: Element) {
+      val itemId = getItemId(e)
       getAnnotation(e, "width") match {
         case Some(x) =>
           addScriptWithMargin("|  $('#" + itemId + "').width('" + x + "');")
@@ -830,7 +831,8 @@ $(function() {
       }
     }
 
-    private def addCssScript(e: Element, itemId: String) {
+    private def addCssScript(e: Element) {
+      val itemId = getItemId(e)
       getAnnotation(e, "css") match {
         case Some(x) => {
           val items = x.split(';')
