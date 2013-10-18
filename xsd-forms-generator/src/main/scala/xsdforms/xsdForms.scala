@@ -213,6 +213,7 @@ package xsdforms {
     }
 
     private def doNode(node: Node) {
+      addRepeatCountScriptlet(node);
       node match {
         case n: NodeSimpleType => doNode(n)
         case n: NodeBaseType => doNode(n)
@@ -343,6 +344,14 @@ package xsdforms {
 
     }
 
+    private def addRepeatCountScriptlet(node: Node) {
+      val repeatingCountVariableName = repeatCount(node)
+      addScriptWithMargin("""
+|var """ + repeatingCountVariableName + """ = 1;""")
+    }
+
+    private def repeatCount(node: Node): String = repeatCount(node.element)
+    private def repeatCount(element: Element): String = "repeatCount" + elementNumber(element)
     private def refById(id: String) = "$(\"#" + id + "\")"
     private def valById(id: String) = "encodeHTML(" + refById(id) + ".val())"
     private def namespace(node: Node) =
@@ -1143,6 +1152,7 @@ $(function() {
 |""" + (if (e.minOccurs == 0) """$("#""" + enclosingId + """").hide();""" else "") + """ 
 |var lastRepeat""" + number + """="""" + enclosingId + """";
 |$("#""" + repeatButtonId + """").click(function() {
+|  """ + repeatCount(e) + """++;
 |  var clone = enclosing""" + number + """.clone();
 |  clone.insertAfter("#"+lastRepeat""" + number + """);
 |  var map = {};
