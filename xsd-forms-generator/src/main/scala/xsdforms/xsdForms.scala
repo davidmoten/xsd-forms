@@ -195,20 +195,19 @@ package xsdforms {
     //will match order of element numbers. To do this must 
     //traverse children before siblings
     assignElementNumbers(tree)
-    
+
     //process the abstract syntax tree
     doNode(tree)
-    
-    
+
     /**
-     * Traverse children before siblings to provide element 
+     * Traverse children before siblings to provide element
      * numbers matching page display order.
      * @param node
      */
-    private def assignElementNumbers(node:Node) {
+    private def assignElementNumbers(node: Node) {
       elementNumber(node)
       node match {
-        case n:NodeGroup => n.children.foreach {assignElementNumbers(_)} 
+        case n: NodeGroup => n.children.foreach { assignElementNumbers(_) }
         case _ => ;
       }
     }
@@ -226,11 +225,10 @@ package xsdforms {
     private def doNode(node: NodeSimpleType) {
       val e = node.element
       val typ = node.typ
-      val number = elementNumber(e)
 
-      addItemHtmlOpening(e, number, Some(typ))
+      addItemHtmlOpening(e, Some(typ))
       typ.simpleDerivationOption3.value match {
-        case x: Restriction => simpleType(e, x, number)
+        case x: Restriction => simpleType(e, x)
         case _ => Util.unexpected
       }
       html
@@ -244,9 +242,8 @@ package xsdforms {
     private def doNode(node: NodeBaseType) {
       val e = node.element
       val typ = node.typ
-      val number = elementNumber(e)
-      addItemHtmlOpening(e, number, None)
-      simpleType(e, new MyRestriction(typ.qName), number + "")
+      addItemHtmlOpening(e, None)
+      simpleType(e, new MyRestriction(typ.qName))
       html
         .closeTag
         .closeTag
@@ -262,7 +259,6 @@ package xsdforms {
     private def doNode(node: NodeSequence) {
       val e = node.element
 
-      val number = elementNumber(e)
       val legend = getAnnotation(e, "legend")
       val usesFieldset = legend.isDefined
 
@@ -270,9 +266,9 @@ package xsdforms {
 
       html
         .div(classes = List("sequence"))
-      repeatingTitle(e, number, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
-      repeatingEnclosing(e, number)
-      addMaxOccurs(e, number)
+      repeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
+      repeatingEnclosing(e)
+      addMaxOccurs(e)
       html.div(classes = List("sequence-label"), content = Some(label))
         .closeTag
         .div(id = Some(idPrefix + "sequence-" + number),
@@ -301,9 +297,9 @@ package xsdforms {
       val number = elementNumber(e)
 
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
-      repeatingTitle(e, number, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
-      repeatingEnclosing(e, number)
-      addMaxOccurs(e, number)
+      repeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
+      repeatingEnclosing(e)
+      addMaxOccurs(e)
       val particles = choice.group.particleOption3.map(_.value)
       addChoiceHideOnStart(particles, number)
       addChoiceShowHideScriptOnSelection(particles, number)
@@ -348,7 +344,7 @@ package xsdforms {
     }
 
     private def refById(id: String) = "$(\"#" + id + "\")"
-    private def valById(id: String) = "encodeHTML("+refById(id) + ".val())"
+    private def valById(id: String) = "encodeHTML(" + refById(id) + ".val())"
     private def namespace(node: Node) =
       if (elementNumber(node.element).equals("1"))
         " xmlns=\"" + targetNamespace + "\""
@@ -653,7 +649,8 @@ $(function() {
         case _ => None
       }
 
-    private def repeatingTitle(e: Element, number: String, hasButton: Boolean) {
+    private def repeatingTitle(e: Element, hasButton: Boolean) {
+      val number = elementNumber(e)
       html.div(
         classes = List("repeating-title"),
         content = getAnnotation(e, "repeatingTitle")).closeTag
@@ -670,19 +667,21 @@ $(function() {
     private def getRepeatingEnclosingId(number: String) =
       idPrefix + "repeating-enclosing-" + number
 
-    private def repeatingEnclosing(e: Element, number: String) {
+    private def repeatingEnclosing(e: Element) {
+      val number = elementNumber(e)
       html.div(
         id = Some(getRepeatingEnclosingId(number)),
         classes = List("repeating-enclosing"))
     }
 
-    private def addItemHtmlOpening(e: Element, number: String, typ: Option[SimpleType]) {
+    private def addItemHtmlOpening(e: Element, typ: Option[SimpleType]) {
+      val number = elementNumber(e)
       html
         .div(
           classes = List("item-enclosing") ++ getVisibility(e),
           id = Some(getItemEnclosingId(number)))
-      repeatingTitle(e, number, e.maxOccurs != "0" && e.maxOccurs != "1")
-      repeatingEnclosing(e, number)
+      repeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1")
+      repeatingEnclosing(e)
       getAnnotation(e, "title") match {
         case Some(x) => html.div(classes = List("item-title"), content = Some(x)).closeTag
         case _ =>
@@ -697,9 +696,9 @@ $(function() {
         .div(classes = List("item-input"))
     }
 
-    private def elementNumber(node:Node):String = elementNumber(node.element)
-    
-    private def elementNumber(e: Element):String = {
+    private def elementNumber(node: Node): String = elementNumber(node.element)
+
+    private def elementNumber(e: Element): String = {
       val n = elementNumbers.get(e);
       if (n.isDefined)
         n.get
@@ -734,30 +733,30 @@ $(function() {
 
     private def getPathId(number: String) = idPrefix + "item-path-" + number
 
-    private def simpleType(e: Element, r: Restriction, number: String) {
+    private def simpleType(e: Element, r: Restriction) {
       val qn = toQN(r.base.get)
 
-      addInput(e, qn, r, number)
+      addInput(e, qn, r)
 
-      addMaxOccurs(e, number)
+      addMaxOccurs(e)
 
       addDescription(e)
 
-      addError(e, getItemErrorId(number))
+      addError(e)
 
       addHelp(e)
 
       addAfter(e)
 
       val statements = List(
-        createDeclarationScriptlet(e, qn, number),
+        createDeclarationScriptlet(e, qn),
         createMandatoryTestScriptlet(e, r),
         createPatternsTestScriptlet(getPatterns(r)),
         createBasePatternTestScriptlet(qn),
         createFacetTestScriptlet(r),
         createLengthTestScriptlet(r),
         createCanExcludeScriptlet(e),
-        createClosingScriptlet(e, qn, number))
+        createClosingScriptlet(e, qn))
 
       statements
         .map(stripMargin(_))
@@ -768,14 +767,16 @@ $(function() {
     private def getItemName(number: String) =
       idPrefix + "item-input-" + number;
 
-    private def addInput(e: Element, qn: QN, r: Restriction, number: String) {
+    private def addInput(e: Element, qn: QN, r: Restriction) {
+
+      val number = elementNumber(e)
 
       val itemId = getItemId(number)
 
       if (isEnumeration(r))
-        addEnumeration(e, r, number)
+        addEnumeration(e, r)
       else
-        addTextField(e, r, itemId, number, getExtraClasses(qn))
+        addTextField(e, r, itemId, getExtraClasses(qn))
 
       addWidthScript(e, itemId)
 
@@ -791,7 +792,8 @@ $(function() {
 
     private def addTextField(
       e: Element, r: Restriction, itemId: String,
-      number: String, extraClasses: String) {
+      extraClasses: String) {
+      val number = elementNumber(e)
       val inputType = getInputType(r)
       getTextType(e) match {
         case Some("textarea") =>
@@ -848,7 +850,8 @@ $(function() {
     private def isEnumeration(r: Restriction) =
       !getEnumeration(r).isEmpty
 
-    private def addEnumeration(e: Element, r: Restriction, number: String) {
+    private def addEnumeration(e: Element, r: Restriction) {
+      val number = elementNumber(e)
       val en = getEnumeration(r)
       val isRadio = getAnnotation(e, "selector") match {
         case Some("radio") => true
@@ -937,7 +940,8 @@ $(function() {
       }
     }
 
-    private def addError(e: Element, itemErrorId: String) {
+    private def addError(e: Element) {
+      val itemErrorId = getItemErrorId(elementNumber(e))
       html.div(
         id = Some(itemErrorId),
         classes = List("item-error"),
@@ -970,7 +974,8 @@ $(function() {
       }
     }
 
-    private def createDeclarationScriptlet(e: Element, qn: QN, number: String) = {
+    private def createDeclarationScriptlet(e: Element, qn: QN) = {
+      val number = elementNumber(e)
       val itemId = getItemId(number)
       """
 |// """ + e.name.get + """
@@ -1067,7 +1072,8 @@ $(function() {
       else ""
     }
 
-    private def createClosingScriptlet(e: Element, qn: QN, number: String) = {
+    private def createClosingScriptlet(e: Element, qn: QN) = {
+      val number = elementNumber(e)
       val onChange = "change("
       val changeMethod = qn match {
         case QN(xs, "date") => onChange
@@ -1121,8 +1127,8 @@ $(function() {
     private def isMultiple(e: Element): Boolean =
       (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
-    private def addMaxOccurs(e: Element, number: String) {
-
+    private def addMaxOccurs(e: Element) {
+      val number = elementNumber(e)
       if (isMultiple(e)) {
         val repeatButtonId = getRepeatButtonId(number)
         val enclosingId = idPrefix + "repeating-enclosing-" + number
