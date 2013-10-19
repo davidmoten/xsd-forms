@@ -213,7 +213,7 @@ package xsdforms {
     }
 
     private def doNode(node: Node) {
-      addRepeatCountScriptlet(node);
+      addRepeatsDeclarationScriptlet(node);
       node match {
         case n: NodeSimpleType => doNode(n)
         case n: NodeBaseType => doNode(n)
@@ -344,14 +344,14 @@ package xsdforms {
 
     }
 
-    private def addRepeatCountScriptlet(node: Node) {
-      val repeatingCountVariableName = repeatCount(node)
+    private def addRepeatsDeclarationScriptlet(node: Node) {
+      val repeatsVariable = repeats(node)
       addScriptWithMargin("""
-|var """ + repeatingCountVariableName + """ = 1;""")
+|var """ + repeatsVariable + """ = [];""")
     }
 
-    private def repeatCount(node: Node): String = repeatCount(node.element)
-    private def repeatCount(element: Element): String = "repeatCount" + elementNumber(element)
+    private def repeats(node: Node): String = repeats(node.element)
+    private def repeats(element: Element): String = "repeats" + elementNumber(element)
     private def refById(id: String) = "$(\"#" + id + "\")"
     private def valById(id: String) = "encodeHTML(" + refById(id) + ".val())"
     private def namespace(node: Node) =
@@ -751,7 +751,7 @@ $(function() {
       addMaxOccurs(e)
 
       addDescription(e)
-      
+
       addPath(e)
 
       addError(e)
@@ -962,8 +962,8 @@ $(function() {
         .closeTag
 
     }
-    
-     private def addPath(e:Element) {
+
+    private def addPath(e: Element) {
       html.div(
         classes = List("item-path"),
         id = Some(getPathId(elementNumber(e))),
@@ -1163,7 +1163,6 @@ $(function() {
 |""" + (if (e.minOccurs == 0) """$("#""" + enclosingId + """").hide();""" else "") + """ 
 |var lastRepeat""" + number + """="""" + enclosingId + """";
 |$("#""" + repeatButtonId + """").click(function() {
-|  """ + repeatCount(e) + """++;
 |  var clone = enclosing""" + number + """.clone();
 |  clone.insertAfter("#"+lastRepeat""" + number + """);
 |  var map = {};
@@ -1174,7 +1173,7 @@ $(function() {
 |    if (id.match(/^.*-\d+$/)) {
 |      //extract the number
 |      //extract the number from a choice id pattern first
-|      var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
+|      var number = id.replace(/^.*-(\d+)(-choice-\d+)$/,"$1");
 |      //if not found then extract from a standard id pattern
 |      if (number == id)
 |        number = id.replace(/^.*-(\d+)$/,"$1");
@@ -1182,6 +1181,7 @@ $(function() {
 |        repeatCount++;
 |        map[number]=repeatCount;
 |      }
+|      """ + repeats(e) + """.push(map[number]);
 |      var suffix = "-" + map[number];
 |      var newId = id + suffix;
 |      $(this).attr("id",newId);
