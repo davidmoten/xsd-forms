@@ -128,7 +128,7 @@ package xsdforms {
 
     private val uri = new File("target/demo/demo-form.html").toURI().toString()
     private val WebDriverChromeDriverKey = "webdriver.chrome.driver"
-
+      
     @Test
     def testOnFirefox() {
       println("firefox test")

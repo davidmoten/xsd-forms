@@ -744,6 +744,8 @@ $(function() {
       addDescription(e)
 
       addError(e, getItemErrorId(number))
+      
+      addPath(e)
 
       addHelp(e)
 
@@ -944,6 +946,15 @@ $(function() {
         content = Some(getAnnotation(e, "validation").getOrElse("Invalid")))
         .closeTag
 
+    }
+    
+     private def addPath(e:Element) {
+      html.div(
+        classes = List("item-path"),
+        id = Some(getPathId(elementNumber(e))),
+        enabledAttr = Some("true"),
+        content = Some(""))
+        .closeTag
     }
 
     private def addHelp(e: Element) {

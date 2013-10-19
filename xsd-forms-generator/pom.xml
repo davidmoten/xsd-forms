@@ -10,6 +10,7 @@
 	<name>${project.artifactId}</name>
 	<properties>
 		<selenium.version>2.36.0</selenium.version>
+		<webdriver.chrome.driver>/usr/local/bin/chromedriver</webdriver.chrome.driver>
 	</properties>
 	<profiles>
 		<profile>
@@ -123,6 +124,7 @@
 					<excludes>
 						<exclude>${surefire.excludes}</exclude>
 					</excludes>
+					<argLine>-Dwebdriver.chrome.driver=${webdriver.chrome.driver}</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
