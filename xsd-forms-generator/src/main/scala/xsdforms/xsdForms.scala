@@ -583,7 +583,7 @@ $(function() {
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
 
-    private def choiceIndexDelimiter = "-"
+    private def choiceIndexDelimiter = "-choice-"
 
     private def addChoiceHideOnStart(
       particles: Seq[ParticleOption], number: String) {
