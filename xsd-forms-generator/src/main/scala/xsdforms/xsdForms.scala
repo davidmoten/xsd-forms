@@ -347,7 +347,8 @@ package xsdforms {
     private def addRepeatsDeclarationScriptlet(node: Node) {
       val repeatsVariable = repeats(node)
       addScriptWithMargin("""
-|var """ + repeatsVariable + """ = [];""")
+|//blank string indicates the first instance (without instance number)
+|var """ + repeatsVariable + """ = [""];""")
     }
 
     private def repeats(node: Node): String = repeats(node.element)
