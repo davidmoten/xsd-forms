@@ -516,6 +516,9 @@ function cloneAndReplaceIds(element, suffix){
 }
     
 var repeatCount = 10000;
+    
+// required to hold structure with repeats
+var tree = {};
 
 $(function() {
   $('input').filter('.datepickerclass').datepicker();
