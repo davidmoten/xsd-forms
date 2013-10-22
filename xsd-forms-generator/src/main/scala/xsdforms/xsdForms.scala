@@ -735,6 +735,9 @@ $(function() {
     private def getItemId(node: Node): String = getItemId(elementNumber(node.element))
     private def getItemId(element: Element): String = getItemId(elementNumber(element))
     private def getItemId(number: String): String = idPrefix + "item-" + number
+    private def getItemId(number: String, enumeration: Integer): String = getItemId(number) + "-" + enumeration
+    private def getItemName(number: String) =
+      idPrefix + "item-input-" + number;
 
     private def getItemEnclosingId(number: String) =
       idPrefix + "item-enclosing-" + number
@@ -776,9 +779,6 @@ $(function() {
         .foreach(x => if (x.length > 0) addScript(x))
 
     }
-
-    private def getItemName(number: String) =
-      idPrefix + "item-input-" + number;
 
     private def addInput(e: Element, qn: QN, r: Restriction) {
 
@@ -904,7 +904,7 @@ $(function() {
       if (isRadio) {
         en.zipWithIndex.foreach(x => {
           html.input(
-            id = Some(idPrefix + "item-" + number + "-" + x._2),
+            id = Some(getItemId(number, x._2)),
             name = getItemName(number),
             classes = List("select"),
             typ = Some("radio"),
@@ -914,7 +914,7 @@ $(function() {
         })
       } else {
         html.select(
-          id = Some(idPrefix + "item-" + number),
+          id = Some(getItemId(number)),
           name = getItemName(number),
           classes = List("select"),
           number = Some(number))
@@ -926,8 +926,8 @@ $(function() {
             case Some(y: String) => {
               val refersTo = number.toInt + y.toInt
               addScriptWithMargin("""
-|  $("#""" + idPrefix + """item-""" + number + """").change( function() {
-|    var v = $("#""" + idPrefix + """item-""" + number + """");
+|  $("#""" + getItemId(number) + """").change( function() {
+|    var v = $("#""" + getItemId(number) + """");
 |    var refersTo = $("#""" + getItemEnclosingId(refersTo + "") + """") 
 |    if ("""" + x._2.valueAttribute + """" == v.val()) 
 |      refersTo.show();
@@ -1154,7 +1154,7 @@ $(function() {
       val number = elementNumber(e)
       if (isMultiple(e)) {
         val repeatButtonId = getRepeatButtonId(number)
-        val enclosingId = idPrefix + "repeating-enclosing-" + number
+        val enclosingId = getRepeatingEnclosingId(number)
 
         addScriptWithMargin("""
 
