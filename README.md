@@ -50,34 +50,32 @@ The use case is
 
 ### Building from source 
 You need maven 3 installed and subversion binaries.
-{{{
-git clone https://github.com/davidmoten/xsd-forms.git
-cd xsd-forms
-mvn clean install
-}}}
+
+    git clone https://github.com/davidmoten/xsd-forms.git
+    cd xsd-forms
+    mvn clean install
 
 ### Running selenium tests
 To run selenium tests (firefox, and chrome if setup):
-{{{
-mvn clean install -Dselenium=true
-}}}
+
+    mvn clean install -Dselenium=true
 
 ### More options
 Disable the chrome driver:
-{{{
--Dchrome=false
-}}}
+
+    -Dchrome=false
+
 If you have the chromedriver executable installed ensure it is on the $PATH. For example, on linux
-{{{
-export PATH=/opt/chromedriver:$PATH
-}}}
+
+    export PATH=/opt/chromedriver:$PATH
+
 where /opt/chromedriver is the directory containing the chromedriver executable.
 
 ### Viewing a sample form
-{{{
-cd xsd-forms-generator
-mvn jetty:run
-}}}
+
+    cd xsd-forms-generator
+    mvn jetty:run
+
 Then go to http://localhost:8080/demo-form.html.
 
 ### Development plan
