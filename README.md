@@ -90,31 +90,6 @@ Then go to http://localhost:8080/demo-form.html.
   * unit tests of form behaviour (selenium?) including xml schema compliance
   * use templating instead of coding divs directly in scala?
 
-
-### Features
-Feature|Description|Complete
------|---------------------------------------------------------------------------|--------
-Types|Simple base types (string, decimal, integer, date, datetime, time, boolean)|&#10004;
-
-
-|| ||Named simple types||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||Named complex types||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||Anonmyous complex types||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-||Restriction||base=string||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||other bases||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||minLength||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||maxLength||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||regex pattern||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||OR on multiple regex pattern||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif ||
-||Element||minOccurs=0,1||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||minOccurs>1|| ||
-|| ||maxOccurs=1,unbounded||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||maxOccurs>1||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-||Structure||Sequence||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||Choice||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
-|| ||All|| ||
-||Generate xml|| || ||
-
 Scope
 --------------
 The initial proposal is to only support certain xsd features including:
@@ -144,5 +119,26 @@ The generated form should
   * support small screen/large screen
   * support common mobile platforms
 
+## Status of features
+Category|Feature|Complete
+--------|-------|--------
+Types|Simple base types (string, decimal, integer, date, datetime, time, boolean)|&#10004;
+     |Named simple types|tick
+     |Named complex types|tick
+     |Anonmyous complex types|tick
+Restriction|base=string|tick
+     |other bases|tick
+     |minLength|tick
+     |maxLength|tick
+     |regex pattern|tick
+     |OR on multiple regex pattern|http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif
+Element|minOccurs=0,1|tick
+     |minOccurs>1|
+     |maxOccurs=1,unbounded|tick
+     |maxOccurs>1|tick
+Structure|Sequence|tick
+     |Choice|tick
+     |All| 
+Generate xml| | 
 
   
