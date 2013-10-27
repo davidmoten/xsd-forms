@@ -5,7 +5,7 @@ Moved from http://code.google.com/p/xsd-forms/
 
 Xml schemas contain nearly everything we need for many web forms except for presentation information. Instead of seeking full separation of presentation from the data model (the xml schema) there are significant advantages in [annotating the xsd itself](http://code.google.com/p/xsd-forms/source/browse/xsd-forms/trunk/demo-scalaxb/src/main/resources/demo.xsd) according to a [special schema](http://code.google.com/p/xsd-forms/source/browse/xsd-forms/trunk/xsd-scalaxb/src/main/xsd/xsd-forms.xsd) to indicate presentation details. For one, refactoring is much easier without specialized IDE tooling that can read both our xsd and our presentation format. 
 
-*Status:* pre-alpha. Alpha release planned for December 2013 (excuse delay, very busy on other projects!). UI elements mostly done, xml generation from the completed form not working properly yet. Update 27 Oct 2013: Doing major rewrite of xsd-forms to represent and process the schema as an abstract syntax tree. Have realized that the xml extraction step needs some major rework. Repetitions of elements requires quite a lot of extra smarts in the javascript. If interested can view progress in the [https://github.com/davidmoten/xsd-forms/tree/tree tree branch].
+*Status:* pre-alpha. Alpha release planned for December 2013 (excuse delay, very busy on other projects!). UI elements mostly done, xml generation from the completed form not working properly yet. Update 27 Oct 2013: Doing major rewrite of xsd-forms to represent and process the schema as an abstract syntax tree. Have realized that the xml extraction step needs some major rework. Repetitions of elements requires quite a lot of extra smarts in the javascript. If interested can view progress in the [tree branch](https://github.com/davidmoten/xsd-forms/tree/tree).
 
 Primary Use Case
 -----------------
@@ -13,7 +13,7 @@ Primary Use Case
   * The developer creates an annotated schema as per xsd-forms and generates pure html and javascript (no server side scripting). 
   * The developer links the form to a server side component that processes the submitted xml. 
 
-As the submitted xml is compliant with a schema, the xml can be unmarshalled by a tool (see [http://www.oracle.com/technetwork/articles/javase/index-140168.html](jaxb), [http://scalaxb.org](scalaxb), [http://msdn.microsoft.com/en-us/library/x6c1kb0s(v=vs.71).aspx](xsd.exe]) into schema generated objects. Consequently any change in the schema will be reflected by compilation errors in the processing code if a statically typed language is used (such as Java, Scala, C#, etc.).
+As the submitted xml is compliant with a schema, the xml can be unmarshalled by a tool (see [jaxb](http://www.oracle.com/technetwork/articles/javase/index-140168.html), [scalaxb](http://scalaxb.org), [xsd.exe](http://msdn.microsoft.com/en-us/library/x6c1kb0s(v=vs.71).aspx)) into schema generated objects. Consequently any change in the schema will be reflected by compilation errors in the processing code if a statically typed language is used (such as Java, Scala, C#, etc.).
 
 The features of javascript libraries like [http://jquery.com](JQuery) mean that generating an html/javascript form that on submit posts xml that is compliant with the schema is a viable approach. The resultant css/html/javascript can be plugged in to any web server and presentation aspects can be overriden using annotations on the schema, css overrides and custom jquery script (the ability to separate script from structure is a nice feature of jquery in this instance).
 
@@ -34,7 +34,7 @@ There will be options for that.
   * ant script (java developer)
   * web service (other)
 
-Once a beta version is ready, we will deploy a web service (Rest/SOAP) to Google App Engine at [http://xsd-forms.appspot.com]. Submit a schema document to the service and receive a zip archive in return of the generated files.
+Once a beta version is ready, we will deploy a web service (Rest/SOAP) to Google App Engine at (http://xsd-forms.appspot.com). Submit a schema document to the service and receive a zip archive in return of the generated files.
 
 [GettingStarted]
 
