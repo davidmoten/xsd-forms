@@ -120,7 +120,7 @@ The generated form should
   * support common mobile platforms
 
 ## Status of features
-Category|Feature|UI|XMl Extraction
+Category|Feature|UI|XML Extraction
 --------|-------|--------|--------
 Types|Simple base types (string, decimal, integer, date, datetime, time, boolean)|&#10004;| 
      |Named simple types|&#10004;| 
