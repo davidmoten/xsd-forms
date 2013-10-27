@@ -29,17 +29,20 @@ The features of javascript libraries like [http://jquery.com](JQuery) mean that 
 
 Note that the examples are not fully working and are still in development. The examples  look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is partially working (click Submit on a form). 
 
-===How to use it?===
+How to use it?
+----------------
 There will be options for that. 
 
   * maven plugin (java developer)
   * ant script (java developer)
   * web service (other)
 
-Once a beta version is ready, we will deploy a web service (Rest/SOAP) to Google App Engine at (http://xsd-forms.appspot.com). Submit a schema document to the service and receive a zip archive in return of the generated files.
+Once a beta version is ready, we will deploy a web service (Rest/SOAP) to Google App Engine at http://xsd-forms.appspot.com. Submit a schema document to the service and receive a zip archive in return of the generated files.
 
 [GettingStarted]
 
+Scope
+--------------
 The initial proposal is to only support certain xsd features including:
 
   * elements only, not attributes
