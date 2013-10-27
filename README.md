@@ -7,7 +7,7 @@ Xml schemas contain nearly everything we need for many web forms except for pres
 
 *Status:* pre-alpha. Alpha release planned for December 2013 (excuse delay, very busy on other projects!). UI elements mostly done, xml generation from the completed form not working properly yet. Update 27 Oct 2013: Doing major rewrite of xsd-forms to represent and process the schema as an abstract syntax tree. Have realized that the xml extraction step needs some major rework. Repetitions of elements requires quite a lot of extra smarts in the javascript. If interested can view progress in the [tree branch](https://github.com/davidmoten/xsd-forms/tree/tree).
 
-Architecture
+Design
 -----------------
 
 **Primary Use Case**
