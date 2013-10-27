@@ -64,6 +64,10 @@ To run selenium tests (firefox, and chrome if setup):
 Disable the chrome driver:
 
     -Dchrome=false
+    
+Disable the firefox driver:
+
+    -Dfirefox=false
 
 If you have the chromedriver executable installed ensure it is on the $PATH. For example, on linux
 
