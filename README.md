@@ -39,7 +39,77 @@ There will be options for that.
 
 Once a beta version is ready, we will deploy a web service (Rest/SOAP) to Google App Engine at http://xsd-forms.appspot.com. Submit a schema document to the service and receive a zip archive in return of the generated files.
 
-[GettingStarted]
+Getting Started
+----------------
+
+### Technical overview
+The use case is
+ Given an xml schema, generate html, javascript and css files that will capture input, perform validation and prepare an xml representation of the form detail compliant with the schema.
+
+### Building from source 
+You need maven 3 installed and subversion binaries.
+{{{
+git clone https://github.com/davidmoten/xsd-forms.git
+cd xsd-forms
+mvn clean install
+}}}
+
+### Running selenium tests
+To run selenium tests (firefox, and chrome if setup):
+{{{
+mvn clean install -Dselenium=true
+}}}
+
+### More options
+Disable the chrome driver:
+{{{
+-Dchrome=false
+}}}
+If you have the chromedriver executable installed ensure it is on the $PATH. For example, on linux
+{{{
+export PATH=/opt/chromedriver:$PATH
+}}}
+where /opt/chromedriver is the directory containing the chromedriver executable.
+
+### Viewing a sample form
+{{{
+cd xsd-forms-generator
+mvn jetty:run
+}}}
+Then go to http://localhost:8080/demo-form.html.
+
+### Development plan
+  * use jquery to insert clones of div blocks to model maxOccurs > 1
+  * demonstrate choice presentation options (inline and post, labelled and unlabelled)
+  * implement choice presentation options
+  * clean up generated jquery code
+  * improve presentation 
+  * enable css override
+  * generate xml
+  * unit tests of form generation
+  * unit tests of form behaviour (selenium?) including xml schema compliance
+  * use templating instead of coding divs directly in scala?
+
+
+### Features
+||Types||Simple base types (string, decimal, integer, date, datetime, time, boolean)||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||Named simple types||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||Named complex types||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||Anonmyous complex types||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+||Restriction||base=string||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||other bases||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||minLength||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||maxLength||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||regex pattern||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||OR on multiple regex pattern||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif ||
+||Element||minOccurs=0,1||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||minOccurs>1|| ||
+|| ||maxOccurs=1,unbounded||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||maxOccurs>1||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+||Structure||Sequence||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||Choice||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
+|| ||All|| ||
+||Generate xml|| || ||
 
 Scope
 --------------
