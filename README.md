@@ -120,25 +120,25 @@ The generated form should
   * support common mobile platforms
 
 ## Status of features
-Category|Feature|Complete
---------|-------|--------
-Types|Simple base types (string, decimal, integer, date, datetime, time, boolean)|&#10004;
-     |Named simple types|&#10004;
-     |Named complex types|&#10004;
-     |Anonmyous complex types|&#10004;
-Restriction|base=string|&#10004;
-     |other bases|&#10004;
-     |minLength|&#10004;
-     |maxLength|&#10004;
-     |regex pattern|&#10004;
-     |OR on multiple regex pattern|&#10004;
-Element|minOccurs=0,1|&#10004;
-     |minOccurs>1|
-     |maxOccurs=1,unbounded|&#10004;
-     |maxOccurs>1|&#10004;
-Structure|Sequence|&#10004;
-     |Choice|&#10004;
-     |All| 
-Generate xml| | 
+Category|Feature|UI|XMl Extraction
+--------|-------|--------|--------
+Types|Simple base types (string, decimal, integer, date, datetime, time, boolean)|&#10004;| 
+     |Named simple types|&#10004;| 
+     |Named complex types|&#10004;| 
+     |Anonmyous complex types|&#10004;| 
+Restriction|base=string|&#10004;| 
+     |other bases|&#10004;| 
+     |minLength|&#10004;| 
+     |maxLength|&#10004;| 
+     |regex pattern|&#10004;| 
+     |OR on multiple regex pattern|&#10004;| 
+Element|minOccurs=0,1|&#10004;| 
+     |minOccurs>1| | 
+     |maxOccurs=1,unbounded|&#10004;| 
+     |maxOccurs>1|&#10004;| 
+Structure|Sequence|&#10004;| 
+     |Choice|&#10004;| 
+     |All| | 
+Generate xml| | |  
 
   
