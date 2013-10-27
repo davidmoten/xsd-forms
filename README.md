@@ -92,8 +92,10 @@ Then go to http://localhost:8080/demo-form.html.
 
 
 ### Features
-Types|Simple base types (string, decimal, integer, date, datetime, time, boolean)|&#10004;
+Feature|Description|Complete
 -----|---------------------------------------------------------------------------|--------
+Types|Simple base types (string, decimal, integer, date, datetime, time, boolean)|&#10004;
+
 
 || ||Named simple types||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
 || ||Named complex types||http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/test/resources/tick.gif||
