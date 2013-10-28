@@ -124,7 +124,7 @@ The generated form should
   * support common mobile platforms
 
 ## Status of features
-Category|Feature|UI|XML Extraction
+Category|Feature|UI|XML gen
 --------|-------|--------|--------
 Types|Simple base types (string, decimal, integer, date, datetime, time, boolean)|&#10004;| 
      |Named simple types|&#10004;| 
@@ -143,6 +143,5 @@ Element|minOccurs=0,1|&#10004;|
 Structure|Sequence|&#10004;| 
      |Choice|&#10004;| 
      |All| | 
-Generate xml| | |  
 
   
