@@ -246,9 +246,7 @@ package xsdforms {
       addItemHtmlOpening(e, None)
       simpleType(e, new MyRestriction(typ.qName))
       html
-        .closeTag
-        .closeTag
-        .closeTag
+        .closeTag(3)
 
       addXmlExtractScriplet(node)
     }
@@ -269,7 +267,7 @@ package xsdforms {
         .div(classes = List("sequence"))
       repeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
       repeatingEnclosing(e)
-      addMaxOccurs(e)
+      addMaxOccursScriptlet(e)
       html.div(classes = List("sequence-label"), content = Some(label))
         .closeTag
         .div(id = Some(idPrefix + "sequence-" + number),
@@ -285,8 +283,7 @@ package xsdforms {
       if (usesFieldset)
         html.closeTag
       html
-        .closeTag
-        .closeTag
+        .closeTag(2)
 
     }
 
@@ -300,10 +297,10 @@ package xsdforms {
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
       repeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
       repeatingEnclosing(e)
-      addMaxOccurs(e)
+      addMaxOccursScriptlet(e)
       val particles = choice.group.particleOption3.map(_.value)
-      addChoiceHideOnStart(particles, number)
-      addChoiceShowHideScriptOnSelection(particles, number)
+      addChoiceHideOnStartScriptlet(particles, number)
+      addChoiceShowHideOnSelectionScriptlet(particles, number)
 
       html.div(
         classes = List("choice-label"),
@@ -326,8 +323,7 @@ package xsdforms {
           value = Some("number"),
           content = Some(getChoiceLabel(e, particle)),
           number = Some(number))
-        html.closeTag
-        html.closeTag
+        html.closeTag(2)
       })
 
       node.children.zipWithIndex.foreach {
@@ -338,7 +334,7 @@ package xsdforms {
         }
       }
 
-      html.closeTag.closeTag
+      html.closeTag(2)
 
       addXmlExtractScriplet(node)
 
@@ -589,7 +585,7 @@ $(function() {
 
     private def choiceIndexDelimiter = "-choice-"
 
-    private def addChoiceHideOnStart(
+    private def addChoiceHideOnStartScriptlet(
       particles: Seq[ParticleOption], number: String) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
@@ -601,7 +597,7 @@ $(function() {
       })
     }
 
-    private def addChoiceShowHideScriptOnSelection(
+    private def addChoiceShowHideOnSelectionScriptlet(
       particles: Seq[ParticleOption], number: String) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
@@ -755,7 +751,7 @@ $(function() {
 
       addInput(e, qn, r)
 
-      addMaxOccurs(e)
+      addMaxOccursScriptlet(e)
 
       addDescription(e)
 
@@ -1153,7 +1149,7 @@ $(function() {
     private def isMultiple(e: Element): Boolean =
       (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
-    private def addMaxOccurs(e: Element) {
+    private def addMaxOccursScriptlet(e: Element) {
       val number = elementNumber(e)
       if (isMultiple(e)) {
         val repeatButtonId = getRepeatButtonId(number)
@@ -1564,13 +1560,19 @@ $(function() {
       this
     }
 
-    def closeTag = {
+    def closeTag: Html = {
       val element = stack.head
       if (!element.hasContent) {
         indent
       }
       append("</" + element.name + ">");
       stack.pop
+      this
+    }
+
+    def closeTag(n: Int): Html = {
+      for (i <- 1 to n)
+        closeTag
       this
     }
 
