@@ -293,24 +293,24 @@
 
 			<xs:element name="max-occurs-example-1" type="xs:decimal"
 				maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable item"
+				<xs:annotation i:nonRepeatingTitle="Repeatable item"
 					i:label="Number" />
 			</xs:element>
 
 			<xs:element name="max-occurs-example-2" type="xs:decimal" minOccurs="0"
 				maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable item minOccurs=0"
+				<xs:annotation i:nonRepeatingTitle="Repeatable item minOccurs=0"
 					i:label="Number" />
 			</xs:element>
 
 			<xs:element name="max-occurs-example-3" type="xs:string"
 				maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable item with button label"
+				<xs:annotation i:nonRepeatingTitle="Repeatable item with button label"
 					i:label="String" i:repeatLabel="Another" />
 			</xs:element>
 
 			<xs:element name="max-occurs-example-4" maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable complex type" />
+				<xs:annotation i:nonRepeatingTitle="Repeatable complex type" />
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="A" type="xs:string" />
@@ -320,7 +320,7 @@
 			</xs:element>
 
 			<xs:element name="max-occurs-example-5" maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable choice" />
+				<xs:annotation i:nonRepeatingTitle="Repeatable choice" />
 				<xs:complexType>
 					<xs:choice>
 						<xs:element name="A" type="xs:string" />
@@ -331,7 +331,7 @@
 
 
 			<xs:element name="max-occurs-example-6" maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable complex type with title" i:label="Two items" />
+				<xs:annotation i:nonRepeatingTitle="Repeatable complex type with title" i:label="Two items" />
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="A" type="xs:string" />

@@ -265,7 +265,7 @@ package xsdforms {
 
       html
         .div(classes = List("sequence"))
-      repeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
+      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
       repeatingEnclosing(e)
       addMaxOccursScriptlet(e)
       html.div(classes = List("sequence-label"), content = Some(label))
@@ -295,7 +295,7 @@ package xsdforms {
       val number = elementNumber(e)
 
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
-      repeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
+      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
       repeatingEnclosing(e)
       addMaxOccursScriptlet(e)
       val particles = choice.group.particleOption3.map(_.value)
@@ -658,11 +658,11 @@ $(function() {
         case _ => None
       }
 
-    private def repeatingTitle(e: Element, hasButton: Boolean) {
+    private def nonRepeatingTitle(e: Element, hasButton: Boolean) {
       val number = elementNumber(e)
       html.div(
-        classes = List("repeating-title"),
-        content = getAnnotation(e, "repeatingTitle")).closeTag
+        classes = List("non-repeating-title"),
+        content = getAnnotation(e, "nonRepeatingTitle")).closeTag
       if (hasButton)
         html.div(
           id = Some(getRepeatButtonId(number)),
@@ -689,7 +689,7 @@ $(function() {
         .div(
           classes = List("item-enclosing") ++ getVisibility(e),
           id = Some(getItemEnclosingId(number)))
-      repeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1")
+      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1")
       repeatingEnclosing(e)
       getAnnotation(e, "title") match {
         case Some(x) => html.div(classes = List("item-title"), content = Some(x)).closeTag
