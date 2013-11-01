@@ -144,4 +144,12 @@ Structure|Sequence|&#10004;|
      |Choice|&#10004;| 
      |All| | 
 
-  
+## Current work
+A major redesign is occurring now. The plan is this:
+
+  * use abstract syntax tree to represent xsd simplified to enable recursive traversal of the xsd in scala
+  * against all elements using an element number include an instance number to support maxOccurs>1
+  * in the generated page store a hidden copy of the form html with instance=1 to be used as the source for repeating nodes in the tree 
+  * the initial view will be with of the form html with instance=2
+  * store a global variable in js to record instance counter
+  * whenever a node is added increment the instance counter and use it in the newly created node and its descendants
