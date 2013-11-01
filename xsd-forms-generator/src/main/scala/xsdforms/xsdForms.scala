@@ -188,6 +188,8 @@ package xsdforms {
     private sealed trait StackEntry
     private val html = new Html
 
+    private val NumInstancesForMultiple = 3
+
     import scala.collection.mutable.HashMap
     private val elementNumbers = new HashMap[Element, String]()
 
@@ -255,6 +257,15 @@ package xsdforms {
       nodes.foreach(doNode(_))
     }
 
+    private def numInstances(e: Element): Int =
+      if (isMultiple(e)) NumInstancesForMultiple
+      else 1
+      
+    private def instances(e:Element): Range = {1 to numInstances(e)}
+
+    private def numInstances(node: Node): Int =
+      numInstances(node.element)
+
     private def doNode(node: NodeSequence) {
       val e = node.element
 
@@ -266,24 +277,26 @@ package xsdforms {
       html
         .div(classes = List("sequence"))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
-      repeatingEnclosing(e)
-      addMaxOccursScriptlet(e)
-      html.div(classes = List("sequence-label"), content = Some(label))
-        .closeTag
-        .div(id = Some(idPrefix + "sequence-" + number),
-          classes = List("sequence-content"))
-      if (usesFieldset)
-        html.fieldset(legend = legend, classes = List("fieldset"), id = Some(idPrefix + "fieldset-" + number))
+      for (instanceNo <- instances(e)) {
+        repeatingEnclosing(e)
+        addMaxOccursScriptlet(e)
+        html.div(classes = List("sequence-label"), content = Some(label))
+          .closeTag
+          .div(id = Some(idPrefix + "sequence-" + number + "-instance-" + instanceNo),
+            classes = List("sequence-content"))
+        if (usesFieldset)
+          html.fieldset(legend = legend, classes = List("fieldset"), id = Some(idPrefix + "fieldset-" + number + "-instance-" + instanceNo))
 
-      addXmlExtractScriplet(node)
+        doNodes(node.children)
 
-      doNodes(node.children)
-
-      html.closeTag
-      if (usesFieldset)
+        if (usesFieldset)
+          html.closeTag
         html.closeTag
+      }
       html
         .closeTag(2)
+
+      addXmlExtractScriplet(node)
 
     }
 
@@ -358,6 +371,9 @@ package xsdforms {
         ""
     private def xmlStart(node: Node) =
       "'<" + node.element.name.getOrElse("?") + namespace(node) + ">'"
+
+    private def xmlEnd(node: Node) =
+      "'</" + node.element.name.getOrElse("?") + ">'"
     private def xml(node: Node, value: String) = {
       xmlStart(node) + " + " +
         value +
@@ -373,18 +389,37 @@ package xsdforms {
     }
 
     private def addXmlExtractScriplet(node: NodeSequence) {
+      //TODO add scriptlets for each instanceNo
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
+ |    //for each instance of sequence
+ |    for (instance=1;instance<=""" + numInstances(node) + """;instance++) {
+ 
  |    //now add sequence children""")
       node.children.foreach { n =>
         s.append("""
  |    xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
       }
       s.append("""
- |    xml+="</""" + node.element.name.get + """>";
+ |    xml+="""" + xmlEnd(node) + """>";
  |    return xml;""")
       addXmlExtractScriptlet(node, s.toString());
+    }
+
+    private def addXmlExtractScriplet(node: NodeSequence, instanceNo: Int) {
+      val s = new StringBuilder
+      s.append("""
+ |    var xml = """ + xmlStart(node) + """ + "\n"; 
+ |    //now add sequence children""")
+      node.children.foreach { n =>
+        s.append("""
+ |    xml += """ + xmlFunctionName(n, instanceNo) + "() + \"\\n\";");
+      }
+      s.append("""
+ |    xml+="""" + xmlEnd(node) + """>";
+ |    return xml;""")
+      addXmlExtractScriptlet(node,  s.toString(),instanceNo);
     }
 
     private def addXmlExtractScriplet(node: NodeChoice) {
@@ -412,7 +447,12 @@ package xsdforms {
       "getXml" + number
     }
 
-    private def addXmlExtractScriptlet(node: Node, functionBody: String) {
+    private def xmlFunctionName(node: Node, instanceNo: Option[Int]=None) = {
+      val number = elementNumber(node.element)
+      "getXml" + number + ( if (instanceNo.isDefined)  "instance" + instanceNo else "")
+    }
+
+    private def addXmlExtractScriptlet(node: Node, functionBody: String, instanceNo: Option[Int] = None) {
       val functionName = xmlFunctionName(node)
       addScriptWithMargin(
         """
@@ -1158,55 +1198,9 @@ $(function() {
         addScriptWithMargin("""
 
 |            
-|//make a hidden copy of the enclosing item
-|var enclosing""" + number + """ = $("#""" + enclosingId + """").clone();
-|""" + (if (e.minOccurs == 0) """$("#""" + enclosingId + """").hide();""" else "") + """ 
-|var lastRepeat""" + number + """="""" + enclosingId + """";
 |$("#""" + repeatButtonId + """").click(function() {
-|  var clone = enclosing""" + number + """.clone();
-|  clone.insertAfter("#"+lastRepeat""" + number + """);
-|  var map = {};
-|  clone.find('*').andSelf().each( function(index) {  
-|    var id = $(this).attr("id");
-|    if (typeof id === "undefined") 
-|      return;
-|    if (id.match(/^.*-\d+$/)) {
-|      //extract the number
-|      //extract the number from a choice id pattern first
-|      var number = id.replace(/^.*-(\d+)(-choice-\d+)$/,"$1");
-|      //if not found then extract from a standard id pattern
-|      if (number == id)
-|        number = id.replace(/^.*-(\d+)$/,"$1");
-|      if (map[number] == null) {
-|        repeatCount++;
-|        map[number]=repeatCount;
-|      }
-|      """ + repeats(e) + """.push(map[number]);
-|      var suffix = "-" + map[number];
-|      var newId = id + suffix;
-|      $(this).attr("id",newId);
-|      //TODO fix up label for attribute (points to name attribute of input element)
-|      if (id.match(/^""" + idPrefix + """item(-\d+)?-\d+$/)) {
-|        var input = $('#'+newId);  
-|        var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
-|        if (numberFromId == id)
-|          numberFromId = id.replace(/^.*-(\d+)$/,"$1");
-|         
-|        input.attr("name", """" + idPrefix + """item-input-" + numberFromId + "-" + map[numberFromId]);
-|        input.change( function() {
-|          console.log("changed " + newId);
-|          var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
-|          var error= $("#""" + idPrefix + """item-error-" + numberFromId  + "-" + map[numberFromId]);
-|          if (!(ok)) 
-|            error.show();
-|          else 
-|            error.hide();
-|        })
-|      }
-|    }
+|   //TODO
 |  })
-|  var nextId = clone.attr("id");
-|  lastRepeat""" + number + """=nextId;
 |})
         """)
       }
