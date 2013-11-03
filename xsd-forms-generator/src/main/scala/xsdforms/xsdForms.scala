@@ -1582,83 +1582,97 @@ $(function() {
 
     override def toString = s.toString()
 
-    import JS._
+  }
+}
+
+package js {
+
+  case class Function() {
+    def apply(name: String) = NamedFunction(name)
+  }
+
+  case class NamedFunction(name: String) {
+    def apply(js: JS): JS = JS("function " + name + "() {\n" + js + "\n}\n\n")
+  }
+
+  case class Expression(s: String)
+
+  trait Statement
+
+  case class Assignment extends Statement
+
+  object JS {
+    implicit def toJS(s: String): JS = JS(s);
+    implicit def toJS(i: Int): JS = JS(i.toString)
+    implicit def toJS(s: Symbol): JS = JS(s.toString)
+    val function = Function()
+
     def test {
       val js: JS =
-        function ("hello") (
-          'x := 'y + 'z  newLine 'a := 'a + 1 newLine
-          'a := 'a + 2)
+        function("hello")(
+          'x := 'y + 'z --
+            'a := 'a + 1 --
+            'a := 'a + 2)
     }
 
   }
-}
 
-object JS {
-  implicit def toJS(s: String): JS = JS(s);
-  implicit def toJS(i: Int): JS = JS(i.toString)
-  implicit def toJS(s:Symbol):JS = JS(s.toString)
-  val function = Function()
-}
+  case class JS(val initialValue: String = "") {
 
-case class Function() {
-  def apply(name: String) = NamedFunction(name)
-}
+    val content: StringBuffer = new StringBuffer(initialValue)
 
-case class NamedFunction(name: String) {
-  def apply(js: JS): JS = JS("function " + name + "() {\n" + js + "\n}\n\n")
-}
+    def fn(name: String)(body: JS): JS = {
+      this
+    }
 
-case class JS(val initialValue: String = "") {
+    def +(js: JS): JS = {
+      content append " + "
+      append(js)
+    }
 
-  val content: StringBuffer = new StringBuffer(initialValue)
+    def append(s: String) = {
+      content append s
+      this
+    }
 
-  def fn(name: String)(body: JS): JS = {
-    this
+    def newLine(js: JS): JS = {
+      content append "\n"
+      append(js)
+    }
+
+    def declare(js: JS): JS = {
+      content append "\nvar "
+      append(js)
+    }
+
+    def :=(js: JS): JS = {
+      content append " = "
+      append(js)
+    }
+
+    def --(js: JS): JS = {
+      newLine(js)
+    }
+
+    def apply(s: String, js: JS) = {
+      content append s
+      append(js)
+    }
+
+    def append(js: JS) = {
+      content append js.content.toString
+      this
+    }
+
+    def apply(js: JS) = append(js)
+
+    def start(js: JS) = {
+      content append " {\n"
+      this
+    }
+
+    override def toString = content.toString + "\n"
+
   }
-
-  def +(js: JS): JS = {
-    content append " + "
-    append(js)
-  }
-  
- def append(s:String) = {
-   content append s
-   this
- }
-
-  
-  def newLine(js: JS): JS = {
-    content append "\n"
-    append(js)
-  }
-
-  def declare(js: JS): JS = {
-    content append "\nvar "
-    append(js)
-  }
-
-  def :=(js: JS): JS = {
-    content append " = "
-    append(js)
-  }
-
-  def apply(s: String, js: JS) = {
-    content append s
-    append(js)
-  }
-
-  def append(js: JS) = {
-    content append js.content.toString
-    this
-  }
-
-  def apply(js: JS) = append(js)
-
-  def start(js: JS) = {
-    content append " {\n"
-    this
-  }
-
-  override def toString = content.toString + "\n"
 
 }
