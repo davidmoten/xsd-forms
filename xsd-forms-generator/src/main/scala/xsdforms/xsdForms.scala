@@ -270,7 +270,7 @@ package xsdforms {
 
     private def doNode(node: NodeSequence) {
       val e = node.element
-
+      val number = elementNumber(node)
       val legend = getAnnotation(e, "legend")
       val usesFieldset = legend.isDefined
 
