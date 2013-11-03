@@ -260,8 +260,10 @@ package xsdforms {
     private def numInstances(e: Element): Int =
       if (isMultiple(e)) NumInstancesForMultiple
       else 1
-      
-    private def instances(e:Element): Range = {1 to numInstances(e)}
+
+    private def instances(node: Node): Range = instances(node.element)
+
+    private def instances(e: Element): Range = { 1 to numInstances(e) }
 
     private def numInstances(node: Node): Int =
       numInstances(node.element)
@@ -393,14 +395,12 @@ package xsdforms {
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
- |    //for each instance of sequence
- |    for (instance=1;instance<=""" + numInstances(node) + """;instance++) {
- 
- |    //now add sequence children""")
-      node.children.foreach { n =>
-        s.append("""
- |    xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
-      }
+ |    //now add sequence children for each instanceNo""")
+      for (instanceNo <- instances(node))
+        node.children.foreach { n =>
+          s.append("""
+ |    xml += """ + xmlFunctionName(n, Some(instanceNo)) + "() + \"\\n\";");
+        }
       s.append("""
  |    xml+="""" + xmlEnd(node) + """>";
  |    return xml;""")
@@ -414,12 +414,12 @@ package xsdforms {
  |    //now add sequence children""")
       node.children.foreach { n =>
         s.append("""
- |    xml += """ + xmlFunctionName(n, instanceNo) + "() + \"\\n\";");
+ |    xml += """ + xmlFunctionName(n, Some(instanceNo)) + "() + \"\\n\";");
       }
       s.append("""
  |    xml+="""" + xmlEnd(node) + """>";
  |    return xml;""")
-      addXmlExtractScriptlet(node,  s.toString(),instanceNo);
+      addXmlExtractScriptlet(node, s.toString(), Some(instanceNo));
     }
 
     private def addXmlExtractScriplet(node: NodeChoice) {
@@ -447,9 +447,9 @@ package xsdforms {
       "getXml" + number
     }
 
-    private def xmlFunctionName(node: Node, instanceNo: Option[Int]=None) = {
+    private def xmlFunctionName(node: Node, instanceNo: Option[Int] = None) = {
       val number = elementNumber(node.element)
-      "getXml" + number + ( if (instanceNo.isDefined)  "instance" + instanceNo else "")
+      "getXml" + number + (if (instanceNo.isDefined) "instance" + instanceNo.get else "")
     }
 
     private def addXmlExtractScriptlet(node: Node, functionBody: String, instanceNo: Option[Int] = None) {
