@@ -301,7 +301,7 @@ package xsdforms {
       addXmlExtractScriplet(node)
 
     }
-    
+
     private val instanceDelimiter = "-instance-"
 
     private def doNode(node: NodeChoice) {
@@ -335,7 +335,7 @@ package xsdforms {
             classes = List("div-choice-item"))
           html.input(
             id = Some(getChoiceItemId(number, index, instanceNo)),
-            name = getChoiceItemName(number,instanceNo),
+            name = getChoiceItemName(number, instanceNo),
             classes = List("choice-item"),
             typ = Some("radio"),
             value = Some("number"),
@@ -346,7 +346,7 @@ package xsdforms {
 
         node.children.zipWithIndex.foreach {
           case (n, index) => {
-            html.div(id = Some(choiceContentId(idPrefix,number, (index + 1),instanceNo)), classes = List("invisible"))
+            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instanceNo)), classes = List("invisible"))
             doNode(n)
             html.closeTag
           }
@@ -359,10 +359,10 @@ package xsdforms {
       addXmlExtractScriplet(node)
 
     }
-    
-    def choiceContentId(idPrefix:String, number:String, index:Int,instanceNo:Int) =
+
+    def choiceContentId(idPrefix: String, number: String, index: Int, instanceNo: Int) =
       idPrefix + "choice-content-" + number + instanceDelimiter + instanceNo + choiceIndexDelimiter + index
-    
+
     private def addRepeatsDeclarationScriptlet(node: Node) {
       val repeatsVariable = repeats(node)
       addScriptWithMargin("""
@@ -435,19 +435,22 @@ package xsdforms {
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
  |    //now optionally add selected child if any
- |    var suffix=""; //what is suffix used for?
- |    var checked = $(':input[name=""" + getChoiceItemName(node) + """' + suffix + ']:checked').attr("id");
+ |    var suffix=""; //what is suffix used for?""")
+      for (instanceNo <- instances(node)) {
+        s.append(""" 
+ |    var checked = $(':input[name=""" + getChoiceItemName(node, instanceNo) + """' + suffix + ']:checked').attr("id");
  """)
 
-      node.children.zipWithIndex.foreach {
-        case (n, index) =>
-          s.append("""
- |    if (checked == """" + getChoiceItemId(node, index + 1) + """") xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
-      }
-      s.append("""
+        node.children.zipWithIndex.foreach {
+          case (n, index) =>
+            s.append("""
+ |    if (checked == """" + getChoiceItemId(node, index + 1, instanceNo) + """") xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
+        }
+        s.append("""
  |    xml+="</""" + node.element.name.get + """>";
  |    return xml;""")
-      addXmlExtractScriptlet(node, s.toString());
+        addXmlExtractScriptlet(node, s.toString(),Some(instanceNo));
+      }
     }
 
     private def xmlFunctionName(node: Node) = {
@@ -623,10 +626,10 @@ $(function() {
 </body>
 </html>"""
 
-    private def getChoiceItemName(node: Node, instanceNo:Int): String = getChoiceItemName(elementNumber(node.element),instanceNo)
-    private def getChoiceItemName(number: String,instanceNo:Int): String = idPrefix + "item-input-" + number + instanceDelimiter + instanceNo
-    private def getChoiceItemId(node: Node, index: Int, instanceNo:Int): String = getChoiceItemId(elementNumber(node.element), index,instanceNo)
-    private def getChoiceItemId(number: String, index: Int,instanceNo:Int): String = getItemId(number) + instanceDelimiter + instanceNo + choiceIndexDelimiter + index 
+    private def getChoiceItemName(node: Node, instanceNo: Int): String = getChoiceItemName(elementNumber(node.element), instanceNo)
+    private def getChoiceItemName(number: String, instanceNo: Int): String = idPrefix + "item-input-" + number + instanceDelimiter + instanceNo
+    private def getChoiceItemId(node: Node, index: Int, instanceNo: Int): String = getChoiceItemId(elementNumber(node.element), index, instanceNo)
+    private def getChoiceItemId(number: String, index: Int, instanceNo: Int): String = getItemId(number) + instanceDelimiter + instanceNo + choiceIndexDelimiter + index
 
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
@@ -634,35 +637,35 @@ $(function() {
     private val choiceIndexDelimiter = "-choice-"
 
     private def addChoiceHideOnStartScriptlet(
-      particles: Seq[ParticleOption], number: String,instanceNo:Int) {
+      particles: Seq[ParticleOption], number: String, instanceNo: Int) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
       forEachParticle(x => {
         val index = x._2 + 1
         addScriptWithMargin("""
-|$("#""" + choiceContentId(idPrefix,number, index ,instanceNo) + """").hide();""")
+|$("#""" + choiceContentId(idPrefix, number, index, instanceNo) + """").hide();""")
       })
     }
 
     private def addChoiceShowHideOnSelectionScriptlet(
-      particles: Seq[ParticleOption], number: String, instanceNo:Int) {
+      particles: Seq[ParticleOption], number: String, instanceNo: Int) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
       addScriptWithMargin(
         """
-|var choiceChange""" + number + """instance"""+instanceNo + """ = function addChoiceChange""" + number + """instance"""+instanceNo+"""(suffix) {
-|  $(":input[@name='""" + getChoiceItemName(number,instanceNo) + """" + suffix + "']").change(function() {
-|    var checked = $(':input[name=""" + getChoiceItemName(number,instanceNo) + """' + suffix + ']:checked').attr("id");""")
+|var choiceChange""" + number + """instance""" + instanceNo + """ = function addChoiceChange""" + number + """instance""" + instanceNo + """(suffix) {
+|  $(":input[@name='""" + getChoiceItemName(number, instanceNo) + """" + suffix + "']").change(function() {
+|    var checked = $(':input[name=""" + getChoiceItemName(number, instanceNo) + """' + suffix + ']:checked').attr("id");""")
 
       forEachParticle(x => {
         val index = x._2 + 1
         val ccId =
-          choiceContentId(idPrefix, number,index,instanceNo)
+          choiceContentId(idPrefix, number, index, instanceNo)
         addScriptWithMargin(
           """
-|    if (checked == """" + getChoiceItemId(number, index,instanceNo) + """" + suffix) {
+|    if (checked == """" + getChoiceItemId(number, index, instanceNo) + """" + suffix) {
 |      $("#""" + ccId + """" + suffix).show();
 |      $("#""" + ccId + """" + suffix).find('.item-path').attr('enabled','true');
 |    }
@@ -1208,7 +1211,6 @@ $(function() {
 |            
 |$("#""" + repeatButtonId + """").click(function() {
 |   //TODO
-|  })
 |})
         """)
       }
