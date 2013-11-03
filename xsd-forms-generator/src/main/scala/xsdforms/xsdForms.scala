@@ -229,6 +229,7 @@ package xsdforms {
       val e = node.element
       val typ = node.typ
 
+      nonRepeatingSimpleType(e)
       addItemHtmlOpening(e, Some(typ))
       typ.simpleDerivationOption3.value match {
         case x: Restriction => simpleType(e, x)
@@ -245,6 +246,7 @@ package xsdforms {
     private def doNode(node: NodeBaseType) {
       val e = node.element
       val typ = node.typ
+      nonRepeatingSimpleType(e)
       addItemHtmlOpening(e, None)
       simpleType(e, new MyRestriction(typ.qName))
       html
@@ -399,7 +401,6 @@ package xsdforms {
     }
 
     private def addXmlExtractScriplet(node: NodeSequence) {
-      //TODO add scriptlets for each instanceNo
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
@@ -415,6 +416,22 @@ package xsdforms {
       addXmlExtractScriptlet(node, s.toString());
     }
 
+    case class JSBuilder(indent:Int=0) {
+      val content = new StringBuilder
+      
+      def apply(items:String*):JSBuilder = {
+        content append " " * 3
+        for (item <-items) content append item 
+        content append "\n" 
+        this
+      }
+      
+      def newLine():JSBuilder = {
+        content append "\n"
+        this
+      }
+    } 
+    
     private def addXmlExtractScriplet(node: NodeSequence, instanceNo: Int) {
       val s = new StringBuilder
       s.append("""
@@ -422,11 +439,12 @@ package xsdforms {
  |    //now add sequence children""")
       node.children.foreach { n =>
         s.append("""
+ |    //TODO if instanceNo enabled
  |    xml += """ + xmlFunctionName(n, Some(instanceNo)) + "() + \"\\n\";");
       }
       s.append("""
  |    xml+="""" + xmlEnd(node) + """>";
- |    return xml;""")
+ |""")
       addXmlExtractScriptlet(node, s.toString(), Some(instanceNo));
     }
 
@@ -734,13 +752,17 @@ $(function() {
         classes = List("repeating-enclosing"))
     }
 
-    private def addItemHtmlOpening(e: Element, typ: Option[SimpleType]) {
+    private def nonRepeatingSimpleType(e:Element) {
       val number = elementNumber(e)
       html
         .div(
           classes = List("item-enclosing") ++ getVisibility(e),
           id = Some(getItemEnclosingId(number)))
       nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1")
+    }
+    
+    private def addItemHtmlOpening(e: Element, typ: Option[SimpleType]) {
+      val number = elementNumber(e)
       repeatingEnclosing(e)
       getAnnotation(e, "title") match {
         case Some(x) => html.div(classes = List("item-title"), content = Some(x)).closeTag
