@@ -301,6 +301,8 @@ package xsdforms {
       addXmlExtractScriplet(node)
 
     }
+    
+    private val instanceDelimiter = "-instance-"
 
     private def doNode(node: NodeChoice) {
       val choice = node.choice
@@ -311,50 +313,56 @@ package xsdforms {
 
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
-      repeatingEnclosing(e)
-      addMaxOccursScriptlet(e)
-      val particles = choice.group.particleOption3.map(_.value)
-      addChoiceHideOnStartScriptlet(particles, number)
-      addChoiceShowHideOnSelectionScriptlet(particles, number)
+      for (instanceNo <- instances(e)) {
+        repeatingEnclosing(e)
+        addMaxOccursScriptlet(e)
+        val particles = choice.group.particleOption3.map(_.value)
+        addChoiceHideOnStartScriptlet(particles, number, instanceNo)
+        addChoiceShowHideOnSelectionScriptlet(particles, number, instanceNo)
 
-      html.div(
-        classes = List("choice-label"),
-        content = Some(getAnnotation(choice.group, "label").mkString))
-        .closeTag
-
-      val forEachParticle = particles.zipWithIndex.foreach _
-
-      forEachParticle(x => {
-        val particle = x._1
-        val index = x._2 + 1
         html.div(
-          id = Some(idPrefix + "div-choice-item-" + number + choiceIndexDelimiter + index),
-          classes = List("div-choice-item"))
-        html.input(
-          id = Some(getChoiceItemId(number, index)),
-          name = getChoiceItemName(number),
-          classes = List("choice-item"),
-          typ = Some("radio"),
-          value = Some("number"),
-          content = Some(getChoiceLabel(e, particle)),
-          number = Some(number))
-        html.closeTag(2)
-      })
+          classes = List("choice-label"),
+          content = Some(getAnnotation(choice.group, "label").mkString))
+          .closeTag
 
-      node.children.zipWithIndex.foreach {
-        case (n, index) => {
-          html.div(id = Some(idPrefix + "choice-content-" + number + choiceIndexDelimiter + (index + 1)), classes = List("invisible"))
-          doNode(n)
-          html.closeTag
+        val forEachParticle = particles.zipWithIndex.foreach _
+
+        forEachParticle(x => {
+          val particle = x._1
+          val index = x._2 + 1
+          html.div(
+            id = Some(idPrefix + "div-choice-item-" + number + instanceDelimiter + instanceNo + choiceIndexDelimiter + index),
+            classes = List("div-choice-item"))
+          html.input(
+            id = Some(getChoiceItemId(number, index, instanceNo)),
+            name = getChoiceItemName(number,instanceNo),
+            classes = List("choice-item"),
+            typ = Some("radio"),
+            value = Some("number"),
+            content = Some(getChoiceLabel(e, particle)),
+            number = Some(number))
+          html.closeTag(2)
+        })
+
+        node.children.zipWithIndex.foreach {
+          case (n, index) => {
+            html.div(id = Some(choiceContentId(idPrefix,number, (index + 1),instanceNo)), classes = List("invisible"))
+            doNode(n)
+            html.closeTag
+          }
         }
-      }
 
-      html.closeTag(2)
+        html.closeTag
+      }
+      html.closeTag
 
       addXmlExtractScriplet(node)
 
     }
-
+    
+    def choiceContentId(idPrefix:String, number:String, index:Int,instanceNo:Int) =
+      idPrefix + "choice-content-" + number + instanceDelimiter + instanceNo + choiceIndexDelimiter + index
+    
     private def addRepeatsDeclarationScriptlet(node: Node) {
       val repeatsVariable = repeats(node)
       addScriptWithMargin("""
@@ -615,52 +623,52 @@ $(function() {
 </body>
 </html>"""
 
-    private def getChoiceItemName(node: Node): String = getChoiceItemName(elementNumber(node.element))
-    private def getChoiceItemName(number: String): String = idPrefix + "item-input-" + number
-    private def getChoiceItemId(node: Node, index: Int): String = getChoiceItemId(elementNumber(node.element), index)
-    private def getChoiceItemId(number: String, index: Int): String = getItemId(number) + choiceIndexDelimiter + index
+    private def getChoiceItemName(node: Node, instanceNo:Int): String = getChoiceItemName(elementNumber(node.element),instanceNo)
+    private def getChoiceItemName(number: String,instanceNo:Int): String = idPrefix + "item-input-" + number + instanceDelimiter + instanceNo
+    private def getChoiceItemId(node: Node, index: Int, instanceNo:Int): String = getChoiceItemId(elementNumber(node.element), index,instanceNo)
+    private def getChoiceItemId(number: String, index: Int,instanceNo:Int): String = getItemId(number) + instanceDelimiter + instanceNo + choiceIndexDelimiter + index 
 
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
 
-    private def choiceIndexDelimiter = "-choice-"
+    private val choiceIndexDelimiter = "-choice-"
 
     private def addChoiceHideOnStartScriptlet(
-      particles: Seq[ParticleOption], number: String) {
+      particles: Seq[ParticleOption], number: String,instanceNo:Int) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
       forEachParticle(x => {
         val index = x._2 + 1
         addScriptWithMargin("""
-|$("#""" + idPrefix + """choice-content-""" + number + choiceIndexDelimiter + index + """").hide();""")
+|$("#""" + choiceContentId(idPrefix,number, index ,instanceNo) + """").hide();""")
       })
     }
 
     private def addChoiceShowHideOnSelectionScriptlet(
-      particles: Seq[ParticleOption], number: String) {
+      particles: Seq[ParticleOption], number: String, instanceNo:Int) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
       addScriptWithMargin(
         """
-|var choiceChange""" + number + """ = function addChoiceChange""" + number + """(suffix) {
-|  $(":input[@name='""" + getChoiceItemName(number) + """" + suffix + "']").change(function() {
-|    var checked = $(':input[name=""" + getChoiceItemName(number) + """' + suffix + ']:checked').attr("id");""")
+|var choiceChange""" + number + """instance"""+instanceNo + """ = function addChoiceChange""" + number + """instance"""+instanceNo+"""(suffix) {
+|  $(":input[@name='""" + getChoiceItemName(number,instanceNo) + """" + suffix + "']").change(function() {
+|    var checked = $(':input[name=""" + getChoiceItemName(number,instanceNo) + """' + suffix + ']:checked').attr("id");""")
 
       forEachParticle(x => {
         val index = x._2 + 1
-        val choiceContentId =
-          idPrefix + """choice-content-""" + number + choiceIndexDelimiter + index
+        val ccId =
+          choiceContentId(idPrefix, number,index,instanceNo)
         addScriptWithMargin(
           """
-|    if (checked == """" + getChoiceItemId(number, index) + """" + suffix) {
-|      $("#""" + choiceContentId + """" + suffix).show();
-|      $("#""" + choiceContentId + """" + suffix).find('.item-path').attr('enabled','true');
+|    if (checked == """" + getChoiceItemId(number, index,instanceNo) + """" + suffix) {
+|      $("#""" + ccId + """" + suffix).show();
+|      $("#""" + ccId + """" + suffix).find('.item-path').attr('enabled','true');
 |    }
 |    else {
-|      $("#""" + choiceContentId + """" + suffix).hide();
-|      $("#""" + choiceContentId + """" + suffix).find('.item-path').attr('enabled','false');
+|      $("#""" + ccId + """" + suffix).hide();
+|      $("#""" + ccId + """" + suffix).find('.item-path').attr('enabled','false');
 |    }""")
       })
       addScriptWithMargin(
