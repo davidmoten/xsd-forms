@@ -230,15 +230,26 @@ package xsdforms {
       val typ = node.typ
 
       nonRepeatingSimpleType(e)
-      addItemHtmlOpening(e, Some(typ))
-      typ.simpleDerivationOption3.value match {
-        case x: Restriction => simpleType(e, x)
-        case _ => Util.unexpected
+      val t = Some(typ)
+      val number = elementNumber(e)
+      for (instanceNo <- instances(e)) {
+        repeatingEnclosing(e)
+        itemTitle(e)
+        itemBefore(e)
+        html.div(classes = List("item-number"), content = Some(number)).closeTag
+          .label(forInputName = getItemName(number),
+            classes = List("item-label"), content = Some(getLabel(e, t))).closeTag
+          .div(classes = List("item-input"))
+
+        typ.simpleDerivationOption3.value match {
+          case x: Restriction => simpleType(e, x, instanceNo)
+          case _ => Util.unexpected
+        }
+        html
+          .closeTag
+          .closeTag
       }
-      html
-        .closeTag
-        .closeTag
-        .closeTag
+      html.closeTag
 
       addXmlExtractScriplet(node)
     }
@@ -247,10 +258,21 @@ package xsdforms {
       val e = node.element
       val typ = node.typ
       nonRepeatingSimpleType(e)
-      addItemHtmlOpening(e, None)
-      simpleType(e, new MyRestriction(typ.qName))
-      html
-        .closeTag(3)
+      val t = None
+      val number = elementNumber(e)
+      for (instanceNo <- instances(e)) {
+        repeatingEnclosing(e)
+        itemTitle(e)
+        itemBefore(e)
+        html.div(classes = List("item-number"), content = Some(number)).closeTag
+          .label(forInputName = getItemName(number),
+            classes = List("item-label"), content = Some(getLabel(e, t))).closeTag
+          .div(classes = List("item-input"))
+        simpleType(e, new MyRestriction(typ.qName), instanceNo)
+        html
+          .closeTag(2)
+      }
+      html.closeTag
 
       addXmlExtractScriplet(node)
     }
@@ -265,7 +287,7 @@ package xsdforms {
 
     private def instances(node: Node): Range = instances(node.element)
 
-    private def instances(e: Element): Range = { 1 to numInstances(e) }
+    private def instances(e: Element): Range = 1 to numInstances(e)
 
     private def numInstances(node: Node): Int =
       numInstances(node.element)
@@ -393,11 +415,13 @@ package xsdforms {
     }
 
     private def addXmlExtractScriplet(node: NodeSimpleType) {
-      addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node))));
+      //TODO use instanceNo
+      addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node, 1))));
     }
 
     private def addXmlExtractScriplet(node: NodeBaseType) {
-      addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node))));
+      //TODO use instanceNo
+      addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node, 1))));
     }
 
     private def addXmlExtractScriplet(node: NodeSequence) {
@@ -416,22 +440,22 @@ package xsdforms {
       addXmlExtractScriptlet(node, s.toString());
     }
 
-    case class JSBuilder(indent:Int=0) {
+    case class JSBuilder(indent: Int = 0) {
       val content = new StringBuilder
-      
-      def apply(items:String*):JSBuilder = {
+
+      def apply(items: String*): JSBuilder = {
         content append " " * 3
-        for (item <-items) content append item 
-        content append "\n" 
-        this
-      }
-      
-      def newLine():JSBuilder = {
+        for (item <- items) content append item
         content append "\n"
         this
       }
-    } 
-    
+
+      def newLine(): JSBuilder = {
+        content append "\n"
+        this
+      }
+    }
+
     private def addXmlExtractScriplet(node: NodeSequence, instanceNo: Int) {
       val s = new StringBuilder
       s.append("""
@@ -647,7 +671,7 @@ $(function() {
     private def getChoiceItemName(node: Node, instanceNo: Int): String = getChoiceItemName(elementNumber(node.element), instanceNo)
     private def getChoiceItemName(number: String, instanceNo: Int): String = idPrefix + "item-input-" + number + instanceDelimiter + instanceNo
     private def getChoiceItemId(node: Node, index: Int, instanceNo: Int): String = getChoiceItemId(elementNumber(node.element), index, instanceNo)
-    private def getChoiceItemId(number: String, index: Int, instanceNo: Int): String = getItemId(number) + instanceDelimiter + instanceNo + choiceIndexDelimiter + index
+    private def getChoiceItemId(number: String, index: Int, instanceNo: Int): String = getItemId(number, instanceNo) + choiceIndexDelimiter + index
 
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
@@ -752,7 +776,7 @@ $(function() {
         classes = List("repeating-enclosing"))
     }
 
-    private def nonRepeatingSimpleType(e:Element) {
+    private def nonRepeatingSimpleType(e: Element) {
       val number = elementNumber(e)
       html
         .div(
@@ -760,22 +784,19 @@ $(function() {
           id = Some(getItemEnclosingId(number)))
       nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1")
     }
-    
-    private def addItemHtmlOpening(e: Element, typ: Option[SimpleType]) {
-      val number = elementNumber(e)
-      repeatingEnclosing(e)
+
+    private def itemTitle(e: Element) {
       getAnnotation(e, "title") match {
         case Some(x) => html.div(classes = List("item-title"), content = Some(x)).closeTag
         case _ =>
       }
+    }
+
+    private def itemBefore(e: Element) {
       getAnnotation(e, "before") match {
         case Some(x) => html.div(classes = List("item-before"), content = Some(x)).closeTag
         case _ =>
       }
-      html.div(classes = List("item-number"), content = Some(number)).closeTag
-        .label(forInputName = getItemName(number),
-          classes = List("item-label"), content = Some(getLabel(e, typ))).closeTag
-        .div(classes = List("item-input"))
     }
 
     private def elementNumber(node: Node): String = elementNumber(node.element)
@@ -804,25 +825,26 @@ $(function() {
     implicit def toQN(qName: QName) =
       QN(qName.getNamespaceURI(), qName.getLocalPart())
 
-    private def getItemId(node: Node): String = getItemId(elementNumber(node.element))
-    private def getItemId(element: Element): String = getItemId(elementNumber(element))
-    private def getItemId(number: String): String = idPrefix + "item-" + number
-    private def getItemId(number: String, enumeration: Integer): String = getItemId(number) + "-" + enumeration
+    private def getItemId(node: Node, instanceNo: Int): String = getItemId(elementNumber(node.element), instanceNo)
+    private def getItemId(element: Element, instanceNo: Int): String = getItemId(elementNumber(element), instanceNo)
+    private def getItemId(number: String, instanceNo: Int): String = idPrefix + "item-" + number + instanceDelimiter + instanceNo
+    private def getItemId(number: String, enumeration: Integer, instanceNo: Int): String = getItemId(number, instanceNo) + "-" + enumeration
     private def getItemName(number: String) =
       idPrefix + "item-input-" + number;
 
     private def getItemEnclosingId(number: String) =
       idPrefix + "item-enclosing-" + number
 
-    private def getItemErrorId(number: String) =
-      idPrefix + "item-error-" + number
+    private def getItemErrorId(number: String, instanceNo: Int) =
+      idPrefix + "item-error-" + number + instanceDelimiter + instanceNo
 
     private def getPathId(number: String) = idPrefix + "item-path-" + number
 
-    private def simpleType(e: Element, r: Restriction) {
+    private def simpleType(e: Element, r: Restriction, instanceNo: Int) {
       val qn = toQN(r.base.get)
 
-      addInput(e, qn, r)
+      //TODO use instanceNo
+      addInput(e, qn, r, instanceNo)
 
       addMaxOccursScriptlet(e)
 
@@ -830,21 +852,21 @@ $(function() {
 
       addPath(e)
 
-      addError(e)
+      addError(e, instanceNo)
 
       addHelp(e)
 
       addAfter(e)
 
       val statements = List(
-        createDeclarationScriptlet(e, qn),
+        createDeclarationScriptlet(e, qn, instanceNo),
         createMandatoryTestScriptlet(e, r),
         createPatternsTestScriptlet(getPatterns(r)),
         createBasePatternTestScriptlet(qn),
         createFacetTestScriptlet(r),
         createLengthTestScriptlet(r),
         createCanExcludeScriptlet(e),
-        createClosingScriptlet(e, qn))
+        createClosingScriptlet(e, qn, instanceNo))
 
       statements
         .map(stripMargin(_))
@@ -852,18 +874,18 @@ $(function() {
 
     }
 
-    private def addInput(e: Element, qn: QN, r: Restriction) {
+    private def addInput(e: Element, qn: QN, r: Restriction, instanceNo: Int) {
 
       val number = elementNumber(e)
 
       if (isEnumeration(r))
-        addEnumeration(e, r)
+        addEnumeration(e, r, instanceNo)
       else
-        addTextField(e, r, getExtraClasses(qn))
+        addTextField(e, r, getExtraClasses(qn), instanceNo)
 
-      addWidthScript(e)
+      addWidthScript(e, instanceNo)
 
-      addCssScript(e)
+      addCssScript(e, instanceNo)
     }
 
     private def getExtraClasses(qn: QN) = qn match {
@@ -875,10 +897,10 @@ $(function() {
 
     private def addTextField(
       e: Element, r: Restriction,
-      extraClasses: String) {
+      extraClasses: String, instanceNo: Int) {
       val number = elementNumber(e)
       val inputType = getInputType(r)
-      val itemId = getItemId(number)
+      val itemId = getItemId(number, instanceNo)
       getTextType(e) match {
         case Some("textarea") =>
           html.textarea(
@@ -906,8 +928,8 @@ $(function() {
       }
     }
 
-    private def addWidthScript(e: Element) {
-      val itemId = getItemId(e)
+    private def addWidthScript(e: Element, instanceNo: Int) {
+      val itemId = getItemId(e, instanceNo)
       getAnnotation(e, "width") match {
         case Some(x) =>
           addScriptWithMargin("|  $('#" + itemId + "').width('" + x + "');")
@@ -915,8 +937,8 @@ $(function() {
       }
     }
 
-    private def addCssScript(e: Element) {
-      val itemId = getItemId(e)
+    private def addCssScript(e: Element, instanceNo: Int) {
+      val itemId = getItemId(e, instanceNo)
       getAnnotation(e, "css") match {
         case Some(x) => {
           val items = x.split(';')
@@ -936,7 +958,7 @@ $(function() {
     private def isEnumeration(r: Restriction) =
       !getEnumeration(r).isEmpty
 
-    private def addEnumeration(e: Element, r: Restriction) {
+    private def addEnumeration(e: Element, r: Restriction, instanceNo: Int) {
       val number = elementNumber(e)
       val en = getEnumeration(r)
       val isRadio = getAnnotation(e, "selector") match {
@@ -948,7 +970,7 @@ $(function() {
         case Some("true") => true
         case _ => false
       }
-      enumeration(en, number, isRadio, initializeBlank)
+      enumeration(en, number, isRadio, initializeBlank, instanceNo)
     }
 
     private def getEnumeration(typ: SimpleType): Seq[(String, NoFixedFacet)] =
@@ -972,11 +994,11 @@ $(function() {
         }).flatten
 
     private def enumeration(en: Seq[(String, NoFixedFacet)],
-      number: String, isRadio: Boolean, initializeBlank: Boolean) {
+      number: String, isRadio: Boolean, initializeBlank: Boolean, instanceNo: Int) {
       if (isRadio) {
         en.zipWithIndex.foreach(x => {
           html.input(
-            id = Some(getItemId(number, x._2)),
+            id = Some(getItemId(number, x._2, instanceNo)),
             name = getItemName(number),
             classes = List("select"),
             typ = Some("radio"),
@@ -986,7 +1008,7 @@ $(function() {
         })
       } else {
         html.select(
-          id = Some(getItemId(number)),
+          id = Some(getItemId(number, instanceNo)),
           name = getItemName(number),
           classes = List("select"),
           number = Some(number))
@@ -998,8 +1020,8 @@ $(function() {
             case Some(y: String) => {
               val refersTo = number.toInt + y.toInt
               addScriptWithMargin("""
-|  $("#""" + getItemId(number) + """").change( function() {
-|    var v = $("#""" + getItemId(number) + """");
+|  $("#""" + getItemId(number, instanceNo) + """").change( function() {
+|    var v = $("#""" + getItemId(number, instanceNo) + """");
 |    var refersTo = $("#""" + getItemEnclosingId(refersTo + "") + """") 
 |    if ("""" + x._2.valueAttribute + """" == v.val()) 
 |      refersTo.show();
@@ -1026,8 +1048,8 @@ $(function() {
       }
     }
 
-    private def addError(e: Element) {
-      val itemErrorId = getItemErrorId(elementNumber(e))
+    private def addError(e: Element, instanceNo: Int) {
+      val itemErrorId = getItemErrorId(elementNumber(e), instanceNo)
       html.div(
         id = Some(itemErrorId),
         classes = List("item-error"),
@@ -1069,16 +1091,16 @@ $(function() {
       }
     }
 
-    private def createDeclarationScriptlet(e: Element, qn: QN) = {
+    private def createDeclarationScriptlet(e: Element, qn: QN, instanceNo: Int) = {
       val number = elementNumber(e)
-      val itemId = getItemId(number)
+      val itemId = getItemId(number, instanceNo)
       """
 |// """ + e.name.get + """
-|var validate""" + number + """ = function() {
+|var validate""" + number + "instance" + instanceNo + """ = function() {
 |  return validate""" + number + """WithSuffix("");  
 |}
 |
-|var validate""" + number + """WithSuffix = function (suffix) {
+|var validate""" + number + "instance" + instanceNo + """WithSuffix = function (suffix) {
 |  var ok = true;
 |  var v = $("#""" + itemId + """" + suffix);
 |  var pathDiv = $("#""" + getPathId(number) + """");"""
@@ -1167,7 +1189,7 @@ $(function() {
       else ""
     }
 
-    private def createClosingScriptlet(e: Element, qn: QN) = {
+    private def createClosingScriptlet(e: Element, qn: QN, instanceNo: Int) = {
       val number = elementNumber(e)
       val onChange = "change("
       val changeMethod = qn match {
@@ -1180,9 +1202,9 @@ $(function() {
 |  return ok;
 |}
 |      
-|$("#""" + getItemId(number) + """").""" + changeMethod + """ function() {
-|  var ok = validate""" + number + """();
-|  var error= $("#""" + getItemErrorId(number) + """");
+|$("#""" + getItemId(number, instanceNo) + """").""" + changeMethod + """ function() {
+|  var ok = validate""" + number + "instance" + instanceNo + """();
+|  var error= $("#""" + getItemErrorId(number, instanceNo) + """");
 |  if (!(ok)) 
 |    error.show();
 |  else 
@@ -1587,6 +1609,7 @@ $(function() {
     }
 
     def closeTag: Html = {
+      if (stack.isEmpty) throw new RuntimeException("closeTag called on empty html stack!")
       val element = stack.head
       if (!element.hasContent) {
         indent
