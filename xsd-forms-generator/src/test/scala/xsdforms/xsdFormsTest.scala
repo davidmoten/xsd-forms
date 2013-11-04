@@ -185,11 +185,11 @@ package xsdforms {
       if (log.exists) log.delete();
     }
 
-    private def getInput(driver: WebDriver, itemNo: Int) =
-      driver.findElement(By.id("c-item-" + itemNo));
+    private def getInput(driver: WebDriver, itemNo: Int, instanceNo:Int=1) =
+      driver.findElement(By.id(TreeToHtmlConverter.getItemId("c-",itemNo.toString, instanceNo)));
 
-    private def getError(driver: WebDriver, itemNo: Int) =
-      driver.findElement(By.id("c-item-error-" + itemNo))
+    private def getError(driver: WebDriver, itemNo: Int, instanceNo:Int=1) =
+      driver.findElement(By.id(TreeToHtmlConverter.getItemErrorId("c-",itemNo.toString,instanceNo)))
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
       val input = getInput(driver, itemNo)

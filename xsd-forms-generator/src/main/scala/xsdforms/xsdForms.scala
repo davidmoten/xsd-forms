@@ -175,8 +175,19 @@ package xsdforms {
    * **************************************************************
    */
 
-  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
+  object TreeToHtmlConverter {
 
+    val instanceDelimiter = "-instance-"
+
+    def getItemId(idPrefix: String, number: String, instanceNo: Int) =
+      idPrefix + "item-" + number + instanceDelimiter + instanceNo
+
+    def getItemErrorId(idPrefix: String, number: String, instanceNo: Int) =
+      idPrefix + "item-error-" + number + instanceDelimiter + instanceNo
+  }
+
+  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
+    import TreeToHtmlConverter._
     import XsdUtil._
     import Util._
     private val script = new StringBuilder
@@ -325,8 +336,6 @@ package xsdforms {
       addXmlExtractScriplet(node)
 
     }
-
-    private val instanceDelimiter = "-instance-"
 
     private def doNode(node: NodeChoice) {
       val choice = node.choice
@@ -827,7 +836,7 @@ $(function() {
 
     private def getItemId(node: Node, instanceNo: Int): String = getItemId(elementNumber(node.element), instanceNo)
     private def getItemId(element: Element, instanceNo: Int): String = getItemId(elementNumber(element), instanceNo)
-    private def getItemId(number: String, instanceNo: Int): String = idPrefix + "item-" + number + instanceDelimiter + instanceNo
+    private def getItemId(number: String, instanceNo: Int): String = TreeToHtmlConverter.getItemId(idPrefix, number, instanceNo)
     private def getItemId(number: String, enumeration: Integer, instanceNo: Int): String = getItemId(number, instanceNo) + "-" + enumeration
     private def getItemName(number: String) =
       idPrefix + "item-input-" + number;
@@ -836,7 +845,7 @@ $(function() {
       idPrefix + "item-enclosing-" + number
 
     private def getItemErrorId(number: String, instanceNo: Int) =
-      idPrefix + "item-error-" + number + instanceDelimiter + instanceNo
+      TreeToHtmlConverter.getItemErrorId(idPrefix, number, instanceNo)
 
     private def getPathId(number: String) = idPrefix + "item-path-" + number
 
