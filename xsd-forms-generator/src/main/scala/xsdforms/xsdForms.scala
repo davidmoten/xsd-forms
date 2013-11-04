@@ -257,10 +257,8 @@ package xsdforms {
           case _ => Util.unexpected
         }
         html
-          .closeTag
-          .closeTag
+          .closeTag(3)
       }
-      html.closeTag
 
       addXmlExtractScriplet(node)
     }
@@ -281,9 +279,8 @@ package xsdforms {
           .div(classes = List("item-input"))
         simpleType(e, new MyRestriction(typ.qName), instanceNo)
         html
-          .closeTag(2)
+          .closeTag(3)
       }
-      html.closeTag
 
       addXmlExtractScriplet(node)
     }
