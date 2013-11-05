@@ -178,12 +178,17 @@ package xsdforms {
   object TreeToHtmlConverter {
 
     val instanceDelimiter = "-instance-"
+    val choiceIndexDelimiter = "-choice-"
 
     def getItemId(idPrefix: String, number: String, instanceNo: Int) =
       idPrefix + "item-" + number + instanceDelimiter + instanceNo
 
     def getItemErrorId(idPrefix: String, number: String, instanceNo: Int) =
       idPrefix + "item-error-" + number + instanceDelimiter + instanceNo
+
+    def getChoiceItemId(idPrefix: String, number: String, index: Int, instanceNo: Int): String = getItemId(idPrefix, number, instanceNo) + choiceIndexDelimiter + index
+
+    def getChoiceItemName(idPrefix: String, number: String, instanceNo: Int) = idPrefix + "item-input-" + number + instanceDelimiter + instanceNo
   }
 
   class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
@@ -666,14 +671,12 @@ $(function() {
 </html>"""
 
     private def getChoiceItemName(node: Node, instanceNo: Int): String = getChoiceItemName(elementNumber(node.element), instanceNo)
-    private def getChoiceItemName(number: String, instanceNo: Int): String = idPrefix + "item-input-" + number + instanceDelimiter + instanceNo
+    private def getChoiceItemName(number: String, instanceNo: Int): String = TreeToHtmlConverter.getChoiceItemName(idPrefix, number, instanceNo)
     private def getChoiceItemId(node: Node, index: Int, instanceNo: Int): String = getChoiceItemId(elementNumber(node.element), index, instanceNo)
-    private def getChoiceItemId(number: String, index: Int, instanceNo: Int): String = getItemId(number, instanceNo) + choiceIndexDelimiter + index
+    private def getChoiceItemId(number: String, index: Int, instanceNo: Int): String = TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instanceNo)
 
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
-
-    private val choiceIndexDelimiter = "-choice-"
 
     private def addChoiceHideOnStartScriptlet(
       particles: Seq[ParticleOption], number: String, instanceNo: Int) {

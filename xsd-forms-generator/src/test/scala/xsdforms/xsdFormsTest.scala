@@ -128,7 +128,7 @@ package xsdforms {
 
     private val uri = new File("target/demo/demo-form.html").toURI().toString()
     private val WebDriverChromeDriverKey = "webdriver.chrome.driver"
-      
+
     @Test
     def testOnFirefox() {
       println("firefox test")
@@ -185,11 +185,11 @@ package xsdforms {
       if (log.exists) log.delete();
     }
 
-    private def getInput(driver: WebDriver, itemNo: Int, instanceNo:Int=1) =
-      driver.findElement(By.id(TreeToHtmlConverter.getItemId("c-",itemNo.toString, instanceNo)));
+    private def getInput(driver: WebDriver, itemNo: Int, instanceNo: Int = 1) =
+      driver.findElement(By.id(TreeToHtmlConverter.getItemId("c-", itemNo.toString, instanceNo)));
 
-    private def getError(driver: WebDriver, itemNo: Int, instanceNo:Int=1) =
-      driver.findElement(By.id(TreeToHtmlConverter.getItemErrorId("c-",itemNo.toString,instanceNo)))
+    private def getError(driver: WebDriver, itemNo: Int, instanceNo: Int = 1) =
+      driver.findElement(By.id(TreeToHtmlConverter.getItemErrorId("c-", itemNo.toString, instanceNo)))
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
       val input = getInput(driver, itemNo)
@@ -459,9 +459,9 @@ package xsdforms {
     }
 
     private def testChoice(driver: WebDriver, itemNo: Int) {
-      val input = driver.findElement(By.name("c-item-input-" + itemNo));
-      val option1 = driver.findElement(By.id("c-item-" + itemNo + "-choice-1"))
-      val option2 = driver.findElement(By.id("c-item-" + itemNo + "-choice-2"))
+      val input = driver.findElement(By.name(TreeToHtmlConverter.getChoiceItemName("c-", itemNo.toString, 1)));
+      val option1 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 1, instanceNo = 1)))
+      val option2 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 2, instanceNo = 1)))
       assertFalse(input.isSelected)
       option1.click
       assertTrue(getInput(driver, itemNo + 1).isDisplayed)
@@ -563,7 +563,7 @@ package xsdforms {
       println("xml=" + xml)
       assertFalse(errors.isDisplayed());
       assertTrue(xml.getText.trim.contains("xmlns"))
-//      fail
+      //      fail
 
       //TODO generate objects from demo schema and attempt unmarshal of xml
       //      val text = xml.getText.replaceAll("xmlns=\".*\"", "")
