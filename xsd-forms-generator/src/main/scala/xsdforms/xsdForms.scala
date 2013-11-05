@@ -226,7 +226,6 @@ package xsdforms {
     }
 
     private def doNode(node: Node) {
-      addRepeatsDeclarationScriptlet(node);
       node match {
         case n: NodeSimpleType => doNode(n)
         case n: NodeBaseType => doNode(n)
@@ -279,8 +278,9 @@ package xsdforms {
           .div(classes = List("item-input"))
         simpleType(e, new MyRestriction(typ.qName), instanceNo)
         html
-          .closeTag(3)
+          .closeTag(2)
       }
+      html.closeTag
 
       addXmlExtractScriplet(node)
     }
@@ -393,15 +393,6 @@ package xsdforms {
     def choiceContentId(idPrefix: String, number: String, index: Int, instanceNo: Int) =
       idPrefix + "choice-content-" + number + instanceDelimiter + instanceNo + choiceIndexDelimiter + index
 
-    private def addRepeatsDeclarationScriptlet(node: Node) {
-      val repeatsVariable = repeats(node)
-      addScriptWithMargin("""
-|//blank string indicates the first instance (without instance number)
-|var """ + repeatsVariable + """ = [""];""")
-    }
-
-    private def repeats(node: Node): String = repeats(node.element)
-    private def repeats(element: Element): String = "repeats" + elementNumber(element)
     private def refById(id: String) = "$(\"#" + id + "\")"
     private def valById(id: String) = "encodeHTML(" + refById(id) + ".val())"
     private def namespace(node: Node) =
