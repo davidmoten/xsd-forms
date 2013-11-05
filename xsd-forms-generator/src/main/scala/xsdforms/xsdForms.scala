@@ -1093,13 +1093,9 @@ $(function() {
       val itemId = getItemId(number, instanceNo)
       """
 |// """ + e.name.get + """
-|var validate""" + number + "instance" + instanceNo + """ = function() {
-|  return validate""" + number + """WithSuffix("");  
-|}
-|
-|var validate""" + number + "instance" + instanceNo + """WithSuffix = function (suffix) {
+|var validate""" + number + "instance" + instanceNo + """= function () {
 |  var ok = true;
-|  var v = $("#""" + itemId + """" + suffix);
+|  var v = $("#""" + itemId + """");
 |  var pathDiv = $("#""" + getPathId(number) + """");"""
     }
 
