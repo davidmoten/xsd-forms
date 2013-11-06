@@ -10,6 +10,8 @@ package xsdforms {
   object TstUtil {
 
     import org.apache.commons.io._
+    
+    val idPrefix = "c-"
 
     def generate(
       idPrefix: String,
@@ -43,7 +45,7 @@ package xsdforms {
     def generateDemoForm(file: File) {
       println("generating demo form")
       generate(
-        idPrefix = "c-",
+        idPrefix = idPrefix,
         schemaInputStream = TstUtil.getClass().getResourceAsStream("/demo.xsd"),
         rootElement = "main",
         outputFile = file)
@@ -65,6 +67,7 @@ package xsdforms {
     import org.apache.commons.io._
     import TstUtil._
 
+    
     @Test
     def testSetupWebapp() {
       setupDemoWebapp
@@ -125,6 +128,7 @@ package xsdforms {
     import org.junit.matchers.JUnitMatchers._
     import org.apache.commons.io._
     import TstUtil._
+    import TreeToHtmlConverter._
 
     private val uri = new File("target/demo/demo-form.html").toURI().toString()
     private val WebDriverChromeDriverKey = "webdriver.chrome.driver"
@@ -186,13 +190,13 @@ package xsdforms {
     }
 
     private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1","1"))) = {
-      val id = TreeToHtmlConverter.getItemId("c-", itemNo.toString, instanceNos) 
+      val id = getItemId(idPrefix, itemNo.toString, instanceNos) 
       println("getInput: id="+id)
       driver.findElement(By.id(id));
   }
 
     private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1","1"))) =
-      driver.findElement(By.id(TreeToHtmlConverter.getItemErrorId("c-", itemNo.toString, instanceNos)))
+      driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos)))
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
       val input = getInput(driver, itemNo)
@@ -463,9 +467,9 @@ package xsdforms {
 
     private def testChoice(driver: WebDriver, itemNo: Int) {
       val instanceNos = Instances(List("1","1"))
-      val input = driver.findElement(By.name(TreeToHtmlConverter.getChoiceItemName("c-", itemNo.toString, instanceNos)));
-      val option1 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 1, instanceNos)))
-      val option2 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 2, instanceNos)))
+      val input = driver.findElement(By.name(getChoiceItemName(idPrefix, itemNo.toString, instanceNos)));
+      val option1 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo.toString, index = 1, instanceNos)))
+      val option2 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo.toString, index = 2, instanceNos)))
       assertFalse(input.isSelected)
       option1.click
       assertTrue(getInput(driver, itemNo + 1,instanceNos add 1).isDisplayed)
@@ -477,23 +481,23 @@ package xsdforms {
 
     private def testRepeat(driver: WebDriver, itemNo: Int) {
       val instanceNos = Instances(List("1"))
-      val button = driver.findElement(By.id(TreeToHtmlConverter.getRepeatButtonId("c-", itemNo.toString, instanceNos)))
+      val button = driver.findElement(By.id(getRepeatButtonId(idPrefix, itemNo.toString, instanceNos)))
       button.click;
-      checkDisplayedById(driver, "c-repeating-enclosing-" + itemNo + "-10001")
-      checkDisplayedById(driver, "c-item-" + itemNo + "-10001")
+      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1))
+      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 2))
       button.click
-      checkDisplayedById(driver, "c-repeating-enclosing-" + itemNo + "-10002")
-      checkDisplayedById(driver, "c-item-" + itemNo + "-10002")
+      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 3))
+      checkDisplayedById(driver, getItemId(idPrefix, itemNo.toString, instanceNos add 3))
 
       //clear validation for integer value
-      val input = driver.findElement(By.id("c-item-" + itemNo))
+      val input = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 1)))
       //put integer in so passes validation on submission
       input.sendKeys("456\n")
 
-      val input1 = driver.findElement(By.id("c-item-" + itemNo + "-10001"))
-      val error1 = driver.findElement(By.id("c-item-error-" + itemNo + "-10001"))
-      val input2 = driver.findElement(By.id("c-item-" + itemNo + "-10002"))
-      val error2 = driver.findElement(By.id("c-item-error-" + itemNo + "-10002"))
+      val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 2)))
+      val error1 = driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos add 2)))
+      val input2 = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 3)))
+      val error2 = driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos add 3)))
 
       input1.sendKeys("123\n")
       assertFalse(error1.isDisplayed)
