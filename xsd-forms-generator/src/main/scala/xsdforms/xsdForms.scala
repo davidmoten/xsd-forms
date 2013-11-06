@@ -176,13 +176,13 @@ package xsdforms {
    */
 
   case class Instances(heirarchy: Seq[String] = List()) {
-      def add(instance: Int): Instances = Instances(heirarchy :+ instance.toString)
-      override def toString = heirarchy.mkString("_")
-      def last = heirarchy.last
-    }
-  
+    def add(instance: Int): Instances = Instances(heirarchy :+ instance.toString)
+    override def toString = heirarchy.mkString("_")
+    def last = heirarchy.last
+  }
+
   object TreeToHtmlConverter {
-	val Invisible = "invisible"
+    val Invisible = "invisible"
     val instanceDelimiter = "-instance-"
     val choiceIndexDelimiter = "-choice-"
 
@@ -201,7 +201,7 @@ package xsdforms {
     def getRepeatButtonId(idPrefix: String, number: String, instanceNos: Instances) =
       idPrefix + "repeat-button-" + number + instanceDelimiter + instanceNos
 
-    def getRepeatingEnclosingId(idPrefix: String, number: String, instanceNos: Instances):String =
+    def getRepeatingEnclosingId(idPrefix: String, number: String, instanceNos: Instances): String =
       idPrefix + "repeating-enclosing-" + number + instanceDelimiter + instanceNos
   }
 
@@ -258,7 +258,7 @@ package xsdforms {
       val e = node.element
       val typ = node.typ
 
-      nonRepeatingSimpleType(e,instanceNos)
+      nonRepeatingSimpleType(e, instanceNos)
       val t = Some(typ)
       val number = elementNumber(e)
       for (instanceNo <- repeats(e)) {
@@ -285,7 +285,7 @@ package xsdforms {
     private def doNode(node: NodeBaseType, instanceNos: Instances) {
       val e = node.element
       val typ = node.typ
-      nonRepeatingSimpleType(e,instanceNos)
+      nonRepeatingSimpleType(e, instanceNos)
       val t = None
       val number = elementNumber(e)
       for (instanceNo <- repeats(e)) {
@@ -335,7 +335,6 @@ package xsdforms {
       for (instanceNo <- repeats(e)) {
         val instNos = instanceNos add instanceNo
         repeatingEnclosing(e, instNos)
-        addMaxOccursScriptlet(e, instNos)
         html.div(classes = List("sequence-label"), content = Some(label))
           .closeTag
           .div(id = Some(idPrefix + "sequence-" + number + "-instance-" + instanceNo),
@@ -351,8 +350,8 @@ package xsdforms {
       }
       html
         .closeTag(2)
-
-      addXmlExtractScriplet2(node,instanceNos)
+      addMaxOccursScriptlet(e, instanceNos)
+      addXmlExtractScriplet2(node, instanceNos)
 
     }
 
@@ -364,7 +363,7 @@ package xsdforms {
       val number = elementNumber(e)
 
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
-      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1",instanceNos)
+      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instanceNos)
       for (instanceNo <- repeats(e)) {
         val instNos = instanceNos add instanceNo
         repeatingEnclosing(e, instNos)
@@ -409,7 +408,7 @@ package xsdforms {
       }
       html.closeTag
 
-      addXmlExtractScriplet2(node,instanceNos)
+      addXmlExtractScriplet2(node, instanceNos)
 
     }
 
@@ -444,7 +443,7 @@ package xsdforms {
       addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node, Instances(List("1"))))));
     }
 
-    private def addXmlExtractScriplet2(node: NodeSequence,instanceNos:Instances) {
+    private def addXmlExtractScriplet2(node: NodeSequence, instanceNos: Instances) {
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
@@ -481,11 +480,13 @@ package xsdforms {
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
  |    //now add sequence children""")
-      node.children.foreach { n => {
-        //TODO use instanceNos for children
-        s.append("""
+      node.children.foreach { n =>
+        {
+          //TODO use instanceNos for children
+          s.append("""
  |    //TODO if instanceNo enabled
- |    xml += """ + xmlFunctionName(n, Some(instanceNos)) + "() + \"\\n\";");}
+ |    xml += """ + xmlFunctionName(n, Some(instanceNos)) + "() + \"\\n\";");
+        }
       }
       s.append("""
  |    xml+="""" + xmlEnd(node) + """>";
@@ -493,7 +494,7 @@ package xsdforms {
       addXmlExtractScriptlet(node, s.toString(), Some(instanceNos));
     }
 
-    private def addXmlExtractScriplet2(node: NodeChoice, instanceNos:Instances) {
+    private def addXmlExtractScriplet2(node: NodeChoice, instanceNos: Instances) {
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
@@ -772,9 +773,8 @@ $(function() {
         case _ => None
       }
 
-    private def nonRepeatingTitle(e: Element, hasButton: Boolean,instanceNos:Instances) {
-      //TODO what to do with repeats of whole trees of stuff?
-      val instanceNo = "1"
+    private def nonRepeatingTitle(e: Element, hasButton: Boolean, instanceNos: Instances) {
+      //there's only one of these so use instanceNo = 1
       val number = elementNumber(e)
       html.div(
         classes = List("non-repeating-title"),
@@ -789,28 +789,32 @@ $(function() {
     private def getRepeatButtonId(number: String, instanceNos: Instances) =
       TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instanceNos)
 
-    private def getRepeatingEnclosingId(element:Element, instanceNos:Instances):String =
+    private def getRepeatingEnclosingId(element: Element, instanceNos: Instances): String =
       TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instanceNos)
 
-      
-      private def getRepeatingEnclosingId(number: String, instanceNos:Instances) =
+    private def getRepeatingEnclosingId(number: String, instanceNos: Instances) =
       TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instanceNos)
 
     private def repeatingEnclosing(e: Element, instanceNos: Instances) {
       val number = elementNumber(e)
-      val extraClasses = (if (instanceNos.last != "1") List(Invisible) else List())
+      val id = getRepeatingEnclosingId(number, instanceNos)
       html.div(
-        id = Some(getRepeatingEnclosingId(number, instanceNos)),
-        classes = List("repeating-enclosing") ++ extraClasses)
+        id = Some(id),
+        classes = List("repeating-enclosing"))
+      if (instanceNos.last != "1")
+        addScriptWithMargin("""
+          |  $('""" + id + """').hide();
+          """)
+
     }
 
-    private def nonRepeatingSimpleType(e: Element,instanceNos:Instances) {
+    private def nonRepeatingSimpleType(e: Element, instanceNos: Instances) {
       val number = elementNumber(e)
       html
         .div(
           classes = List("item-enclosing") ++ getVisibility(e),
           id = Some(getItemEnclosingId(number)))
-      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1",instanceNos)
+      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instanceNos)
     }
 
     private def itemTitle(e: Element) {
@@ -1268,9 +1272,9 @@ $(function() {
     private def isMultiple(e: Element): Boolean =
       (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
-    private def repeatingEnclosingIds(e:Element,instanceNos: Instances ) = 
+    private def repeatingEnclosingIds(e: Element, instanceNos: Instances) =
       repeats(e).map(instanceNos.add(_)).map(getRepeatingEnclosingId(e, _))
-      
+
     private def addMaxOccursScriptlet(e: Element, instanceNos: Instances) {
       val number = elementNumber(e)
       if (isMultiple(e)) {
@@ -1280,10 +1284,12 @@ $(function() {
 
 |            
 |$("#""" + repeatButtonId + """").click(function() {
-|   //TODO
-|   // loop through all repeats until find nonInvisible repeat and make it visible
-""" + repeatingEnclosingIds(e,instanceNos).map("if (!$('"+ _ + "').is(':visible')) make visible and return" ).mkString("\n|    ") +
-"""
+|   // loop through all repeats until find first nonInvisible repeat and make it visible
+|   var elem;
+""" + repeatingEnclosingIds(e, instanceNos)
+          .map(id => { "|    elem = $('" + id + "');\n|    if (!elem.is(':visible'))\n|      { elem.show(); return; }\n" })
+          .mkString("") +
+          """
 |   
 |})
         """)
