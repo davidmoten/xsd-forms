@@ -185,8 +185,11 @@ package xsdforms {
       if (log.exists) log.delete();
     }
 
-    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1","1"))) =
-      driver.findElement(By.id(TreeToHtmlConverter.getItemId("c-", itemNo.toString, instanceNos)));
+    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1","1"))) = {
+      val id = TreeToHtmlConverter.getItemId("c-", itemNo.toString, instanceNos) 
+      println("getInput: id="+id)
+      driver.findElement(By.id(id));
+  }
 
     private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1","1"))) =
       driver.findElement(By.id(TreeToHtmlConverter.getItemErrorId("c-", itemNo.toString, instanceNos)))
@@ -465,11 +468,11 @@ package xsdforms {
       val option2 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 2, instanceNos)))
       assertFalse(input.isSelected)
       option1.click
-      assertTrue(getInput(driver, itemNo + 1).isDisplayed)
-      assertFalse(getInput(driver, itemNo + 2).isDisplayed)
+      assertTrue(getInput(driver, itemNo + 1,instanceNos add 1).isDisplayed)
+      assertFalse(getInput(driver, itemNo + 2,instanceNos add 1).isDisplayed)
       option2.click
-      assertFalse(getInput(driver, itemNo + 1).isDisplayed)
-      assertTrue(getInput(driver, itemNo + 2).isDisplayed)
+      assertFalse(getInput(driver, itemNo + 1,instanceNos add 1).isDisplayed)
+      assertTrue(getInput(driver, itemNo + 2,instanceNos add 1).isDisplayed)
     }
 
     private def testRepeat(driver: WebDriver, itemNo: Int) {
