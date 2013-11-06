@@ -472,7 +472,7 @@ package xsdforms {
     }
 
     private def testRepeat(driver: WebDriver, itemNo: Int) {
-      val button = driver.findElement(By.id("c-repeat-button-" + itemNo))
+      val button = driver.findElement(By.id(TreeToHtmlConverter.getRepeatButtonId("c-", itemNo.toString, instanceNo = 1)))
       button.click;
       checkDisplayedById(driver, "c-repeating-enclosing-" + itemNo + "-10001")
       checkDisplayedById(driver, "c-item-" + itemNo + "-10001")

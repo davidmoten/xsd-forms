@@ -186,9 +186,17 @@ package xsdforms {
     def getItemErrorId(idPrefix: String, number: String, instanceNo: Int) =
       idPrefix + "item-error-" + number + instanceDelimiter + instanceNo
 
-    def getChoiceItemId(idPrefix: String, number: String, index: Int, instanceNo: Int): String = getItemId(idPrefix, number, instanceNo) + choiceIndexDelimiter + index
+    def getChoiceItemId(idPrefix: String, number: String, index: Int, instanceNo: Int): String =
+      getItemId(idPrefix, number, instanceNo) + choiceIndexDelimiter + index
 
-    def getChoiceItemName(idPrefix: String, number: String, instanceNo: Int) = idPrefix + "item-input-" + number + instanceDelimiter + instanceNo
+    def getChoiceItemName(idPrefix: String, number: String, instanceNo: Int) =
+      idPrefix + "item-input-" + number + instanceDelimiter + instanceNo
+
+    def getRepeatButtonId(idPrefix: String, number: String, instanceNo: Int) =
+      idPrefix + "repeat-button-" + number + instanceDelimiter + instanceNo
+
+    def getRepeatingEnclosingId(idPrefix: String, number: String, instanceNo: Int) =
+      idPrefix + "repeating-enclosing-" + number + instanceDelimiter + instanceNo
   }
 
   class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
@@ -248,7 +256,7 @@ package xsdforms {
       val t = Some(typ)
       val number = elementNumber(e)
       for (instanceNo <- instances(e)) {
-        repeatingEnclosing(e)
+        repeatingEnclosing(e, instanceNo)
         itemTitle(e)
         itemBefore(e)
         html.div(classes = List("item-number"), content = Some(number)).closeTag
@@ -274,7 +282,7 @@ package xsdforms {
       val t = None
       val number = elementNumber(e)
       for (instanceNo <- instances(e)) {
-        repeatingEnclosing(e)
+        repeatingEnclosing(e, instanceNo)
         itemTitle(e)
         itemBefore(e)
         html.div(classes = List("item-number"), content = Some(number)).closeTag
@@ -317,8 +325,8 @@ package xsdforms {
         .div(classes = List("sequence"))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
       for (instanceNo <- instances(e)) {
-        repeatingEnclosing(e)
-        addMaxOccursScriptlet(e)
+        repeatingEnclosing(e, instanceNo)
+        addMaxOccursScriptlet(e, instanceNo)
         html.div(classes = List("sequence-label"), content = Some(label))
           .closeTag
           .div(id = Some(idPrefix + "sequence-" + number + "-instance-" + instanceNo),
@@ -349,8 +357,8 @@ package xsdforms {
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
       for (instanceNo <- instances(e)) {
-        repeatingEnclosing(e)
-        addMaxOccursScriptlet(e)
+        repeatingEnclosing(e, instanceNo)
+        addMaxOccursScriptlet(e, instanceNo)
         val particles = choice.group.particleOption3.map(_.value)
         addChoiceHideOnStartScriptlet(particles, number, instanceNo)
         addChoiceShowHideOnSelectionScriptlet(particles, number, instanceNo)
@@ -753,27 +761,29 @@ $(function() {
       }
 
     private def nonRepeatingTitle(e: Element, hasButton: Boolean) {
+      //TODO what to do with repeats of whole trees of stuff?
+      val instanceNo = 1
       val number = elementNumber(e)
       html.div(
         classes = List("non-repeating-title"),
         content = getAnnotation(e, "nonRepeatingTitle")).closeTag
       if (hasButton)
         html.div(
-          id = Some(getRepeatButtonId(number)),
+          id = Some(getRepeatButtonId(number, instanceNo)),
           classes = List("repeat-button", "white", "small"),
           content = Some(getAnnotation(e, "repeatLabel").getOrElse("+"))).closeTag
     }
 
-    private def getRepeatButtonId(number: String) =
-      idPrefix + "repeat-button-" + number
+    private def getRepeatButtonId(number: String, instanceNo: Int) =
+      TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instanceNo)
 
-    private def getRepeatingEnclosingId(number: String) =
-      idPrefix + "repeating-enclosing-" + number
+    private def getRepeatingEnclosingId(number: String, instanceNo: Int) =
+      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instanceNo)
 
-    private def repeatingEnclosing(e: Element) {
+    private def repeatingEnclosing(e: Element, instanceNo: Int) {
       val number = elementNumber(e)
       html.div(
-        id = Some(getRepeatingEnclosingId(number)),
+        id = Some(getRepeatingEnclosingId(number, instanceNo)),
         classes = List("repeating-enclosing"))
     }
 
@@ -847,7 +857,7 @@ $(function() {
       //TODO use instanceNo
       addInput(e, qn, r, instanceNo)
 
-      addMaxOccursScriptlet(e)
+      addMaxOccursScriptlet(e, instanceNo)
 
       addDescription(e)
 
@@ -1241,11 +1251,11 @@ $(function() {
     private def isMultiple(e: Element): Boolean =
       (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
-    private def addMaxOccursScriptlet(e: Element) {
+    private def addMaxOccursScriptlet(e: Element, instanceNo: Int) {
       val number = elementNumber(e)
       if (isMultiple(e)) {
-        val repeatButtonId = getRepeatButtonId(number)
-        val enclosingId = getRepeatingEnclosingId(number)
+        val repeatButtonId = getRepeatButtonId(number, instanceNo)
+        val enclosingId = getRepeatingEnclosingId(number, instanceNo)
 
         addScriptWithMargin("""
 
