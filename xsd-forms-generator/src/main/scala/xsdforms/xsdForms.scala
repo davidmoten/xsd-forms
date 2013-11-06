@@ -223,7 +223,7 @@ package xsdforms {
     assignElementNumbers(tree)
 
     //process the abstract syntax tree
-    doNode(tree)
+    doNode(tree, new Instances)
 
     /**
      * Traverse children before siblings to provide element
@@ -238,17 +238,21 @@ package xsdforms {
       }
     }
 
-    private def doNode(node: Node) {
+    private class Instances(heirarchy: Seq[String] = List()) {
+      def add(instance: Int): Instances = new Instances(heirarchy :+ instance.toString)
+    }
+
+    private def doNode(node: Node, instanceNos: Instances) {
       node match {
-        case n: NodeSimpleType => doNode(n)
-        case n: NodeBaseType => doNode(n)
-        case n: NodeSequence => doNode(n)
-        case n: NodeChoice => doNode(n)
+        case n: NodeSimpleType => doNode(n, instanceNos)
+        case n: NodeBaseType => doNode(n, instanceNos)
+        case n: NodeSequence => doNode(n, instanceNos)
+        case n: NodeChoice => doNode(n, instanceNos)
         case _ => Util.unexpected
       }
     }
 
-    private def doNode(node: NodeSimpleType) {
+    private def doNode(node: NodeSimpleType, instanceNos: Instances) {
       val e = node.element
       val typ = node.typ
 
@@ -256,7 +260,8 @@ package xsdforms {
       val t = Some(typ)
       val number = elementNumber(e)
       for (instanceNo <- instances(e)) {
-        repeatingEnclosing(e, instanceNo)
+        val instNos = instanceNos add instanceNo
+        repeatingEnclosing(e, instNos)
         itemTitle(e)
         itemBefore(e)
         html.div(classes = List("item-number"), content = Some(number)).closeTag
@@ -265,55 +270,56 @@ package xsdforms {
           .div(classes = List("item-input"))
 
         typ.simpleDerivationOption3.value match {
-          case x: Restriction => simpleType(e, x, instanceNo)
+          case x: Restriction => simpleType(e, x, instNos)
           case _ => Util.unexpected
         }
         html
           .closeTag(3)
       }
 
-      addXmlExtractScriplet(node)
+      addXmlExtractScriplet2(node)
     }
 
-    private def doNode(node: NodeBaseType) {
+    private def doNode(node: NodeBaseType, instanceNos: Instances) {
       val e = node.element
       val typ = node.typ
       nonRepeatingSimpleType(e)
       val t = None
       val number = elementNumber(e)
       for (instanceNo <- instances(e)) {
-        repeatingEnclosing(e, instanceNo)
+        val instNos = instanceNos add instanceNo
+        repeatingEnclosing(e, instNos)
         itemTitle(e)
         itemBefore(e)
         html.div(classes = List("item-number"), content = Some(number)).closeTag
           .label(forInputName = getItemName(number),
             classes = List("item-label"), content = Some(getLabel(e, t))).closeTag
           .div(classes = List("item-input"))
-        simpleType(e, new MyRestriction(typ.qName), instanceNo)
+        simpleType(e, new MyRestriction(typ.qName), instNos)
         html
           .closeTag(2)
       }
       html.closeTag
 
-      addXmlExtractScriplet(node)
+      addXmlExtractScriplet2(node)
     }
 
-    private def doNodes(nodes: MutableList[Node]) {
-      nodes.foreach(doNode(_))
+    private def doNodes(nodes: MutableList[Node], instanceNos: Instances) {
+      nodes.foreach(doNode(_, instanceNos))
     }
 
     private def numInstances(e: Element): Int =
       if (isMultiple(e)) NumInstancesForMultiple
       else 1
 
-    private def instances(node: Node): Seq[String] = instances(node.element)
+    private def instances(node: Node): Range = instances(node.element)
 
-    private def instances(e: Element): Seq[String] = (1 to numInstances(e)).map(_.toString)
+    private def instances(e: Element): Range = 1 to numInstances(e)
 
     private def numInstances(node: Node): Int =
       numInstances(node.element)
 
-    private def doNode(node: NodeSequence) {
+    private def doNode(node: NodeSequence, instanceNos: Instances) {
       val e = node.element
       val number = elementNumber(node)
       val legend = getAnnotation(e, "legend")
@@ -325,8 +331,9 @@ package xsdforms {
         .div(classes = List("sequence"))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
       for (instanceNo <- instances(e)) {
-        repeatingEnclosing(e, instanceNo)
-        addMaxOccursScriptlet(e, instanceNo)
+        val instNos = instanceNos add instanceNo
+        repeatingEnclosing(e, instNos)
+        addMaxOccursScriptlet(e, instNos)
         html.div(classes = List("sequence-label"), content = Some(label))
           .closeTag
           .div(id = Some(idPrefix + "sequence-" + number + "-instance-" + instanceNo),
@@ -334,7 +341,7 @@ package xsdforms {
         if (usesFieldset)
           html.fieldset(legend = legend, classes = List("fieldset"), id = Some(idPrefix + "fieldset-" + number + "-instance-" + instanceNo))
 
-        doNodes(node.children)
+        doNodes(node.children, instNos)
 
         if (usesFieldset)
           html.closeTag
@@ -343,11 +350,11 @@ package xsdforms {
       html
         .closeTag(2)
 
-      addXmlExtractScriplet(node)
+      addXmlExtractScriplet2(node)
 
     }
 
-    private def doNode(node: NodeChoice) {
+    private def doNode(node: NodeChoice, instanceNos: Instances) {
       val choice = node.choice
       val e = node.element
       val choiceInline = displayChoiceInline(choice)
@@ -357,11 +364,12 @@ package xsdforms {
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
       for (instanceNo <- instances(e)) {
-        repeatingEnclosing(e, instanceNo)
-        addMaxOccursScriptlet(e, instanceNo)
+        val instNos = instanceNos add instanceNo
+        repeatingEnclosing(e, instNos)
+        addMaxOccursScriptlet(e, instNos)
         val particles = choice.group.particleOption3.map(_.value)
-        addChoiceHideOnStartScriptlet(particles, number, instanceNo)
-        addChoiceShowHideOnSelectionScriptlet(particles, number, instanceNo)
+        addChoiceHideOnStartScriptlet(particles, number, instNos)
+        addChoiceShowHideOnSelectionScriptlet(particles, number, instNos)
 
         html.div(
           classes = List("choice-label"),
@@ -377,8 +385,8 @@ package xsdforms {
             id = Some(idPrefix + "div-choice-item-" + number + instanceDelimiter + instanceNo + choiceIndexDelimiter + index),
             classes = List("div-choice-item"))
           html.input(
-            id = Some(getChoiceItemId(number, index, instanceNo)),
-            name = getChoiceItemName(number, instanceNo),
+            id = Some(getChoiceItemId(number, index, instNos)),
+            name = getChoiceItemName(number, instNos),
             classes = List("choice-item"),
             typ = Some("radio"),
             value = Some("number"),
@@ -389,8 +397,8 @@ package xsdforms {
 
         node.children.zipWithIndex.foreach {
           case (n, index) => {
-            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instanceNo)), classes = List("invisible"))
-            doNode(n)
+            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instNos)), classes = List("invisible"))
+            doNode(n, instNos)
             html.closeTag
           }
         }
@@ -399,7 +407,7 @@ package xsdforms {
       }
       html.closeTag
 
-      addXmlExtractScriplet(node)
+      addXmlExtractScriplet2(node)
 
     }
 
@@ -424,17 +432,17 @@ package xsdforms {
         " + \"</" + node.element.name.getOrElse("?") + ">\""
     }
 
-    private def addXmlExtractScriplet(node: NodeSimpleType) {
+    private def addXmlExtractScriplet2(node: NodeSimpleType) {
       //TODO use instanceNo
       addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node, "1"))));
     }
 
-    private def addXmlExtractScriplet(node: NodeBaseType) {
+    private def addXmlExtractScriplet2(node: NodeBaseType) {
       //TODO use instanceNo
       addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node, "1"))));
     }
 
-    private def addXmlExtractScriplet(node: NodeSequence) {
+    private def addXmlExtractScriplet2(node: NodeSequence) {
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
@@ -482,7 +490,7 @@ package xsdforms {
       addXmlExtractScriptlet(node, s.toString(), Some(instanceNo));
     }
 
-    private def addXmlExtractScriplet(node: NodeChoice) {
+    private def addXmlExtractScriplet2(node: NodeChoice) {
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
