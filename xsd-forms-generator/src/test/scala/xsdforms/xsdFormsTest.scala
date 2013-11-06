@@ -185,10 +185,10 @@ package xsdforms {
       if (log.exists) log.delete();
     }
 
-    private def getInput(driver: WebDriver, itemNo: Int, instanceNo: Int = 1) =
+    private def getInput(driver: WebDriver, itemNo: Int, instanceNo: String = "1") =
       driver.findElement(By.id(TreeToHtmlConverter.getItemId("c-", itemNo.toString, instanceNo)));
 
-    private def getError(driver: WebDriver, itemNo: Int, instanceNo: Int = 1) =
+    private def getError(driver: WebDriver, itemNo: Int, instanceNo: String = "1") =
       driver.findElement(By.id(TreeToHtmlConverter.getItemErrorId("c-", itemNo.toString, instanceNo)))
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
@@ -459,9 +459,9 @@ package xsdforms {
     }
 
     private def testChoice(driver: WebDriver, itemNo: Int) {
-      val input = driver.findElement(By.name(TreeToHtmlConverter.getChoiceItemName("c-", itemNo.toString, 1)));
-      val option1 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 1, instanceNo = 1)))
-      val option2 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 2, instanceNo = 1)))
+      val input = driver.findElement(By.name(TreeToHtmlConverter.getChoiceItemName("c-", itemNo.toString, "1")));
+      val option1 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 1, instanceNo = "1")))
+      val option2 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 2, instanceNo = "1")))
       assertFalse(input.isSelected)
       option1.click
       assertTrue(getInput(driver, itemNo + 1).isDisplayed)
@@ -472,7 +472,7 @@ package xsdforms {
     }
 
     private def testRepeat(driver: WebDriver, itemNo: Int) {
-      val button = driver.findElement(By.id(TreeToHtmlConverter.getRepeatButtonId("c-", itemNo.toString, instanceNo = 1)))
+      val button = driver.findElement(By.id(TreeToHtmlConverter.getRepeatButtonId("c-", itemNo.toString, instanceNo = "1")))
       button.click;
       checkDisplayedById(driver, "c-repeating-enclosing-" + itemNo + "-10001")
       checkDisplayedById(driver, "c-item-" + itemNo + "-10001")
