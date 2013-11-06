@@ -478,11 +478,10 @@ package xsdforms {
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
- |    //now optionally add selected child if any
- |    var suffix=""; //what is suffix used for?""")
+ |    //now optionally add selected child if any""");
       for (instanceNo <- instances(node)) {
         s.append(""" 
- |    var checked = $(':input[name=""" + getChoiceItemName(node, instanceNo) + """' + suffix + ']:checked').attr("id");
+ |    var checked = $(':input[name=""" + getChoiceItemName(node, instanceNo) + """]:checked').attr("id");
  """)
 
         node.children.zipWithIndex.foreach {
@@ -695,11 +694,13 @@ $(function() {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
+      val choiceChangeFunction = "choiceChange" + number + "instance" + instanceNo;
+
       addScriptWithMargin(
         """
-|var choiceChange""" + number + """instance""" + instanceNo + """ = function addChoiceChange""" + number + """instance""" + instanceNo + """(suffix) {
-|  $(":input[@name='""" + getChoiceItemName(number, instanceNo) + """" + suffix + "']").change(function() {
-|    var checked = $(':input[name=""" + getChoiceItemName(number, instanceNo) + """' + suffix + ']:checked').attr("id");""")
+|var """ + choiceChangeFunction + """ = function addChoiceChange""" + number + """instance""" + instanceNo + """() {
+|  $(":input[@name='""" + getChoiceItemName(number, instanceNo) + """']").change(function() {
+|    var checked = $(':input[name=""" + getChoiceItemName(number, instanceNo) + """]:checked').attr("id");""")
 
       forEachParticle(x => {
         val index = x._2 + 1
@@ -707,13 +708,13 @@ $(function() {
           choiceContentId(idPrefix, number, index, instanceNo)
         addScriptWithMargin(
           """
-|    if (checked == """" + getChoiceItemId(number, index, instanceNo) + """" + suffix) {
-|      $("#""" + ccId + """" + suffix).show();
-|      $("#""" + ccId + """" + suffix).find('.item-path').attr('enabled','true');
+|    if (checked == """" + getChoiceItemId(number, index, instanceNo) + """") {
+|      $("#""" + ccId + """").show();
+|      $("#""" + ccId + """").find('.item-path').attr('enabled','true');
 |    }
 |    else {
-|      $("#""" + ccId + """" + suffix).hide();
-|      $("#""" + ccId + """" + suffix).find('.item-path').attr('enabled','false');
+|      $("#""" + ccId + """").hide();
+|      $("#""" + ccId + """").find('.item-path').attr('enabled','false');
 |    }""")
       })
       addScriptWithMargin(
@@ -721,7 +722,7 @@ $(function() {
 |  })
 |}
 |
-|choiceChange""" + number + """("");""")
+|""" + choiceChangeFunction + """();""")
 
     }
 
@@ -838,7 +839,7 @@ $(function() {
     private def getItemErrorId(number: String, instanceNo: Int) =
       TreeToHtmlConverter.getItemErrorId(idPrefix, number, instanceNo)
 
-    private def getPathId(number: String) = idPrefix + "item-path-" + number
+    private def getPathId(number: String, instanceNo: Int) = idPrefix + "item-path-" + number + instanceDelimiter + instanceNo
 
     private def simpleType(e: Element, r: Restriction, instanceNo: Int) {
       val qn = toQN(r.base.get)
@@ -850,7 +851,7 @@ $(function() {
 
       addDescription(e)
 
-      addPath(e)
+      addPath(e, instanceNo)
 
       addError(e, instanceNo)
 
@@ -1058,10 +1059,10 @@ $(function() {
 
     }
 
-    private def addPath(e: Element) {
+    private def addPath(e: Element, instanceNo: Int) {
       html.div(
         classes = List("item-path"),
-        id = Some(getPathId(elementNumber(e))),
+        id = Some(getPathId(elementNumber(e), instanceNo)),
         enabledAttr = Some("true"),
         content = Some(""))
         .closeTag
@@ -1099,7 +1100,7 @@ $(function() {
 |var validate""" + number + "instance" + instanceNo + """= function () {
 |  var ok = true;
 |  var v = $("#""" + itemId + """");
-|  var pathDiv = $("#""" + getPathId(number) + """");"""
+|  var pathDiv = $("#""" + getPathId(number, instanceNo) + """");"""
     }
 
     private def createMandatoryTestScriptlet(e: Element, r: Restriction) = {
@@ -1209,7 +1210,7 @@ $(function() {
 """ + (if (e.minOccurs == 0 && e.default.isEmpty)
         """
 |//disable item-path due to minOccurs=0 and default is empty  
-|$("#""" + getPathId(number) + """").attr('enabled','false');"""
+|$("#""" + getPathId(number, instanceNo) + """").attr('enabled','false');"""
       else "")
     }
 
