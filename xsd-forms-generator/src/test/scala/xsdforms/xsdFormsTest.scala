@@ -185,10 +185,10 @@ package xsdforms {
       if (log.exists) log.delete();
     }
 
-    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1"))) =
+    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1","1"))) =
       driver.findElement(By.id(TreeToHtmlConverter.getItemId("c-", itemNo.toString, instanceNos)));
 
-    private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1"))) =
+    private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1","1"))) =
       driver.findElement(By.id(TreeToHtmlConverter.getItemErrorId("c-", itemNo.toString, instanceNos)))
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
@@ -459,7 +459,7 @@ package xsdforms {
     }
 
     private def testChoice(driver: WebDriver, itemNo: Int) {
-      val instanceNos = Instances(List("1"))
+      val instanceNos = Instances(List("1","1"))
       val input = driver.findElement(By.name(TreeToHtmlConverter.getChoiceItemName("c-", itemNo.toString, instanceNos)));
       val option1 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 1, instanceNos)))
       val option2 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 2, instanceNos)))
