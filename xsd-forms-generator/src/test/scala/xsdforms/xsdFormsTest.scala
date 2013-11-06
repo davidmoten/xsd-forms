@@ -511,8 +511,9 @@ package xsdforms {
     }
 
     private def testRepeatWhenMinOccursIsZero(driver: WebDriver, itemNo: Int) {
+      val instanceNos = Instances(List("1"))
       //default input should not be visible because minOccurs=0
-      val input = driver.findElement(By.id("c-repeating-enclosing-" + itemNo))
+      val input = driver.findElement(By.id(getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertFalse(input.isDisplayed)
       val button = driver.findElement(By.id("c-repeat-button-" + itemNo))
       button.click;
