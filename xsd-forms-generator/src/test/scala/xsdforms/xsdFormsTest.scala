@@ -185,11 +185,11 @@ package xsdforms {
       if (log.exists) log.delete();
     }
 
-    private def getInput(driver: WebDriver, itemNo: Int, instanceNo: String = "1") =
-      driver.findElement(By.id(TreeToHtmlConverter.getItemId("c-", itemNo.toString, instanceNo)));
+    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1"))) =
+      driver.findElement(By.id(TreeToHtmlConverter.getItemId("c-", itemNo.toString, instanceNos)));
 
-    private def getError(driver: WebDriver, itemNo: Int, instanceNo: String = "1") =
-      driver.findElement(By.id(TreeToHtmlConverter.getItemErrorId("c-", itemNo.toString, instanceNo)))
+    private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1"))) =
+      driver.findElement(By.id(TreeToHtmlConverter.getItemErrorId("c-", itemNo.toString, instanceNos)))
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
       val input = getInput(driver, itemNo)
@@ -459,9 +459,10 @@ package xsdforms {
     }
 
     private def testChoice(driver: WebDriver, itemNo: Int) {
-      val input = driver.findElement(By.name(TreeToHtmlConverter.getChoiceItemName("c-", itemNo.toString, "1")));
-      val option1 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 1, instanceNo = "1")))
-      val option2 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 2, instanceNo = "1")))
+      val instanceNos = Instances(List("1"))
+      val input = driver.findElement(By.name(TreeToHtmlConverter.getChoiceItemName("c-", itemNo.toString, instanceNos)));
+      val option1 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 1, instanceNos)))
+      val option2 = driver.findElement(By.id(TreeToHtmlConverter.getChoiceItemId("c-", itemNo.toString, index = 2, instanceNos)))
       assertFalse(input.isSelected)
       option1.click
       assertTrue(getInput(driver, itemNo + 1).isDisplayed)
@@ -472,7 +473,8 @@ package xsdforms {
     }
 
     private def testRepeat(driver: WebDriver, itemNo: Int) {
-      val button = driver.findElement(By.id(TreeToHtmlConverter.getRepeatButtonId("c-", itemNo.toString, instanceNo = "1")))
+      val instanceNos = Instances(List("1"))
+      val button = driver.findElement(By.id(TreeToHtmlConverter.getRepeatButtonId("c-", itemNo.toString, instanceNos)))
       button.click;
       checkDisplayedById(driver, "c-repeating-enclosing-" + itemNo + "-10001")
       checkDisplayedById(driver, "c-item-" + itemNo + "-10001")
