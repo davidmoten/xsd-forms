@@ -201,7 +201,7 @@ package xsdforms {
     def getRepeatButtonId(idPrefix: String, number: String, instanceNos: Instances) =
       idPrefix + "repeat-button-" + number + instanceDelimiter + instanceNos
 
-    def getRepeatingEnclosingId(idPrefix: String, number: String, instanceNos: Instances) =
+    def getRepeatingEnclosingId(idPrefix: String, number: String, instanceNos: Instances):String =
       idPrefix + "repeating-enclosing-" + number + instanceDelimiter + instanceNos
   }
 
@@ -789,7 +789,11 @@ $(function() {
     private def getRepeatButtonId(number: String, instanceNos: Instances) =
       TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instanceNos)
 
-    private def getRepeatingEnclosingId(number: String, instanceNos:Instances) =
+    private def getRepeatingEnclosingId(element:Element, instanceNos:Instances):String =
+      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instanceNos)
+
+      
+      private def getRepeatingEnclosingId(number: String, instanceNos:Instances) =
       TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instanceNos)
 
     private def repeatingEnclosing(e: Element, instanceNos: Instances) {
@@ -1264,17 +1268,23 @@ $(function() {
     private def isMultiple(e: Element): Boolean =
       (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
+    private def repeatingEnclosingIds(e:Element,instanceNos: Instances ) = 
+      repeats(e).map(instanceNos.add(_)).map(getRepeatingEnclosingId(e, _))
+      
     private def addMaxOccursScriptlet(e: Element, instanceNos: Instances) {
       val number = elementNumber(e)
       if (isMultiple(e)) {
         val repeatButtonId = getRepeatButtonId(number, instanceNos)
-        val enclosingId = getRepeatingEnclosingId(number, instanceNos)
 
         addScriptWithMargin("""
 
 |            
 |$("#""" + repeatButtonId + """").click(function() {
 |   //TODO
+|   // loop through all repeats until find nonInvisible repeat and make it visible
+""" + repeatingEnclosingIds(e,instanceNos).map("if (!$('"+ _ + "').is(':visible')) make visible and return" ).mkString("\n|    ") +
+"""
+|   
 |})
         """)
       }
