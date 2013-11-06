@@ -178,10 +178,11 @@ package xsdforms {
   case class Instances(heirarchy: Seq[String] = List()) {
       def add(instance: Int): Instances = Instances(heirarchy :+ instance.toString)
       override def toString = heirarchy.mkString("_")
+      def last = heirarchy.last
     }
   
   object TreeToHtmlConverter {
-
+	val Invisible = "invisible"
     val instanceDelimiter = "-instance-"
     val choiceIndexDelimiter = "-choice-"
 
@@ -260,7 +261,7 @@ package xsdforms {
       nonRepeatingSimpleType(e,instanceNos)
       val t = Some(typ)
       val number = elementNumber(e)
-      for (instanceNo <- instances(e)) {
+      for (instanceNo <- repeats(e)) {
         val instNos = instanceNos add instanceNo
         repeatingEnclosing(e, instNos)
         itemTitle(e)
@@ -287,7 +288,7 @@ package xsdforms {
       nonRepeatingSimpleType(e,instanceNos)
       val t = None
       val number = elementNumber(e)
-      for (instanceNo <- instances(e)) {
+      for (instanceNo <- repeats(e)) {
         val instNos = instanceNos add instanceNo
         repeatingEnclosing(e, instNos)
         itemTitle(e)
@@ -313,9 +314,9 @@ package xsdforms {
       if (isMultiple(e)) NumInstancesForMultiple
       else 1
 
-    private def instances(node: Node): Range = instances(node.element)
+    private def repeats(node: Node): Range = repeats(node.element)
 
-    private def instances(e: Element): Range = 1 to numInstances(e)
+    private def repeats(e: Element): Range = 1 to numInstances(e)
 
     private def numInstances(node: Node): Int =
       numInstances(node.element)
@@ -331,7 +332,7 @@ package xsdforms {
       html
         .div(classes = List("sequence"))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instanceNos)
-      for (instanceNo <- instances(e)) {
+      for (instanceNo <- repeats(e)) {
         val instNos = instanceNos add instanceNo
         repeatingEnclosing(e, instNos)
         addMaxOccursScriptlet(e, instNos)
@@ -364,7 +365,7 @@ package xsdforms {
 
       html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1",instanceNos)
-      for (instanceNo <- instances(e)) {
+      for (instanceNo <- repeats(e)) {
         val instNos = instanceNos add instanceNo
         repeatingEnclosing(e, instNos)
         addMaxOccursScriptlet(e, instNos)
@@ -398,7 +399,7 @@ package xsdforms {
 
         node.children.zipWithIndex.foreach {
           case (n, index) => {
-            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instNos)), classes = List("invisible"))
+            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instNos)), classes = List(Invisible))
             doNode(n, instNos)
             html.closeTag
           }
@@ -448,7 +449,7 @@ package xsdforms {
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
  |    //now add sequence children for each instanceNo""")
-      for (instanceNo <- instances(node))
+      for (instanceNo <- repeats(node))
         node.children.foreach { n =>
           s.append("""
  |    xml += """ + xmlFunctionName(n, Some(instanceNos)) + "() + \"\\n\";");
@@ -497,7 +498,7 @@ package xsdforms {
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
  |    //now optionally add selected child if any""");
-      for (instanceNo <- instances(node)) {
+      for (instanceNo <- repeats(node)) {
         s.append(""" 
  |    var checked = $(':input[name=""" + getChoiceItemName(node, instanceNos) + """]:checked').attr("id");
  """)
@@ -767,7 +768,7 @@ $(function() {
 
     private def getVisibility(e: Element) =
       getAnnotation(e, "visible") match {
-        case Some("false") => Some("invisible")
+        case Some("false") => Some(Invisible)
         case _ => None
       }
 
@@ -793,9 +794,10 @@ $(function() {
 
     private def repeatingEnclosing(e: Element, instanceNos: Instances) {
       val number = elementNumber(e)
+      val extraClasses = (if (instanceNos.last != "1") List(Invisible) else List())
       html.div(
         id = Some(getRepeatingEnclosingId(number, instanceNos)),
-        classes = List("repeating-enclosing"))
+        classes = List("repeating-enclosing") ++ extraClasses)
     }
 
     private def nonRepeatingSimpleType(e: Element,instanceNos:Instances) {

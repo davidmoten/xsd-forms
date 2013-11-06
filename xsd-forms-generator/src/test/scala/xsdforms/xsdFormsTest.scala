@@ -482,6 +482,9 @@ package xsdforms {
     private def testRepeat(driver: WebDriver, itemNo: Int) {
       val instanceNos = Instances(List("1"))
       val button = driver.findElement(By.id(getRepeatButtonId(idPrefix, itemNo.toString, instanceNos)))
+      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1))
+      checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 2))
+      checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 3))
       button.click;
       checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1))
       checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 2))
@@ -536,6 +539,11 @@ package xsdforms {
     private def checkDisplayedById(driver: WebDriver, id: String) {
       val item = driver.findElement(By.id(id))
       assertTrue(item.isDisplayed)
+    }
+    
+    private def checkNotDisplayedById(driver: WebDriver, id: String) {
+      val item = driver.findElement(By.id(id))
+      assertFalse(item.isDisplayed)
     }
 
     private def setInput(driver: WebDriver, itemNo: Int, text: String) {
