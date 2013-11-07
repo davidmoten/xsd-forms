@@ -312,7 +312,7 @@ package xsdforms {
           .closeTag(2)
       }
       html.closeTag
-
+      addMaxOccursScriptlet(e, instanceNos)
       addXmlExtractScriplet2(node)
     }
 
@@ -1275,8 +1275,11 @@ $(function() {
     private def isMultiple(node: Node): Boolean =
       isMultiple(node.element)
 
-    private def isMultiple(e: Element): Boolean =
-      (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
+    private def isMultiple(e: Element): Boolean = {
+      val result = (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
+      println(elementNumber(e) + " maxOccurs=" + e.maxOccurs + " isMultiple=" + result)
+      result
+    }
 
     private def repeatingEnclosingIds(e: Element, instanceNos: Instances) =
       repeats(e).map(instanceNos.add(_)).map(getRepeatingEnclosingId(e, _))

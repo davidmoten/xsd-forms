@@ -1,5 +1,6 @@
 package xsdforms {
   import org.junit.Test
+  import org.junit.Before
   import xsd.Schema
   import org.junit.runners.BlockJUnit4ClassRunner
   import org.junit.runner.notification.Failure
@@ -70,6 +71,23 @@ package xsdforms {
     @Test
     def testSetupWebapp() {
       setupDemoWebapp
+    }
+
+    @Before
+    def setupCssJsFiles {
+      {
+        val directory = new File("target/generated-webapp/css")
+        directory.mkdirs
+        FileUtils.deleteDirectory(directory)
+        FileUtils.copyDirectory(new File("src/main/webapp/css"), directory)
+      }
+      {
+        val directory = new File("target/generated-webapp/js")
+        directory.mkdirs
+        FileUtils.deleteDirectory(directory)
+        FileUtils.copyDirectory(new File("src/main/webapp/js"), directory)
+      }
+      println("copied css+js directories to target/generated-webapp")
     }
 
     @Test
