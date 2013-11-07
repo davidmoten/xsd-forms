@@ -887,7 +887,7 @@ $(function() {
       //TODO use instanceNo
       addInput(e, qn, r, instanceNos)
 
-      addMaxOccursScriptlet(e, instanceNos)
+      addMaxOccursScriptlet(e, instanceNos.dropLast)
 
       addDescription(e)
 
@@ -1063,7 +1063,7 @@ $(function() {
               addScriptWithMargin("""
 |  $("#""" + getItemId(number, instanceNos) + """").change( function() {
 |    var v = $("#""" + getItemId(number, instanceNos) + """");
-|    var refersTo = $("#""" + getItemEnclosingId(refersTo + "", instanceNos add 1) + """") 
+|    var refersTo = $("#""" + getItemEnclosingId(refersTo + "", instanceNos) + """") 
 |    if ("""" + x._2.valueAttribute + """" == v.val()) 
 |      refersTo.show();
 |    else
@@ -1295,7 +1295,7 @@ $(function() {
 |$("#""" + repeatButtonId + """").click(function() {
 |   // loop through all repeats until find first nonInvisible repeat and make it visible
 |   var elem;
-""" + repeatingEnclosingIds(e, instanceNos.dropLast)
+""" + repeatingEnclosingIds(e, instanceNos)
           .map(id => { "|    elem = $('" + id + "');\n|    if (!elem.is(':visible'))\n|      { elem.show(); return; }\n" })
           .mkString("") +
           """
