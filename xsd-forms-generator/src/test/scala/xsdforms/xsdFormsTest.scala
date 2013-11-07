@@ -522,9 +522,9 @@ package xsdforms {
       //default input should not be visible because minOccurs=0
       val input = driver.findElement(By.id(getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertFalse(input.isDisplayed)
-      val button = driver.findElement(By.id("c-repeat-button-" + itemNo))
+      val button = driver.findElement(By.id(getRepeatButtonId(idPrefix, itemNo.toString, instanceNos)))
       button.click;
-      val input1 = driver.findElement(By.id("c-item-" + itemNo + "-10003"))
+      val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertTrue(input1.isDisplayed)
       //make sure it validates come submission time
       input1.sendKeys("123\n")
