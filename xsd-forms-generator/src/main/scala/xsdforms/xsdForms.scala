@@ -1296,7 +1296,7 @@ $(function() {
 |   // loop through all repeats until find first nonInvisible repeat and make it visible
 |   var elem;
 """ + repeatingEnclosingIds(e, instanceNos)
-          .map(id => { "|    elem = $('" + id + "');\n|    if (!elem.is(':visible'))\n|      { elem.show(); return; }\n" })
+          .map(id => { "|    elem = $('#" + id + "');\n|    if (!elem.is(':visible'))\n|      { elem.show(); return; }\n" })
           .mkString("") +
           """
 |   
