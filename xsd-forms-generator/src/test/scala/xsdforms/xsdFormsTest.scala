@@ -181,6 +181,7 @@ package xsdforms {
       testChoice(driver, 49)
       testRepeat(driver, 52)
       testRepeatWhenMinOccursIsZero(driver, 53)
+      //TODO renable 
       //testChoiceRepeat(driver,58)
       testSubmission(driver)
       driver.close
@@ -492,6 +493,7 @@ package xsdforms {
       button.click;
       checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1))
       checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 2))
+      checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 3))
       button.click
       checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 3))
       checkDisplayedById(driver, getItemId(idPrefix, itemNo.toString, instanceNos add 3))
@@ -531,10 +533,12 @@ package xsdforms {
     }
 
     private def testChoiceRepeat(driver: WebDriver, itemNo: Int) {
+      //TODO fix and call this method
       val input = driver.findElement(By.id("c-repeating-enclosing-" + itemNo))
       assertTrue(input.isDisplayed)
       val button = driver.findElement(By.id("c-repeat-button-" + itemNo))
       button.click;
+
       val input1 = driver.findElement(By.id("c-item-" + itemNo + "-1-10004"))
       assertTrue(input1.isDisplayed)
       assertEquals("c-item-input-" + itemNo + "-10004", input1.getAttribute("name"))
