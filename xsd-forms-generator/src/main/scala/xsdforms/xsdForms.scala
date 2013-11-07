@@ -811,7 +811,7 @@ $(function() {
       html.div(
         id = Some(id),
         classes = List("repeating-enclosing"))
-      if (instanceNos.last != "1")
+      if (instanceNos.last != "1" || e.minOccurs == 0)
         addScriptWithMargin("""
           |$('#""" + id + """').hide();
           """)
