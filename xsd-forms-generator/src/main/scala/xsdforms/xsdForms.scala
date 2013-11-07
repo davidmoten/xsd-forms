@@ -813,7 +813,7 @@ $(function() {
         classes = List("repeating-enclosing"))
       if (instanceNos.last != "1")
         addScriptWithMargin("""
-          |$('""" + id + """').hide();
+          |$('#""" + id + """').hide();
           """)
     }
 
