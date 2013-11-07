@@ -823,7 +823,7 @@ $(function() {
         .div(
           classes = List("item-enclosing") ++ getVisibility(e),
           id = Some(getItemEnclosingId(number, instanceNos add 1)))
-      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instanceNos add 1)
+      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instanceNos)
     }
 
     private def itemTitle(e: Element) {
