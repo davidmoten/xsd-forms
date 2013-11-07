@@ -288,7 +288,7 @@ package xsdforms {
         html
           .closeTag(3)
       }
-
+      addMaxOccursScriptlet(e, instanceNos)
       addXmlExtractScriplet2(node)
     }
 
@@ -884,10 +884,7 @@ $(function() {
     private def simpleType(e: Element, r: Restriction, instanceNos: Instances) {
       val qn = toQN(r.base.get)
 
-      //TODO use instanceNo
       addInput(e, qn, r, instanceNos)
-
-      addMaxOccursScriptlet(e, instanceNos.dropLast)
 
       addDescription(e)
 
@@ -1287,21 +1284,17 @@ $(function() {
     private def addMaxOccursScriptlet(e: Element, instanceNos: Instances) {
       val number = elementNumber(e)
       if (isMultiple(e)) {
+        println(number + "is multiple ")
         val repeatButtonId = getRepeatButtonId(number, instanceNos)
-
         addScriptWithMargin("""
-
-|            
 |$("#""" + repeatButtonId + """").click(function() {
 |   // loop through all repeats until find first nonInvisible repeat and make it visible
-|   var elem;
+|  var elem;
 """ + repeatingEnclosingIds(e, instanceNos)
-          .map(id => { "|    elem = $('#" + id + "');\n|    if (!elem.is(':visible'))\n|      { elem.show(); return; }\n" })
+          .map(id => { "|  elem = $('#" + id + "');\n|  if (!elem.is(':visible'))\n|    { elem.show(); return; }\n" })
           .mkString("") +
-          """
-|   
-|})
-        """)
+          """|})
+""")
       }
     }
 
