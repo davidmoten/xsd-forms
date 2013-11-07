@@ -169,7 +169,7 @@ package xsdforms {
   /**
    * **************************************************************
    *
-   *   TreeToHtmlConverter
+   *   Instances
    *
    *
    * **************************************************************
@@ -179,7 +179,17 @@ package xsdforms {
     def add(instance: Int): Instances = Instances(heirarchy :+ instance.toString)
     override def toString = heirarchy.mkString("_")
     def last = heirarchy.last
+    def dropLast = Instances(heirarchy.dropRight(1))
   }
+
+  /**
+   * **************************************************************
+   *
+   *   TreeToHtmlConverter
+   *
+   *
+   * **************************************************************
+   */
 
   object TreeToHtmlConverter {
     val Invisible = "invisible"
@@ -362,12 +372,11 @@ package xsdforms {
 
       val number = elementNumber(e)
 
-      html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
+      html.div(id = Some(getItemEnclosingId(number, instanceNos add 1)), classes = List("choice"))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instanceNos)
       for (instanceNo <- repeats(e)) {
         val instNos = instanceNos add instanceNo
         repeatingEnclosing(e, instNos)
-        addMaxOccursScriptlet(e, instNos)
         val particles = choice.group.particleOption3.map(_.value)
         addChoiceHideOnStartScriptlet(particles, number, instNos)
         addChoiceShowHideOnSelectionScriptlet(particles, number, instNos)
@@ -408,6 +417,7 @@ package xsdforms {
       }
       html.closeTag
 
+      addMaxOccursScriptlet(e, instanceNos)
       addXmlExtractScriplet2(node, instanceNos)
 
     }
@@ -803,9 +813,8 @@ $(function() {
         classes = List("repeating-enclosing"))
       if (instanceNos.last != "1")
         addScriptWithMargin("""
-          |  $('""" + id + """').hide();
+          |$('""" + id + """').hide();
           """)
-
     }
 
     private def nonRepeatingSimpleType(e: Element, instanceNos: Instances) {
@@ -813,8 +822,8 @@ $(function() {
       html
         .div(
           classes = List("item-enclosing") ++ getVisibility(e),
-          id = Some(getItemEnclosingId(number)))
-      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instanceNos)
+          id = Some(getItemEnclosingId(number, instanceNos add 1)))
+      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instanceNos add 1)
     }
 
     private def itemTitle(e: Element) {
@@ -864,8 +873,8 @@ $(function() {
     private def getItemName(number: String) =
       idPrefix + "item-input-" + number;
 
-    private def getItemEnclosingId(number: String) =
-      idPrefix + "item-enclosing-" + number
+    private def getItemEnclosingId(number: String, instanceNos: Instances) =
+      idPrefix + "item-enclosing-" + number + instanceDelimiter + instanceNos
 
     private def getItemErrorId(number: String, instanceNos: Instances) =
       TreeToHtmlConverter.getItemErrorId(idPrefix, number, instanceNos)
@@ -1054,7 +1063,7 @@ $(function() {
               addScriptWithMargin("""
 |  $("#""" + getItemId(number, instanceNos) + """").change( function() {
 |    var v = $("#""" + getItemId(number, instanceNos) + """");
-|    var refersTo = $("#""" + getItemEnclosingId(refersTo + "") + """") 
+|    var refersTo = $("#""" + getItemEnclosingId(refersTo + "", instanceNos add 1) + """") 
 |    if ("""" + x._2.valueAttribute + """" == v.val()) 
 |      refersTo.show();
 |    else
@@ -1286,7 +1295,7 @@ $(function() {
 |$("#""" + repeatButtonId + """").click(function() {
 |   // loop through all repeats until find first nonInvisible repeat and make it visible
 |   var elem;
-""" + repeatingEnclosingIds(e, instanceNos)
+""" + repeatingEnclosingIds(e, instanceNos.dropLast)
           .map(id => { "|    elem = $('" + id + "');\n|    if (!elem.is(':visible'))\n|      { elem.show(); return; }\n" })
           .mkString("") +
           """

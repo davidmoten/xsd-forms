@@ -10,7 +10,7 @@ package xsdforms {
   object TstUtil {
 
     import org.apache.commons.io._
-    
+
     val idPrefix = "c-"
 
     def generate(
@@ -67,7 +67,6 @@ package xsdforms {
     import org.apache.commons.io._
     import TstUtil._
 
-    
     @Test
     def testSetupWebapp() {
       setupDemoWebapp
@@ -189,13 +188,13 @@ package xsdforms {
       if (log.exists) log.delete();
     }
 
-    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1","1"))) = {
-      val id = getItemId(idPrefix, itemNo.toString, instanceNos) 
-      println("getInput: id="+id)
+    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1", "1"))) = {
+      val id = getItemId(idPrefix, itemNo.toString, instanceNos)
+      println("getInput: id=" + id)
       driver.findElement(By.id(id));
-  }
+    }
 
-    private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1","1"))) =
+    private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1", "1"))) =
       driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos)))
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
@@ -466,17 +465,17 @@ package xsdforms {
     }
 
     private def testChoice(driver: WebDriver, itemNo: Int) {
-      val instanceNos = Instances(List("1","1"))
+      val instanceNos = Instances(List("1", "1"))
       val input = driver.findElement(By.name(getChoiceItemName(idPrefix, itemNo.toString, instanceNos)));
       val option1 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo.toString, index = 1, instanceNos)))
       val option2 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo.toString, index = 2, instanceNos)))
       assertFalse(input.isSelected)
       option1.click
-      assertTrue(getInput(driver, itemNo + 1,instanceNos add 1).isDisplayed)
-      assertFalse(getInput(driver, itemNo + 2,instanceNos add 1).isDisplayed)
+      assertTrue(getInput(driver, itemNo + 1, instanceNos add 1).isDisplayed)
+      assertFalse(getInput(driver, itemNo + 2, instanceNos add 1).isDisplayed)
       option2.click
-      assertFalse(getInput(driver, itemNo + 1,instanceNos add 1).isDisplayed)
-      assertTrue(getInput(driver, itemNo + 2,instanceNos add 1).isDisplayed)
+      assertFalse(getInput(driver, itemNo + 1, instanceNos add 1).isDisplayed)
+      assertTrue(getInput(driver, itemNo + 2, instanceNos add 1).isDisplayed)
     }
 
     private def testRepeat(driver: WebDriver, itemNo: Int) {
@@ -538,12 +537,12 @@ package xsdforms {
 
     private def checkDisplayedById(driver: WebDriver, id: String) {
       val item = driver.findElement(By.id(id))
-      assertTrue(item.isDisplayed)
+      assertTrue(id + " is not visible and should be", item.isDisplayed)
     }
-    
+
     private def checkNotDisplayedById(driver: WebDriver, id: String) {
       val item = driver.findElement(By.id(id))
-      assertFalse(item.isDisplayed)
+      assertFalse(id + " is visible and should not be", item.isDisplayed)
     }
 
     private def setInput(driver: WebDriver, itemNo: Int, text: String) {
