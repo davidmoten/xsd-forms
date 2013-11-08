@@ -223,6 +223,7 @@ package xsdforms {
 
     private var number = 0
     val margin = "  "
+    val plus = " + "
 
     private sealed trait Entry
     private sealed trait StackEntry
@@ -445,11 +446,10 @@ package xsdforms {
 
     private def xmlEnd(node: Node) =
       "'</" + node.element.name.getOrElse("?") + ">'"
-    private def xml(node: Node, value: String) = {
-      xmlStart(node) + " + " +
-        value +
-        " + '</" + node.element.name.getOrElse("?") + ">'"
-    }
+      
+    private def xml(node: Node, value: String) = 
+      xmlStart(node) + plus + value + plus + xmlEnd(node)
+    
 
     private def addXmlExtractScriptlet(node: NodeSequence, instanceNos: Instances) {
       {
