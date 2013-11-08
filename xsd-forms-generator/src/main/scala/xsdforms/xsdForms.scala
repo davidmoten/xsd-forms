@@ -458,7 +458,7 @@ package xsdforms {
         val s = new StringBuilder
         val number = elementNumber(node)
         s.append("""
- |    var xml = """ + spaces(instanceNos) + xmlStart(node) + """; 
+ |    var xml = """ + spaces(instanceNos add 1) + xmlStart(node) + """; 
  |    //now add sequence children for each instanceNo""")
         for (instanceNo <- repeats(node)) {
           val instNos = instanceNos add instanceNo
@@ -470,7 +470,7 @@ package xsdforms {
           }
         }
         s.append("""
- |    xml+=""" +  spaces(instanceNos) + xmlEnd(node) + """;
+ |    xml+=""" +  spaces(instanceNos add 1) + xmlEnd(node) + """;
  |    return xml;""")
         addXmlExtractScriptlet(node, s.toString(), instanceNos);
       }
@@ -479,7 +479,7 @@ package xsdforms {
     private def addXmlExtractScriptlet(node: NodeChoice, instanceNos: Instances) {
       val s = new StringBuilder
       s.append("""
- |    var xml = """ + spaces(instanceNos) + xmlStart(node) + """; 
+ |    var xml = """ + spaces(instanceNos add 1) + xmlStart(node) + """; 
  |    //now optionally add selected child if any""");
       for (instanceNo <- repeats(node)) {
         val instNos = instanceNos add instanceNo
@@ -495,7 +495,7 @@ package xsdforms {
             addXmlExtractScriptlet(n, instNos)
         }
         s.append("""
- |    xml+=""" + spaces(instNos) + xmlEnd(node) + """;
+ |    xml+=""" + spaces(instanceNos add 1) + xmlEnd(node) + """;
  |    return xml;""")
         addXmlExtractScriptlet(node, s.toString(), instanceNos);
       }
