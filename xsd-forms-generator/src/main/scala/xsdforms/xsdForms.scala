@@ -485,11 +485,12 @@ package xsdforms {
         node.children.zipWithIndex.foreach {
           case (n, index) =>
             s.append("""
- |    if (checked == """" + getChoiceItemId(node, index + 1, instanceNos) + """") xml += """ + xmlFunctionName(n,instanceNos) + "() + \"\\n\";");
+ |    if (checked == """" + getChoiceItemId(node, index + 1, instanceNos) + """") 
+ |      xml += """ + xmlFunctionName(n,instanceNos) + """() + "\n";""");
         addXmlExtractScriptlet(n,instanceNos add instanceNo)
         }
         s.append("""
- |    xml+="</""" + node.element.name.get + """>";
+ |    xml+=""" + xmlEnd(node) + """ + "\n";
  |    return xml;""")
         addXmlExtractScriptlet(node, s.toString(), instanceNos);
       }
