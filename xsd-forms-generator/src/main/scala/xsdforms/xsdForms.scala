@@ -462,13 +462,13 @@ package xsdforms {
           node.children.foreach { n =>
             s.append("""
  |    if (idVisible("""" + getRepeatingEnclosingId(number, instanceNos add instanceNo) + """"))
- |      xml += """ + xmlFunctionName(n, Some(instanceNos add instanceNo)) + "() + \"\\n\";");
+ |      xml += """ + xmlFunctionName(n, instanceNos add instanceNo) + "() + \"\\n\";");
         addXmlExtractScriptlet(n,instanceNos add instanceNo)  
         }
         s.append("""
  |    xml+="""" + xmlEnd(node) + """>";
  |    return xml;""")
-        addXmlExtractScriptlet(node, s.toString());
+        addXmlExtractScriptlet(node, s.toString(),instanceNos);
       }
     }
 
@@ -485,13 +485,13 @@ package xsdforms {
         node.children.zipWithIndex.foreach {
           case (n, index) =>
             s.append("""
- |    if (checked == """" + getChoiceItemId(node, index + 1, instanceNos) + """") xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
+ |    if (checked == """" + getChoiceItemId(node, index + 1, instanceNos) + """") xml += """ + xmlFunctionName(n,instanceNos) + "() + \"\\n\";");
         addXmlExtractScriptlet(n,instanceNos add instanceNo)
         }
         s.append("""
  |    xml+="</""" + node.element.name.get + """>";
  |    return xml;""")
-        addXmlExtractScriptlet(node, s.toString(), Some(instanceNos));
+        addXmlExtractScriptlet(node, s.toString(), instanceNos);
       }
     }
 
@@ -513,20 +513,15 @@ package xsdforms {
         s.append("\n|      xml+=" + xml(node, valById(getItemId(node, instanceNos add instanceNo)))) + ";"
       }
       s.append("\n|    return xml;\n")
-      addXmlExtractScriptlet(node, s.toString);
+      addXmlExtractScriptlet(node, s.toString,instanceNos);
     }
 
-    private def xmlFunctionName(node: Node) = {
+    private def xmlFunctionName(node: Node, instanceNos: Instances) = {
       val number = elementNumber(node.element)
-      "getXml" + number
+      "getXml" + number +  "instance" + instanceNos
     }
 
-    private def xmlFunctionName(node: Node, instanceNos: Option[Instances] = None) = {
-      val number = elementNumber(node.element)
-      "getXml" + number + (if (instanceNos.isDefined) "instance" + instanceNos.get else "")
-    }
-
-    private def addXmlExtractScriptlet(node: Node, functionBody: String, instanceNos: Option[Instances] = None) {
+    private def addXmlExtractScriptlet(node: Node, functionBody: String, instanceNos: Instances) {
       //TODO use instanceNos
       val functionName = xmlFunctionName(node, instanceNos)
       addScriptWithMargin(
