@@ -469,27 +469,6 @@ package xsdforms {
     private def numInstances(node: Node): Int =
       numInstances(node.element)
 
-    def choiceContentId(idPrefix: String, number: String, index: Int, instanceNos: Instances) =
-      idPrefix + "choice-content-" + number + instanceDelimiter + instanceNos + choiceIndexDelimiter + index
-
-    private def refById(id: String) = "$(\"#" + id + "\")"
-    private def valById(id: String) = "encodedValueById(\"" + id + "\")"
-    private def namespace(node: Node) =
-      if (elementNumber(node.element).equals("1"))
-        " xmlns=\"" + targetNamespace + "\""
-      else
-        ""
-    private def xmlStart(node: Node) =
-      "'<" + node.element.name.getOrElse("?") + namespace(node) + ">'"
-
-    private def xmlEnd(node: Node) =
-      "'</" + node.element.name.getOrElse("?") + ">'"
-
-    private def xml(node: Node, value: String) =
-      xmlStart(node) + Plus + value + Plus + xmlEnd(node)
-
-    private def spaces(instanceNos: Instances) = "'\\n' + spaces(" + (instanceNos.size * 2) + ") + "
-
     private def addXmlExtractScriptlet(node: NodeSequence, instanceNos: Instances) {
       {
         val s = new StringBuilder
@@ -576,6 +555,24 @@ package xsdforms {
 |}
 | """)
     }
+
+    private def refById(id: String) = "$(\"#" + id + "\")"
+    private def valById(id: String) = "encodedValueById(\"" + id + "\")"
+    private def namespace(node: Node) =
+      if (elementNumber(node.element).equals("1"))
+        " xmlns=\"" + targetNamespace + "\""
+      else
+        ""
+    private def xmlStart(node: Node) =
+      "'<" + node.element.name.getOrElse("?") + namespace(node) + ">'"
+
+    private def xmlEnd(node: Node) =
+      "'</" + node.element.name.getOrElse("?") + ">'"
+
+    private def xml(node: Node, value: String) =
+      xmlStart(node) + Plus + value + Plus + xmlEnd(node)
+
+    private def spaces(instanceNos: Instances) = "'\\n' + spaces(" + (instanceNos.size * 2) + ") + "
 
     override def toString = text
 
@@ -1201,6 +1198,8 @@ package xsdforms {
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
 
+    private def choiceContentId(idPrefix: String, number: String, index: Int, instanceNos: Instances) =
+      idPrefix + "choice-content-" + number + instanceDelimiter + instanceNos + choiceIndexDelimiter + index
     private def getRepeatButtonId(number: String, instanceNos: Instances) =
       TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instanceNos)
     private def getRepeatingEnclosingId(element: Element, instanceNos: Instances): String =
