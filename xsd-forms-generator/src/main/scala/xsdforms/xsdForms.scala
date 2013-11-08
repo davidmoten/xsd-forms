@@ -239,7 +239,9 @@ package xsdforms {
     assignElementNumbers(tree)
 
     //process the abstract syntax tree
-    doNode(tree, new Instances)
+    doNode(tree, new  Instances)
+    
+    addXmlExtractScriptlet(tree, new  Instances)
 
     /**
      * Traverse children before siblings to provide element
@@ -254,12 +256,22 @@ package xsdforms {
       }
     }
 
-    private def doNode(node: Node, instanceNos: Instances) {
+    private def doNode(node: Node, instanceNos: Instances) { 
       node match {
         case n: NodeSimpleType => doNode(n, instanceNos)
         case n: NodeBaseType => doNode(n, instanceNos)
         case n: NodeSequence => doNode(n, instanceNos)
         case n: NodeChoice => doNode(n, instanceNos)
+        case _ => Util.unexpected
+      }
+    }
+    
+    private def addXmlExtractScriptlet(node: Node, instanceNos: Instances) {
+      node match {
+        case n: NodeSimpleType => addXmlExtractScriptlet(n, instanceNos)
+        case n: NodeBaseType => addXmlExtractScriptlet(n, instanceNos)
+        case n: NodeSequence => addXmlExtractScriptlet(n, instanceNos)
+        case n: NodeChoice => addXmlExtractScriptlet(n, instanceNos)
         case _ => Util.unexpected
       }
     }
@@ -294,7 +306,6 @@ package xsdforms {
       html
         .closeTag(2)
       addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet(node, instanceNos)
 
     }
 
@@ -351,7 +362,6 @@ package xsdforms {
       html.closeTag
 
       addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet(node, instanceNos)
 
     }
 
@@ -380,7 +390,6 @@ package xsdforms {
           .closeTag(3)
       }
       addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet(node, instanceNos)
     }
 
     private def doNode(node: NodeBaseType, instanceNos: Instances) {
@@ -404,7 +413,6 @@ package xsdforms {
       }
       html.closeTag
       addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet(node, instanceNos)
     }
 
     private def doNodes(nodes: MutableList[Node], instanceNos: Instances) {
@@ -443,26 +451,28 @@ package xsdforms {
         " + \"</" + node.element.name.getOrElse("?") + ">\""
     }
 
-    private def addXmlExtractScriplet(node: NodeSequence, instanceNos: Instances) {
-      val s = new StringBuilder
-      val number = elementNumber(node)
-      s.append("""
+    private def addXmlExtractScriptlet(node: NodeSequence, instanceNos: Instances) {
+      {
+        val s = new StringBuilder
+        val number = elementNumber(node)
+        s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
  |    //now add sequence children for each instanceNo""")
-      for (instanceNo <- repeats(node))
-        node.children.foreach { n =>
-          s.append("""
+        for (instanceNo <- repeats(node))
+          node.children.foreach { n =>
+            s.append("""
  |    if (idVisible("""" + getRepeatingEnclosingId(number, instanceNos add instanceNo) + """"))
  |      xml += """ + xmlFunctionName(n, Some(instanceNos add instanceNo)) + "() + \"\\n\";");
+        addXmlExtractScriptlet(n,instanceNos add instanceNo)  
         }
-      s.append("""
+        s.append("""
  |    xml+="""" + xmlEnd(node) + """>";
  |    return xml;""")
-      addXmlExtractScriptlet(node, s.toString());
-
+        addXmlExtractScriptlet(node, s.toString());
+      }
     }
 
-    private def addXmlExtractScriplet(node: NodeChoice, instanceNos: Instances) {
+    private def addXmlExtractScriptlet(node: NodeChoice, instanceNos: Instances) {
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
@@ -476,6 +486,7 @@ package xsdforms {
           case (n, index) =>
             s.append("""
  |    if (checked == """" + getChoiceItemId(node, index + 1, instanceNos) + """") xml += """ + xmlFunctionName(n) + "() + \"\\n\";");
+        addXmlExtractScriptlet(n,instanceNos add instanceNo)
         }
         s.append("""
  |    xml+="</""" + node.element.name.get + """>";
@@ -484,11 +495,11 @@ package xsdforms {
       }
     }
 
-    private def addXmlExtractScriplet(node: NodeSimpleType, instanceNos: Instances) {
+    private def addXmlExtractScriptlet(node: NodeSimpleType, instanceNos: Instances) {
       addXmlExtractScriptletForSimpleOrBase(node, instanceNos)
     }
 
-    private def addXmlExtractScriplet(node: NodeBaseType, instanceNos: Instances) {
+    private def addXmlExtractScriptlet(node: NodeBaseType, instanceNos: Instances) {
       addXmlExtractScriptletForSimpleOrBase(node, instanceNos)
     }
 
