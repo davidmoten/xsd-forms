@@ -186,14 +186,13 @@ package xsdforms {
   /**
    * **************************************************************
    *
-   *   TreeToHtmlConverter
+   *   TreeToHtmlConverter object
    *
    *
    * **************************************************************
    */
 
   object TreeToHtmlConverter {
-    val Invisible = "invisible"
     val instanceDelimiter = "-instance-"
     val choiceIndexDelimiter = "-choice-"
 
@@ -214,7 +213,43 @@ package xsdforms {
 
     def getRepeatingEnclosingId(idPrefix: String, number: String, instanceNos: Instances): String =
       idPrefix + "repeating-enclosing-" + number + instanceDelimiter + instanceNos
+      
+      val ClassInvisible = "invisible"
+    val ClassSequence = "sequence"
+      val ClassSequenceLabel = "sequence-label"
+      val ClassSequenceContent = "sequence-content"
+        val ClassFieldset = "fieldset"
+          val ClassChoiceLabel = "choice-label"
+            val ClassDivChoiceItem ="div-choice-item"
+              val ClassItemNumber = "item-number"
+                val ClassItemLabel="item-label"
+                  val ClassItemInput = "item-input"
+                    val ClassChoiceItem = "choice-item"
+                      val ClassNonRepeatingTitle = "non-repeating-title"
+                        val ClassRepeatButton = "repeat-button"
+                          val ClassItemEnclosing = "item-enclosing"
+                            val ClassRepeatingEnclosing = "repeating-enclosing"
+                              val ClassItemTitle = "item-title"
+                                val ClassItemBefore = "item-before"
+                                  
+                                  val ClassItemInputTextarea = "item-input-textarea"
+                                    val ClassItemInputText = "item-input-text"
+                                      val ClassSelect = "select"
+                                        val ClassChoice = "choice"
+                                          val ClassWhite = "white"
+                                            val ClassSmall = "small"
+                                              val ClassItemDescription = "item-description"
+                                                val ClassItemError = "item-error"
   }
+
+  /**
+   * **************************************************************
+   *
+   *   TreeToHtmlConverter class
+   *
+   *
+   * **************************************************************
+   */
 
   class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
     import TreeToHtmlConverter._
@@ -234,6 +269,7 @@ package xsdforms {
 
     import scala.collection.mutable.HashMap
     private val elementNumbers = new HashMap[Element, String]()
+    
 
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
@@ -287,17 +323,17 @@ package xsdforms {
       val label = getAnnotation(e, "label").mkString
 
       html
-        .div(classes = List("sequence"))
+        .div(classes = List(ClassSequence))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instanceNos)
       for (instanceNo <- repeats(e)) {
         val instNos = instanceNos add instanceNo
         repeatingEnclosing(e, instNos)
-        html.div(classes = List("sequence-label"), content = Some(label))
+        html.div(classes = List(ClassSequenceLabel), content = Some(label))
           .closeTag
           .div(id = Some(idPrefix + "sequence-" + number + "-instance-" + instanceNo),
-            classes = List("sequence-content"))
+            classes = List(ClassSequenceContent))
         if (usesFieldset)
-          html.fieldset(legend = legend, classes = List("fieldset"), id = Some(idPrefix + "fieldset-" + number + "-instance-" + instanceNo))
+          html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + "-instance-" + instanceNo))
 
         doNodes(node.children, instNos)
 
@@ -318,7 +354,7 @@ package xsdforms {
 
       val number = elementNumber(e)
 
-      html.div(id = Some(getItemEnclosingId(number, instanceNos add 1)), classes = List("choice"))
+      html.div(id = Some(getItemEnclosingId(number, instanceNos add 1)), classes = List(ClassChoice))
       nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instanceNos)
       for (instanceNo <- repeats(e)) {
         val instNos = instanceNos add instanceNo
@@ -328,7 +364,7 @@ package xsdforms {
         addChoiceShowHideOnSelectionScriptlet(particles, number, instNos)
 
         html.div(
-          classes = List("choice-label"),
+          classes = List(ClassChoiceLabel),
           content = Some(getAnnotation(choice.group, "label").mkString))
           .closeTag
 
@@ -339,11 +375,11 @@ package xsdforms {
           val index = x._2 + 1
           html.div(
             id = Some(idPrefix + "div-choice-item-" + number + instanceDelimiter + instanceNo + choiceIndexDelimiter + index),
-            classes = List("div-choice-item"))
+            classes = List(ClassDivChoiceItem))
           html.input(
             id = Some(getChoiceItemId(number, index, instNos)),
             name = getChoiceItemName(number, instNos),
-            classes = List("choice-item"),
+            classes = List(ClassChoiceItem),
             typ = Some("radio"),
             value = Some("number"),
             content = Some(getChoiceLabel(e, particle)),
@@ -353,7 +389,7 @@ package xsdforms {
 
         node.children.zipWithIndex.foreach {
           case (n, index) => {
-            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instNos)), classes = List(Invisible))
+            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instNos)), classes = List(ClassInvisible))
             doNode(n, instNos)
             html.closeTag
           }
@@ -379,10 +415,10 @@ package xsdforms {
         repeatingEnclosing(e, instNos)
         itemTitle(e)
         itemBefore(e)
-        html.div(classes = List("item-number"), content = Some(number)).closeTag
+        html.div(classes = List(ClassItemNumber), content = Some(number)).closeTag
           .label(forInputName = getItemName(number),
-            classes = List("item-label"), content = Some(getLabel(e, t))).closeTag
-          .div(classes = List("item-input"))
+            classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
+          .div(classes = List(ClassItemInput))
 
         typ.simpleDerivationOption3.value match {
           case x: Restriction => simpleType(e, x, instNos)
@@ -405,10 +441,10 @@ package xsdforms {
         repeatingEnclosing(e, instNos)
         itemTitle(e)
         itemBefore(e)
-        html.div(classes = List("item-number"), content = Some(number)).closeTag
+        html.div(classes = List(ClassItemNumber), content = Some(number)).closeTag
           .label(forInputName = getItemName(number),
-            classes = List("item-label"), content = Some(getLabel(e, t))).closeTag
-          .div(classes = List("item-input"))
+            classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
+          .div(classes = List(ClassItemInput))
         simpleType(e, new MyRestriction(typ.qName), instNos)
         html
           .closeTag(2)
@@ -451,7 +487,7 @@ package xsdforms {
     private def xml(node: Node, value: String) =
       xmlStart(node) + Plus + value + Plus + xmlEnd(node)
 
-    private def spaces(instanceNos: Instances) = "'\\n' + spaces(" + (instanceNos.size *2) + ") + "
+    private def spaces(instanceNos: Instances) = "'\\n' + spaces(" + (instanceNos.size * 2) + ") + "
 
     private def addXmlExtractScriptlet(node: NodeSequence, instanceNos: Instances) {
       {
@@ -470,7 +506,7 @@ package xsdforms {
           }
         }
         s.append("""
- |    xml+=""" +  spaces(instanceNos add 1) + xmlEnd(node) + """;
+ |    xml+=""" + spaces(instanceNos add 1) + xmlEnd(node) + """;
  |    return xml;""")
         addXmlExtractScriptlet(node, s.toString(), instanceNos);
       }
@@ -743,7 +779,7 @@ $(function() {
 
     private def getVisibility(e: Element) =
       getAnnotation(e, "visible") match {
-        case Some("false") => Some(Invisible)
+        case Some("false") => Some(ClassInvisible)
         case _ => None
       }
 
@@ -751,12 +787,12 @@ $(function() {
       //there's only one of these so use instanceNo = 1
       val number = elementNumber(e)
       html.div(
-        classes = List("non-repeating-title"),
+        classes = List(ClassNonRepeatingTitle),
         content = getAnnotation(e, "nonRepeatingTitle")).closeTag
       if (hasButton)
         html.div(
           id = Some(getRepeatButtonId(number, instanceNos)),
-          classes = List("repeat-button", "white", "small"),
+          classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
           content = Some(getAnnotation(e, "repeatLabel").getOrElse("+"))).closeTag
     }
 
@@ -774,7 +810,7 @@ $(function() {
       val id = getRepeatingEnclosingId(number, instanceNos)
       html.div(
         id = Some(id),
-        classes = List("repeating-enclosing"))
+        classes = List(ClassRepeatingEnclosing))
       if (instanceNos.last != 1 || e.minOccurs == 0)
         addScriptWithMargin("""
           |$('#""" + id + """').hide();
@@ -785,21 +821,21 @@ $(function() {
       val number = elementNumber(e)
       html
         .div(
-          classes = List("item-enclosing") ++ getVisibility(e),
+          classes = List(ClassItemEnclosing) ++ getVisibility(e),
           id = Some(getItemEnclosingId(number, instanceNos add 1)))
       nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instanceNos)
     }
 
     private def itemTitle(e: Element) {
       getAnnotation(e, "title") match {
-        case Some(x) => html.div(classes = List("item-title"), content = Some(x)).closeTag
+        case Some(x) => html.div(classes = List(ClassItemTitle), content = Some(x)).closeTag
         case _ =>
       }
     }
 
     private def itemBefore(e: Element) {
       getAnnotation(e, "before") match {
-        case Some(x) => html.div(classes = List("item-before"), content = Some(x)).closeTag
+        case Some(x) => html.div(classes = List(ClassItemBefore), content = Some(x)).closeTag
         case _ =>
       }
     }
@@ -908,7 +944,7 @@ $(function() {
           html.textarea(
             id = Some(itemId),
             name = getItemName(number),
-            classes = List(extraClasses, "item-input-textarea"),
+            classes = List(extraClasses, ClassItemInputTextarea),
             content = Some(e.default.mkString),
             number = Some(number))
             .closeTag
@@ -921,7 +957,7 @@ $(function() {
           html.input(
             id = Some(itemId),
             name = getItemName(number),
-            classes = List(extraClasses, "item-input-text"),
+            classes = List(extraClasses, ClassItemInputText),
             typ = Some(inputType),
             checked = checked,
             value = e.default,
@@ -1002,7 +1038,7 @@ $(function() {
           html.input(
             id = Some(getItemId(number, x._2, instanceNos)),
             name = getItemName(number),
-            classes = List("select"),
+            classes = List(ClassSelect),
             typ = Some("radio"),
             value = Some(x._1._1),
             content = Some(x._1._1),
@@ -1012,7 +1048,7 @@ $(function() {
         html.select(
           id = Some(getItemId(number, instanceNos)),
           name = getItemName(number),
-          classes = List("select"),
+          classes = List(ClassSelect),
           number = Some(number))
         if (initializeBlank)
           html.option(content = Some("Select one..."), value = "").closeTag
@@ -1043,7 +1079,7 @@ $(function() {
       getAnnotation(e, "description") match {
         case Some(x) =>
           html.div(
-            classes = List("item-description"),
+            classes = List(ClassItemDescription),
             content = Some(x))
             .closeTag
         case None =>
@@ -1054,7 +1090,7 @@ $(function() {
       val itemErrorId = getItemErrorId(elementNumber(e), instanceNos)
       html.div(
         id = Some(itemErrorId),
-        classes = List("item-error"),
+        classes = List(ClassItemError),
         content = Some(getAnnotation(e, "validation").getOrElse("Invalid")))
         .closeTag
 
@@ -1493,7 +1529,25 @@ $(function() {
    * **************************************************************
    */
 
+  private object Html {
+    val Legend = "legend"
+    val Div = "div"
+    val Select = "select"
+    val Option = "option"
+    val Label = "label"
+    val Fieldset = "fieldset"
+    val Textarea = "textarea"
+    val Input = "input"
+    val Id = "id"
+    val Class = "class"
+    val Value = "value"
+    val Enabled = "enabled"
+    val Checked = "checked"
+    val Name = "name"
+  }
+
   private class Html {
+    import Html._
     private case class HtmlElement(name: String, hasContent: Boolean)
     private val stack = new scala.collection.mutable.Stack[HtmlElement]
     private var s = new StringBuffer
@@ -1512,25 +1566,25 @@ $(function() {
     def div(id: Option[String] = None,
       classes: List[String] = List(), enabledAttr: Option[String] = None,
       content: Option[String] = None) =
-      element(name = "div", id = id, classes = classes, enabledAttr = enabledAttr,
+      element(name = Div, id = id, classes = classes, enabledAttr = enabledAttr,
         content = content)
 
     def select(id: Option[String] = None, name: String,
       classes: List[String] = List(), content: Option[String] = None, number: Option[String] = None) =
-      element(name = "select", id = id, classes = classes, nameAttr = Some(name), numberAttr = number,
+      element(name = Select, id = id, classes = classes, nameAttr = Some(name), numberAttr = number,
         content = content)
 
     def option(id: Option[String] = None,
       classes: List[String] = List(),
       value: String,
       content: Option[String] = None) =
-      element(name = "option", id = id, classes = classes,
+      element(name = Html.Option, id = id, classes = classes,
         content = content, value = Some(value))
 
     def label(forInputName: String, id: Option[String] = None,
       classes: List[String] = List(), content: Option[String] = None) =
       element(
-        name = "label",
+        name = Label,
         id = id,
         forAttr = Some(forInputName),
         classes = classes,
@@ -1540,9 +1594,9 @@ $(function() {
       legend: Option[String] = None,
       classes: List[String] = List(),
       id: Option[String]) = {
-      element(name = "fieldset", classes = classes, id = id)
+      element(name = Fieldset, classes = classes, id = id)
       legend match {
-        case Some(x) => element(name = "legend", content = Some(x)).closeTag
+        case Some(x) => element(name = Legend, content = Some(x)).closeTag
         case None =>
       }
     }
@@ -1553,7 +1607,7 @@ $(function() {
       value: Option[String] = None,
       name: String, number: Option[String] = None,
       closed: Boolean = false) =
-      element(name = "textarea",
+      element(name = Textarea,
         id = id,
         classes = classes,
         content = content,
@@ -1568,7 +1622,7 @@ $(function() {
       checked: Option[Boolean] = None,
       number: Option[String] = None,
       typ: Option[String]) =
-      element(name = "input", id = id, classes = classes, checked = checked,
+      element(name = Input, id = id, classes = classes, checked = checked,
         content = content, value = value, nameAttr = Some(name), typ = typ, numberAttr = number)
 
     private def classNames(classes: List[String]) =
@@ -1589,14 +1643,14 @@ $(function() {
       numberAttr: Option[String] = None,
       typ: Option[String] = None): Html = {
       val attributes =
-        id.map(("id", _)) ++
-          classNames(classes).map(("class" -> _)) ++
-          value.map(("value", _)) ++
-          nameAttr.map(("name", _)) ++
-          enabledAttr.map(("enabled", _)) ++
+        id.map((Id, _)) ++
+          classNames(classes).map((Class -> _)) ++
+          value.map((Value, _)) ++
+          nameAttr.map((Name, _)) ++
+          enabledAttr.map((Enabled, _)) ++
           forAttr.map(("for", _)) ++
           typ.map(("type", _)) ++
-          checked.map(x => ("checked", x.toString)) ++
+          checked.map(x => (Checked, x.toString)) ++
           numberAttr.map(("number", _))
       elementBase(name, attributes.toMap, content)
       this
