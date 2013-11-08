@@ -207,13 +207,13 @@ package xsdforms {
       if (log.exists) log.delete();
     }
 
-    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1", "1"))) = {
+    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List(1, 1))) = {
       val id = getItemId(idPrefix, itemNo.toString, instanceNos)
       println("getInput: id=" + id)
       driver.findElement(By.id(id));
     }
 
-    private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List("1", "1"))) =
+    private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List(1, 1))) =
       driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos)))
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
@@ -484,7 +484,7 @@ package xsdforms {
     }
 
     private def testChoice(driver: WebDriver, itemNo: Int) {
-      val instanceNos = Instances(List("1", "1"))
+      val instanceNos = Instances(List(1, 1))
       val input = driver.findElement(By.name(getChoiceItemName(idPrefix, itemNo.toString, instanceNos)));
       val option1 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo.toString, index = 1, instanceNos)))
       val option2 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo.toString, index = 2, instanceNos)))
@@ -503,7 +503,7 @@ package xsdforms {
     }
 
     private def testRepeat(driver: WebDriver, itemNo: Int) {
-      val instanceNos = Instances(List("1"))
+      val instanceNos = Instances(List(1))
       val button = elementById(driver, getRepeatButtonId(idPrefix, itemNo.toString, instanceNos))
       checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1))
       checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 2))
@@ -538,7 +538,7 @@ package xsdforms {
     }
 
     private def testRepeatWhenMinOccursIsZero(driver: WebDriver, itemNo: Int) {
-      val instanceNos = Instances(List("1"))
+      val instanceNos = Instances(List(1))
       //default input should not be visible because minOccurs=0
       val input = driver.findElement(By.id(getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertFalse(input.isDisplayed)

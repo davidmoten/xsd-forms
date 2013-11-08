@@ -175,8 +175,8 @@ package xsdforms {
    * **************************************************************
    */
 
-  case class Instances(heirarchy: Seq[String] = List()) {
-    def add(instance: Int): Instances = Instances(heirarchy :+ instance.toString)
+  case class Instances(heirarchy: Seq[Int] = List()) {
+    def add(instance: Int): Instances = Instances(heirarchy :+ instance)
     override def toString = heirarchy.mkString("_")
     def last = heirarchy.last
     def dropLast = Instances(heirarchy.dropRight(1))
@@ -459,6 +459,7 @@ package xsdforms {
  |    xml+="""" + xmlEnd(node) + """>";
  |    return xml;""")
       addXmlExtractScriptlet(node, s.toString());
+
     }
 
     private def addXmlExtractScriplet(node: NodeChoice, instanceNos: Instances) {
@@ -801,7 +802,7 @@ $(function() {
       html.div(
         id = Some(id),
         classes = List("repeating-enclosing"))
-      if (instanceNos.last != "1" || e.minOccurs == 0)
+      if (instanceNos.last != 1 || e.minOccurs == 0)
         addScriptWithMargin("""
           |$('#""" + id + """').hide();
           """)
