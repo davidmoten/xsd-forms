@@ -451,7 +451,7 @@ package xsdforms {
     private def xml(node: Node, value: String) =
       xmlStart(node) + Plus + value + Plus + xmlEnd(node)
 
-    private def spaces(instanceNos: Instances) = "'\\n' + spaces(" + instanceNos.size + ") + "
+    private def spaces(instanceNos: Instances) = "'\\n' + spaces(" + (instanceNos.size *2) + ") + "
 
     private def addXmlExtractScriptlet(node: NodeSequence, instanceNos: Instances) {
       {
