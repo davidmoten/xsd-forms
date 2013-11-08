@@ -196,23 +196,23 @@ package xsdforms {
     val instanceDelimiter = "-instance-"
     val choiceIndexDelimiter = "-choice-"
 
-    def getItemId(idPrefix: String, number: String, instanceNos: Instances) =
-      idPrefix + "item-" + number + instanceDelimiter + instanceNos
+    def getItemId(idPrefix: String, number: String, instances: Instances) =
+      idPrefix + "item-" + number + instanceDelimiter + instances
 
-    def getItemErrorId(idPrefix: String, number: String, instanceNos: Instances) =
-      idPrefix + "item-error-" + number + instanceDelimiter + instanceNos
+    def getItemErrorId(idPrefix: String, number: String, instances: Instances) =
+      idPrefix + "item-error-" + number + instanceDelimiter + instances
 
-    def getChoiceItemId(idPrefix: String, number: String, index: Int, instanceNos: Instances): String =
-      getItemId(idPrefix, number, instanceNos) + choiceIndexDelimiter + index
+    def getChoiceItemId(idPrefix: String, number: String, index: Int, instances: Instances): String =
+      getItemId(idPrefix, number, instances) + choiceIndexDelimiter + index
 
-    def getChoiceItemName(idPrefix: String, number: String, instanceNos: Instances) =
-      idPrefix + "item-input-" + number + instanceDelimiter + instanceNos
+    def getChoiceItemName(idPrefix: String, number: String, instances: Instances) =
+      idPrefix + "item-input-" + number + instanceDelimiter + instances
 
-    def getRepeatButtonId(idPrefix: String, number: String, instanceNos: Instances) =
-      idPrefix + "repeat-button-" + number + instanceDelimiter + instanceNos
+    def getRepeatButtonId(idPrefix: String, number: String, instances: Instances) =
+      idPrefix + "repeat-button-" + number + instanceDelimiter + instances
 
-    def getRepeatingEnclosingId(idPrefix: String, number: String, instanceNos: Instances): String =
-      idPrefix + "repeating-enclosing-" + number + instanceDelimiter + instanceNos
+    def getRepeatingEnclosingId(idPrefix: String, number: String, instances: Instances): String =
+      idPrefix + "repeating-enclosing-" + number + instanceDelimiter + instances
 
     val ClassInvisible = "invisible"
     val ClassSequence = "sequence"
@@ -295,27 +295,27 @@ package xsdforms {
       }
     }
 
-    private def doNode(node: Node, instanceNos: Instances) {
+    private def doNode(node: Node, instances: Instances) {
       node match {
-        case n: NodeSimpleType => doNode(n, instanceNos)
-        case n: NodeBaseType => doNode(n, instanceNos)
-        case n: NodeSequence => doNode(n, instanceNos)
-        case n: NodeChoice => doNode(n, instanceNos)
+        case n: NodeSimpleType => doNode(n, instances)
+        case n: NodeBaseType => doNode(n, instances)
+        case n: NodeSequence => doNode(n, instances)
+        case n: NodeChoice => doNode(n, instances)
         case _ => Util.unexpected
       }
     }
 
-    private def addXmlExtractScriptlet(node: Node, instanceNos: Instances) {
+    private def addXmlExtractScriptlet(node: Node, instances: Instances) {
       node match {
-        case n: NodeSimpleType => addXmlExtractScriptlet(n, instanceNos)
-        case n: NodeBaseType => addXmlExtractScriptlet(n, instanceNos)
-        case n: NodeSequence => addXmlExtractScriptlet(n, instanceNos)
-        case n: NodeChoice => addXmlExtractScriptlet(n, instanceNos)
+        case n: NodeSimpleType => addXmlExtractScriptlet(n, instances)
+        case n: NodeBaseType => addXmlExtractScriptlet(n, instances)
+        case n: NodeSequence => addXmlExtractScriptlet(n, instances)
+        case n: NodeChoice => addXmlExtractScriptlet(n, instances)
         case _ => Util.unexpected
       }
     }
 
-    private def doNode(node: NodeSequence, instanceNos: Instances) {
+    private def doNode(node: NodeSequence, instances: Instances) {
       val e = node.element
       val number = elementNumber(node)
       val legend = getAnnotation(e, "legend")
@@ -325,9 +325,9 @@ package xsdforms {
 
       html
         .div(classes = List(ClassSequence))
-      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instanceNos)
+      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instances)
       for (instanceNo <- repeats(e)) {
-        val instNos = instanceNos add instanceNo
+        val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         html.div(classes = List(ClassSequenceLabel), content = Some(label))
           .closeTag
@@ -344,21 +344,21 @@ package xsdforms {
       }
       html
         .closeTag(2)
-      addMaxOccursScriptlet(e, instanceNos)
+      addMaxOccursScriptlet(e, instances)
 
     }
 
-    private def doNode(node: NodeChoice, instanceNos: Instances) {
+    private def doNode(node: NodeChoice, instances: Instances) {
       val choice = node.choice
       val e = node.element
       val choiceInline = displayChoiceInline(choice)
 
       val number = elementNumber(e)
 
-      html.div(id = Some(getItemEnclosingId(number, instanceNos add 1)), classes = List(ClassChoice))
-      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instanceNos)
+      html.div(id = Some(getItemEnclosingId(number, instances add 1)), classes = List(ClassChoice))
+      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instances)
       for (instanceNo <- repeats(e)) {
-        val instNos = instanceNos add instanceNo
+        val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         val particles = choice.group.particleOption3.map(_.value)
         addChoiceHideOnStartScriptlet(particles, number, instNos)
@@ -400,19 +400,19 @@ package xsdforms {
       }
       html.closeTag
 
-      addMaxOccursScriptlet(e, instanceNos)
+      addMaxOccursScriptlet(e, instances)
 
     }
 
-    private def doNode(node: NodeSimpleType, instanceNos: Instances) {
+    private def doNode(node: NodeSimpleType, instances: Instances) {
       val e = node.element
       val typ = node.typ
 
-      nonRepeatingSimpleType(e, instanceNos)
+      nonRepeatingSimpleType(e, instances)
       val t = Some(typ)
       val number = elementNumber(e)
       for (instanceNo <- repeats(e)) {
-        val instNos = instanceNos add instanceNo
+        val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         itemTitle(e)
         itemBefore(e)
@@ -428,17 +428,17 @@ package xsdforms {
         html
           .closeTag(3)
       }
-      addMaxOccursScriptlet(e, instanceNos)
+      addMaxOccursScriptlet(e, instances)
     }
 
-    private def doNode(node: NodeBaseType, instanceNos: Instances) {
+    private def doNode(node: NodeBaseType, instances: Instances) {
       val e = node.element
       val typ = node.typ
-      nonRepeatingSimpleType(e, instanceNos)
+      nonRepeatingSimpleType(e, instances)
       val t = None
       val number = elementNumber(e)
       for (instanceNo <- repeats(e)) {
-        val instNos = instanceNos add instanceNo
+        val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         itemTitle(e)
         itemBefore(e)
@@ -451,11 +451,11 @@ package xsdforms {
           .closeTag(2)
       }
       html.closeTag
-      addMaxOccursScriptlet(e, instanceNos)
+      addMaxOccursScriptlet(e, instances)
     }
 
-    private def doNodes(nodes: MutableList[Node], instanceNos: Instances) {
-      nodes.foreach(doNode(_, instanceNos))
+    private def doNodes(nodes: MutableList[Node], instances: Instances) {
+      nodes.foreach(doNode(_, instances))
     }
 
     private def numInstances(e: Element): Int =
@@ -469,15 +469,15 @@ package xsdforms {
     private def numInstances(node: Node): Int =
       numInstances(node.element)
 
-    private def addXmlExtractScriptlet(node: NodeSequence, instanceNos: Instances) {
+    private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
         val s = new StringBuilder
         val number = elementNumber(node)
         s.append("""
- |    var xml = """ + spaces(instanceNos add 1) + xmlStart(node) + """; 
+ |    var xml = """ + spaces(instances add 1) + xmlStart(node) + """; 
  |    //now add sequence children for each instanceNo""")
         for (instanceNo <- repeats(node)) {
-          val instNos = instanceNos add instanceNo
+          val instNos = instances add instanceNo
           node.children.foreach { n =>
             s.append("""
  |    if (idVisible("""" + getRepeatingEnclosingId(number, instNos) + """"))
@@ -486,19 +486,19 @@ package xsdforms {
           }
         }
         s.append("""
- |    xml+=""" + spaces(instanceNos add 1) + xmlEnd(node) + """;
+ |    xml+=""" + spaces(instances add 1) + xmlEnd(node) + """;
  |    return xml;""")
-        addXmlExtractScriptlet(node, s.toString(), instanceNos);
+        addXmlExtractScriptlet(node, s.toString(), instances);
       }
     }
 
-    private def addXmlExtractScriptlet(node: NodeChoice, instanceNos: Instances) {
+    private def addXmlExtractScriptlet(node: NodeChoice, instances: Instances) {
       val s = new StringBuilder
       s.append("""
- |    var xml = """ + spaces(instanceNos add 1) + xmlStart(node) + """; 
+ |    var xml = """ + spaces(instances add 1) + xmlStart(node) + """; 
  |    //now optionally add selected child if any""");
       for (instanceNo <- repeats(node)) {
-        val instNos = instanceNos add instanceNo
+        val instNos = instances add instanceNo
         s.append(""" 
  |    var checked = $(':input[name=""" + getChoiceItemName(node, instNos) + """]:checked').attr("id"); console.log("checked="+checked);
  """)
@@ -511,42 +511,42 @@ package xsdforms {
             addXmlExtractScriptlet(n, instNos)
         }
         s.append("""
- |    xml+=""" + spaces(instanceNos add 1) + xmlEnd(node) + """;
+ |    xml+=""" + spaces(instances add 1) + xmlEnd(node) + """;
  |    return xml;""")
-        addXmlExtractScriptlet(node, s.toString(), instanceNos);
+        addXmlExtractScriptlet(node, s.toString(), instances);
       }
     }
 
-    private def addXmlExtractScriptlet(node: NodeSimpleType, instanceNos: Instances) {
-      addXmlExtractScriptletForSimpleOrBase(node, instanceNos)
+    private def addXmlExtractScriptlet(node: NodeSimpleType, instances: Instances) {
+      addXmlExtractScriptletForSimpleOrBase(node, instances)
     }
 
-    private def addXmlExtractScriptlet(node: NodeBaseType, instanceNos: Instances) {
-      addXmlExtractScriptletForSimpleOrBase(node, instanceNos)
+    private def addXmlExtractScriptlet(node: NodeBaseType, instances: Instances) {
+      addXmlExtractScriptletForSimpleOrBase(node, instances)
     }
 
-    private def addXmlExtractScriptletForSimpleOrBase(node: Node, instanceNos: Instances) {
+    private def addXmlExtractScriptletForSimpleOrBase(node: Node, instances: Instances) {
       val number = elementNumber(node)
       val s = new StringBuffer
 
       s.append("|    var xml=\"\";\n")
       for (instanceNo <- repeats(node)) {
-        val instNos = instanceNos add instanceNo
+        val instNos = instances add instanceNo
         s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instNos) + "\"))")
         s.append("\n|    xml+=" + spaces(instNos) + xml(node, valById(getItemId(node, instNos))) + ";")
       }
       s.append("\n|    return xml;\n")
-      addXmlExtractScriptlet(node, s.toString, instanceNos);
+      addXmlExtractScriptlet(node, s.toString, instances);
     }
 
-    private def xmlFunctionName(node: Node, instanceNos: Instances) = {
+    private def xmlFunctionName(node: Node, instances: Instances) = {
       val number = elementNumber(node.element)
-      "getXml" + number + "instance" + instanceNos
+      "getXml" + number + "instance" + instances
     }
 
-    private def addXmlExtractScriptlet(node: Node, functionBody: String, instanceNos: Instances) {
-      //TODO use instanceNos
-      val functionName = xmlFunctionName(node, instanceNos)
+    private def addXmlExtractScriptlet(node: Node, functionBody: String, instances: Instances) {
+      //TODO use instances
+      val functionName = xmlFunctionName(node, instances)
       addScriptWithMargin(
         """
 |//extract xml from element <""" + node.element.name.getOrElse("?") + """>
@@ -572,7 +572,7 @@ package xsdforms {
     private def xml(node: Node, value: String) =
       xmlStart(node) + Plus + value + Plus + xmlEnd(node)
 
-    private def spaces(instanceNos: Instances) = "'\\n' + spaces(" + (instanceNos.size * 2) + ") + "
+    private def spaces(instances: Instances) = "'\\n' + spaces(" + (instances.size * 2) + ") + "
 
     override def toString = text
 
@@ -585,37 +585,37 @@ package xsdforms {
       "inline" == getAnnotation(choice.group, "choice").mkString
 
     private def addChoiceHideOnStartScriptlet(
-      particles: Seq[ParticleOption], number: String, instanceNos: Instances) {
+      particles: Seq[ParticleOption], number: String, instances: Instances) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
       forEachParticle(x => {
         val index = x._2 + 1
         addScriptWithMargin("""
-|$("#""" + choiceContentId(idPrefix, number, index, instanceNos) + """").hide();""")
+|$("#""" + choiceContentId(idPrefix, number, index, instances) + """").hide();""")
       })
     }
 
     private def addChoiceShowHideOnSelectionScriptlet(
-      particles: Seq[ParticleOption], number: String, instanceNos: Instances) {
+      particles: Seq[ParticleOption], number: String, instances: Instances) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
-      val choiceChangeFunction = "choiceChange" + number + "instance" + instanceNos;
+      val choiceChangeFunction = "choiceChange" + number + "instance" + instances;
 
       addScriptWithMargin(
         """
-|var """ + choiceChangeFunction + """ = function addChoiceChange""" + number + """instance""" + instanceNos + """() {
-|  $(":input[@name='""" + getChoiceItemName(number, instanceNos) + """']").change(function() {
-|    var checked = $(':input[name=""" + getChoiceItemName(number, instanceNos) + """]:checked').attr("id");""")
+|var """ + choiceChangeFunction + """ = function addChoiceChange""" + number + """instance""" + instances + """() {
+|  $(":input[@name='""" + getChoiceItemName(number, instances) + """']").change(function() {
+|    var checked = $(':input[name=""" + getChoiceItemName(number, instances) + """]:checked').attr("id");""")
 
       forEachParticle(x => {
         val index = x._2 + 1
         val ccId =
-          choiceContentId(idPrefix, number, index, instanceNos)
+          choiceContentId(idPrefix, number, index, instances)
         addScriptWithMargin(
           """
-|    if (checked == """" + getChoiceItemId(number, index, instanceNos) + """") {
+|    if (checked == """" + getChoiceItemId(number, index, instances) + """") {
 |      $("#""" + ccId + """").show();
 |      $("#""" + ccId + """").find('.item-path').attr('enabled','true');
 |    }
@@ -659,7 +659,7 @@ package xsdforms {
         case _ => None
       }
 
-    private def nonRepeatingTitle(e: Element, hasButton: Boolean, instanceNos: Instances) {
+    private def nonRepeatingTitle(e: Element, hasButton: Boolean, instances: Instances) {
       //there's only one of these so use instanceNo = 1
       val number = elementNumber(e)
       html.div(
@@ -667,30 +667,30 @@ package xsdforms {
         content = getAnnotation(e, "nonRepeatingTitle")).closeTag
       if (hasButton)
         html.div(
-          id = Some(getRepeatButtonId(number, instanceNos)),
+          id = Some(getRepeatButtonId(number, instances)),
           classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
           content = Some(getAnnotation(e, "repeatLabel").getOrElse("+"))).closeTag
     }
 
-    private def repeatingEnclosing(e: Element, instanceNos: Instances) {
+    private def repeatingEnclosing(e: Element, instances: Instances) {
       val number = elementNumber(e)
-      val id = getRepeatingEnclosingId(number, instanceNos)
+      val id = getRepeatingEnclosingId(number, instances)
       html.div(
         id = Some(id),
         classes = List(ClassRepeatingEnclosing))
-      if (instanceNos.last != 1 || e.minOccurs == 0)
+      if (instances.last != 1 || e.minOccurs == 0)
         addScriptWithMargin("""
           |$('#""" + id + """').hide();
           """)
     }
 
-    private def nonRepeatingSimpleType(e: Element, instanceNos: Instances) {
+    private def nonRepeatingSimpleType(e: Element, instances: Instances) {
       val number = elementNumber(e)
       html
         .div(
           classes = List(ClassItemEnclosing) ++ getVisibility(e),
-          id = Some(getItemEnclosingId(number, instanceNos add 1)))
-      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instanceNos)
+          id = Some(getItemEnclosingId(number, instances add 1)))
+      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instances)
     }
 
     private def itemTitle(e: Element) {
@@ -723,30 +723,30 @@ package xsdforms {
     private def getTextType(e: Element) =
       getAnnotation(e, "text")
 
-    private def simpleType(e: Element, r: Restriction, instanceNos: Instances) {
+    private def simpleType(e: Element, r: Restriction, instances: Instances) {
       val qn = toQN(r.base.get)
 
-      addInput(e, qn, r, instanceNos)
+      addInput(e, qn, r, instances)
 
       addDescription(e)
 
-      addPath(e, instanceNos)
+      addPath(e, instances)
 
-      addError(e, instanceNos)
+      addError(e, instances)
 
       addHelp(e)
 
       addAfter(e)
 
       val statements = List(
-        createDeclarationScriptlet(e, qn, instanceNos),
+        createDeclarationScriptlet(e, qn, instances),
         createMandatoryTestScriptlet(e, r),
         createPatternsTestScriptlet(getPatterns(r)),
         createBasePatternTestScriptlet(qn),
         createFacetTestScriptlet(r),
         createLengthTestScriptlet(r),
         createCanExcludeScriptlet(e),
-        createClosingScriptlet(e, qn, instanceNos))
+        createClosingScriptlet(e, qn, instances))
 
       statements
         .map(stripMargin(_))
@@ -754,18 +754,18 @@ package xsdforms {
 
     }
 
-    private def addInput(e: Element, qn: QN, r: Restriction, instanceNos: Instances) {
+    private def addInput(e: Element, qn: QN, r: Restriction, instances: Instances) {
 
       val number = elementNumber(e)
 
       if (isEnumeration(r))
-        addEnumeration(e, r, instanceNos)
+        addEnumeration(e, r, instances)
       else
-        addTextField(e, r, getExtraClasses(qn), instanceNos)
+        addTextField(e, r, getExtraClasses(qn), instances)
 
-      addWidthScript(e, instanceNos)
+      addWidthScript(e, instances)
 
-      addCssScript(e, instanceNos)
+      addCssScript(e, instances)
     }
 
     private def getExtraClasses(qn: QN) = qn match {
@@ -777,10 +777,10 @@ package xsdforms {
 
     private def addTextField(
       e: Element, r: Restriction,
-      extraClasses: String, instanceNos: Instances) {
+      extraClasses: String, instances: Instances) {
       val number = elementNumber(e)
       val inputType = getInputType(r)
-      val itemId = getItemId(number, instanceNos)
+      val itemId = getItemId(number, instances)
       getTextType(e) match {
         case Some("textarea") =>
           html.textarea(
@@ -808,8 +808,8 @@ package xsdforms {
       }
     }
 
-    private def addWidthScript(e: Element, instanceNos: Instances) {
-      val itemId = getItemId(e, instanceNos)
+    private def addWidthScript(e: Element, instances: Instances) {
+      val itemId = getItemId(e, instances)
       getAnnotation(e, "width") match {
         case Some(x) =>
           addScriptWithMargin("|  $('#" + itemId + "').width('" + x + "');")
@@ -817,8 +817,8 @@ package xsdforms {
       }
     }
 
-    private def addCssScript(e: Element, instanceNos: Instances) {
-      val itemId = getItemId(e, instanceNos)
+    private def addCssScript(e: Element, instances: Instances) {
+      val itemId = getItemId(e, instances)
       getAnnotation(e, "css") match {
         case Some(x) => {
           val items = x.split(';')
@@ -838,7 +838,7 @@ package xsdforms {
     private def isEnumeration(r: Restriction) =
       !getEnumeration(r).isEmpty
 
-    private def addEnumeration(e: Element, r: Restriction, instanceNos: Instances) {
+    private def addEnumeration(e: Element, r: Restriction, instances: Instances) {
       val number = elementNumber(e)
       val en = getEnumeration(r)
       val isRadio = getAnnotation(e, "selector") match {
@@ -850,7 +850,7 @@ package xsdforms {
         case Some("true") => true
         case _ => false
       }
-      enumeration(en, number, isRadio, initializeBlank, instanceNos)
+      enumeration(en, number, isRadio, initializeBlank, instances)
     }
 
     private def getEnumeration(typ: SimpleType): Seq[(String, NoFixedFacet)] =
@@ -874,11 +874,11 @@ package xsdforms {
         }).flatten
 
     private def enumeration(en: Seq[(String, NoFixedFacet)],
-      number: String, isRadio: Boolean, initializeBlank: Boolean, instanceNos: Instances) {
+      number: String, isRadio: Boolean, initializeBlank: Boolean, instances: Instances) {
       if (isRadio) {
         en.zipWithIndex.foreach(x => {
           html.input(
-            id = Some(getItemId(number, x._2, instanceNos)),
+            id = Some(getItemId(number, x._2, instances)),
             name = getItemName(number),
             classes = List(ClassSelect),
             typ = Some("radio"),
@@ -888,7 +888,7 @@ package xsdforms {
         })
       } else {
         html.select(
-          id = Some(getItemId(number, instanceNos)),
+          id = Some(getItemId(number, instances)),
           name = getItemName(number),
           classes = List(ClassSelect),
           number = Some(number))
@@ -900,9 +900,9 @@ package xsdforms {
             case Some(y: String) => {
               val refersTo = number.toInt + y.toInt
               addScriptWithMargin("""
-|  $("#""" + getItemId(number, instanceNos) + """").change( function() {
-|    var v = $("#""" + getItemId(number, instanceNos) + """");
-|    var refersTo = $("#""" + getItemEnclosingId(refersTo + "", instanceNos) + """") 
+|  $("#""" + getItemId(number, instances) + """").change( function() {
+|    var v = $("#""" + getItemId(number, instances) + """");
+|    var refersTo = $("#""" + getItemEnclosingId(refersTo + "", instances) + """") 
 |    if ("""" + x._2.valueAttribute + """" == v.val()) 
 |      refersTo.show();
 |    else
@@ -928,8 +928,8 @@ package xsdforms {
       }
     }
 
-    private def addError(e: Element, instanceNos: Instances) {
-      val itemErrorId = getItemErrorId(elementNumber(e), instanceNos)
+    private def addError(e: Element, instances: Instances) {
+      val itemErrorId = getItemErrorId(elementNumber(e), instances)
       html.div(
         id = Some(itemErrorId),
         classes = List(ClassItemError),
@@ -938,10 +938,10 @@ package xsdforms {
 
     }
 
-    private def addPath(e: Element, instanceNos: Instances) {
+    private def addPath(e: Element, instances: Instances) {
       html.div(
         classes = List("item-path"),
-        id = Some(getPathId(elementNumber(e), instanceNos)),
+        id = Some(getPathId(elementNumber(e), instances)),
         enabledAttr = Some("true"),
         content = Some(""))
         .closeTag
@@ -971,15 +971,15 @@ package xsdforms {
       }
     }
 
-    private def createDeclarationScriptlet(e: Element, qn: QN, instanceNos: Instances) = {
+    private def createDeclarationScriptlet(e: Element, qn: QN, instances: Instances) = {
       val number = elementNumber(e)
-      val itemId = getItemId(number, instanceNos)
+      val itemId = getItemId(number, instances)
       """
 |// """ + e.name.get + """
-|var validate""" + number + "instance" + instanceNos + """= function () {
+|var validate""" + number + "instance" + instances + """= function () {
 |  var ok = true;
 |  var v = $("#""" + itemId + """");
-|  var pathDiv = $("#""" + getPathId(number, instanceNos) + """");"""
+|  var pathDiv = $("#""" + getPathId(number, instances) + """");"""
     }
 
     private def createMandatoryTestScriptlet(e: Element, r: Restriction) = {
@@ -1065,7 +1065,7 @@ package xsdforms {
       else ""
     }
 
-    private def createClosingScriptlet(e: Element, qn: QN, instanceNos: Instances) = {
+    private def createClosingScriptlet(e: Element, qn: QN, instances: Instances) = {
       val number = elementNumber(e)
       val onChange = "change("
       val changeMethod = qn match {
@@ -1078,9 +1078,9 @@ package xsdforms {
 |  return ok;
 |}
 |      
-|$("#""" + getItemId(number, instanceNos) + """").""" + changeMethod + """ function() {
-|  var ok = validate""" + number + "instance" + instanceNos + """();
-|  var error= $("#""" + getItemErrorId(number, instanceNos) + """");
+|$("#""" + getItemId(number, instances) + """").""" + changeMethod + """ function() {
+|  var ok = validate""" + number + "instance" + instances + """();
+|  var error= $("#""" + getItemErrorId(number, instances) + """");
 |  if (!(ok)) 
 |    error.show();
 |  else 
@@ -1089,7 +1089,7 @@ package xsdforms {
 """ + (if (e.minOccurs == 0 && e.default.isEmpty)
         """
 |//disable item-path due to minOccurs=0 and default is empty  
-|$("#""" + getPathId(number, instanceNos) + """").attr('enabled','false');"""
+|$("#""" + getPathId(number, instances) + """").attr('enabled','false');"""
       else "")
     }
 
@@ -1123,19 +1123,19 @@ package xsdforms {
       result
     }
 
-    private def repeatingEnclosingIds(e: Element, instanceNos: Instances) =
-      repeats(e).map(instanceNos.add(_)).map(getRepeatingEnclosingId(e, _))
+    private def repeatingEnclosingIds(e: Element, instances: Instances) =
+      repeats(e).map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
 
-    private def addMaxOccursScriptlet(e: Element, instanceNos: Instances) {
+    private def addMaxOccursScriptlet(e: Element, instances: Instances) {
       val number = elementNumber(e)
       if (isMultiple(e)) {
         println(number + "is multiple ")
-        val repeatButtonId = getRepeatButtonId(number, instanceNos)
+        val repeatButtonId = getRepeatButtonId(number, instances)
         addScriptWithMargin("""
 |$("#""" + repeatButtonId + """").click(function() {
 |   // loop through all repeats until find first nonInvisible repeat and make it visible
 |  var elem;
-""" + repeatingEnclosingIds(e, instanceNos)
+""" + repeatingEnclosingIds(e, instances)
           .map(id => { "|  elem = $('#" + id + "');\n|  if (!elemVisible(elem))\n|    { elem.show(); return; }\n" })
           .mkString("") +
           """|})
@@ -1198,49 +1198,50 @@ package xsdforms {
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
 
-    private def choiceContentId(idPrefix: String, number: String, index: Int, instanceNos: Instances) =
-      idPrefix + "choice-content-" + number + instanceDelimiter + instanceNos + choiceIndexDelimiter + index
-    private def getRepeatButtonId(number: String, instanceNos: Instances) =
-      TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instanceNos)
-    private def getRepeatingEnclosingId(element: Element, instanceNos: Instances): String =
-      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instanceNos)
-    private def getRepeatingEnclosingId(number: String, instanceNos: Instances) =
-      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instanceNos)
-    private def getChoiceItemName(node: Node, instanceNos: Instances): String =
-      getChoiceItemName(elementNumber(node.element), instanceNos)
-    private def getChoiceItemName(number: String, instanceNos: Instances): String =
-      TreeToHtmlConverter.getChoiceItemName(idPrefix, number, instanceNos)
-    private def getChoiceItemId(node: Node, index: Int, instanceNos: Instances): String =
-      getChoiceItemId(elementNumber(node.element), index, instanceNos)
-    private def getChoiceItemId(number: String, index: Int, instanceNos: Instances): String =
-      TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instanceNos)
-    private def getItemId(node: Node, instanceNos: Instances): String =
-      getItemId(elementNumber(node.element), instanceNos)
-    private def getItemId(element: Element, instanceNos: Instances): String =
-      getItemId(elementNumber(element), instanceNos)
-    private def getItemId(number: String, instanceNos: Instances): String =
-      TreeToHtmlConverter.getItemId(idPrefix, number, instanceNos)
-    private def getItemId(number: String, enumeration: Integer, instanceNos: Instances): String =
-      getItemId(number, instanceNos) + "-" + enumeration
+    private def choiceContentId(idPrefix: String, number: String, index: Int, instances: Instances) =
+      idPrefix + "choice-content-" + number + instanceDelimiter + instances + choiceIndexDelimiter + index
+    private def getRepeatButtonId(number: String, instances: Instances) =
+      TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instances)
+    private def getRepeatingEnclosingId(element: Element, instances: Instances): String =
+      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instances)
+    private def getRepeatingEnclosingId(number: String, instances: Instances) =
+      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instances)
+    private def getChoiceItemName(node: Node, instances: Instances): String =
+      getChoiceItemName(elementNumber(node.element), instances)
+    private def getChoiceItemName(number: String, instances: Instances): String =
+      TreeToHtmlConverter.getChoiceItemName(idPrefix, number, instances)
+    private def getChoiceItemId(node: Node, index: Int, instances: Instances): String =
+      getChoiceItemId(elementNumber(node.element), index, instances)
+    private def getChoiceItemId(number: String, index: Int, instances: Instances): String =
+      TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instances)
+    private def getItemId(node: Node, instances: Instances): String =
+      getItemId(elementNumber(node.element), instances)
+    private def getItemId(element: Element, instances: Instances): String =
+      getItemId(elementNumber(element), instances)
+    private def getItemId(number: String, instances: Instances): String =
+      TreeToHtmlConverter.getItemId(idPrefix, number, instances)
+    private def getItemId(number: String, enumeration: Integer, instances: Instances): String =
+      getItemId(number, instances) + "-" + enumeration
     private def getItemName(number: String) =
       idPrefix + "item-input-" + number;
-    private def getItemEnclosingId(number: String, instanceNos: Instances) =
-      idPrefix + "item-enclosing-" + number + instanceDelimiter + instanceNos
-    private def getItemErrorId(number: String, instanceNos: Instances) =
-      TreeToHtmlConverter.getItemErrorId(idPrefix, number, instanceNos)
-
-    private def getPathId(number: String, instanceNos: Instances) = idPrefix + "item-path-" + number + instanceDelimiter + instanceNos
+    private def getItemEnclosingId(number: String, instances: Instances) =
+      idPrefix + "item-enclosing-" + number + instanceDelimiter + instances
+    private def getItemErrorId(number: String, instances: Instances) =
+      TreeToHtmlConverter.getItemErrorId(idPrefix, number, instances)
+    private def getPathId(number: String, instances: Instances) = 
+      idPrefix + "item-path-" + number + instanceDelimiter + instances
 
     private def nextNumber: String = {
       number += 1
       number + ""
     }
 
-    case class QN(namespace: String, localPart: String)
+    private case class QN(namespace: String, localPart: String)
 
-    implicit def toQN(qName: QName) =
+    private implicit def toQN(qName: QName) =
       QN(qName.getNamespaceURI(), qName.getLocalPart())
-    def text =
+    
+      def text =
       header +
         html.toString() + footer
 
