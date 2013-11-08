@@ -448,7 +448,7 @@ package xsdforms {
     private def xml(node: Node, value: String) = {
       xmlStart(node) + " + " +
         value +
-        " + \"</" + node.element.name.getOrElse("?") + ">\""
+        " + '</" + node.element.name.getOrElse("?") + ">'"
     }
 
     private def addXmlExtractScriptlet(node: NodeSequence, instanceNos: Instances) {
