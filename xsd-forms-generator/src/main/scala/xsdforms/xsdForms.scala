@@ -294,7 +294,7 @@ package xsdforms {
       html
         .closeTag(2)
       addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet2(node, instanceNos)
+      addXmlExtractScriplet(node, instanceNos)
 
     }
 
@@ -351,7 +351,7 @@ package xsdforms {
       html.closeTag
 
       addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet2(node, instanceNos)
+      addXmlExtractScriplet(node, instanceNos)
 
     }
 
@@ -380,7 +380,7 @@ package xsdforms {
           .closeTag(3)
       }
       addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet2(node)
+      addXmlExtractScriplet(node, instanceNos)
     }
 
     private def doNode(node: NodeBaseType, instanceNos: Instances) {
@@ -404,7 +404,7 @@ package xsdforms {
       }
       html.closeTag
       addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet2(node)
+      addXmlExtractScriplet(node, instanceNos)
     }
 
     private def doNodes(nodes: MutableList[Node], instanceNos: Instances) {
@@ -426,7 +426,7 @@ package xsdforms {
       idPrefix + "choice-content-" + number + instanceDelimiter + instanceNos + choiceIndexDelimiter + index
 
     private def refById(id: String) = "$(\"#" + id + "\")"
-    private def valById(id: String) = "encodeHTML(" + refById(id) + ".val())"
+    private def valById(id: String) = "encodedValueById(\"" + id + "\")"
     private def namespace(node: Node) =
       if (elementNumber(node.element).equals("1"))
         " xmlns=\"" + targetNamespace + "\""
@@ -443,25 +443,17 @@ package xsdforms {
         " + \"</" + node.element.name.getOrElse("?") + ">\""
     }
 
-    private def addXmlExtractScriplet2(node: NodeSimpleType) {
-      //TODO use instanceNo
-      addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node, Instances(List("1"))))));
-    }
-
-    private def addXmlExtractScriplet2(node: NodeBaseType) {
-      //TODO use instanceNo
-      addXmlExtractScriptlet(node, "|    return " + xml(node, valById(getItemId(node, Instances(List("1"))))));
-    }
-
-    private def addXmlExtractScriplet2(node: NodeSequence, instanceNos: Instances) {
+    private def addXmlExtractScriplet(node: NodeSequence, instanceNos: Instances) {
       val s = new StringBuilder
+      val number = elementNumber(node)
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
  |    //now add sequence children for each instanceNo""")
       for (instanceNo <- repeats(node))
         node.children.foreach { n =>
           s.append("""
- |    xml += """ + xmlFunctionName(n, Some(instanceNos)) + "() + \"\\n\";");
+ |    if (idVisible("""" + getRepeatingEnclosingId(number, instanceNos add instanceNo) + """"))
+ |      xml += """ + xmlFunctionName(n, Some(instanceNos add instanceNo)) + "() + \"\\n\";");
         }
       s.append("""
  |    xml+="""" + xmlEnd(node) + """>";
@@ -469,26 +461,7 @@ package xsdforms {
       addXmlExtractScriptlet(node, s.toString());
     }
 
-    private def addXmlExtractScriplet(node: NodeSequence, instanceNos: Instances) {
-      val s = new StringBuilder
-      s.append("""
- |    var xml = """ + xmlStart(node) + """ + "\n"; 
- |    //now add sequence children""")
-      node.children.foreach { n =>
-        {
-          //TODO use instanceNos for children
-          s.append("""
- |    //TODO if instanceNo enabled
- |    xml += """ + xmlFunctionName(n, Some(instanceNos)) + "() + \"\\n\";");
-        }
-      }
-      s.append("""
- |    xml+="""" + xmlEnd(node) + """>";
- |""")
-      addXmlExtractScriptlet(node, s.toString(), Some(instanceNos));
-    }
-
-    private def addXmlExtractScriplet2(node: NodeChoice, instanceNos: Instances) {
+    private def addXmlExtractScriplet(node: NodeChoice, instanceNos: Instances) {
       val s = new StringBuilder
       s.append("""
  |    var xml = """ + xmlStart(node) + """ + "\n"; 
@@ -510,6 +483,27 @@ package xsdforms {
       }
     }
 
+    private def addXmlExtractScriplet(node: NodeSimpleType, instanceNos: Instances) {
+      addXmlExtractScriptletForSimpleOrBase(node, instanceNos)
+    }
+
+    private def addXmlExtractScriplet(node: NodeBaseType, instanceNos: Instances) {
+      addXmlExtractScriptletForSimpleOrBase(node, instanceNos)
+    }
+
+    private def addXmlExtractScriptletForSimpleOrBase(node: Node, instanceNos: Instances) {
+      val number = elementNumber(node)
+      val s = new StringBuffer
+
+      s.append("|    var xml=\"\";\n")
+      for (instanceNo <- repeats(node)) {
+        s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instanceNos add instanceNo) + "\"))")
+        s.append("\n|      xml+=" + xml(node, valById(getItemId(node, instanceNos add instanceNo)))) + ";"
+      }
+      s.append("\n|    return xml;\n")
+      addXmlExtractScriptlet(node, s.toString);
+    }
+
     private def xmlFunctionName(node: Node) = {
       val number = elementNumber(node.element)
       "getXml" + number
@@ -522,7 +516,7 @@ package xsdforms {
 
     private def addXmlExtractScriptlet(node: Node, functionBody: String, instanceNos: Option[Instances] = None) {
       //TODO use instanceNos
-      val functionName = xmlFunctionName(node)
+      val functionName = xmlFunctionName(node, instanceNos)
       addScriptWithMargin(
         """
 |//extract xml from element <""" + node.element.name.getOrElse("?") + """>
@@ -566,6 +560,10 @@ function encodeHTML(s) {
 	               .replace(/"/g, '&quot;');
      else 
           return s; 
+}
+          
+function encodedValueById(id) {
+    return encodeHTML($("#"+id).val());
 }
 
 function openTag(name) {
