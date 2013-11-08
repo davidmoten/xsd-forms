@@ -466,7 +466,7 @@ package xsdforms {
         addXmlExtractScriptlet(n,instanceNos add instanceNo)  
         }
         s.append("""
- |    xml+="""" + xmlEnd(node) + """>";
+ |    xml+=""" + xmlEnd(node) + """;
  |    return xml;""")
         addXmlExtractScriptlet(node, s.toString(),instanceNos);
       }
