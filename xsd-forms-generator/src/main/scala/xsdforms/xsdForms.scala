@@ -626,7 +626,7 @@ $(function() {
     }
     else 
       $('#validation-errors').hide();
-    var s = getXml1();
+    var s = getXml1instance();
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
     $('#submit-comments').html(s);
