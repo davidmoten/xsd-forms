@@ -584,128 +584,6 @@ package xsdforms {
       script.append("\n")
     }
 
-    def text =
-      header +
-        html.toString() + footer
-
-    private def header = {
-      val s = new StringBuilder
-      s.append(
-        """
-<html>
-<head>
-<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
-<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
-<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
-<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
-<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
-<script type="text/javascript">
-
-function encodeHTML(s) {
-    if (typeof(myVariable) != "undefined")
-	    return s.replace(/&/g, '&amp;')
-	               .replace(/</g, '&lt;')
-	               .replace(/>/g, '&gt;')
-	               .replace(/"/g, '&quot;');
-     else 
-          return s; 
-}
-          
-function encodedValueById(id) {
-    return encodeHTML($("#"+id).val());
-}
-
-function spaces(n) {
-    var s = "";
-    for (var i=0;i<n;i++)
-      s = s + " ";
-    return s;
-}
-
-function cloneAndReplaceIds(element, suffix){
-  var clone = element.clone();
-  clone.find("*[id]").andSelf().each(function() { 
-    var previousId = $(this).attr("id");
-    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
-    $(this).attr("id", newId); 
-  });
-  return clone;
-}
-    
-function idVisible(id) {
-    return elemVisible($("#"+id));
-}
-    
-function elemVisible(elem) {
-    return elem.is(":visible");    
-}
-    
-$(function() {
-  $('input').filter('.datepickerclass').datepicker();
-  $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","dd/mm/yy");
-  $('input').filter('.datetimepickerclass').datetimepicker();
-  $('input').filter('.timepickerclass').timepicker({});
-
-  function callMethod(methodName, argument) {
-    var method = eval('(' + methodName + ')');
-    return method(argument);
-  }
-
-  $('#pre-submit').click( function () {
-    var previousItems = null;
-    $('*[number]').each( function(index) {
-      var thisId = this.id
-      var elem = $('#' + thisId)
-      // will do validations here
-      //if elem visible then do the validation for that element
-      if (elem.is(":visible")) 
-        elem.change();
-    });
-    var count = $('.item-error').filter(":visible").length
-    if (count>0) {
-      $('#validation-errors').show();
-      return;
-    }
-    else 
-      $('#validation-errors').hide();
-    var s = getXml1instance();
-    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
-    s = "<pre>" + s + "</pre>";
-    $('#submit-comments').html(s);
-  });
-""" + script + """
-  $("#form").submit(function () { return false; }); // so it won't submit
-""" + extraScript.mkString + """
-    });
-</script>
-<script type="text/javascript" src="js/xsd-forms-override.js"></script>
-</head>
-<body>
-<div class="form">
-<form method="POST" action="form.html" name="form">
-""")
-      s.toString
-      //TODO action form parameter should be a constructor parameter for HtmlVisitor
-    }
-
-    private def footer =
-      """
-  <!--<input id="submit" class="submit" type="submit"></input>-->
-      <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
-  <div id="pre-submit" class="pre-submit">Submit</div>
-    		<p><div id="submit-comments"></div></p>
-</form>
-</div>
-</body>
-</html>"""
-
-    private def getChoiceItemName(node: Node, instanceNos: Instances): String = getChoiceItemName(elementNumber(node.element), instanceNos)
-    private def getChoiceItemName(number: String, instanceNos: Instances): String = TreeToHtmlConverter.getChoiceItemName(idPrefix, number, instanceNos)
-    private def getChoiceItemId(node: Node, index: Int, instanceNos: Instances): String = getChoiceItemId(elementNumber(node.element), index, instanceNos)
-    private def getChoiceItemId(number: String, index: Int, instanceNos: Instances): String = TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instanceNos)
-
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, "choice").mkString
 
@@ -797,15 +675,6 @@ $(function() {
           content = Some(getAnnotation(e, "repeatLabel").getOrElse("+"))).closeTag
     }
 
-    private def getRepeatButtonId(number: String, instanceNos: Instances) =
-      TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instanceNos)
-
-    private def getRepeatingEnclosingId(element: Element, instanceNos: Instances): String =
-      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instanceNos)
-
-    private def getRepeatingEnclosingId(number: String, instanceNos: Instances) =
-      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instanceNos)
-
     private def repeatingEnclosing(e: Element, instanceNos: Instances) {
       val number = elementNumber(e)
       val id = getRepeatingEnclosingId(number, instanceNos)
@@ -856,31 +725,6 @@ $(function() {
 
     private def getTextType(e: Element) =
       getAnnotation(e, "text")
-
-    private def nextNumber: String = {
-      number += 1
-      number + ""
-    }
-
-    case class QN(namespace: String, localPart: String)
-
-    implicit def toQN(qName: QName) =
-      QN(qName.getNamespaceURI(), qName.getLocalPart())
-
-    private def getItemId(node: Node, instanceNos: Instances): String = getItemId(elementNumber(node.element), instanceNos)
-    private def getItemId(element: Element, instanceNos: Instances): String = getItemId(elementNumber(element), instanceNos)
-    private def getItemId(number: String, instanceNos: Instances): String = TreeToHtmlConverter.getItemId(idPrefix, number, instanceNos)
-    private def getItemId(number: String, enumeration: Integer, instanceNos: Instances): String = getItemId(number, instanceNos) + "-" + enumeration
-    private def getItemName(number: String) =
-      idPrefix + "item-input-" + number;
-
-    private def getItemEnclosingId(number: String, instanceNos: Instances) =
-      idPrefix + "item-enclosing-" + number + instanceDelimiter + instanceNos
-
-    private def getItemErrorId(number: String, instanceNos: Instances) =
-      TreeToHtmlConverter.getItemErrorId(idPrefix, number, instanceNos)
-
-    private def getPathId(number: String, instanceNos: Instances) = idPrefix + "item-path-" + number + instanceDelimiter + instanceNos
 
     private def simpleType(e: Element, r: Restriction, instanceNos: Instances) {
       val qn = toQN(r.base.get)
@@ -1356,6 +1200,163 @@ $(function() {
         patterns.size > 0 &&
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
+
+    private def getRepeatButtonId(number: String, instanceNos: Instances) =
+      TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instanceNos)
+    private def getRepeatingEnclosingId(element: Element, instanceNos: Instances): String =
+      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instanceNos)
+    private def getRepeatingEnclosingId(number: String, instanceNos: Instances) =
+      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instanceNos)
+    private def getChoiceItemName(node: Node, instanceNos: Instances): String =
+      getChoiceItemName(elementNumber(node.element), instanceNos)
+    private def getChoiceItemName(number: String, instanceNos: Instances): String =
+      TreeToHtmlConverter.getChoiceItemName(idPrefix, number, instanceNos)
+    private def getChoiceItemId(node: Node, index: Int, instanceNos: Instances): String =
+      getChoiceItemId(elementNumber(node.element), index, instanceNos)
+    private def getChoiceItemId(number: String, index: Int, instanceNos: Instances): String =
+      TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instanceNos)
+    private def getItemId(node: Node, instanceNos: Instances): String =
+      getItemId(elementNumber(node.element), instanceNos)
+    private def getItemId(element: Element, instanceNos: Instances): String =
+      getItemId(elementNumber(element), instanceNos)
+    private def getItemId(number: String, instanceNos: Instances): String =
+      TreeToHtmlConverter.getItemId(idPrefix, number, instanceNos)
+    private def getItemId(number: String, enumeration: Integer, instanceNos: Instances): String =
+      getItemId(number, instanceNos) + "-" + enumeration
+    private def getItemName(number: String) =
+      idPrefix + "item-input-" + number;
+    private def getItemEnclosingId(number: String, instanceNos: Instances) =
+      idPrefix + "item-enclosing-" + number + instanceDelimiter + instanceNos
+    private def getItemErrorId(number: String, instanceNos: Instances) =
+      TreeToHtmlConverter.getItemErrorId(idPrefix, number, instanceNos)
+
+    private def getPathId(number: String, instanceNos: Instances) = idPrefix + "item-path-" + number + instanceDelimiter + instanceNos
+
+    private def nextNumber: String = {
+      number += 1
+      number + ""
+    }
+
+    case class QN(namespace: String, localPart: String)
+
+    implicit def toQN(qName: QName) =
+      QN(qName.getNamespaceURI(), qName.getLocalPart())
+    def text =
+      header +
+        html.toString() + footer
+
+    private def header = {
+      val s = new StringBuilder
+      s.append(
+        """
+<html>
+<head>
+<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
+<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript">
+
+function encodeHTML(s) {
+    if (typeof(myVariable) != "undefined")
+	    return s.replace(/&/g, '&amp;')
+	               .replace(/</g, '&lt;')
+	               .replace(/>/g, '&gt;')
+	               .replace(/"/g, '&quot;');
+     else 
+          return s; 
+}
+          
+function encodedValueById(id) {
+    return encodeHTML($("#"+id).val());
+}
+
+function spaces(n) {
+    var s = "";
+    for (var i=0;i<n;i++)
+      s = s + " ";
+    return s;
+}
+
+function cloneAndReplaceIds(element, suffix){
+  var clone = element.clone();
+  clone.find("*[id]").andSelf().each(function() { 
+    var previousId = $(this).attr("id");
+    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
+    $(this).attr("id", newId); 
+  });
+  return clone;
+}
+    
+function idVisible(id) {
+    return elemVisible($("#"+id));
+}
+    
+function elemVisible(elem) {
+    return elem.is(":visible");    
+}
+    
+$(function() {
+  $('input').filter('.datepickerclass').datepicker();
+  $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","dd/mm/yy");
+  $('input').filter('.datetimepickerclass').datetimepicker();
+  $('input').filter('.timepickerclass').timepicker({});
+
+  function callMethod(methodName, argument) {
+    var method = eval('(' + methodName + ')');
+    return method(argument);
+  }
+
+  $('#pre-submit').click( function () {
+    var previousItems = null;
+    $('*[number]').each( function(index) {
+      var thisId = this.id
+      var elem = $('#' + thisId)
+      // will do validations here
+      //if elem visible then do the validation for that element
+      if (elem.is(":visible")) 
+        elem.change();
+    });
+    var count = $('.item-error').filter(":visible").length
+    if (count>0) {
+      $('#validation-errors').show();
+      return;
+    }
+    else 
+      $('#validation-errors').hide();
+    var s = getXml1instance();
+    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s = "<pre>" + s + "</pre>";
+    $('#submit-comments').html(s);
+  });
+""" + script + """
+  $("#form").submit(function () { return false; }); // so it won't submit
+""" + extraScript.mkString + """
+    });
+</script>
+<script type="text/javascript" src="js/xsd-forms-override.js"></script>
+</head>
+<body>
+<div class="form">
+<form method="POST" action="form.html" name="form">
+""")
+      s.toString
+      //TODO action form parameter should be a constructor parameter for HtmlVisitor
+    }
+
+    private def footer =
+      """
+  <!--<input id="submit" class="submit" type="submit"></input>-->
+      <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="pre-submit" class="pre-submit">Submit</div>
+    		<p><div id="submit-comments"></div></p>
+</form>
+</div>
+</body>
+</html>"""
 
   }
 
