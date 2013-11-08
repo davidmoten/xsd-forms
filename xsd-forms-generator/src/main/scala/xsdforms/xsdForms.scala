@@ -264,73 +264,6 @@ package xsdforms {
       }
     }
 
-    private def doNode(node: NodeSimpleType, instanceNos: Instances) {
-      val e = node.element
-      val typ = node.typ
-
-      nonRepeatingSimpleType(e, instanceNos)
-      val t = Some(typ)
-      val number = elementNumber(e)
-      for (instanceNo <- repeats(e)) {
-        val instNos = instanceNos add instanceNo
-        repeatingEnclosing(e, instNos)
-        itemTitle(e)
-        itemBefore(e)
-        html.div(classes = List("item-number"), content = Some(number)).closeTag
-          .label(forInputName = getItemName(number),
-            classes = List("item-label"), content = Some(getLabel(e, t))).closeTag
-          .div(classes = List("item-input"))
-
-        typ.simpleDerivationOption3.value match {
-          case x: Restriction => simpleType(e, x, instNos)
-          case _ => Util.unexpected
-        }
-        html
-          .closeTag(3)
-      }
-      addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet2(node)
-    }
-
-    private def doNode(node: NodeBaseType, instanceNos: Instances) {
-      val e = node.element
-      val typ = node.typ
-      nonRepeatingSimpleType(e, instanceNos)
-      val t = None
-      val number = elementNumber(e)
-      for (instanceNo <- repeats(e)) {
-        val instNos = instanceNos add instanceNo
-        repeatingEnclosing(e, instNos)
-        itemTitle(e)
-        itemBefore(e)
-        html.div(classes = List("item-number"), content = Some(number)).closeTag
-          .label(forInputName = getItemName(number),
-            classes = List("item-label"), content = Some(getLabel(e, t))).closeTag
-          .div(classes = List("item-input"))
-        simpleType(e, new MyRestriction(typ.qName), instNos)
-        html
-          .closeTag(2)
-      }
-      html.closeTag
-      addMaxOccursScriptlet(e, instanceNos)
-      addXmlExtractScriplet2(node)
-    }
-
-    private def doNodes(nodes: MutableList[Node], instanceNos: Instances) {
-      nodes.foreach(doNode(_, instanceNos))
-    }
-
-    private def numInstances(e: Element): Int =
-      if (isMultiple(e)) NumInstancesForMultiple
-      else 1
-
-    private def repeats(node: Node): Range = repeats(node.element)
-
-    private def repeats(e: Element): Range = 1 to numInstances(e)
-
-    private def numInstances(node: Node): Int =
-      numInstances(node.element)
-
     private def doNode(node: NodeSequence, instanceNos: Instances) {
       val e = node.element
       val number = elementNumber(node)
@@ -422,6 +355,73 @@ package xsdforms {
 
     }
 
+    private def doNode(node: NodeSimpleType, instanceNos: Instances) {
+      val e = node.element
+      val typ = node.typ
+
+      nonRepeatingSimpleType(e, instanceNos)
+      val t = Some(typ)
+      val number = elementNumber(e)
+      for (instanceNo <- repeats(e)) {
+        val instNos = instanceNos add instanceNo
+        repeatingEnclosing(e, instNos)
+        itemTitle(e)
+        itemBefore(e)
+        html.div(classes = List("item-number"), content = Some(number)).closeTag
+          .label(forInputName = getItemName(number),
+            classes = List("item-label"), content = Some(getLabel(e, t))).closeTag
+          .div(classes = List("item-input"))
+
+        typ.simpleDerivationOption3.value match {
+          case x: Restriction => simpleType(e, x, instNos)
+          case _ => Util.unexpected
+        }
+        html
+          .closeTag(3)
+      }
+      addMaxOccursScriptlet(e, instanceNos)
+      addXmlExtractScriplet2(node)
+    }
+
+    private def doNode(node: NodeBaseType, instanceNos: Instances) {
+      val e = node.element
+      val typ = node.typ
+      nonRepeatingSimpleType(e, instanceNos)
+      val t = None
+      val number = elementNumber(e)
+      for (instanceNo <- repeats(e)) {
+        val instNos = instanceNos add instanceNo
+        repeatingEnclosing(e, instNos)
+        itemTitle(e)
+        itemBefore(e)
+        html.div(classes = List("item-number"), content = Some(number)).closeTag
+          .label(forInputName = getItemName(number),
+            classes = List("item-label"), content = Some(getLabel(e, t))).closeTag
+          .div(classes = List("item-input"))
+        simpleType(e, new MyRestriction(typ.qName), instNos)
+        html
+          .closeTag(2)
+      }
+      html.closeTag
+      addMaxOccursScriptlet(e, instanceNos)
+      addXmlExtractScriplet2(node)
+    }
+
+    private def doNodes(nodes: MutableList[Node], instanceNos: Instances) {
+      nodes.foreach(doNode(_, instanceNos))
+    }
+
+    private def numInstances(e: Element): Int =
+      if (isMultiple(e)) NumInstancesForMultiple
+      else 1
+
+    private def repeats(node: Node): Range = repeats(node.element)
+
+    private def repeats(e: Element): Range = 1 to numInstances(e)
+
+    private def numInstances(node: Node): Int =
+      numInstances(node.element)
+
     def choiceContentId(idPrefix: String, number: String, index: Int, instanceNos: Instances) =
       idPrefix + "choice-content-" + number + instanceDelimiter + instanceNos + choiceIndexDelimiter + index
 
@@ -467,22 +467,6 @@ package xsdforms {
  |    xml+="""" + xmlEnd(node) + """>";
  |    return xml;""")
       addXmlExtractScriptlet(node, s.toString());
-    }
-
-    case class JSBuilder(indent: Int = 0) {
-      val content = new StringBuilder
-
-      def apply(items: String*): JSBuilder = {
-        content append " " * 3
-        for (item <- items) content append item
-        content append "\n"
-        this
-      }
-
-      def newLine(): JSBuilder = {
-        content append "\n"
-        this
-      }
     }
 
     private def addXmlExtractScriplet(node: NodeSequence, instanceNos: Instances) {
@@ -634,6 +618,14 @@ function cloneAndReplaceIds(element, suffix){
     $(this).attr("id", newId); 
   });
   return clone;
+}
+    
+function idVisible(id) {
+    return elemVisible($("#"+id));
+}
+    
+function elemVisible(elem) {
+    return elem.is(":visible");    
 }
     
 var repeatCount = 10000;
@@ -1294,7 +1286,7 @@ $(function() {
 |   // loop through all repeats until find first nonInvisible repeat and make it visible
 |  var elem;
 """ + repeatingEnclosingIds(e, instanceNos)
-          .map(id => { "|  elem = $('#" + id + "');\n|  if (!elem.is(':visible'))\n|    { elem.show(); return; }\n" })
+          .map(id => { "|  elem = $('#" + id + "');\n|  if (!elemVisible(elem))\n|    { elem.show(); return; }\n" })
           .mkString("") +
           """|})
 """)
@@ -1361,7 +1353,7 @@ $(function() {
   /**
    * **************************************************************
    *
-   *   Traversor
+   *   SchemaTraversor
    *
    *
    * **************************************************************
@@ -1670,6 +1662,15 @@ $(function() {
 
   }
 }
+
+/**
+ * **************************************************************
+ *
+ *   JS
+ *
+ *
+ * **************************************************************
+ */
 
 package js {
 
