@@ -567,41 +567,6 @@ function encodedValueById(id) {
     return encodeHTML($("#"+id).val());
 }
 
-function openTag(name) {
-	return "<" + name + ">";
-}
-          
-function openTagWithNs(name, namespace) {
-    return "<" + name + " xmlns=\"""" + targetNamespace + """\">";
-}
-
-function closeTag(name) {
-	return "</" + name + ">";
-}
-
-function getStartAt(previousItems, items) {
-	if (previousItems == null) return 0;
-
-	var startAt = 0;
-
-        for (var i=0; i<Math.min(previousItems.length,items.length); i++) {
-    		  if (!(items[i]==previousItems[i])) 
-    			  return startAt;
-    		  else 
-    			  startAt = i+1;
-    	}
-	return startAt;
-}
-
-function closePreviousItems(previousItems,startAt,s) {
-     if (previousItems!=null) {
-          for (var i=previousItems.length-2;i>=startAt;i--) {
-              s = s + "\n" + spaces(i*2) + closeTag(previousItems[i]);
-          }
-      }
-      return s;
-}
-
 function spaces(n) {
     var s = "";
     for (var i=0;i<n;i++)
@@ -627,11 +592,6 @@ function elemVisible(elem) {
     return elem.is(":visible");    
 }
     
-var repeatCount = 10000;
-    
-// required to hold structure with repeats
-var tree = {};
-
 $(function() {
   $('input').filter('.datepickerclass').datepicker();
   $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","dd/mm/yy");
