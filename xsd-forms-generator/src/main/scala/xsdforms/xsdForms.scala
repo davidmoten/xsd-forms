@@ -213,33 +213,35 @@ package xsdforms {
 
     def getRepeatingEnclosingId(idPrefix: String, number: String, instanceNos: Instances): String =
       idPrefix + "repeating-enclosing-" + number + instanceDelimiter + instanceNos
-      
-      val ClassInvisible = "invisible"
+
+    val ClassInvisible = "invisible"
     val ClassSequence = "sequence"
-      val ClassSequenceLabel = "sequence-label"
-      val ClassSequenceContent = "sequence-content"
-        val ClassFieldset = "fieldset"
-          val ClassChoiceLabel = "choice-label"
-            val ClassDivChoiceItem ="div-choice-item"
-              val ClassItemNumber = "item-number"
-                val ClassItemLabel="item-label"
-                  val ClassItemInput = "item-input"
-                    val ClassChoiceItem = "choice-item"
-                      val ClassNonRepeatingTitle = "non-repeating-title"
-                        val ClassRepeatButton = "repeat-button"
-                          val ClassItemEnclosing = "item-enclosing"
-                            val ClassRepeatingEnclosing = "repeating-enclosing"
-                              val ClassItemTitle = "item-title"
-                                val ClassItemBefore = "item-before"
-                                  
-                                  val ClassItemInputTextarea = "item-input-textarea"
-                                    val ClassItemInputText = "item-input-text"
-                                      val ClassSelect = "select"
-                                        val ClassChoice = "choice"
-                                          val ClassWhite = "white"
-                                            val ClassSmall = "small"
-                                              val ClassItemDescription = "item-description"
-                                                val ClassItemError = "item-error"
+    val ClassSequenceLabel = "sequence-label"
+    val ClassSequenceContent = "sequence-content"
+    val ClassFieldset = "fieldset"
+    val ClassChoiceLabel = "choice-label"
+    val ClassDivChoiceItem = "div-choice-item"
+    val ClassItemNumber = "item-number"
+    val ClassItemTitle = "item-title"
+    val ClassItemLabel = "item-label"
+    val ClassItemInput = "item-input"
+    val ClassItemHelp = "item-help"
+    val ClassItemBefore = "item-before"
+    val ClassItemAfter = "item-after"
+    val ClassItemPath = "item-path"
+    val ClassItemEnclosing = "item-enclosing"
+    val ClassItemError = "item-error"
+    val ClassChoiceItem = "choice-item"
+    val ClassNonRepeatingTitle = "non-repeating-title"
+    val ClassRepeatButton = "repeat-button"
+    val ClassRepeatingEnclosing = "repeating-enclosing"
+    val ClassItemInputTextarea = "item-input-textarea"
+    val ClassItemInputText = "item-input-text"
+    val ClassSelect = "select"
+    val ClassChoice = "choice"
+    val ClassWhite = "white"
+    val ClassSmall = "small"
+    val ClassItemDescription = "item-description"
   }
 
   /**
@@ -269,7 +271,6 @@ package xsdforms {
 
     import scala.collection.mutable.HashMap
     private val elementNumbers = new HashMap[Element, String]()
-    
 
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
@@ -1108,7 +1109,7 @@ $(function() {
     private def addHelp(e: Element) {
       getAnnotation(e, "help") match {
         case Some(x) =>
-          html.div(classes = List("item-help"), content = Some(x)).closeTag
+          html.div(classes = List(ClassItemHelp), content = Some(x)).closeTag
         case None =>
       }
     }
@@ -1116,7 +1117,7 @@ $(function() {
     private def addAfter(e: Element) {
       getAnnotation(e, "after") match {
         case Some(x) =>
-          html.div(classes = List("item-after"), content = Some(x)).closeTag
+          html.div(classes = List(ClassItemAfter), content = Some(x)).closeTag
         case None =>
       }
     }
