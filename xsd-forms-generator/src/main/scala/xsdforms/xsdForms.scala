@@ -458,17 +458,6 @@ package xsdforms {
       nodes.foreach(doNode(_, instances))
     }
 
-    private def numInstances(e: Element): Int =
-      if (isMultiple(e)) NumInstancesForMultiple
-      else 1
-
-    private def repeats(node: Node): Range = repeats(node.element)
-
-    private def repeats(e: Element): Range = 1 to numInstances(e)
-
-    private def numInstances(node: Node): Int =
-      numInstances(node.element)
-
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
         val s = new StringBuilder
@@ -1197,6 +1186,17 @@ package xsdforms {
         patterns.size > 0 &&
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
+    
+    private def numInstances(e: Element): Int =
+      if (isMultiple(e)) NumInstancesForMultiple
+      else 1
+
+    private def repeats(node: Node): Range = repeats(node.element)
+
+    private def repeats(e: Element): Range = 1 to numInstances(e)
+
+    private def numInstances(node: Node): Int =
+      numInstances(node.element)
 
     private def choiceContentId(idPrefix: String, number: String, index: Int, instances: Instances) =
       idPrefix + "choice-content-" + number + instanceDelimiter + instances + choiceIndexDelimiter + index
