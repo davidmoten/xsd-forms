@@ -180,6 +180,7 @@ package xsdforms {
     override def toString = heirarchy.mkString("_")
     def last = heirarchy.last
     def dropLast = Instances(heirarchy.dropRight(1))
+    def size = heirarchy.size
   }
 
   /**
@@ -450,20 +451,23 @@ package xsdforms {
     private def xml(node: Node, value: String) = 
       xmlStart(node) + plus + value + plus + xmlEnd(node)
     
+    private def spaces(instanceNos:Instances) = "spaces(" + instanceNos.size + ") + "
 
     private def addXmlExtractScriptlet(node: NodeSequence, instanceNos: Instances) {
       {
         val s = new StringBuilder
         val number = elementNumber(node)
         s.append("""
- |    var xml = """ + xmlStart(node) + """ + "\n"; 
+ |    var xml = """ + spaces(instanceNos) + xmlStart(node) + """ + "\n"; 
  |    //now add sequence children for each instanceNo""")
-        for (instanceNo <- repeats(node))
+        for (instanceNo <- repeats(node)) {
+          val instNos = instanceNos add instanceNo
           node.children.foreach { n =>
             s.append("""
- |    if (idVisible("""" + getRepeatingEnclosingId(number, instanceNos add instanceNo) + """"))
- |      xml += """ + xmlFunctionName(n, instanceNos add instanceNo) + "() + \"\\n\";");
-        addXmlExtractScriptlet(n,instanceNos add instanceNo)  
+ |    if (idVisible("""" + getRepeatingEnclosingId(number, instNos) + """"))
+ |      xml += """ +  xmlFunctionName(n, instNos) + """() + "\n";""");
+        addXmlExtractScriptlet(n,instNos)  
+        }
         }
         s.append("""
  |    xml+=""" + xmlEnd(node) + """;
@@ -510,8 +514,9 @@ package xsdforms {
 
       s.append("|    var xml=\"\";\n")
       for (instanceNo <- repeats(node)) {
-        s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instanceNos add instanceNo) + "\"))")
-        s.append("\n|      xml+=" + xml(node, valById(getItemId(node, instanceNos add instanceNo)))) + ";"
+        val instNos = instanceNos add instanceNo
+        s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instNos) + "\"))")
+        s.append("\n|      xml+=" + spaces(instNos) + xml(node, valById(getItemId(node, instNos)))) + """ + "\n";"""
       }
       s.append("\n|    return xml;\n")
       addXmlExtractScriptlet(node, s.toString,instanceNos);
