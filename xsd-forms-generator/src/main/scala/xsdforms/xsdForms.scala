@@ -482,19 +482,20 @@ package xsdforms {
  |    var xml = """ + spaces(instanceNos) + xmlStart(node) + """; 
  |    //now optionally add selected child if any""");
       for (instanceNo <- repeats(node)) {
+        val instNos = instanceNos add instanceNo
         s.append(""" 
- |    var checked = $(':input[name=""" + getChoiceItemName(node, instanceNos) + """]:checked').attr("id");
+ |    var checked = $(':input[name=""" + getChoiceItemName(node, instNos) + """]:checked').attr("id"); console.log("checked="+checked);
  """)
 
         node.children.zipWithIndex.foreach {
           case (n, index) =>
             s.append("""
- |    if (checked == """" + getChoiceItemId(node, index + 1, instanceNos) + """") 
- |      xml += """ + xmlFunctionName(n, instanceNos) + "();");
-            addXmlExtractScriptlet(n, instanceNos add instanceNo)
+ |    if (checked == """" + getChoiceItemId(node, index + 1, instNos) + """") 
+ |      xml += """ + xmlFunctionName(n, instNos) + "();");
+            addXmlExtractScriptlet(n, instNos)
         }
         s.append("""
- |    xml+=""" + spaces(instanceNos) + xmlEnd(node) + """;
+ |    xml+=""" + spaces(instNos) + xmlEnd(node) + """;
  |    return xml;""")
         addXmlExtractScriptlet(node, s.toString(), instanceNos);
       }
