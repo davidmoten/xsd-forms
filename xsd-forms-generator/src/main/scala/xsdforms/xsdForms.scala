@@ -20,10 +20,10 @@ package xsdforms {
   }
 
   object XsdUtil {
-    def qn(namespaceUri: String, localPart: String) = new QName(namespaceUri, localPart)
-    def qn(localPart: String): QName = new QName(Xsd, localPart)
-    val Xsd = "http://www.w3.org/2001/XMLSchema"
+	val xs = "http://www.w3.org/2001/XMLSchema"
     val appInfoSchema = "http://moten.david.org/xsd-forms"
+    def qn(namespaceUri: String, localPart: String) = new QName(namespaceUri, localPart)
+    def qn(localPart: String): QName = new QName(xs, localPart)
   }
 
   /**
@@ -1139,11 +1139,8 @@ package xsdforms {
     private def isMultiple(node: Node): Boolean =
       isMultiple(node.element)
 
-    private def isMultiple(e: ElementWrapper): Boolean = {
-      val result = (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
-      println(elementNumber(e) + " maxOccurs=" + e.maxOccurs + " isMultiple=" + result)
-      result
-    }
+    private def isMultiple(e: ElementWrapper): Boolean = 
+      return  (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
     private def repeatingEnclosingIds(e: ElementWrapper, instances: Instances) =
       repeats(e).map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
@@ -1151,7 +1148,6 @@ package xsdforms {
     private def addMaxOccursScriptlet(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       if (isMultiple(e)) {
-        println(number + "is multiple ")
         val repeatButtonId = getRepeatButtonId(number, instances)
         addScriptWithMargin("""
 |$("#""" + repeatButtonId + """").click(function() {
