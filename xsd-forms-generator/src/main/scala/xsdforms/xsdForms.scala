@@ -1336,11 +1336,7 @@ function elemVisible(elem) {
 }
           
 function toXmlDate(s) {
-  //assume input is dd/mm/yy
-  var dd = s.substring(0,2);
-  var mm = s.substring(3,5);
-  var yyyy = s.substring(6,10);
-  return yyyy + "-" + mm + "-" + dd;
+  return s;
 }
           
 function toXmlDateTime(s) {
@@ -1353,7 +1349,7 @@ function toXmlTime(s) {
           
 $(function() {
   $('input').filter('.datepickerclass').datepicker();
-  $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","dd/mm/yy");
+  $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","yy-mm-dd");
   $('input').filter('.datetimepickerclass').datetimepicker();
   $('input').filter('.timepickerclass').timepicker({});
 
