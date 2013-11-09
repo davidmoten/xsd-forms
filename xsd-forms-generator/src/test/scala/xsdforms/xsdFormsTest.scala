@@ -199,7 +199,7 @@ package xsdforms {
       testChoice(driver, 49)
       testRepeat(driver, 52)
       testRepeatWhenMinOccursIsZero(driver, 53)
-      //TODO renable 
+      //TODO reenable 
       //testChoiceRepeat(driver,58)
       testSubmission(driver)
       driver.close
