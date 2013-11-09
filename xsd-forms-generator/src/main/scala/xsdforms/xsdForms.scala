@@ -72,7 +72,7 @@ package xsdforms {
   trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList()
   }
-  
+
   // immutable would be preferrable but should be safe because not changed after tree created
   case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
@@ -87,12 +87,12 @@ package xsdforms {
    *
    * **************************************************************
    */
-  
+
   object ElementWrapper {
-    implicit def unwrap(wrapped:ElementWrapper):Element = wrapped.element
+    implicit def unwrap(wrapped: ElementWrapper): Element = wrapped.element
   }
-  
-  case class ElementWrapper(element:Element, uniqueId:String) 
+
+  case class ElementWrapper(element: Element, uniqueId: String)
 
   class TreeCreatingVisitor extends Visitor {
 
@@ -100,8 +100,8 @@ package xsdforms {
     import java.util.UUID
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
-    
-    private implicit def wrap(e:Element):ElementWrapper = ElementWrapper(e,UUID.randomUUID.toString)
+
+    private implicit def wrap(e: Element): ElementWrapper = ElementWrapper(e, UUID.randomUUID.toString)
 
     override def startSequence(e: Element) {
       val seq = NodeSequence(e, MutableList())
@@ -432,19 +432,19 @@ package xsdforms {
             classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
           .div(classes = List(ClassItemInput))
 
-       simpleType(e, restriction(node), instNos)
-       
+        simpleType(e, restriction(node), instNos)
+
         html
           .closeTag(3)
       }
       addMaxOccursScriptlet(e, instances)
     }
-    
-    private def restriction(node:NodeSimpleType) =
+
+    private def restriction(node: NodeSimpleType) =
       node.typ.simpleDerivationOption3.value match {
-      case x:Restriction => x
-      case _ => Util.unexpected
-    }
+        case x: Restriction => x
+        case _ => Util.unexpected
+      }
 
     private def doNode(node: NodeBaseType, instances: Instances) {
       val e = node.element
@@ -537,10 +537,27 @@ package xsdforms {
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
         s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instNos) + "\"))")
-        s.append("\n|    xml+=" + spaces(instNos) + xml(node, valById(getItemId(node, instNos))) + ";")
+        s.append("\n|    xml+=" + spaces(instNos) + xml(node, extractDateIfValid(node, valById(getItemId(node, instNos)))) + ";")
       }
       s.append("\n|  return xml;\n")
       addXmlExtractScriptlet(node, s.toString, instances);
+    }
+
+    private def extractDateIfValid(node: Node, value: String): String =
+      node match {
+        case n: NodeSimpleType => extractDateIfValid(n, value)
+        case _ => value
+      }
+
+    private def extractDateIfValid(node: NodeSimpleType, value: String): String = {
+      val qn = toQN(restriction(node).base.get)
+     
+      qn match {
+        case QN(xs, "date") => "toXmlDate("+value+")"
+        case QN(xs, "datetime") => "toXmlDateTime("+value+")"  
+        case QN(xs, "time") => "toXmlTime("+value+")"
+        case _ => value
+      }
     }
 
     private def xmlFunctionName(node: Node, instances: Instances) = {
@@ -1314,7 +1331,19 @@ function idVisible(id) {
 function elemVisible(elem) {
     return elem.is(":visible");    
 }
-    
+          
+function toXmlDate(s) {
+  return s;
+}
+          
+function toXmlDateTime(s) {
+  return s;
+}
+          
+function toXmlTime(s) {
+  return s;
+}
+          
 $(function() {
   $('input').filter('.datepickerclass').datepicker();
   $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","dd/mm/yy");
