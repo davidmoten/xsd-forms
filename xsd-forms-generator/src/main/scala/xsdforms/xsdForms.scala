@@ -440,11 +440,7 @@ package xsdforms {
       addMaxOccursScriptlet(e, instances)
     }
 
-    private def restriction(node: NodeSimpleType) =
-      node.typ.simpleDerivationOption3.value match {
-        case x: Restriction => x
-        case _ => Util.unexpected
-      }
+   
 
     private def doNode(node: NodeBaseType, instances: Instances) {
       val e = node.element
@@ -461,7 +457,7 @@ package xsdforms {
           .label(forInputName = getItemName(number),
             classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
           .div(classes = List(ClassItemInput))
-        simpleType(e, new MyRestriction(typ.qName), instNos)
+        simpleType(e, restriction(node), instNos)
         html
           .closeTag(2)
       }
@@ -473,6 +469,7 @@ package xsdforms {
       nodes.foreach(doNode(_, instances))
     }
 
+    
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
         val s = new StringBuilder
@@ -545,20 +542,21 @@ package xsdforms {
 
     private def extractDateIfValid(node: Node, value: String): String =
       node match {
-        case n: NodeSimpleType => extractDateIfValid(n, value)
+        case n: NodeSimpleType => extractDateIfValid(restriction(n), value)
+        case n: NodeBaseType => extractDateIfValid(restriction(n), value)
         case _ => value
       }
 
-    private def extractDateIfValid(node: NodeSimpleType, value: String): String = {
-      val qn = toQN(restriction(node).base.get)
-     
+    private def extractDateIfValid(r:Restriction, value: String): String = {
+      val qn = toQN(r.base.get)
       qn match {
         case QN(xs, "date") => "toXmlDate("+value+")"
         case QN(xs, "datetime") => "toXmlDateTime("+value+")"  
         case QN(xs, "time") => "toXmlTime("+value+")"
         case _ => value
       }
-    }
+    } 
+    
 
     private def xmlFunctionName(node: Node, instances: Instances) = {
       val number = elementNumber(node.element)
@@ -1215,6 +1213,15 @@ package xsdforms {
         patterns.size > 0 &&
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
+    
+     private def restriction(node: NodeSimpleType) =
+      node.typ.simpleDerivationOption3.value match {
+        case x: Restriction => x
+        case _ => Util.unexpected
+      }
+     
+     private def restriction(node: NodeBaseType) =
+      new MyRestriction(node.typ.qName) 
 
     private def numInstances(e: ElementWrapper): Int =
       if (isMultiple(e)) NumInstancesForMultiple
@@ -1329,7 +1336,11 @@ function elemVisible(elem) {
 }
           
 function toXmlDate(s) {
-  return s;
+  //assume input is dd/mm/yy
+  var dd = s.substring(0,2);
+  var mm = s.substring(3,5);
+  var yyyy = s.substring(6,10);
+  return yyyy + "-" + mm + "-" + dd;
 }
           
 function toXmlDateTime(s) {
