@@ -551,15 +551,15 @@ package xsdforms {
     }
 
     private def testChoiceRepeat(driver: WebDriver, itemNo: Int) {
-      //TODO fix and call this method
-      val input = driver.findElement(By.id("c-repeating-enclosing-" + itemNo))
+      val instanceNos = Instances(List(1))
+      val input = driver.findElement(By.id(getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertTrue(input.isDisplayed)
-      val button = driver.findElement(By.id("c-repeat-button-" + itemNo))
+      val button = driver.findElement(By.id(getRepeatButtonId(idPrefix, itemNo.toString, instanceNos)))
       button.click;
 
-      val input1 = driver.findElement(By.id("c-item-" + itemNo + "-1-10004"))
+      //TODO 
+      val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertTrue(input1.isDisplayed)
-      assertEquals("c-item-input-" + itemNo + "-10004", input1.getAttribute("name"))
     }
 
     private def checkDisplayedById(driver: WebDriver, id: String) {
