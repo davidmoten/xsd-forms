@@ -21,8 +21,8 @@ package xsdforms {
 
   object XsdUtil {
     def qn(namespaceUri: String, localPart: String) = new QName(namespaceUri, localPart)
-    def qn(localPart: String): QName = new QName(xs, localPart)
-    val xs = "http://www.w3.org/2001/XMLSchema"
+    def qn(localPart: String): QName = new QName(Xsd, localPart)
+    val Xsd = "http://www.w3.org/2001/XMLSchema"
     val appInfoSchema = "http://moten.david.org/xsd-forms"
   }
 
