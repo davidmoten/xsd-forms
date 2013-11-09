@@ -604,10 +604,13 @@ package xsdforms {
       preSubmit.click
       preSubmit.click
       //TODO why twice to get chrome to work?
-      println("xml=" + xml)
+      
+      println("xml=" + xml.getText)
       assertFalse(errors.isDisplayed());
       assertTrue(xml.getText.trim.contains("xmlns"))
-      fail
+      val expectedXml = io.Source.fromInputStream(getClass.getResourceAsStream("/demo-form-expected.xml")).mkString
+      assertTrue(xml.getText.trim == expectedXml.trim) 
+     // fail
 
       //TODO generate objects from demo schema and attempt unmarshal of xml
       //      val text = xml.getText.replaceAll("xmlns=\".*\"", "")

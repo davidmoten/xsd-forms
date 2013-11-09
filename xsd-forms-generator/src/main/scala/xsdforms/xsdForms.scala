@@ -534,7 +534,6 @@ package xsdforms {
     }
 
     private def addXmlExtractScriptlet(node: Node, functionBody: String, instances: Instances) {
-      //TODO use instances
       val functionName = xmlFunctionName(node, instances)
       addScriptWithMargin(
         """
@@ -561,7 +560,9 @@ package xsdforms {
     private def xml(node: Node, value: String) =
       xmlStart(node) + Plus + value + Plus + xmlEnd(node)
 
-    private def spaces(instances: Instances) = "'\\n' + spaces(" + (instances.size * 2) + ") + "
+    private def spaces(instances: Instances) =
+      if (instances.size == 0) "'\\n' + "
+      else "'\\n' + spaces(" + ((instances.size - 1) * 2) + ") + "
 
     override def toString = text
 
@@ -1186,7 +1187,7 @@ package xsdforms {
         patterns.size > 0 &&
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
-    
+
     private def numInstances(e: Element): Int =
       if (isMultiple(e)) NumInstancesForMultiple
       else 1
@@ -1228,7 +1229,7 @@ package xsdforms {
       idPrefix + "item-enclosing-" + number + instanceDelimiter + instances
     private def getItemErrorId(number: String, instances: Instances) =
       TreeToHtmlConverter.getItemErrorId(idPrefix, number, instances)
-    private def getPathId(number: String, instances: Instances) = 
+    private def getPathId(number: String, instances: Instances) =
       idPrefix + "item-path-" + number + instanceDelimiter + instances
 
     private def nextNumber: String = {
@@ -1240,8 +1241,8 @@ package xsdforms {
 
     private implicit def toQN(qName: QName) =
       QN(qName.getNamespaceURI(), qName.getLocalPart())
-    
-      def text =
+
+    def text =
       header +
         html.toString() + footer
 
