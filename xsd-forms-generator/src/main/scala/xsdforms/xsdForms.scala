@@ -67,15 +67,17 @@ package xsdforms {
   import scala.collection.mutable.MutableList
 
   trait Node {
-    val element: Element
+    val element: ElementWrapper
   }
   trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList()
   }
-  case class NodeSequence(element: Element, override val children: MutableList[Node]) extends NodeGroup
-  case class NodeChoice(element: Element, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
-  case class NodeSimpleType(element: Element, typ: SimpleType) extends Node
-  case class NodeBaseType(element: Element, typ: BaseType) extends Node
+  
+  // immutable would be preferrable but should be safe because not changed after tree created
+  case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends Node
+  case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends Node
 
   /**
    * **************************************************************
@@ -85,12 +87,21 @@ package xsdforms {
    *
    * **************************************************************
    */
+  
+  object ElementWrapper {
+    implicit def unwrap(wrapped:ElementWrapper):Element = wrapped.element
+  }
+  
+  case class ElementWrapper(element:Element, uniqueId:String) 
 
   class TreeCreatingVisitor extends Visitor {
 
     import Util._
+    import java.util.UUID
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
+    
+    private implicit def wrap(e:Element):ElementWrapper = ElementWrapper(e,UUID.randomUUID.toString)
 
     override def startSequence(e: Element) {
       val seq = NodeSequence(e, MutableList())
@@ -270,7 +281,7 @@ package xsdforms {
     private val NumInstancesForMultiple = 3
 
     import scala.collection.mutable.HashMap
-    private val elementNumbers = new HashMap[Element, String]()
+    private val elementNumbers = new HashMap[ElementWrapper, String]()
 
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
@@ -649,7 +660,7 @@ package xsdforms {
         case _ => None
       }
 
-    private def nonRepeatingTitle(e: Element, hasButton: Boolean, instances: Instances) {
+    private def nonRepeatingTitle(e: ElementWrapper, hasButton: Boolean, instances: Instances) {
       //there's only one of these so use instanceNo = 1
       val number = elementNumber(e)
       html.div(
@@ -662,7 +673,7 @@ package xsdforms {
           content = Some(getAnnotation(e, "repeatLabel").getOrElse("+"))).closeTag
     }
 
-    private def repeatingEnclosing(e: Element, instances: Instances) {
+    private def repeatingEnclosing(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       val id = getRepeatingEnclosingId(number, instances)
       html.div(
@@ -674,7 +685,7 @@ package xsdforms {
           """)
     }
 
-    private def nonRepeatingSimpleType(e: Element, instances: Instances) {
+    private def nonRepeatingSimpleType(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       html
         .div(
@@ -699,7 +710,7 @@ package xsdforms {
 
     private def elementNumber(node: Node): String = elementNumber(node.element)
 
-    private def elementNumber(e: Element): String = {
+    private def elementNumber(e: ElementWrapper): String = {
       val n = elementNumbers.get(e);
       if (n.isDefined)
         n.get
@@ -713,7 +724,7 @@ package xsdforms {
     private def getTextType(e: Element) =
       getAnnotation(e, "text")
 
-    private def simpleType(e: Element, r: Restriction, instances: Instances) {
+    private def simpleType(e: ElementWrapper, r: Restriction, instances: Instances) {
       val qn = toQN(r.base.get)
 
       addInput(e, qn, r, instances)
@@ -744,7 +755,7 @@ package xsdforms {
 
     }
 
-    private def addInput(e: Element, qn: QN, r: Restriction, instances: Instances) {
+    private def addInput(e: ElementWrapper, qn: QN, r: Restriction, instances: Instances) {
 
       val number = elementNumber(e)
 
@@ -766,7 +777,7 @@ package xsdforms {
     }
 
     private def addTextField(
-      e: Element, r: Restriction,
+      e: ElementWrapper, r: Restriction,
       extraClasses: String, instances: Instances) {
       val number = elementNumber(e)
       val inputType = getInputType(r)
@@ -798,7 +809,7 @@ package xsdforms {
       }
     }
 
-    private def addWidthScript(e: Element, instances: Instances) {
+    private def addWidthScript(e: ElementWrapper, instances: Instances) {
       val itemId = getItemId(e, instances)
       getAnnotation(e, "width") match {
         case Some(x) =>
@@ -807,7 +818,7 @@ package xsdforms {
       }
     }
 
-    private def addCssScript(e: Element, instances: Instances) {
+    private def addCssScript(e: ElementWrapper, instances: Instances) {
       val itemId = getItemId(e, instances)
       getAnnotation(e, "css") match {
         case Some(x) => {
@@ -828,7 +839,7 @@ package xsdforms {
     private def isEnumeration(r: Restriction) =
       !getEnumeration(r).isEmpty
 
-    private def addEnumeration(e: Element, r: Restriction, instances: Instances) {
+    private def addEnumeration(e: ElementWrapper, r: Restriction, instances: Instances) {
       val number = elementNumber(e)
       val en = getEnumeration(r)
       val isRadio = getAnnotation(e, "selector") match {
@@ -918,7 +929,7 @@ package xsdforms {
       }
     }
 
-    private def addError(e: Element, instances: Instances) {
+    private def addError(e: ElementWrapper, instances: Instances) {
       val itemErrorId = getItemErrorId(elementNumber(e), instances)
       html.div(
         id = Some(itemErrorId),
@@ -928,7 +939,7 @@ package xsdforms {
 
     }
 
-    private def addPath(e: Element, instances: Instances) {
+    private def addPath(e: ElementWrapper, instances: Instances) {
       html.div(
         classes = List("item-path"),
         id = Some(getPathId(elementNumber(e), instances)),
@@ -961,7 +972,7 @@ package xsdforms {
       }
     }
 
-    private def createDeclarationScriptlet(e: Element, qn: QN, instances: Instances) = {
+    private def createDeclarationScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
       val number = elementNumber(e)
       val itemId = getItemId(number, instances)
       """
@@ -1055,7 +1066,7 @@ package xsdforms {
       else ""
     }
 
-    private def createClosingScriptlet(e: Element, qn: QN, instances: Instances) = {
+    private def createClosingScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
       val number = elementNumber(e)
       val onChange = "change("
       val changeMethod = qn match {
@@ -1107,16 +1118,16 @@ package xsdforms {
     private def isMultiple(node: Node): Boolean =
       isMultiple(node.element)
 
-    private def isMultiple(e: Element): Boolean = {
+    private def isMultiple(e: ElementWrapper): Boolean = {
       val result = (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
       println(elementNumber(e) + " maxOccurs=" + e.maxOccurs + " isMultiple=" + result)
       result
     }
 
-    private def repeatingEnclosingIds(e: Element, instances: Instances) =
+    private def repeatingEnclosingIds(e: ElementWrapper, instances: Instances) =
       repeats(e).map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
 
-    private def addMaxOccursScriptlet(e: Element, instances: Instances) {
+    private def addMaxOccursScriptlet(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       if (isMultiple(e)) {
         println(number + "is multiple ")
@@ -1188,13 +1199,13 @@ package xsdforms {
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
 
-    private def numInstances(e: Element): Int =
+    private def numInstances(e: ElementWrapper): Int =
       if (isMultiple(e)) NumInstancesForMultiple
       else 1
 
     private def repeats(node: Node): Range = repeats(node.element)
 
-    private def repeats(e: Element): Range = 1 to numInstances(e)
+    private def repeats(e: ElementWrapper): Range = 1 to numInstances(e)
 
     private def numInstances(node: Node): Int =
       numInstances(node.element)
@@ -1203,7 +1214,7 @@ package xsdforms {
       idPrefix + "choice-content-" + number + instanceDelimiter + instances + choiceIndexDelimiter + index
     private def getRepeatButtonId(number: String, instances: Instances) =
       TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instances)
-    private def getRepeatingEnclosingId(element: Element, instances: Instances): String =
+    private def getRepeatingEnclosingId(element: ElementWrapper, instances: Instances): String =
       TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instances)
     private def getRepeatingEnclosingId(number: String, instances: Instances) =
       TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instances)
@@ -1217,7 +1228,7 @@ package xsdforms {
       TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instances)
     private def getItemId(node: Node, instances: Instances): String =
       getItemId(elementNumber(node.element), instances)
-    private def getItemId(element: Element, instances: Instances): String =
+    private def getItemId(element: ElementWrapper, instances: Instances): String =
       getItemId(elementNumber(element), instances)
     private def getItemId(number: String, instances: Instances): String =
       TreeToHtmlConverter.getItemId(idPrefix, number, instances)
