@@ -432,14 +432,18 @@ package xsdforms {
             classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
           .div(classes = List(ClassItemInput))
 
-        typ.simpleDerivationOption3.value match {
-          case x: Restriction => simpleType(e, x, instNos)
-          case _ => Util.unexpected
-        }
+       simpleType(e, restriction(node), instNos)
+       
         html
           .closeTag(3)
       }
       addMaxOccursScriptlet(e, instances)
+    }
+    
+    private def restriction(node:NodeSimpleType) =
+      node.typ.simpleDerivationOption3.value match {
+      case x:Restriction => x
+      case _ => Util.unexpected
     }
 
     private def doNode(node: NodeBaseType, instances: Instances) {
@@ -529,13 +533,13 @@ package xsdforms {
       val number = elementNumber(node)
       val s = new StringBuffer
 
-      s.append("|    var xml=\"\";\n")
+      s.append("|  var xml=\"\";\n")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
         s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instNos) + "\"))")
         s.append("\n|    xml+=" + spaces(instNos) + xml(node, valById(getItemId(node, instNos))) + ";")
       }
-      s.append("\n|    return xml;\n")
+      s.append("\n|  return xml;\n")
       addXmlExtractScriptlet(node, s.toString, instances);
     }
 
