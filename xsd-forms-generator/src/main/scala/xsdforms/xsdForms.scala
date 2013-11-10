@@ -20,13 +20,17 @@ package xsdforms {
   }
 
   object XsdUtil {
-	val Xsd = "http://www.w3.org/2001/XMLSchema"
+    val Xsd = "http://www.w3.org/2001/XMLSchema"
     val AppInfoSchema = "http://moten.david.org/xsd-forms"
     def qn(namespaceUri: String, localPart: String) = new QName(namespaceUri, localPart)
     def qn(localPart: String): QName = new QName(Xsd, localPart)
-	val XsdDateTime = "dateTime"
-	val XsdDate = "date"
-	val XsdTime = "time"
+    val XsdDateTime = "dateTime"
+    val XsdDate = "date"
+    val XsdTime = "time"
+    val XsdInteger = "integer"
+    val XsdDecimal = "decimal"
+    val XsdBoolean = "boolean"
+    val XsdString = "string"
   }
 
   /**
@@ -196,6 +200,8 @@ package xsdforms {
     def dropLast = Instances(heirarchy.dropRight(1))
     def size = heirarchy.size
   }
+  
+  case class XsdFormsAnnotation(name: String)
 
   /**
    * **************************************************************
@@ -256,6 +262,9 @@ package xsdforms {
     val ClassWhite = "white"
     val ClassSmall = "small"
     val ClassItemDescription = "item-description"
+
+    val AnnotationLabel = "label"
+    val AnnotationChoice = "choice"
   }
 
   /**
@@ -335,7 +344,7 @@ package xsdforms {
       val legend = getAnnotation(e, "legend")
       val usesFieldset = legend.isDefined
 
-      val label = getAnnotation(e, "label").mkString
+      val label = getAnnotation(e, AnnotationLabel).mkString
 
       html
         .div(classes = List(ClassSequence))
@@ -345,10 +354,10 @@ package xsdforms {
         repeatingEnclosing(e, instNos)
         html.div(classes = List(ClassSequenceLabel), content = Some(label))
           .closeTag
-          .div(id = Some(idPrefix + "sequence-" + number + "-instance-" + instanceNo),
+          .div(id = Some(idPrefix + "sequence-" + number + InstanceDelimiter + instanceNo),
             classes = List(ClassSequenceContent))
         if (usesFieldset)
-          html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + "-instance-" + instanceNo))
+          html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
 
         doNodes(node.children, instNos)
 
@@ -380,7 +389,7 @@ package xsdforms {
 
         html.div(
           classes = List(ClassChoiceLabel),
-          content = Some(getAnnotation(choice.group, "label").mkString))
+          content = Some(getAnnotation(choice.group, AnnotationLabel).mkString))
           .closeTag
 
         val forEachParticle = particles.zipWithIndex.foreach _
@@ -443,8 +452,6 @@ package xsdforms {
       addMaxOccursScriptlet(e, instances)
     }
 
-   
-
     private def doNode(node: NodeBaseType, instances: Instances) {
       val e = node.element
       val typ = node.typ
@@ -472,7 +479,6 @@ package xsdforms {
       nodes.foreach(doNode(_, instances))
     }
 
-    
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
         val s = new StringBuilder
@@ -550,16 +556,15 @@ package xsdforms {
         case _ => value
       }
 
-    private def extractDateIfValid(r:Restriction, value: String): String = {
+    private def extractDateIfValid(r: Restriction, value: String): String = {
       val qn = toQN(r.base.get)
       qn match {
-        case QN(xs, XsdDate) => "toXmlDate("+value+")"
-        case QN(xs, XsdDateTime) => "toXmlDateTime("+value+")"  
-        case QN(xs, XsdTime) => "toXmlTime("+value+")"
+        case QN(xs, XsdDate) => "toXmlDate(" + value + ")"
+        case QN(xs, XsdDateTime) => "toXmlDateTime(" + value + ")"
+        case QN(xs, XsdTime) => "toXmlTime(" + value + ")"
         case _ => value
       }
-    } 
-    
+    }
 
     private def xmlFunctionName(node: Node, instances: Instances) = {
       val number = elementNumber(node.element)
@@ -605,7 +610,7 @@ package xsdforms {
     }
 
     private def displayChoiceInline(choice: Choice) =
-      "inline" == getAnnotation(choice.group, "choice").mkString
+      "inline" == getAnnotation(choice.group, AnnotationChoice).mkString
 
     private def addChoiceHideOnStartScriptlet(
       particles: Seq[ParticleOption], number: String, instances: Instances) {
@@ -660,7 +665,7 @@ package xsdforms {
       val labels =
         p match {
           case x: Element => {
-            getAnnotation(x, "choiceLabel") ++ getAnnotation(x, "label") ++ Some(getLabel(x, None))
+            getAnnotation(x, "choiceLabel") ++ getAnnotation(x, AnnotationLabel) ++ Some(getLabel(x, None))
           }
           case _ => unexpected
         }
@@ -887,7 +892,7 @@ package xsdforms {
       r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
         _.value match {
           case y: NoFixedFacet => {
-            val label = getAnnotation(y, "label") match {
+            val label = getAnnotation(y, AnnotationLabel) match {
               case Some(x) => x
               case None => y.valueAttribute
             }
@@ -1140,8 +1145,8 @@ package xsdforms {
     private def isMultiple(node: Node): Boolean =
       isMultiple(node.element)
 
-    private def isMultiple(e: ElementWrapper): Boolean = 
-      return  (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
+    private def isMultiple(e: ElementWrapper): Boolean =
+      return (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
     private def repeatingEnclosingIds(e: ElementWrapper, instances: Instances) =
       repeats(e).map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
@@ -1216,15 +1221,15 @@ package xsdforms {
         patterns.size > 0 &&
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
-    
-     private def restriction(node: NodeSimpleType) =
+
+    private def restriction(node: NodeSimpleType) =
       node.typ.simpleDerivationOption3.value match {
         case x: Restriction => x
         case _ => Util.unexpected
       }
-     
-     private def restriction(node: NodeBaseType) =
-      new MyRestriction(node.typ.qName) 
+
+    private def restriction(node: NodeBaseType) =
+      new MyRestriction(node.typ.qName)
 
     private def numInstances(e: ElementWrapper): Int =
       if (isMultiple(e)) NumInstancesForMultiple
@@ -1448,7 +1453,7 @@ $(function() {
         ++ (topLevelSimpleTypes.map(x => (qn(targetNs, x.name.get), x)))).toMap;
 
     private val baseTypes =
-      Set("decimal", "string", "integer", "date", "dateTime", "time", "boolean")
+      Set(XsdDecimal, XsdString, XsdInteger, XsdDate, XsdDateTime, XsdTime, XsdBoolean)
         .map(qn(_))
 
     private def getType(q: QName): AnyRef = {
