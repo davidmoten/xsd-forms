@@ -267,6 +267,7 @@ package xsdforms {
   }
 
   object Annotation {
+    //TODO document each of the annotations in scaladoc
     val Label = XsdFormsAnnotation("label")
     val Choice = XsdFormsAnnotation("choice")
     val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
