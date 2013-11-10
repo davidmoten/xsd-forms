@@ -21,7 +21,7 @@ package xsdforms {
 
   object XsdUtil {
 	val Xsd = "http://www.w3.org/2001/XMLSchema"
-    val appInfoSchema = "http://moten.david.org/xsd-forms"
+    val AppInfoSchema = "http://moten.david.org/xsd-forms"
     def qn(namespaceUri: String, localPart: String) = new QName(namespaceUri, localPart)
     def qn(localPart: String): QName = new QName(Xsd, localPart)
 	val XsdDateTime = "dateTime"
@@ -207,26 +207,26 @@ package xsdforms {
    */
 
   object TreeToHtmlConverter {
-    val instanceDelimiter = "-instance-"
-    val choiceIndexDelimiter = "-choice-"
+    val InstanceDelimiter = "-instance-"
+    val ChoiceIndexDelimiter = "-choice-"
 
     def getItemId(idPrefix: String, number: String, instances: Instances) =
-      idPrefix + "item-" + number + instanceDelimiter + instances
+      idPrefix + "item-" + number + InstanceDelimiter + instances
 
     def getItemErrorId(idPrefix: String, number: String, instances: Instances) =
-      idPrefix + "item-error-" + number + instanceDelimiter + instances
+      idPrefix + "item-error-" + number + InstanceDelimiter + instances
 
     def getChoiceItemId(idPrefix: String, number: String, index: Int, instances: Instances): String =
-      getItemId(idPrefix, number, instances) + choiceIndexDelimiter + index
+      getItemId(idPrefix, number, instances) + ChoiceIndexDelimiter + index
 
     def getChoiceItemName(idPrefix: String, number: String, instances: Instances) =
-      idPrefix + "item-input-" + number + instanceDelimiter + instances
+      idPrefix + "item-input-" + number + InstanceDelimiter + instances
 
     def getRepeatButtonId(idPrefix: String, number: String, instances: Instances) =
-      idPrefix + "repeat-button-" + number + instanceDelimiter + instances
+      idPrefix + "repeat-button-" + number + InstanceDelimiter + instances
 
     def getRepeatingEnclosingId(idPrefix: String, number: String, instances: Instances): String =
-      idPrefix + "repeating-enclosing-" + number + instanceDelimiter + instances
+      idPrefix + "repeating-enclosing-" + number + InstanceDelimiter + instances
 
     val ClassInvisible = "invisible"
     val ClassSequence = "sequence"
@@ -389,7 +389,7 @@ package xsdforms {
           val particle = x._1
           val index = x._2 + 1
           html.div(
-            id = Some(idPrefix + "div-choice-item-" + number + instanceDelimiter + instanceNo + choiceIndexDelimiter + index),
+            id = Some(idPrefix + "div-choice-item-" + number + InstanceDelimiter + instanceNo + ChoiceIndexDelimiter + index),
             classes = List(ClassDivChoiceItem))
           html.input(
             id = Some(getChoiceItemId(number, index, instNos)),
@@ -1165,7 +1165,7 @@ package xsdforms {
     private def getAnnotation(e: Annotatedable, key: String): Option[String] =
       e.annotation match {
         case Some(x) =>
-          x.attributes.get("@{" + appInfoSchema + "}" + key) match {
+          x.attributes.get("@{" + AppInfoSchema + "}" + key) match {
             case Some(y) => Some(y.value.toString)
             case None => None
           }
@@ -1238,7 +1238,7 @@ package xsdforms {
       numInstances(node.element)
 
     private def choiceContentId(idPrefix: String, number: String, index: Int, instances: Instances) =
-      idPrefix + "choice-content-" + number + instanceDelimiter + instances + choiceIndexDelimiter + index
+      idPrefix + "choice-content-" + number + InstanceDelimiter + instances + ChoiceIndexDelimiter + index
     private def getRepeatButtonId(number: String, instances: Instances) =
       TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instances)
     private def getRepeatingEnclosingId(element: ElementWrapper, instances: Instances): String =
@@ -1264,11 +1264,11 @@ package xsdforms {
     private def getItemName(number: String) =
       idPrefix + "item-input-" + number;
     private def getItemEnclosingId(number: String, instances: Instances) =
-      idPrefix + "item-enclosing-" + number + instanceDelimiter + instances
+      idPrefix + "item-enclosing-" + number + InstanceDelimiter + instances
     private def getItemErrorId(number: String, instances: Instances) =
       TreeToHtmlConverter.getItemErrorId(idPrefix, number, instances)
     private def getPathId(number: String, instances: Instances) =
-      idPrefix + "item-path-" + number + instanceDelimiter + instances
+      idPrefix + "item-path-" + number + InstanceDelimiter + instances
 
     private def nextNumber: String = {
       number += 1
