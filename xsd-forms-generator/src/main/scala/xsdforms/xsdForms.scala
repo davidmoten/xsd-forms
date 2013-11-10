@@ -197,7 +197,6 @@ package xsdforms {
     def add(instance: Int): Instances = Instances(heirarchy :+ instance)
     override def toString = heirarchy.mkString("_")
     def last = heirarchy.last
-    def dropLast = Instances(heirarchy.dropRight(1))
     def size = heirarchy.size
   }
 
@@ -694,12 +693,6 @@ package xsdforms {
       labels.head
     }
 
-    private def getLabel(e: Element, p: ParticleOption): String =
-      p match {
-        case x: Element => getLabel(x, None)
-        case _ => getLabel(e, None)
-      }
-
     private class MyRestriction(qName: QName)
       extends Restriction(None, SimpleRestrictionModelSequence(), None, Some(qName), Map())
 
@@ -903,12 +896,6 @@ package xsdforms {
       enumeration(en, number, isRadio, initializeBlank, instances)
     }
 
-    private def getEnumeration(typ: SimpleType): Seq[(String, NoFixedFacet)] =
-      typ.simpleDerivationOption3.value match {
-        case x: Restriction =>
-          getEnumeration(x)
-        case _ => unexpected
-      }
 
     private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
@@ -1260,9 +1247,6 @@ package xsdforms {
     private def repeats(node: Node): Range = repeats(node.element)
 
     private def repeats(e: ElementWrapper): Range = 1 to numInstances(e)
-
-    private def numInstances(node: Node): Int =
-      numInstances(node.element)
 
     private def choiceContentId(idPrefix: String, number: String, index: Int, instances: Instances) =
       idPrefix + "choice-content-" + number + InstanceDelimiter + instances + ChoiceIndexDelimiter + index
