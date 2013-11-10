@@ -790,7 +790,7 @@ package xsdforms {
 
     private def getExtraClasses(qn: QN) = qn match {
       case QN(xs, "date") => "datepickerclass "
-      case QN(xs, "datetime") => "datetimepickerclass "
+      case QN(xs, "dateTime") => "datetimepickerclass "
       case QN(xs, "time") => "timepickerclass "
       case _ => ""
     }
@@ -816,7 +816,6 @@ package xsdforms {
             case Some("true") => Some(true)
             case _ => None
           }
-          println(elementNumber(e) + ":" + e.default)
           html.input(
             id = Some(itemId),
             name = getItemName(number),
@@ -1351,7 +1350,7 @@ function toXmlTime(s) {
 $(function() {
   $('input').filter('.datepickerclass').datepicker();
   $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","yy-mm-dd");
-  $('input').filter('.datetimepickerclass').datetimepicker();
+  $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd',separator: 'T'});
   $('input').filter('.timepickerclass').timepicker({});
 
   function callMethod(methodName, argument) {
