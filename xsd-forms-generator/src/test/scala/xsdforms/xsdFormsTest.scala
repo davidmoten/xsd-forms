@@ -620,9 +620,10 @@ package xsdforms {
       assertTrue(xml.getText.trim == expectedXml.trim) 
      // fail
 
-      //TODO generate objects from demo schema and attempt unmarshal of xml
-      //      val text = xml.getText.replaceAll("xmlns=\".*\"", "")
-      //val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(text))
+      // attempt unmarshal of xml
+      //TODO why need to remove namespace?
+     val text = xml.getText.replaceAll("xmlns=\".*\"", "")
+     val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(text))
     }
   }
 
