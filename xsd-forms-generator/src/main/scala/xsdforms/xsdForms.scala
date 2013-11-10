@@ -200,7 +200,7 @@ package xsdforms {
     def dropLast = Instances(heirarchy.dropRight(1))
     def size = heirarchy.size
   }
-  
+
   case class XsdFormsAnnotation(name: String)
 
   /**
@@ -263,10 +263,31 @@ package xsdforms {
     val ClassSmall = "small"
     val ClassItemDescription = "item-description"
 
-    val AnnotationLabel = "label"
-    val AnnotationChoice = "choice"
+    
   }
 
+  object Annotation {
+    val Label = XsdFormsAnnotation("label")
+    val Choice = XsdFormsAnnotation("choice")
+    val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
+    val Legend = XsdFormsAnnotation("legend")
+    val RepeatLabel = XsdFormsAnnotation("repeatLabel")
+    val Title = XsdFormsAnnotation("title")
+    val Before = XsdFormsAnnotation("before")
+    val After = XsdFormsAnnotation("after")
+    val Text = XsdFormsAnnotation("text")
+    val Width = XsdFormsAnnotation("width")
+    val Selector = XsdFormsAnnotation("selector")
+    val AddBlank = XsdFormsAnnotation("addBlank")
+    val Css = XsdFormsAnnotation("css")
+    val Validation = XsdFormsAnnotation("validation")
+    val Help = XsdFormsAnnotation("help")
+    val MakeVisible = XsdFormsAnnotation("makeVisible")
+    val NonRepeatingTitle = XsdFormsAnnotation("nonRepeatingTitle")
+    val Description = XsdFormsAnnotation("description")
+    val Visible = XsdFormsAnnotation("visible")
+  }
+  
   /**
    * **************************************************************
    *
@@ -341,10 +362,10 @@ package xsdforms {
     private def doNode(node: NodeSequence, instances: Instances) {
       val e = node.element
       val number = elementNumber(node)
-      val legend = getAnnotation(e, "legend")
+      val legend = getAnnotation(e, Annotation.Legend)
       val usesFieldset = legend.isDefined
 
-      val label = getAnnotation(e, AnnotationLabel).mkString
+      val label = getAnnotation(e, Annotation.Label).mkString
 
       html
         .div(classes = List(ClassSequence))
@@ -389,7 +410,7 @@ package xsdforms {
 
         html.div(
           classes = List(ClassChoiceLabel),
-          content = Some(getAnnotation(choice.group, AnnotationLabel).mkString))
+          content = Some(getAnnotation(choice.group, Annotation.Label).mkString))
           .closeTag
 
         val forEachParticle = particles.zipWithIndex.foreach _
@@ -610,7 +631,7 @@ package xsdforms {
     }
 
     private def displayChoiceInline(choice: Choice) =
-      "inline" == getAnnotation(choice.group, AnnotationChoice).mkString
+      "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
 
     private def addChoiceHideOnStartScriptlet(
       particles: Seq[ParticleOption], number: String, instances: Instances) {
@@ -665,7 +686,7 @@ package xsdforms {
       val labels =
         p match {
           case x: Element => {
-            getAnnotation(x, "choiceLabel") ++ getAnnotation(x, AnnotationLabel) ++ Some(getLabel(x, None))
+            getAnnotation(x, Annotation.ChoiceLabel) ++ getAnnotation(x, Annotation.Label) ++ Some(getLabel(x, None))
           }
           case _ => unexpected
         }
@@ -682,7 +703,7 @@ package xsdforms {
       extends Restriction(None, SimpleRestrictionModelSequence(), None, Some(qName), Map())
 
     private def getVisibility(e: Element) =
-      getAnnotation(e, "visible") match {
+      getAnnotation(e, Annotation.Visible) match {
         case Some("false") => Some(ClassInvisible)
         case _ => None
       }
@@ -692,12 +713,12 @@ package xsdforms {
       val number = elementNumber(e)
       html.div(
         classes = List(ClassNonRepeatingTitle),
-        content = getAnnotation(e, "nonRepeatingTitle")).closeTag
+        content = getAnnotation(e, Annotation.NonRepeatingTitle)).closeTag
       if (hasButton)
         html.div(
           id = Some(getRepeatButtonId(number, instances)),
           classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
-          content = Some(getAnnotation(e, "repeatLabel").getOrElse("+"))).closeTag
+          content = Some(getAnnotation(e, Annotation.RepeatLabel).getOrElse("+"))).closeTag
     }
 
     private def repeatingEnclosing(e: ElementWrapper, instances: Instances) {
@@ -722,14 +743,14 @@ package xsdforms {
     }
 
     private def itemTitle(e: Element) {
-      getAnnotation(e, "title") match {
+      getAnnotation(e, Annotation.Title) match {
         case Some(x) => html.div(classes = List(ClassItemTitle), content = Some(x)).closeTag
         case _ =>
       }
     }
 
     private def itemBefore(e: Element) {
-      getAnnotation(e, "before") match {
+      getAnnotation(e, Annotation.Before) match {
         case Some(x) => html.div(classes = List(ClassItemBefore), content = Some(x)).closeTag
         case _ =>
       }
@@ -749,7 +770,7 @@ package xsdforms {
     }
 
     private def getTextType(e: Element) =
-      getAnnotation(e, "text")
+      getAnnotation(e, Annotation.Text)
 
     private def simpleType(e: ElementWrapper, r: Restriction, instances: Instances) {
       val qn = toQN(r.base.get)
@@ -838,7 +859,7 @@ package xsdforms {
 
     private def addWidthScript(e: ElementWrapper, instances: Instances) {
       val itemId = getItemId(e, instances)
-      getAnnotation(e, "width") match {
+      getAnnotation(e, Annotation.Width) match {
         case Some(x) =>
           addScriptWithMargin("|  $('#" + itemId + "').width('" + x + "');")
         case None =>
@@ -847,7 +868,7 @@ package xsdforms {
 
     private def addCssScript(e: ElementWrapper, instances: Instances) {
       val itemId = getItemId(e, instances)
-      getAnnotation(e, "css") match {
+      getAnnotation(e, Annotation.Css) match {
         case Some(x) => {
           val items = x.split(';')
             .foreach(
@@ -869,12 +890,12 @@ package xsdforms {
     private def addEnumeration(e: ElementWrapper, r: Restriction, instances: Instances) {
       val number = elementNumber(e)
       val en = getEnumeration(r)
-      val isRadio = getAnnotation(e, "selector") match {
+      val isRadio = getAnnotation(e, Annotation.Selector) match {
         case Some("radio") => true
         case _ => false
       }
 
-      val initializeBlank = getAnnotation(e, "addBlank") match {
+      val initializeBlank = getAnnotation(e, Annotation.AddBlank) match {
         case Some("true") => true
         case _ => false
       }
@@ -892,7 +913,7 @@ package xsdforms {
       r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
         _.value match {
           case y: NoFixedFacet => {
-            val label = getAnnotation(y, AnnotationLabel) match {
+            val label = getAnnotation(y, Annotation.Label) match {
               case Some(x) => x
               case None => y.valueAttribute
             }
@@ -924,7 +945,7 @@ package xsdforms {
           html.option(content = Some("Select one..."), value = "").closeTag
         en.foreach { x =>
           html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
-          getAnnotation(x._2, "makeVisible") match {
+          getAnnotation(x._2, Annotation.MakeVisible) match {
             case Some(y: String) => {
               val refersTo = number.toInt + y.toInt
               addScriptWithMargin("""
@@ -946,7 +967,7 @@ package xsdforms {
     }
 
     private def addDescription(e: Element) {
-      getAnnotation(e, "description") match {
+      getAnnotation(e, Annotation.Description) match {
         case Some(x) =>
           html.div(
             classes = List(ClassItemDescription),
@@ -961,7 +982,7 @@ package xsdforms {
       html.div(
         id = Some(itemErrorId),
         classes = List(ClassItemError),
-        content = Some(getAnnotation(e, "validation").getOrElse("Invalid")))
+        content = Some(getAnnotation(e, Annotation.Validation).getOrElse("Invalid")))
         .closeTag
 
     }
@@ -976,7 +997,7 @@ package xsdforms {
     }
 
     private def addHelp(e: Element) {
-      getAnnotation(e, "help") match {
+      getAnnotation(e, Annotation.Help) match {
         case Some(x) =>
           html.div(classes = List(ClassItemHelp), content = Some(x)).closeTag
         case None =>
@@ -984,7 +1005,7 @@ package xsdforms {
     }
 
     private def addAfter(e: Element) {
-      getAnnotation(e, "after") match {
+      getAnnotation(e, Annotation.After) match {
         case Some(x) =>
           html.div(classes = List(ClassItemAfter), content = Some(x)).closeTag
         case None =>
@@ -993,8 +1014,8 @@ package xsdforms {
 
     private def getBasePattern(qn: QN) = {
       qn match {
-        case QN(xs, "decimal") => Some("\\d+(\\.\\d*)?")
-        case QN(xs, "integer") => Some("\\d+")
+        case QN(xs, XsdDecimal) => Some("\\d+(\\.\\d*)?")
+        case QN(xs, XsdInteger) => Some("\\d+")
         case _ => None
       }
     }
@@ -1134,7 +1155,7 @@ package xsdforms {
     private def getInputType(r: Restriction) = {
       val qn = toQN(r.base.get)
       qn match {
-        case QN(xs, "boolean") => "checkbox"
+        case QN(xs, XsdBoolean) => "checkbox"
         case _ => "text"
       }
     }
@@ -1167,10 +1188,10 @@ package xsdforms {
       }
     }
 
-    private def getAnnotation(e: Annotatedable, key: String): Option[String] =
+    private def getAnnotation(e: Annotatedable, key: XsdFormsAnnotation): Option[String] =
       e.annotation match {
         case Some(x) =>
-          x.attributes.get("@{" + AppInfoSchema + "}" + key) match {
+          x.attributes.get("@{" + AppInfoSchema + "}" + key.name) match {
             case Some(y) => Some(y.value.toString)
             case None => None
           }
@@ -1180,7 +1201,7 @@ package xsdforms {
     private def getLabel(e: Element, typ: Option[SimpleType]) =
       {
         val name = getLabelFromName(e)
-        val label = getAnnotation(e, "label") match {
+        val label = getAnnotation(e, Annotation.Label) match {
           case Some(x) => x
           case _ => name
         }
