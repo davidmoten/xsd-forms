@@ -816,6 +816,7 @@ package xsdforms {
             case Some("true") => Some(true)
             case _ => None
           }
+          println(elementNumber(e) + ":" + e.default)
           html.input(
             id = Some(itemId),
             name = getItemName(number),

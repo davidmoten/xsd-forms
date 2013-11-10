@@ -8,7 +8,7 @@
   <integer-element>1</integer-element>
   <integer-element-with-default>123</integer-element-with-default>
   <date-element></date-element>
-  <date-element-with-default2>2013-11-10</date-element-with-default2>
+  <date-element-with-default2>1973-06-12</date-element-with-default2>
   <time-element></time-element>
   <time-element-with-default>21:55:00</time-element-with-default>
   <datetime-element></datetime-element>
