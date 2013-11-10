@@ -1381,8 +1381,8 @@ $(function() {
   $('input').filter('.datepickerclass').datepicker();
   //now a workaround because datepicker does not use the initial value with the required format but expects mm/dd/yyyy
   $('input').filter('.datepickerclass').each(function() {
-    var val = $(this).attr('value');
     var elem = $(this);
+    var val = elem.attr('value');
     elem.datepicker( "option", "dateFormat","yy-mm-dd");
     if (typeof(val) != 'undefined') {
       console.log("val="+val);
