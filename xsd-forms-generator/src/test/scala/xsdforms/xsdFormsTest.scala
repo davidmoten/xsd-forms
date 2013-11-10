@@ -177,7 +177,7 @@ package xsdforms {
       println("testing web driver " + driver.getClass().getSimpleName())
       driver.get(uri)
       //TODO enable this
-//      testDateDefaultSet(driver, 11) 
+      //      testDateDefaultSet(driver, 11) 
       testMakeVisible(driver, 24)
       testPatternValidation(driver, 29)
       testMultiplePatternValidation(driver, 31)
@@ -218,12 +218,12 @@ package xsdforms {
     private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List(1, 1))) =
       driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos)))
 
-    private def testDateDefaultSet(driver:WebDriver, itemNo:Int) {
-    
-      val input = getInput(driver,itemNo)
-      assertEquals("1973-06-12",input.getText)
+    private def testDateDefaultSet(driver: WebDriver, itemNo: Int) {
+
+      val input = getInput(driver, itemNo)
+      assertEquals("1973-06-12", input.getText)
     }
-      
+
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
       val input = getInput(driver, itemNo)
       val next = getInput(driver, itemNo + 1)
@@ -612,18 +612,18 @@ package xsdforms {
       preSubmit.click
       preSubmit.click
       //TODO why twice to get chrome to work?
-      
+
       println("xml=" + xml.getText)
       assertFalse(errors.isDisplayed());
       assertTrue(xml.getText.trim.contains("xmlns"))
       val expectedXml = io.Source.fromInputStream(getClass.getResourceAsStream("/demo-form-expected.xml")).mkString
-      assertTrue(xml.getText.trim == expectedXml.trim) 
-     // fail
+      assertTrue(xml.getText.trim == expectedXml.trim)
+      // fail
 
       // attempt unmarshal of xml
       //TODO why need to remove namespace?
-     val text = xml.getText.replaceAll("xmlns=\".*\"", "")
-     val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(text))
+      val text = xml.getText.replaceAll("xmlns=\".*\"", "")
+      val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(text))
     }
   }
 

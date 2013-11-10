@@ -1,8 +1,8 @@
 <xs:schema targetNamespace="http://org.moten.david/xsd-forms/demo"
 	xmlns="http://org.moten.david/xsd-forms/demo" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:i="http://moten.david.org/xsd-forms" xs:elementFormDefault="unqualified">
+	
 	<xs:annotation i:numberItems="true" />
-
 
 	<xs:element name="main" type="main" />
 
