@@ -1379,7 +1379,16 @@ function toXmlTime(s) {
           
 $(function() {
   $('input').filter('.datepickerclass').datepicker();
-  $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","yy-mm-dd");
+  //now a workaround because datepicker does not use the initial value with the required format but expects mm/dd/yyyy
+  $('input').filter('.datepickerclass').each(function() {
+    var val = $(this).attr('value');
+    var elem = $(this);
+    elem.datepicker( "option", "dateFormat","yy-mm-dd");
+    if (typeof(val) != 'undefined') {
+      console.log("val="+val);
+      elem.datepicker('setDate',val);
+    }
+  });
   $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm',separator: 'T'});
   $('input').filter('.timepickerclass').timepicker({});
 
