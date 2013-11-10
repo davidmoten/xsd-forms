@@ -177,7 +177,7 @@ package xsdforms {
       println("testing web driver " + driver.getClass().getSimpleName())
       driver.get(uri)
       //TODO enable this
-      testDateDefaultSet(driver, 10)
+//      testDateDefaultSet(driver, 10)
       testMakeVisible(driver, 24)
       testPatternValidation(driver, 29)
       testMultiplePatternValidation(driver, 31)

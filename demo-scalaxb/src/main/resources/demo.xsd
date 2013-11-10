@@ -37,12 +37,12 @@
 				default="1973-06-12" />
 			<xs:element name="time-element" type="xs:time" />
 			<xs:element name="time-element-with-default" type="xs:time"
-				default="21:55:00" />
+				default="21:55" />
 			<xs:element name="datetime-element" type="xs:dateTime">
 				<xs:annotation i:label="datetime element TODO" />
 			</xs:element>
 			<xs:element name="datetime-element-with-default" type="xs:dateTime"
-				default="2002-05-30T09:30:10.5">
+				default="2002-05-30T09:30">
 				<xs:annotation i:label="Datetime element with default TODO" />
 			</xs:element>
 			<xs:element name="boolean-element" type="xs:boolean">

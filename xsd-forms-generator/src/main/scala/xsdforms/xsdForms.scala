@@ -1350,7 +1350,7 @@ function toXmlTime(s) {
 $(function() {
   $('input').filter('.datepickerclass').datepicker();
   $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","yy-mm-dd");
-  $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd',separator: 'T'});
+  $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm',separator: 'T'});
   $('input').filter('.timepickerclass').timepicker({});
 
   function callMethod(methodName, argument) {
