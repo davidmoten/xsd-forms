@@ -20,10 +20,13 @@ package xsdforms {
   }
 
   object XsdUtil {
-	val xs = "http://www.w3.org/2001/XMLSchema"
+	val Xsd = "http://www.w3.org/2001/XMLSchema"
     val appInfoSchema = "http://moten.david.org/xsd-forms"
     def qn(namespaceUri: String, localPart: String) = new QName(namespaceUri, localPart)
-    def qn(localPart: String): QName = new QName(xs, localPart)
+    def qn(localPart: String): QName = new QName(Xsd, localPart)
+	val XsdDateTime = "dateTime"
+	val XsdDate = "date"
+	val XsdTime = "time"
   }
 
   /**
@@ -550,9 +553,9 @@ package xsdforms {
     private def extractDateIfValid(r:Restriction, value: String): String = {
       val qn = toQN(r.base.get)
       qn match {
-        case QN(xs, "date") => "toXmlDate("+value+")"
-        case QN(xs, "datetime") => "toXmlDateTime("+value+")"  
-        case QN(xs, "time") => "toXmlTime("+value+")"
+        case QN(xs, XsdDate) => "toXmlDate("+value+")"
+        case QN(xs, XsdDateTime) => "toXmlDateTime("+value+")"  
+        case QN(xs, XsdTime) => "toXmlTime("+value+")"
         case _ => value
       }
     } 
@@ -789,9 +792,9 @@ package xsdforms {
     }
 
     private def getExtraClasses(qn: QN) = qn match {
-      case QN(xs, "date") => "datepickerclass "
-      case QN(xs, "dateTime") => "datetimepickerclass "
-      case QN(xs, "time") => "timepickerclass "
+      case QN(xs, XsdDate) => "datepickerclass "
+      case QN(xs, XsdDateTime) => "datetimepickerclass "
+      case QN(xs, XsdTime) => "timepickerclass "
       case _ => ""
     }
 
@@ -1089,9 +1092,9 @@ package xsdforms {
       val number = elementNumber(e)
       val onChange = "change("
       val changeMethod = qn match {
-        case QN(xs, "date") => onChange
-        case QN(xs, "datetime") => onChange
-        case QN(xs, "time") => onChange
+        case QN(xs, XsdDate) => onChange
+        case QN(xs, XsdDateTime) => onChange
+        case QN(xs, XsdTime) => onChange
         case _ => onChange
       };
       """

@@ -144,6 +144,9 @@ Structure|Sequence|&#10004;|
      |Choice|&#10004;| 
      |All| | 
 
+##Schema annotations
+
+
 ## Current work
 A major redesign is occurring now. The plan is this:
 
@@ -153,3 +156,5 @@ A major redesign is occurring now. The plan is this:
   * the initial view will be with of the form html with instance=2
   * store a global variable in js to record instance counter
   * whenever a node is added increment the instance counter and use it in the newly created node and its descendants
+
+
