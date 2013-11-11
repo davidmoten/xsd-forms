@@ -621,7 +621,7 @@ package xsdforms {
       assertFalse(errors.isDisplayed());
       assertTrue(xml.getText.trim.contains("xmlns"))
       val expectedXml = io.Source.fromInputStream(getClass.getResourceAsStream("/demo-form-expected.xml")).mkString
-      assertTrue(xml.getText.trim == expectedXml.trim)
+      assertEquals(expectedXml.trim,xml.getText.trim )
       // fail
 
       // attempt unmarshal of xml

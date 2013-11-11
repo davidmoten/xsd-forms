@@ -9,7 +9,7 @@
   <integer-element-with-default>123</integer-element-with-default>
   <date-element>2013-12-25</date-element>
   <date-element-with-default2>1973-06-12</date-element-with-default2>
-  <time-element>22:45</time-element>
+  <time-element>22:45:00</time-element>
   <time-element-with-default>21:55</time-element-with-default>
   <datetime-element>2013-12-25T04:45</datetime-element>
   <datetime-element-with-default>2002-05-30T09:30</datetime-element-with-default>
