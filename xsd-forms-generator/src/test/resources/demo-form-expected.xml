@@ -71,7 +71,7 @@
     <nested>
       <A></A>
       <B></B>
-      <C>on</C>
+      <C>true</C>
       <option>option-1</option>
     </nested>
   </named-complex-type>
@@ -84,13 +84,13 @@
   <named-complex-type-with-repeat>
     <A></A>
     <B></B>
-    <C>on</C>
+    <C>true</C>
     <option>option-1</option>
   </named-complex-type-with-repeat>
   <fieldset-example>
     <A></A>
     <B></B>
-    <C>on</C>
+    <C>true</C>
     <option>option-1</option>
   </fieldset-example>
 </main>
