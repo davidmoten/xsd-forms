@@ -766,11 +766,11 @@ package xsdforms {
     private def getTextType(e: Element) =
       getAnnotation(e, Annotation.Text)
 
-    private def simpleType(node:NodeBasic, instances: Instances) {
+    private def simpleType(node: NodeBasic, instances: Instances) {
       val e = node.element
-      
+
       val r = restriction(node)
-      
+
       val qn = toQN(r.base.get)
 
       addInput(e, qn, r, instances)
@@ -787,8 +787,8 @@ package xsdforms {
 
       val statements = List(
         createDeclarationScriptlet(e, qn, instances),
-        createMandatoryTestScriptlet(e, r),
-        createPatternsTestScriptlet(getPatterns(r)),
+        createMandatoryTestScriptlet(node),
+        createPatternsTestScriptlet(getPatterns(node)),
         createBasePatternTestScriptlet(qn),
         createFacetTestScriptlet(r),
         createLengthTestScriptlet(r),
@@ -1022,8 +1022,8 @@ package xsdforms {
 |  var pathDiv = $("#""" + getPathId(number, instances) + """");"""
     }
 
-    private def createMandatoryTestScriptlet(e: Element, r: Restriction) = {
-      if (isMandatory(e, r))
+    private def createMandatoryTestScriptlet(node:NodeBasic) = {
+      if (isMandatory(node.element,restriction(node)))
         """
 |  // mandatory test
 |  if ((v.val() == null) || (v.val().length==0))
@@ -1135,15 +1135,30 @@ package xsdforms {
 
     private def addScriptWithMargin(s: String) = addScript(stripMargin(s))
 
-    private def getPatterns(r: Restriction) =
-      {
-        val explicitPatterns = r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
+    private def getPatterns(r:Restriction):Seq[String] =
+      r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
           f match {
             case DataRecord(xs, Some("pattern"), x: Pattern) => Some(x.valueAttribute)
             case _ => None
           }
         })
-        explicitPatterns
+    
+    private def getPatterns(node: NodeBasic):Seq[String] =
+      {
+        val r = restriction(node)
+       
+        val explicitPatterns = getPatterns(r)
+        
+        val qn = toQN(r.base.get)
+        val implicitPatterns = 
+          qn match {
+          case QN(xs,XsdDate) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
+          case QN(xs,XsdTime) => Some("\\d\\d:\\d\\d")
+          case QN(xs,XsdDateTime) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
+          case _ => None
+        }
+        
+        explicitPatterns  ++ implicitPatterns
       }
 
     private def getInputType(r: Restriction) = {
@@ -1229,7 +1244,7 @@ package xsdforms {
             + s.substring(1, s.length))
         .mkString(" ")
 
-    private def isMandatory(e: Element, r: Restriction): Boolean = {
+    private def isMandatory(e:Element,r:Restriction): Boolean = {
       val patterns = getPatterns(r)
       getInputType(r) == "text" &&
         e.minOccurs.intValue() == 1 &&
