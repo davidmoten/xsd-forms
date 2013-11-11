@@ -1106,7 +1106,8 @@ package xsdforms {
     private def createEnumerationTestScriptlet(node: NodeBasic) = {
       if (isEnumeration(restriction(node))) {
         "\n|  //enumeration test" +
-          "\n|  if ((typeof(v.val()) != 'undefined') && (v.val().length ==0)) ok = false;"
+        "\n|  console.log('enum=' + v.val());" +
+          "\n|  if ($.trim(v.val()).length ==0) ok = false;"
       } else
         ""
     }
