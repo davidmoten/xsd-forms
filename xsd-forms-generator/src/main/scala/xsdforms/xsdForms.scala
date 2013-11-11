@@ -1022,8 +1022,8 @@ package xsdforms {
 |  var pathDiv = $("#""" + getPathId(number, instances) + """");"""
     }
 
-    private def createMandatoryTestScriptlet(node:NodeBasic) = {
-      if (isMandatory(node.element,restriction(node)))
+    private def createMandatoryTestScriptlet(node: NodeBasic) = {
+      if (isMandatory(node.element, restriction(node)))
         """
 |  // mandatory test
 |  if ((v.val() == null) || (v.val().length==0))
@@ -1135,31 +1135,33 @@ package xsdforms {
 
     private def addScriptWithMargin(s: String) = addScript(stripMargin(s))
 
-    private def getPatterns(r:Restriction):Seq[String] =
+    private def getPatterns(r: Restriction): Seq[String] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
-          f match {
-            case DataRecord(xs, Some("pattern"), x: Pattern) => Some(x.valueAttribute)
-            case _ => None
-          }
-        })
-    
-    private def getPatterns(node: NodeBasic):Seq[String] =
-      {
-        val r = restriction(node)
-       
-        val explicitPatterns = getPatterns(r)
-        
-        val qn = toQN(r.base.get)
-        val implicitPatterns = 
-          qn match {
-          case QN(xs,XsdDate) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
-          //TODO why spaces on end of time?
-          case QN(xs,XsdTime) => Some("\\d\\d:\\d\\d *")
-          case QN(xs,XsdDateTime) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
+        f match {
+          case DataRecord(xs, Some("pattern"), x: Pattern) => Some(x.valueAttribute)
           case _ => None
         }
+      })
+
+    private def getPatterns(node: NodeBasic): Seq[String] =
+      {
+        val r = restriction(node)
+
+        val explicitPatterns = getPatterns(r)
+
+        val qn = toQN(r.base.get)
         
-        explicitPatterns  ++ implicitPatterns
+        //calculate implicit patterns for dates, times, and datetimes
+        val implicitPatterns =
+          qn match {
+            case QN(xs, XsdDate) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
+            //TODO why spaces on end of time?
+            case QN(xs, XsdTime) => Some("\\d\\d:\\d\\d *")
+            case QN(xs, XsdDateTime) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
+            case _ => None
+          }
+
+        explicitPatterns ++ implicitPatterns
       }
 
     private def getInputType(r: Restriction) = {
@@ -1245,7 +1247,7 @@ package xsdforms {
             + s.substring(1, s.length))
         .mkString(" ")
 
-    private def isMandatory(e:Element,r:Restriction): Boolean = {
+    private def isMandatory(e: Element, r: Restriction): Boolean = {
       val patterns = getPatterns(r)
       getInputType(r) == "text" &&
         e.minOccurs.intValue() == 1 &&

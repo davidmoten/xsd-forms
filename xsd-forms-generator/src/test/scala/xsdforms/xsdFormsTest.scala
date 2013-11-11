@@ -580,8 +580,8 @@ package xsdforms {
       assertFalse(id + " is visible and should not be", item.isDisplayed)
     }
 
-    private def setInput(driver: WebDriver, itemNo: Int, text: String) {
-      val in = getInput(driver, itemNo)
+    private def setInput(driver: WebDriver, itemNo: Int, text: String,instances:Instances=Instances(List(1,1))) {
+      val in = getInput(driver, itemNo,instances)
       in.clear
       in.sendKeys(text)
     }
@@ -597,6 +597,9 @@ package xsdforms {
       //fix errors
       setInput(driver, 6, "1")
       setInput(driver, 8, "1")
+      setInput(driver, 10, "2013-12-25")
+      setInput(driver, 12, "22:45")
+      setInput(driver, 14, "2013-12-25T04:45")
       setInput(driver, 27, "a123")
       setInput(driver, 29, "a123")
       setInput(driver, 30, "a123")
@@ -609,6 +612,7 @@ package xsdforms {
       setInput(driver, 38, "1234")
       setInput(driver, 39, "1234")
       setInput(driver, 40, "1234")
+      setInput(driver, 51, "1901-11-30",Instances(List(1,1,1)))
       preSubmit.click
       preSubmit.click
       //TODO why twice to get chrome to work?

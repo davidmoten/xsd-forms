@@ -7,11 +7,11 @@
   <decimal-element-with-default>10.0435</decimal-element-with-default>
   <integer-element>1</integer-element>
   <integer-element-with-default>123</integer-element-with-default>
-  <date-element></date-element>
+  <date-element>2013-12-25</date-element>
   <date-element-with-default2>1973-06-12</date-element-with-default2>
-  <time-element></time-element>
+  <time-element>22:45 </time-element>
   <time-element-with-default>21:55</time-element-with-default>
-  <datetime-element></datetime-element>
+  <datetime-element>2013-12-25T04:45</datetime-element>
   <datetime-element-with-default>2002-05-30T09:30</datetime-element-with-default>
   <boolean-element>on</boolean-element>
   <boolean-element-with-default>true</boolean-element-with-default>
@@ -47,7 +47,7 @@
   <integer-max-exclusive-validation>9</integer-max-exclusive-validation>
   <decimal-max-exclusive-validation>9.9999</decimal-max-exclusive-validation>
   <anonymous-choice-displayed-after>
-    <choice-2></choice-2>
+    <choice-2>1901-11-30</choice-2>
   </anonymous-choice-displayed-after>
   <max-occurs-example-1>456</max-occurs-example-1>
   <max-occurs-example-1>123</max-occurs-example-1>
