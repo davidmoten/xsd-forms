@@ -585,6 +585,10 @@ package xsdforms {
       in.clear
       in.sendKeys(text)
     }
+    
+    private def checkErrorDisplayed(driver: WebDriver, itemNo:Int) {
+      assertTrue(getError(driver, itemNo).isDisplayed())
+    }
 
     private def testSubmission(driver: WebDriver) {
       val preSubmit = driver.findElement(By.id("pre-submit"))
@@ -592,6 +596,10 @@ package xsdforms {
       assertFalse(errors.isDisplayed());
       preSubmit.click
       assertTrue(errors.isDisplayed());
+      checkErrorDisplayed(driver, 10)
+      checkErrorDisplayed(driver, 12)
+      checkErrorDisplayed(driver, 14)
+      checkErrorDisplayed(driver, 19)
       val xml = driver.findElement(By.id("submit-comments"))
       assertEquals("", xml.getText.trim)
       //fix errors
@@ -600,6 +608,7 @@ package xsdforms {
       setInput(driver, 10, "2013-12-25")
       setInput(driver, 12, "22:45")
       setInput(driver, 14, "2013-12-25T04:45")
+      setInput(driver, 19,"option-2")
       setInput(driver, 27, "a123")
       setInput(driver, 29, "a123")
       setInput(driver, 30, "a123")

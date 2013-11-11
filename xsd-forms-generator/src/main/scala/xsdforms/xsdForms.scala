@@ -789,6 +789,7 @@ package xsdforms {
         createDeclarationScriptlet(e, qn, instances),
         createMandatoryTestScriptlet(node),
         createPatternsTestScriptlet(getPatterns(node)),
+        createEnumerationTestScriptlet(node),
         createBasePatternTestScriptlet(qn),
         createFacetTestScriptlet(r),
         createLengthTestScriptlet(r),
@@ -1087,6 +1088,14 @@ package xsdforms {
 |    ok = false;"""
       else ""
 
+    private def createEnumerationTestScriptlet(node:NodeBasic) = {
+        if (isEnumeration(restriction(node))) {
+          "\n|  //enumeration test" +
+          "\n|  if (v.val().length ==0) ok = false;"
+        } else 
+        ""
+      }    
+        
     private def createPatternScriptlet(x: (String, Int)) =
       """|
 |  // pattern test

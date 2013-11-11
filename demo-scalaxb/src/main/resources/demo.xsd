@@ -1,6 +1,6 @@
 <xs:schema targetNamespace="http://org.moten.david/xsd-forms/demo"
 	xmlns="http://org.moten.david/xsd-forms/demo" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:i="http://moten.david.org/xsd-forms" xs:elementFormDefault="unqualified">
+	xmlns:i="http://moten.david.org/xsd-forms"  elementFormDefault="qualified">
 	
 	<xs:annotation i:numberItems="true" />
 
@@ -37,12 +37,12 @@
 				default="1973-06-12" />
 			<xs:element name="time-element" type="xs:time" />
 			<xs:element name="time-element-with-default" type="xs:time"
-				default="21:55" />
+				default="21:55:00" />
 			<xs:element name="datetime-element" type="xs:dateTime">
 				<xs:annotation i:label="datetime element TODO" />
 			</xs:element>
 			<xs:element name="datetime-element-with-default" type="xs:dateTime"
-				default="2002-05-30T09:30">
+				default="2002-05-30T09:30:00">
 				<xs:annotation i:label="Datetime element with default TODO" />
 			</xs:element>
 			<xs:element name="boolean-element" type="xs:boolean">
@@ -120,7 +120,7 @@
 					i:validation="Invalid format, must have a minimum of 3 digits." />
 				<xs:simpleType>
 					<xs:restriction base="xs:integer">
-						<xs:minLength value="3" />
+						<xs:minInclusive value="100" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -129,7 +129,7 @@
 					i:validation="Invalid format, must have a minimum of 3 characters." />
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
-						<xs:minLength value="3" />
+						<xs:fractionDigits value="2" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -149,7 +149,7 @@
 					i:validation="Invalid format, must have a maximum of 4 digits." />
 				<xs:simpleType>
 					<xs:restriction base="xs:integer">
-						<xs:maxLength value="4" />
+						<xs:maxInclusive value="9999" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -158,7 +158,7 @@
 					i:validation="Invalid format, must have a maximum of 4 characters." />
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
-						<xs:maxLength value="4" />
+						<xs:fractionDigits value="2" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -180,7 +180,8 @@
 					i:validation="Invalid format, must have exactly 4 digits." />
 				<xs:simpleType>
 					<xs:restriction base="xs:integer">
-						<xs:length value="4" />
+						<xs:minInclusive value="1000" />
+						<xs:maxInclusive value="9999"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -189,7 +190,8 @@
 					i:validation="Invalid format, must be a decimal value with exactly 4 characters." />
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
-						<xs:length value="4" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="9999"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
