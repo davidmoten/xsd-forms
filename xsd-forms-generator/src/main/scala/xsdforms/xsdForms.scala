@@ -1153,7 +1153,8 @@ package xsdforms {
         val implicitPatterns = 
           qn match {
           case QN(xs,XsdDate) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
-          case QN(xs,XsdTime) => Some("\\d\\d:\\d\\d")
+          //TODO why spaces on end of time?
+          case QN(xs,XsdTime) => Some("\\d\\d:\\d\\d *")
           case QN(xs,XsdDateTime) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
           case _ => None
         }
