@@ -134,6 +134,7 @@ package xsdforms {
 
     import org.openqa.selenium.By
     import org.openqa.selenium.Keys
+    import org.openqa.selenium.support.ui.Select
     import org.openqa.selenium.Proxy
     import org.openqa.selenium.WebDriver
     import org.openqa.selenium.WebElement
@@ -544,7 +545,7 @@ package xsdforms {
       setInput(driver, 10, "2013-12-25")
       setInput(driver, 12, "22:45")
       setInput(driver, 14, "2013-12-25T04:45")
-      setInput(driver, 19,"option-2")
+      new Select(getInput(driver,19)).selectByIndex(1)
       setInput(driver, 27, "a123")
       setInput(driver, 29, "a123")
       setInput(driver, 30, "a123")

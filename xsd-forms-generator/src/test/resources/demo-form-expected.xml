@@ -16,7 +16,7 @@
   <boolean-element>true</boolean-element>
   <boolean-element-with-default>true</boolean-element-with-default>
   <string-enumeration>option-1</string-enumeration>
-  <string-enumeration-unselected></string-enumeration-unselected>
+  <string-enumeration-unselected>option-1</string-enumeration-unselected>
   <string-enumeration-with-labels>A</string-enumeration-with-labels>
   <decimal-enumeration>1.5</decimal-enumeration>
   <integer-enumeration>1</integer-enumeration>

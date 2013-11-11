@@ -577,7 +577,7 @@ package xsdforms {
       }
 
     private def transformToXmlValue(r: Restriction, value: String): String = {
-      val qn = toQN(r.base.get)
+      val qn = toQN(r)
       qn match {
         case QN(xs, XsdDate) => "toXmlDate(" + value + ")"
         case QN(xs, XsdDateTime) => "toXmlDateTime(" + value + ")"
@@ -771,7 +771,7 @@ package xsdforms {
 
       val r = restriction(node)
 
-      val qn = toQN(r.base.get)
+      val qn = toQN(r)
 
       addInput(e, qn, r, instances)
 
@@ -844,15 +844,30 @@ package xsdforms {
             case Some("true") => Some(true)
             case _ => None
           }
+          val v = defaultValue(e.default, r)
           html.input(
             id = Some(itemId),
             name = getItemName(number),
             classes = List(extraClasses, ClassItemInputText),
             typ = Some(inputType),
             checked = checked,
-            value = e.default,
+            value = v,
             number = Some(number))
             .closeTag
+      }
+    }
+
+    private def defaultValue(value: Option[String], r: Restriction): Option[String] = {
+      value match {
+        case Some(v) => {
+          toQN(r) match {
+            // drop the seconds off the time so js timepicker is happy
+            case QN(xs, XsdTime) => Some(v.substring(0, 5))
+            case QN(xs, XsdDateTime) => Some(v.substring(0,16))
+            case _ => value
+          }
+        }
+        case None => value
       }
     }
 
@@ -1088,14 +1103,14 @@ package xsdforms {
 |    ok = false;"""
       else ""
 
-    private def createEnumerationTestScriptlet(node:NodeBasic) = {
-        if (isEnumeration(restriction(node))) {
-          "\n|  //enumeration test" +
+    private def createEnumerationTestScriptlet(node: NodeBasic) = {
+      if (isEnumeration(restriction(node))) {
+        "\n|  //enumeration test" +
           "\n|  if (v.val().length ==0) ok = false;"
-        } else 
+      } else
         ""
-      }    
-        
+    }
+
     private def createPatternScriptlet(x: (String, Int)) =
       """|
 |  // pattern test
@@ -1158,8 +1173,8 @@ package xsdforms {
 
         val explicitPatterns = getPatterns(r)
 
-        val qn = toQN(r.base.get)
-        
+        val qn = toQN(r)
+
         //calculate implicit patterns for dates, times, and datetimes
         val implicitPatterns =
           qn match {
@@ -1174,7 +1189,7 @@ package xsdforms {
       }
 
     private def getInputType(r: Restriction) = {
-      val qn = toQN(r.base.get)
+      val qn = toQN(r)
       qn match {
         case QN(xs, XsdBoolean) => "checkbox"
         case _ => "text"
@@ -1327,7 +1342,9 @@ package xsdforms {
 
     private case class QN(namespace: String, localPart: String)
 
-    private implicit def toQN(qName: QName) =
+    private def toQN(r: Restriction): QN = toQN(r.base.get)
+
+    private implicit def toQN(qName: QName): QN =
       QN(qName.getNamespaceURI(), qName.getLocalPart())
 
     def text =
