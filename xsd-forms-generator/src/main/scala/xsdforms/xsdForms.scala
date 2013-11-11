@@ -1388,7 +1388,7 @@ function toXmlDateTime(s) {
 }
           
 function toXmlTime(s) {
-  return s;
+  return $.trim(s);
 }
           
 $(function() {
