@@ -556,7 +556,7 @@ package xsdforms {
       addXmlExtractScriptletForSimpleOrBase(node, instances)
     }
 
-    private def addXmlExtractScriptletForSimpleOrBase(node: Node, instances: Instances) {
+    private def addXmlExtractScriptletForSimpleOrBase(node: NodeBasic, instances: Instances) {
       val number = elementNumber(node)
       val s = new StringBuffer
 
@@ -564,25 +564,25 @@ package xsdforms {
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
         s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instNos) + "\"))")
-        s.append("\n|    xml+=" + spaces(instNos) + xml(node, extractDateIfValid(node, valById(getItemId(node, instNos)))) + ";")
+        s.append("\n|    xml+=" + spaces(instNos) + xml(node, transformToXmlValue(node, valById(getItemId(node, instNos)))) + ";")
       }
       s.append("\n|  return xml;\n")
       addXmlExtractScriptlet(node, s.toString, instances);
     }
 
-    private def extractDateIfValid(node: Node, value: String): String =
+    private def transformToXmlValue(node: NodeBasic, value: String): String =
       node match {
-        case n: NodeSimpleType => extractDateIfValid(restriction(n), value)
-        case n: NodeBaseType => extractDateIfValid(restriction(n), value)
-        case _ => value
+        case n: NodeSimpleType => transformToXmlValue(restriction(n), value)
+        case n: NodeBaseType => transformToXmlValue(restriction(n), value)
       }
 
-    private def extractDateIfValid(r: Restriction, value: String): String = {
+    private def transformToXmlValue(r: Restriction, value: String): String = {
       val qn = toQN(r.base.get)
       qn match {
         case QN(xs, XsdDate) => "toXmlDate(" + value + ")"
         case QN(xs, XsdDateTime) => "toXmlDateTime(" + value + ")"
         case QN(xs, XsdTime) => "toXmlTime(" + value + ")"
+        case QN(xs, XsdBoolean) => "toBoolean(" + value + ")"
         case _ => value
       }
     }
@@ -1389,6 +1389,13 @@ function toXmlDateTime(s) {
           
 function toXmlTime(s) {
   return $.trim(s) +":00";
+}
+          
+function toBoolean(s) {
+  if (s == "on")
+    return "true";
+  else 
+    return "false";
 }
           
 $(function() {
