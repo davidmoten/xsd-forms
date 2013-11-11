@@ -1392,7 +1392,7 @@ function toXmlTime(s) {
 }
           
 function toBoolean(s) {
-  if (s == "on")
+  if (s == "on" || s == "true")
     return "true";
   else 
     return "false";
