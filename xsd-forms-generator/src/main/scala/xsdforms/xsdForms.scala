@@ -83,8 +83,9 @@ package xsdforms {
   // immutable would be preferrable but should be safe because not changed after tree created
   case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
-  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends Node
-  case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends Node
+  trait NodeBasic extends Node
+  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic
+  case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
 
   /**
    * **************************************************************
@@ -262,7 +263,6 @@ package xsdforms {
     val ClassSmall = "small"
     val ClassItemDescription = "item-description"
 
-    
   }
 
   object Annotation {
@@ -287,7 +287,7 @@ package xsdforms {
     val Description = XsdFormsAnnotation("description")
     val Visible = XsdFormsAnnotation("visible")
   }
-  
+
   /**
    * **************************************************************
    *
@@ -465,7 +465,7 @@ package xsdforms {
             classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
           .div(classes = List(ClassItemInput))
 
-        simpleType(e, restriction(node), instNos)
+        simpleType(node, instNos)
 
         html
           .closeTag(3)
@@ -488,7 +488,7 @@ package xsdforms {
           .label(forInputName = getItemName(number),
             classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
           .div(classes = List(ClassItemInput))
-        simpleType(e, restriction(node), instNos)
+        simpleType(node, instNos)
         html
           .closeTag(2)
       }
@@ -766,7 +766,11 @@ package xsdforms {
     private def getTextType(e: Element) =
       getAnnotation(e, Annotation.Text)
 
-    private def simpleType(e: ElementWrapper, r: Restriction, instances: Instances) {
+    private def simpleType(node:NodeBasic, instances: Instances) {
+      val e = node.element
+      
+      val r = restriction(node)
+      
       val qn = toQN(r.base.get)
 
       addInput(e, qn, r, instances)
@@ -895,7 +899,6 @@ package xsdforms {
       }
       enumeration(en, number, isRadio, initializeBlank, instances)
     }
-
 
     private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
@@ -1133,12 +1136,15 @@ package xsdforms {
     private def addScriptWithMargin(s: String) = addScript(stripMargin(s))
 
     private def getPatterns(r: Restriction) =
-      r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
-        f match {
-          case DataRecord(xs, Some("pattern"), x: Pattern) => Some(x.valueAttribute)
-          case _ => None
-        }
-      })
+      {
+        val explicitPatterns = r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
+          f match {
+            case DataRecord(xs, Some("pattern"), x: Pattern) => Some(x.valueAttribute)
+            case _ => None
+          }
+        })
+        explicitPatterns
+      }
 
     private def getInputType(r: Restriction) = {
       val qn = toQN(r.base.get)
@@ -1230,6 +1236,12 @@ package xsdforms {
         patterns.size > 0 &&
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
+
+    private def restriction(node: NodeBasic): Restriction =
+      node match {
+        case n: NodeSimpleType => restriction(n)
+        case n: NodeBaseType => restriction(n)
+      }
 
     private def restriction(node: NodeSimpleType) =
       node.typ.simpleDerivationOption3.value match {
