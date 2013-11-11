@@ -182,14 +182,10 @@ package xsdforms {
       testPatternValidation(driver, 29)
       testMultiplePatternValidation(driver, 31)
       testStringMinLength(driver, 32)
-      testIntegerMinLength(driver, 33)
-      testDecimalMinLength(driver, 34)
       testStringMaxLength(driver, 35)
       testIntegerMaxLength(driver, 36)
       testDecimalMaxLength(driver, 37)
       testStringLength(driver, 38)
-      testIntegerLength(driver, 39)
-      testDecimalLength(driver, 40)
       testIntegerMinInclusive(driver, 41)
       testDecimalMinInclusive(driver, 42)
       testIntegerMaxInclusive(driver, 43)
@@ -284,38 +280,6 @@ package xsdforms {
       assertTrue(error.isDisplayed)
     }
 
-    private def testIntegerMinLength(driver: WebDriver, itemNo: Int) {
-      val input = getInput(driver, itemNo)
-      val error = getError(driver, itemNo)
-      assertFalse(error.isDisplayed)
-      input.sendKeys("ABC\n")
-      assertTrue(error.isDisplayed)
-      input.sendKeys("\b\b\b\n");
-      assertTrue(error.isDisplayed)
-      input.sendKeys("12\n")
-      assertTrue(error.isDisplayed)
-      input.sendKeys("3\n");
-      assertFalse(error.isDisplayed)
-      input.sendKeys("\b\b\b\b\n")
-      assertTrue(error.isDisplayed)
-    }
-
-    private def testDecimalMinLength(driver: WebDriver, itemNo: Int) {
-      val input = getInput(driver, itemNo)
-      val error = getError(driver, itemNo)
-      assertFalse(error.isDisplayed)
-      input.sendKeys("ABC\n")
-      assertTrue(error.isDisplayed)
-      input.sendKeys("\b\b\b\n");
-      assertTrue(error.isDisplayed)
-      input.sendKeys("1.\n")
-      assertTrue(error.isDisplayed)
-      input.sendKeys("2\n");
-      assertFalse(error.isDisplayed)
-      input.sendKeys("\b\b\b\b\n")
-      assertTrue(error.isDisplayed)
-    }
-
     private def testStringMaxLength(driver: WebDriver, itemNo: Int) {
       val input = getInput(driver, itemNo)
       val error = getError(driver, itemNo)
@@ -369,34 +333,6 @@ package xsdforms {
       assertTrue(error.isDisplayed)
       input.clear
       input.sendKeys("abcd\n")
-      assertFalse(error.isDisplayed)
-    }
-
-    private def testIntegerLength(driver: WebDriver, itemNo: Int) {
-      val input = getInput(driver, itemNo)
-      val error = getError(driver, itemNo)
-      assertFalse(error.isDisplayed)
-      input.sendKeys("12345\n")
-      assertTrue(error.isDisplayed)
-      input.clear
-      input.sendKeys("123\n")
-      assertTrue(error.isDisplayed)
-      input.clear
-      input.sendKeys("1234\n")
-      assertFalse(error.isDisplayed)
-    }
-
-    private def testDecimalLength(driver: WebDriver, itemNo: Int) {
-      val input = getInput(driver, itemNo)
-      val error = getError(driver, itemNo)
-      assertFalse(error.isDisplayed)
-      input.sendKeys("1.234\n")
-      assertTrue(error.isDisplayed)
-      input.clear
-      input.sendKeys("1.2\n")
-      assertTrue(error.isDisplayed)
-      input.clear
-      input.sendKeys("1.23\n")
       assertFalse(error.isDisplayed)
     }
 
