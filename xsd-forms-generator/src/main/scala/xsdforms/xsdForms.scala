@@ -461,7 +461,7 @@ package xsdforms {
         itemTitle(e)
         itemBefore(e)
         html.div(classes = List(ClassItemNumber), content = Some(number)).closeTag
-          .label(forInputName = getItemName(number),
+          .label(forInputName = getItemName(number, instNos),
             classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
           .div(classes = List(ClassItemInput))
 
@@ -485,7 +485,7 @@ package xsdforms {
         itemTitle(e)
         itemBefore(e)
         html.div(classes = List(ClassItemNumber), content = Some(number)).closeTag
-          .label(forInputName = getItemName(number),
+          .label(forInputName = getItemName(number, instNos),
             classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
           .div(classes = List(ClassItemInput))
         simpleType(node, instNos)
@@ -563,8 +563,9 @@ package xsdforms {
       s.append("|  var xml=\"\";\n")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
+        val id = getItemId(node, instNos) + (if (isRadio(node.element)) "-0" else "" )
         s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instNos) + "\"))")
-        s.append("\n|    xml+=" + spaces(instNos) + xml(node, transformToXmlValue(node, valById(getItemId(node, instNos)))) + ";")
+        s.append("\n|    xml+=" + spaces(instNos) + xml(node, transformToXmlValue(node, valById(id))) + ";")
       }
       s.append("\n|  return xml;\n")
       addXmlExtractScriptlet(node, s.toString, instances);
@@ -789,7 +790,7 @@ package xsdforms {
         createDeclarationScriptlet(e, qn, instances),
         createMandatoryTestScriptlet(node),
         createPatternsTestScriptlet(getPatterns(node)),
-        createEnumerationTestScriptlet(node),
+        createEnumerationTestScriptlet(node,instances),
         createBasePatternTestScriptlet(qn),
         createFacetTestScriptlet(r),
         createLengthTestScriptlet(r),
@@ -833,7 +834,7 @@ package xsdforms {
         case Some("textarea") =>
           html.textarea(
             id = Some(itemId),
-            name = getItemName(number),
+            name = getItemName(number, instances),
             classes = List(extraClasses, ClassItemInputTextarea),
             content = Some(e.default.mkString),
             number = Some(number))
@@ -847,7 +848,7 @@ package xsdforms {
           val v = defaultValue(e.default, r)
           html.input(
             id = Some(itemId),
-            name = getItemName(number),
+            name = getItemName(number, instances),
             classes = List(extraClasses, ClassItemInputText),
             typ = Some(inputType),
             checked = checked,
@@ -863,7 +864,7 @@ package xsdforms {
           toQN(r) match {
             // drop the seconds off the time so js timepicker is happy
             case QN(xs, XsdTime) => Some(v.substring(0, 5))
-            case QN(xs, XsdDateTime) => Some(v.substring(0,16))
+            case QN(xs, XsdDateTime) => Some(v.substring(0, 16))
             case _ => value
           }
         }
@@ -904,17 +905,19 @@ package xsdforms {
     private def addEnumeration(e: ElementWrapper, r: Restriction, instances: Instances) {
       val number = elementNumber(e)
       val en = getEnumeration(r)
-      val isRadio = getAnnotation(e, Annotation.Selector) match {
-        case Some("radio") => true
-        case _ => false
-      }
 
       val initializeBlank = getAnnotation(e, Annotation.AddBlank) match {
         case Some("true") => true
         case _ => false
       }
-      enumeration(en, number, isRadio, initializeBlank, instances)
+      enumeration(en, number, isRadio(e), initializeBlank, instances)
     }
+
+    private def isRadio(e: ElementWrapper) =
+      getAnnotation(e, Annotation.Selector) match {
+        case Some("radio") => true
+        case _ => false
+      }
 
     private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
@@ -935,7 +938,7 @@ package xsdforms {
         en.zipWithIndex.foreach(x => {
           html.input(
             id = Some(getItemId(number, x._2, instances)),
-            name = getItemName(number),
+            name = getItemName(number, instances),
             classes = List(ClassSelect),
             typ = Some("radio"),
             value = Some(x._1._1),
@@ -945,7 +948,7 @@ package xsdforms {
       } else {
         html.select(
           id = Some(getItemId(number, instances)),
-          name = getItemName(number),
+          name = getItemName(number, instances),
           classes = List(ClassSelect),
           number = Some(number))
         if (initializeBlank)
@@ -956,14 +959,14 @@ package xsdforms {
             case Some(y: String) => {
               val refersTo = number.toInt + y.toInt
               addScriptWithMargin("""
-|  $("#""" + getItemId(number, instances) + """").change( function() {
-|    var v = $("#""" + getItemId(number, instances) + """");
-|    var refersTo = $("#""" + getItemEnclosingId(refersTo + "", instances) + """") 
-|    if ("""" + x._2.valueAttribute + """" == v.val()) 
-|      refersTo.show();
-|    else
-|      refersTo.hide();
-|  })
+|$("#""" + getItemId(number, instances) + """").change( function() {
+|  var v = $("#""" + getItemId(number, instances) + """");
+|  var refersTo = $("#""" + getItemEnclosingId(refersTo + "", instances) + """") 
+|  if ("""" + x._2.valueAttribute + """" == v.val()) 
+|    refersTo.show();
+|  else
+|    refersTo.hide();
+|})
 """)
             }
             case _ =>
@@ -1103,11 +1106,16 @@ package xsdforms {
 |    ok = false;"""
       else ""
 
-    private def createEnumerationTestScriptlet(node: NodeBasic) = {
+    private def createEnumerationTestScriptlet(node: NodeBasic,instances:Instances) = {
       if (isEnumeration(restriction(node))) {
         "\n|  //enumeration test" +
-        "\n|  console.log('enum=' + v.val());" +
-          "\n|  if ($.trim(v.val()).length ==0) ok = false;"
+          "\n|  console.log('enum"+elementNumber(node)+"=' + v.val());" +
+          (if (isRadio(node.element))
+            "\n|  var radioInput=$('input:radio[name=\"" + getItemName(elementNumber(node), instances) + "\"]');" +
+            "\n|  console.log('radioVal=' + radioInput.val());" +
+            "\n|  if (radioInput.val().length == 0) ok = false;"
+          else
+            "\n|  if ($.trim(v.val()).length ==0) ok = false;")
       } else
         ""
     }
@@ -1129,6 +1137,12 @@ package xsdforms {
 |    ok = false;"""
       else ""
     }
+    
+    private def changeReference(e:ElementWrapper, instances:Instances) =
+      if (isRadio(e)) 
+        "input:radio[name='" + getItemName(elementNumber(e), instances) + "']"
+      else 
+        "#" + getItemId(elementNumber(e),instances)
 
     private def createClosingScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
       val number = elementNumber(e)
@@ -1143,7 +1157,7 @@ package xsdforms {
 |  return ok;
 |}
 |      
-|$("#""" + getItemId(number, instances) + """").""" + changeMethod + """ function() {
+|$("""" + changeReference(e, instances) + """").""" + changeMethod + """ function() {
 |  var ok = validate""" + number + "instance" + instances + """();
 |  var error= $("#""" + getItemErrorId(number, instances) + """");
 |  if (!(ok)) 
@@ -1327,8 +1341,8 @@ package xsdforms {
       TreeToHtmlConverter.getItemId(idPrefix, number, instances)
     private def getItemId(number: String, enumeration: Integer, instances: Instances): String =
       getItemId(number, instances) + "-" + enumeration
-    private def getItemName(number: String) =
-      idPrefix + "item-input-" + number;
+    private def getItemName(number: String, instances: Instances) =
+      idPrefix + "item-input-" + number + InstanceDelimiter + instances;
     private def getItemEnclosingId(number: String, instances: Instances) =
       idPrefix + "item-enclosing-" + number + InstanceDelimiter + instances
     private def getItemErrorId(number: String, instances: Instances) =
@@ -1452,7 +1466,13 @@ $(function() {
       var elem = $('#' + thisId)
       // will do validations here
       //if elem visible then do the validation for that element
-      if (elem.is(":visible")) 
+      if (elemVisible(elem)) 
+        elem.change();
+    });
+    $('input:radio').each( function (index) {
+      console.log("radio.id="+ this.id);
+      var elem = $('#' + this.id)
+      if (elemVisible(elem))
         elem.change();
     });
     var count = $('.item-error').filter(":visible").length
