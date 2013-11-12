@@ -562,8 +562,12 @@ package xsdforms {
       setInput(driver, 40, "1234")
       setInput(driver, 51, "1901-11-30",Instances(List(1,1,1)))
 
-      driver.findElement(By.id(getChoiceItemId(idPrefix,"58", index = 1, Instances(List(1,1))))).click
-      //      driver.findElement(By.id("c-item-58-instance-1_1-choice-1")).click
+      val id = getChoiceItemId(idPrefix,"58", index = 1, Instances(List(1,1)))
+      println("58 id="+id)
+      val elem = driver.findElement(By.id(id))
+      elem.click
+      elem.click
+      assertTrue(elem.isSelected())
 
       preSubmit.click
       preSubmit.click
