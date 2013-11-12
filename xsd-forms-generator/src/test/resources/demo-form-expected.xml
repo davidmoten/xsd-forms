@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8">
+<?xml version="1.0" encoding="utf-8"?>
 <main xmlns="http://org.moten.david/xsd-forms/demo">
   <text-element></text-element>
   <text-element-with-default>default</text-element-with-default>
