@@ -537,6 +537,7 @@ package xsdforms {
       checkErrorDisplayed(driver, 12)
       checkErrorDisplayed(driver, 14)
       checkErrorDisplayed(driver, 19)
+      checkErrorDisplayed(driver, 23)
       val xml = driver.findElement(By.id("submit-comments"))
       assertEquals("", xml.getText.trim)
       //fix errors
@@ -546,6 +547,7 @@ package xsdforms {
       setInput(driver, 12, "22:45")
       setInput(driver, 14, "2013-12-25T04:45")
       new Select(getInput(driver,19)).selectByIndex(1)
+      driver.findElement(By.id("c-item-23-instance-1_1-0")).click
       setInput(driver, 27, "a123")
       setInput(driver, 29, "a123")
       setInput(driver, 30, "a123")

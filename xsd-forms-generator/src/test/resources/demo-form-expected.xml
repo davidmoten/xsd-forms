@@ -20,7 +20,7 @@
   <string-enumeration-with-labels>A</string-enumeration-with-labels>
   <decimal-enumeration>1.5</decimal-enumeration>
   <integer-enumeration>1</integer-enumeration>
-  <string-enumeration-radio>undefined</string-enumeration-radio>
+  <string-enumeration-radio>Option A</string-enumeration-radio>
   <make-visible-example>B</make-visible-example>
   <further-details-for-option-b></further-details-for-option-b>
   <label-override></label-override>

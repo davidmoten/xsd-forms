@@ -563,9 +563,12 @@ package xsdforms {
       s.append("|  var xml=\"\";\n")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
-        val id = getItemId(node, instNos) + (if (isRadio(node.element)) "-0" else "" )
         s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instNos) + "\"))")
-        s.append("\n|    xml+=" + spaces(instNos) + xml(node, transformToXmlValue(node, valById(id))) + ";")
+        val valueById =
+          if (isRadio(node.element)) "$('input[name="+ getItemName(number, instNos) + "]:radio:checked').val()"
+          else valById(getItemId(node, instNos))
+
+        s.append("\n|    xml+=" + spaces(instNos) + xml(node, transformToXmlValue(node, valueById)) + ";")
       }
       s.append("\n|  return xml;\n")
       addXmlExtractScriptlet(node, s.toString, instances);
@@ -790,7 +793,7 @@ package xsdforms {
         createDeclarationScriptlet(e, qn, instances),
         createMandatoryTestScriptlet(node),
         createPatternsTestScriptlet(getPatterns(node)),
-        createEnumerationTestScriptlet(node,instances),
+        createEnumerationTestScriptlet(node, instances),
         createBasePatternTestScriptlet(qn),
         createFacetTestScriptlet(r),
         createLengthTestScriptlet(r),
@@ -1106,14 +1109,12 @@ package xsdforms {
 |    ok = false;"""
       else ""
 
-    private def createEnumerationTestScriptlet(node: NodeBasic,instances:Instances) = {
+    private def createEnumerationTestScriptlet(node: NodeBasic, instances: Instances) = {
       if (isEnumeration(restriction(node))) {
         "\n|  //enumeration test" +
-          "\n|  console.log('enum"+elementNumber(node)+"=' + v.val());" +
           (if (isRadio(node.element))
             "\n|  var radioInput=$('input:radio[name=\"" + getItemName(elementNumber(node), instances) + "\"]');" +
-            "\n|  console.log('radioVal=' + radioInput.val());" +
-            "\n|  if (radioInput.val().length == 0) ok = false;"
+            "\n|  if (! radioInput.is(':checked')) ok = false;"
           else
             "\n|  if ($.trim(v.val()).length ==0) ok = false;")
       } else
@@ -1137,12 +1138,12 @@ package xsdforms {
 |    ok = false;"""
       else ""
     }
-    
-    private def changeReference(e:ElementWrapper, instances:Instances) =
-      if (isRadio(e)) 
+
+    private def changeReference(e: ElementWrapper, instances: Instances) =
+      if (isRadio(e))
         "input:radio[name='" + getItemName(elementNumber(e), instances) + "']"
-      else 
-        "#" + getItemId(elementNumber(e),instances)
+      else
+        "#" + getItemId(elementNumber(e), instances)
 
     private def createClosingScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
       val number = elementNumber(e)
