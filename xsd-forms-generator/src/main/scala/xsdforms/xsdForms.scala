@@ -944,7 +944,7 @@ package xsdforms {
             name = getItemName(number, instances),
             classes = List(ClassSelect),
             typ = Some("radio"),
-            value = Some(x._1._1),
+            value = Some(x._1._2.valueAttribute),
             content = Some(x._1._1),
             number = Some(number)).closeTag
         })
