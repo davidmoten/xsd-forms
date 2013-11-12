@@ -1485,8 +1485,10 @@ $(function() {
     else 
       $('#validation-errors').hide();
     var s = getXml1instance();
+    s = "<?xml version=\"1.0\" encoding=\"utf-8\">" + s;
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
+          
     $('#submit-comments').html(s);
   });
 """ + script + """

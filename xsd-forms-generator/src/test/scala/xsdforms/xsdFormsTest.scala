@@ -561,8 +561,9 @@ package xsdforms {
       setInput(driver, 39, "1234")
       setInput(driver, 40, "1234")
       setInput(driver, 51, "1901-11-30",Instances(List(1,1,1)))
-      new Select(getInput(driver,58)).selectByIndex(1)
-//      driver.findElement(By.id("c-item-58-instance-1_1-choice-1")).click
+
+      driver.findElement(By.id(getChoiceItemId(idPrefix,"58", index = 1, Instances(List(1,1))))).click
+      //      driver.findElement(By.id("c-item-58-instance-1_1-choice-1")).click
 
       preSubmit.click
       preSubmit.click
@@ -578,7 +579,19 @@ package xsdforms {
       // attempt unmarshal of xml
       //TODO why need to remove namespace?
       val text = xml.getText.replaceAll("xmlns=\".*\"", "")
+      validateAgainstSchema(xml.getText,"/demo.xsd")
       val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(text))
+    }
+    
+    private def validateAgainstSchema(xml:String,xsdPath:String) {
+      import javax.xml.validation._
+      import javax.xml._
+      import javax.xml.transform.stream._
+      import java.io._
+      val factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+      val schema = factory.newSchema(new StreamSource(getClass.getResourceAsStream(xsdPath)))
+      val validator = schema.newValidator
+      validator.validate(new StreamSource(new StringReader(xml)))
     }
   }
 
