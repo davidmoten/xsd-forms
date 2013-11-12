@@ -917,6 +917,7 @@ package xsdforms {
     }
 
     private def isRadio(e: ElementWrapper) =
+      //TODO add check is enumeration as well  
       getAnnotation(e, Annotation.Selector) match {
         case Some("radio") => true
         case _ => false

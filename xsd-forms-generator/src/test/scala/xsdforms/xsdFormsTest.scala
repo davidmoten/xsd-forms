@@ -561,6 +561,9 @@ package xsdforms {
       setInput(driver, 39, "1234")
       setInput(driver, 40, "1234")
       setInput(driver, 51, "1901-11-30",Instances(List(1,1,1)))
+      new Select(getInput(driver,58)).selectByIndex(1)
+//      driver.findElement(By.id("c-item-58-instance-1_1-choice-1")).click
+
       preSubmit.click
       preSubmit.click
       //TODO why twice to get chrome to work?
