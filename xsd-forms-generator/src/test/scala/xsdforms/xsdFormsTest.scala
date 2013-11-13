@@ -652,9 +652,9 @@ package xsdforms {
         .line("}")
       println(js)
       val expected = """
-function logit(doc,name) {
-  console.log(doc);
-}"""
+|function logit(doc,name) {
+|  console.log(doc);
+|}"""
       assertEquals(expected, js.toString)
     }
   }

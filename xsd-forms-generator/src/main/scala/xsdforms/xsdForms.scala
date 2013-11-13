@@ -288,16 +288,21 @@ package xsdforms {
     val Visible = XsdFormsAnnotation("visible")
   }
 
-  case class JS(lines:String="") {
-    def line(s:String, params: Object*):JS =  {
-      val b = new StringBuilder(0)
-      b append lines
-      b append "\n" 
-      b append String.format(s,params : _*)
-      JS(b.toString)
+  case class JS() {
+    val b = new StringBuffer()
+    
+    def lines(s:String):JS = {
+      b append s
+      this
     }
     
-    override def toString = lines
+    def line(s:String, params: Object*):JS =  {
+      b append "\n|" 
+      b append String.format(s,params : _*)
+      this
+    }
+    
+    override def toString = b.toString
   }
   
   /**
@@ -514,24 +519,23 @@ package xsdforms {
 
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
-        val s = new StringBuilder
         val number = elementNumber(node)
-        s.append("""
- |    var xml = """ + spaces(instances add 1) + xmlStart(node) + """; 
- |    //now add sequence children for each instanceNo""")
+        val js = JS()
+        	.line("    var xml = %s%s;",spaces(instances add 1), xmlStart(node))
+        	.line("    //now add sequence children for each instanceNo")
+        	
         for (instanceNo <- repeats(node)) {
           val instNos = instances add instanceNo
           node.children.foreach { n =>
-            s.append("""
- |    if (idVisible("""" + getRepeatingEnclosingId(number, instNos) + """"))
- |      xml += """ + xmlFunctionName(n, instNos) + """();""");
+            js.line("    if (idVisible('%s'))",getRepeatingEnclosingId(number, instNos))
+            js.line("    xml += %s();",xmlFunctionName(n, instNos))
             addXmlExtractScriptlet(n, instNos)
           }
         }
-        s.append("""
- |    xml+=""" + spaces(instances add 1) + xmlEnd(node) + """;
- |    return xml;""")
-        addXmlExtractScriptlet(node, s.toString(), instances);
+        js.line("    xml += %s%s;",spaces(instances add 1) , xmlEnd(node))
+        js.line("    return xml;")
+        
+        addXmlExtractScriptlet(node, js.toString, instances);
       }
     }
     
