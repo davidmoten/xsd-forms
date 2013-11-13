@@ -92,7 +92,7 @@ package xsdforms {
   /**
    * **************************************************************
    *
-   *   TreeCreatingVisitor
+   *   ElementWrapper
    *
    *
    * **************************************************************
@@ -103,6 +103,15 @@ package xsdforms {
   }
 
   case class ElementWrapper(element: Element, uniqueId: String)
+
+  /**
+   * **************************************************************
+   *
+   *   TreeCreatingVisitor
+   *
+   *
+   * **************************************************************
+   */
 
   class TreeCreatingVisitor extends Visitor {
 
@@ -204,8 +213,6 @@ package xsdforms {
     def size = heirarchy.size
   }
 
-  case class XsdFormsAnnotation(name: String)
-
   /**
    * **************************************************************
    *
@@ -265,8 +272,13 @@ package xsdforms {
     val ClassWhite = "white"
     val ClassSmall = "small"
     val ClassItemDescription = "item-description"
+    val ClassTimePicker = "timepickerclass"
+    val ClassDatePicker = "datepickerclass"
+    val ClassDateTimePicker = "datetimepickerclass"
 
   }
+
+  case class XsdFormsAnnotation(name: String)
 
   object Annotation {
     //TODO document each of the annotations in scaladoc
@@ -576,14 +588,14 @@ package xsdforms {
 
     private def addXmlExtractScriptletForSimpleOrBase(node: NodeBasic, instances: Instances) {
       val number = elementNumber(node)
-      val js = JS().line("  var xml=\"\";")
+      val js = JS().line("  var xml='';")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
         js.line("  if (idVisible('%s'))", getRepeatingEnclosingId(number, instNos))
         val valueById =
           if (isRadio(node.element)) "$('input[name=" + getItemName(number, instNos) + "]:radio:checked').val()"
           else valById(getItemId(node, instNos))
-        js.line("    xml+= %s%s;", spaces(instNos), xml(node, transformToXmlValue(node, valueById)))
+        js.line("    xml += %s%s;", spaces(instNos), xml(node, transformToXmlValue(node, valueById)))
       }
       js.line("   return xml;")
       addXmlExtractScriptlet(node, js.toString, instances);
@@ -835,9 +847,9 @@ package xsdforms {
     }
 
     private def getExtraClasses(qn: QN) = qn match {
-      case QN(xs, XsdDate) => "datepickerclass "
-      case QN(xs, XsdDateTime) => "datetimepickerclass "
-      case QN(xs, XsdTime) => "timepickerclass "
+      case QN(xs, XsdDate) => ClassDatePicker + " "
+      case QN(xs, XsdDateTime) => ClassDateTimePicker + " "
+      case QN(xs, XsdTime) => ClassTimePicker + " "
       case _ => ""
     }
 
@@ -893,7 +905,7 @@ package xsdforms {
       val itemId = getItemId(e, instances)
       getAnnotation(e, Annotation.Width) match {
         case Some(x) =>
-          addScript(JS().line("  $('#%s').width('%s');", itemId, x).toString)
+          addScript(JS().line("  $('#%s').width('%s');", itemId, x))
         case None =>
       }
     }
@@ -1182,8 +1194,6 @@ package xsdforms {
       js.toString
     }
 
-    private def addScriptWithMargin(s: String) = addScript(stripMargin(s))
-
     private def getPatterns(r: Restriction): Seq[String] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
         f match {
@@ -1248,7 +1258,7 @@ package xsdforms {
           .line("})")
           .line
 
-        addScript(js.toString)
+        addScript(js)
       }
     }
 
