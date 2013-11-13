@@ -971,16 +971,16 @@ package xsdforms {
           getAnnotation(x._2, Annotation.MakeVisible) match {
             case Some(y: String) => {
               val refersTo = number.toInt + y.toInt
-              addScriptWithMargin("""
-|$("#""" + getItemId(number, instances) + """").change( function() {
-|  var v = $("#""" + getItemId(number, instances) + """");
-|  var refersTo = $("#""" + getItemEnclosingId(refersTo + "", instances) + """") 
-|  if ("""" + x._2.valueAttribute + """" == v.val()) 
-|    refersTo.show();
-|  else
-|    refersTo.hide();
-|})
-""")
+              val js = JS().line("$('#%s').change( function() {", getItemId(number, instances))
+                .line("  var v = $('#%s');", getItemId(number, instances))
+                .line("  var refersTo = $('#%s');", getItemEnclosingId(refersTo + "", instances))
+                .line("  if ('%s' == v.val())", x._2.valueAttribute)
+                .line("    refersTo.show();")
+                .line("  else")
+                .line("    refersTo.hide();")
+                .line("})")
+                .line
+              addScript(js)
             }
             case _ =>
           }
