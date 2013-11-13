@@ -30,7 +30,7 @@ package xsdforms {
 
       val visitor = new TreeCreatingVisitor()
 
-      new SchemaTraversor(schema, rootElement, visitor).traverse
+      new SchemaTraversor(schema, Some(rootElement), visitor).traverse
       println("tree:\n" + visitor)
 
       val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
@@ -626,7 +626,7 @@ package xsdforms {
       val ns = schema.targetNamespace.get.toString
       val visitor = new TreeCreatingVisitor()
 
-      new SchemaTraversor(schema, rootElement, visitor).traverse
+      new SchemaTraversor(schema, Some(rootElement), visitor).traverse
       println("tree:\n" + visitor)
 
       val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text

@@ -303,6 +303,15 @@ package xsdforms {
     val Visible = XsdFormsAnnotation("visible")
   }
 
+  /**
+   * **************************************************************
+   *
+   *   JS
+   *
+   *
+   * **************************************************************
+   */
+
   case class JS() {
     val b = new StringBuffer()
 
@@ -321,14 +330,25 @@ package xsdforms {
 
     override def toString = b.toString
   }
-  
+
+  /**
+   * **************************************************************
+   *
+   *   Generator
+   *
+   *
+   * **************************************************************
+   */
+
   object Generator {
     import java.io._
-    
-     def generateZip(
+    import java.util.zip._
+    import org.apache.commons.io._
+
+    def generateZip(
       idPrefix: String,
       schemaInputStream: InputStream,
-      rootElement: String,
+      rootElement: Option[String],
       out: OutputStream,
       extraScript: Option[String] = None) {
 
@@ -347,7 +367,20 @@ package xsdforms {
       val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
       out.write(text.getBytes)
 
-      //println(visitor)
+      val zipIn = new ZipInputStream(Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
+      val zipOut = new ZipOutputStream(out)
+
+      val iterator = Iterator.continually(zipIn.getNextEntry).takeWhile(_ != null)
+      iterator.foreach { zipEntry =>
+        {
+          val bytes = IOUtils.toByteArray(zipIn)
+          zipOut putNextEntry zipEntry
+          zipOut write bytes
+        }
+      }
+
+      zipIn.close
+
       println("generated")
     }
   }
@@ -1597,7 +1630,7 @@ $(function() {
    * **************************************************************
    */
 
-  class SchemaTraversor(s: Schema, rootElement: String, visitor: Visitor) {
+  class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) {
     import Util._
     import XsdUtil._
 
@@ -1649,12 +1682,18 @@ $(function() {
      * Visits the element definition tree.
      */
     def traverse {
+      val element =
+        if (rootElement.isDefined)
 
-      val element = topLevelElements.find(
-        _.name match {
-          case Some(y) => y equals rootElement
-          case None => false
-        }).getOrElse(unexpected("did not find element " + rootElement))
+          topLevelElements.find(
+            _.name match {
+              case Some(y) => y equals rootElement.get
+              case None => false
+            }).getOrElse(unexpected("did not find element " + rootElement.get))
+        else if (topLevelElements.length == 0)
+          unexpected("no top level elements specified in schema!")
+        else
+          topLevelElements(0)
 
       process(element)
 
