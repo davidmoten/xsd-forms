@@ -321,6 +321,36 @@ package xsdforms {
 
     override def toString = b.toString
   }
+  
+  object Generator {
+    import java.io._
+    
+     def generateZip(
+      idPrefix: String,
+      schemaInputStream: InputStream,
+      rootElement: String,
+      out: OutputStream,
+      extraScript: Option[String] = None) {
+
+      import scala.xml._
+
+      val schema = scalaxb.fromXML[Schema](
+        XML.load(schemaInputStream))
+
+      val ns = schema.targetNamespace.get.toString
+
+      val visitor = new TreeCreatingVisitor()
+
+      new SchemaTraversor(schema, rootElement, visitor).traverse
+      println("tree:\n" + visitor)
+
+      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
+      out.write(text.getBytes)
+
+      //println(visitor)
+      println("generated")
+    }
+  }
 
   /**
    * **************************************************************
