@@ -1117,11 +1117,16 @@ import Util._
 
     private def createPatternsTestScriptlet(patterns: Seq[String]) =
       if (patterns.size > 0)
-        """|    var patternMatched =false;
-""" +
-          patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString("\n") + """
-|  if (!(patternMatched))
-|    ok = false;"""
+        JS().line("  var patternMatched =false;")
+            .line(patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString("\n"))
+            .line("  if (!(patternMatched))")
+            .line("    ok = false;")
+            .toString
+//        """|    var patternMatched =false;
+//""" +
+//          patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString("\n") + """
+//|  if (!(patternMatched))
+//|    ok = false;"""
       else ""
 
     private def createEnumerationTestScriptlet(node: NodeBasic, instances: Instances) = {
