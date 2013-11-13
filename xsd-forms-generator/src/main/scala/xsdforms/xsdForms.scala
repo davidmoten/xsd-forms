@@ -296,6 +296,8 @@ package xsdforms {
       this
     }
 
+    def line: JS = line("")
+
     def line(s: String, params: Object*): JS = {
       b append "\n|"
       b append String.format(s, params: _*)
@@ -653,7 +655,7 @@ package xsdforms {
       forEachParticle(x => {
         val index = x._2 + 1
         addScriptWithMargin(
-          JS().line("$(\"#%s\").hide();", choiceContentId(idPrefix, number, index, instances))
+          JS().line("$('#%s').hide();", choiceContentId(idPrefix, number, index, instances))
             .toString)
       })
     }
@@ -665,33 +667,31 @@ package xsdforms {
 
       val choiceChangeFunction = "choiceChange" + number + "instance" + instances;
 
-      addScriptWithMargin(
-        """
-|var """ + choiceChangeFunction + """ = function addChoiceChange""" + number + """instance""" + instances + """() {
-|  $(":input[@name='""" + getChoiceItemName(number, instances) + """']").change(function() {
-|    var checked = $(':input[name=""" + getChoiceItemName(number, instances) + """]:checked').attr("id");""")
+      val js = JS()
+      js.line("var %s = function addChoiceChange%sinstance%s() {", choiceChangeFunction, number, instances)
+        .line("  $(':input[@name=%s]').change(function() {", getChoiceItemName(number, instances))
+        .line("    var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(number, instances))
 
       forEachParticle(x => {
         val index = x._2 + 1
         val ccId =
           choiceContentId(idPrefix, number, index, instances)
-        addScriptWithMargin(
-          """
-|    if (checked == """" + getChoiceItemId(number, index, instances) + """") {
-|      $("#""" + ccId + """").show();
-|      $("#""" + ccId + """").find('.item-path').attr('enabled','true');
-|    }
-|    else {
-|      $("#""" + ccId + """").hide();
-|      $("#""" + ccId + """").find('.item-path').attr('enabled','false');
-|    }""")
+        js.line("    if (checked == '%s') {", getChoiceItemId(number, index, instances))
+          .line("      $('#%s').show();", ccId)
+          .line("      $('#%s').find('.item-path').attr('enabled','true');", ccId)
+          .line("    }")
+          .line("    else {")
+          .line("      $('#%s').hide();", ccId)
+          .line("      $('#%s').find('.item-path').attr('enabled','false');", ccId)
+          .line("    }")
+
       })
-      addScriptWithMargin(
-        """
-|  })
-|}
-|
-|""" + choiceChangeFunction + """();""")
+      js.line("  });")
+        .line("}")
+        .line
+        .line("%s();", choiceChangeFunction)
+
+      addScriptWithMargin(js.toString)
 
     }
 
