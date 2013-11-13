@@ -1139,10 +1139,10 @@ package xsdforms {
 
     private def createPatternScriptlet(x: (String, Int)) =
       JS().line("  // pattern test")
-          .line("  var regex%s = /^%s$/ ;",x._2.toString,x._1)
-          .line("  if (regex%s.test(v.val()))",x._2.toString)
-          .line("    patternMatched = true;")
-          .toString
+        .line("  var regex%s = /^%s$/ ;", x._2.toString, x._1)
+        .line("  if (regex%s.test(v.val()))", x._2.toString)
+        .line("    patternMatched = true;")
+        .toString
 
     private def createBasePatternTestScriptlet(qn: QN) = {
       val js = JS()
@@ -1157,36 +1157,29 @@ package xsdforms {
 
     private def changeReference(e: ElementWrapper, instances: Instances) =
       if (isRadio(e))
-        "input:radio[name='" + getItemName(elementNumber(e), instances) + "']"
+        "input:radio[name=" + getItemName(elementNumber(e), instances) + "]"
       else
         "#" + getItemId(elementNumber(e), instances)
 
     private def createClosingScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
       val number = elementNumber(e)
-      val onChange = "change("
-      val changeMethod = qn match {
-        case QN(xs, XsdDate) => onChange
-        case QN(xs, XsdDateTime) => onChange
-        case QN(xs, XsdTime) => onChange
-        case _ => onChange
-      };
-      """
-|  return ok;
-|}
-|      
-|$("""" + changeReference(e, instances) + """").""" + changeMethod + """ function() {
-|  var ok = validate""" + number + "instance" + instances + """();
-|  var error= $("#""" + getItemErrorId(number, instances) + """");
-|  if (!(ok)) 
-|    error.show();
-|  else 
-|    error.hide();
-|})
-""" + (if (e.minOccurs == 0 && e.default.isEmpty)
-        """
-|//disable item-path due to minOccurs=0 and default is empty  
-|$("#""" + getPathId(number, instances) + """").attr('enabled','false');"""
-      else "")
+      val changeMethod = "change("
+      val js = JS()
+        .line("  return ok;")
+        .line("}")
+        .line
+        .line("$('%s').change( function() {", changeReference(e, instances))
+        .line("  var ok = validate%sinstance%s();", number, instances)
+        .line("  var error= $('#%s');", getItemErrorId(number, instances))
+        .line("  if (!(ok)) ")
+        .line("    error.show();")
+        .line("  else")
+        .line("    error.hide();")
+        .line("});")
+      if (e.minOccurs == 0 && e.default.isEmpty)
+        js.line("//disable item-path due to minOccurs=0 and default is empty")
+          .line("$('#%s').attr('enabled','false');", getPathId(number, instances))
+      js.toString
     }
 
     private def addScriptWithMargin(s: String) = addScript(stripMargin(s))
@@ -1244,15 +1237,18 @@ package xsdforms {
       val number = elementNumber(e)
       if (isMultiple(e)) {
         val repeatButtonId = getRepeatButtonId(number, instances)
-        addScriptWithMargin("""
-|$("#""" + repeatButtonId + """").click(function() {
-|   // loop through all repeats until find first nonInvisible repeat and make it visible
-|  var elem;
-""" + repeatingEnclosingIds(e, instances)
-          .map(id => { "|  elem = $('#" + id + "');\n|  if (!elemVisible(elem))\n|    { elem.show(); return; }\n" })
-          .mkString("") +
-          """|})
-""")
+        val js = JS()
+          .line("$('#%s').click( function() {", repeatButtonId)
+          .line("  // loop through all repeats until find first nonInvisible repeat and make it visible")
+          .line("  var elem;")
+          .line(
+            repeatingEnclosingIds(e, instances)
+              .map(id => { "  elem = $('#" + id + "');\n  if (!elemVisible(elem))\n    { elem.show(); return; }" })
+              .mkString(""))
+          .line("})")
+          .line
+
+        addScript(js.toString)
       }
     }
 
