@@ -652,8 +652,9 @@ package xsdforms {
 
       forEachParticle(x => {
         val index = x._2 + 1
-        addScriptWithMargin("""
-|$("#""" + choiceContentId(idPrefix, number, index, instances) + """").hide();""")
+        addScriptWithMargin(
+          JS().line("$(\"#%s\").hide();", choiceContentId(idPrefix, number, index, instances))
+            .toString)
       })
     }
 
