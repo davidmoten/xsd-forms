@@ -1,11 +1,11 @@
 package xsdforms {
 
   import xsd._
-import xsd.ComplexTypeModelSequence1
+  import xsd.ComplexTypeModelSequence1
 
-import javax.xml.namespace.QName
+  import javax.xml.namespace.QName
 
-import scalaxb._
+  import scalaxb._
 
   /**
    * **************************************************************
@@ -108,7 +108,7 @@ import scalaxb._
 
     import Util._
 
-import java.util.UUID
+    import java.util.UUID
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
 
@@ -322,8 +322,8 @@ import java.util.UUID
   class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
 
     import TreeToHtmlConverter._
-import XsdUtil._
-import Util._
+    import XsdUtil._
+    import Util._
     private val script = new StringBuilder
 
     private var number = 0
@@ -1091,9 +1091,9 @@ import Util._
       if (e.minOccurs > 0) ""
       else {
         JS().line("  // minOccurs=0, disable if blank")
-            .line("  var includeInXml  = !((v.val() == null) || (v.val().length==0));")
-            .line("  pathDiv.attr('enabled','' + includeInXml);")
-            .toString
+          .line("  var includeInXml  = !((v.val() == null) || (v.val().length==0));")
+          .line("  pathDiv.attr('enabled','' + includeInXml);")
+          .toString
       }
 
     private def createFacetTestScriptlet(r: Restriction) = {
@@ -1118,27 +1118,23 @@ import Util._
     private def createPatternsTestScriptlet(patterns: Seq[String]) =
       if (patterns.size > 0)
         JS().line("  var patternMatched =false;")
-            .line(patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString("\n"))
-            .line("  if (!(patternMatched))")
-            .line("    ok = false;")
-            .toString
-//        """|    var patternMatched =false;
-//""" +
-//          patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString("\n") + """
-//|  if (!(patternMatched))
-//|    ok = false;"""
+          .line(patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString("\n"))
+          .line("  if (!(patternMatched))")
+          .line("    ok = false;")
+          .toString
       else ""
 
     private def createEnumerationTestScriptlet(node: NodeBasic, instances: Instances) = {
+      val js = JS()
       if (isEnumeration(restriction(node))) {
-        "\n|  //enumeration test" +
-          (if (isRadio(node.element))
-            "\n|  var radioInput=$('input:radio[name=\"" + getItemName(elementNumber(node), instances) + "\"]');" +
-            "\n|  if (! radioInput.is(':checked')) ok = false;"
-          else
-            "\n|  if ($.trim(v.val()).length ==0) ok = false;")
-      } else
-        ""
+        js.line("  //enumeration test")
+        if (isRadio(node.element))
+          js.line("  var radioInput=$('input:radio[name=%s]');", getItemName(elementNumber(node), instances))
+            .line("  if (! radioInput.is(':checked')) ok = false;")
+        else
+          js.line("  if ($.trim(v.val()).length ==0) ok = false;")
+      }
+      js.toString
     }
 
     private def createPatternScriptlet(x: (String, Int)) =
@@ -1549,7 +1545,7 @@ $(function() {
 
   class SchemaTraversor(s: Schema, rootElement: String, visitor: Visitor) {
     import Util._
-import XsdUtil._
+    import XsdUtil._
 
     private val topLevelElements =
       s.schemasequence1.flatMap(_.schemaTopOption1.value match {
@@ -1727,7 +1723,7 @@ import XsdUtil._
   }
 
   private class Html {
-import Html._
+    import Html._
     private case class HtmlElement(name: String, hasContent: Boolean)
     private val stack = new scala.collection.mutable.Stack[HtmlElement]
     private var s = new StringBuffer
