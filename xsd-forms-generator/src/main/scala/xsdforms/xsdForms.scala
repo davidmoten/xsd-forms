@@ -1143,21 +1143,16 @@ package xsdforms {
           .line("  if (regex%s.test(v.val()))",x._2.toString)
           .line("    patternMatched = true;")
           .toString
-//      """|
-//|  // pattern test
-//|  var regex""" + x._2 + """ = /^""" + x._1 + """$/ ;
-//|  if (regex""" + x._2 + """.test(v.val())) 
-//|    patternMatched = true;"""
 
     private def createBasePatternTestScriptlet(qn: QN) = {
+      val js = JS()
       val basePattern = getBasePattern(qn)
       if (basePattern.size > 0)
-        """    	  
-|  // base pattern test
-|  var regex = /^""" + basePattern.head + """$/ ;
-|  if (!(regex.test(v.val()))) 
-|    ok = false;"""
-      else ""
+        js.line("  // base pattern test")
+          .line("  var regex = /^%s$/ ;", basePattern.head)
+          .line("  if (!(regex.test(v.val())))")
+          .line("    ok = false;")
+      js.toString
     }
 
     private def changeReference(e: ElementWrapper, instances: Instances) =
