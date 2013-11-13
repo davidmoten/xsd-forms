@@ -608,12 +608,11 @@ package xsdforms {
     private def addXmlExtractScriptlet(node: Node, functionBody: String, instances: Instances) {
       val functionName = xmlFunctionName(node, instances)
       addScriptWithMargin(
-        """
-|//extract xml from element <""" + node.element.name.getOrElse("?") + """>
-|function """ + functionName + """() {
-""" + functionBody + """
-|}
-| """)
+        JS().line("//extract xml from element <%s>", node.element.name.getOrElse("?"))
+          .line("function %s() {", functionName)
+          .line(functionBody)
+          .line("}")
+          .line("").toString)
     }
 
     private def refById(id: String) = "$(\"#" + id + "\")"
