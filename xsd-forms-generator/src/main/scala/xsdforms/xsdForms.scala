@@ -290,21 +290,21 @@ package xsdforms {
 
   case class JS() {
     val b = new StringBuffer()
-    
-    def lines(s:String):JS = {
+
+    def lines(s: String): JS = {
       b append s
       this
     }
-    
-    def line(s:String, params: Object*):JS =  {
-      b append "\n|" 
-      b append String.format(s,params : _*)
+
+    def line(s: String, params: Object*): JS = {
+      b append "\n|"
+      b append String.format(s, params: _*)
       this
     }
-    
+
     override def toString = b.toString
   }
-  
+
   /**
    * **************************************************************
    *
@@ -521,46 +521,42 @@ package xsdforms {
       {
         val number = elementNumber(node)
         val js = JS()
-        	.line("    var xml = %s%s;",spaces(instances add 1), xmlStart(node))
-        	.line("    //now add sequence children for each instanceNo")
-        	
+          .line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
+          .line("    //now add sequence children for each instanceNo")
+
         for (instanceNo <- repeats(node)) {
           val instNos = instances add instanceNo
           node.children.foreach { n =>
-            js.line("    if (idVisible('%s'))",getRepeatingEnclosingId(number, instNos))
-            js.line("    xml += %s();",xmlFunctionName(n, instNos))
+            js.line("    if (idVisible('%s'))", getRepeatingEnclosingId(number, instNos))
+            js.line("    xml += %s();", xmlFunctionName(n, instNos))
             addXmlExtractScriptlet(n, instNos)
           }
         }
-        js.line("    xml += %s%s;",spaces(instances add 1) , xmlEnd(node))
+        js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
         js.line("    return xml;")
-        
+
         addXmlExtractScriptlet(node, js.toString, instances);
       }
     }
-    
+
     private def addXmlExtractScriptlet(node: NodeChoice, instances: Instances) {
-      val s = new StringBuilder
-      s.append("""
- |    var xml = """ + spaces(instances add 1) + xmlStart(node) + """; 
- |    //now optionally add selected child if any""");
+
+      val js = JS()
+        .line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
+        .line("    //now optionally add selected child if any")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
-        s.append(""" 
- |    var checked = $(':input[name=""" + getChoiceItemName(node, instNos) + """]:checked').attr("id"); console.log("checked="+checked);
- """)
+        js.line("    var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(node, instNos))
 
         node.children.zipWithIndex.foreach {
           case (n, index) =>
-            s.append("""
- |    if (checked == """" + getChoiceItemId(node, index + 1, instNos) + """") 
- |      xml += """ + xmlFunctionName(n, instNos) + "();");
+            js.line("    if (checked == \"%s\")", getChoiceItemId(node, index + 1, instNos))
+              .line("    xml += %s();", xmlFunctionName(n, instNos))
             addXmlExtractScriptlet(n, instNos)
         }
-        s.append("""
- |    xml+=""" + spaces(instances add 1) + xmlEnd(node) + """;
- |    return xml;""")
-        addXmlExtractScriptlet(node, s.toString(), instances);
+        js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
+          .line("    return xml;")
+        addXmlExtractScriptlet(node, js.toString(), instances);
       }
     }
 
@@ -581,7 +577,7 @@ package xsdforms {
         val instNos = instances add instanceNo
         s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instNos) + "\"))")
         val valueById =
-          if (isRadio(node.element)) "$('input[name="+ getItemName(number, instNos) + "]:radio:checked').val()"
+          if (isRadio(node.element)) "$('input[name=" + getItemName(number, instNos) + "]:radio:checked').val()"
           else valById(getItemId(node, instNos))
 
         s.append("\n|    xml+=" + spaces(instNos) + xml(node, transformToXmlValue(node, valueById)) + ";")
