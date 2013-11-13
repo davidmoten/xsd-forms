@@ -570,20 +570,17 @@ package xsdforms {
 
     private def addXmlExtractScriptletForSimpleOrBase(node: NodeBasic, instances: Instances) {
       val number = elementNumber(node)
-      val s = new StringBuffer
-
-      s.append("|  var xml=\"\";\n")
+      val js = JS().line("  var xml=\"\";")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
-        s.append("\n|  if (idVisible(\"" + getRepeatingEnclosingId(number, instNos) + "\"))")
+        js.line("  if (idVisible('%s'))", getRepeatingEnclosingId(number, instNos))
         val valueById =
           if (isRadio(node.element)) "$('input[name=" + getItemName(number, instNos) + "]:radio:checked').val()"
           else valById(getItemId(node, instNos))
-
-        s.append("\n|    xml+=" + spaces(instNos) + xml(node, transformToXmlValue(node, valueById)) + ";")
+        js.line("    xml+= %s%s;", spaces(instNos), xml(node, transformToXmlValue(node, valueById)))
       }
-      s.append("\n|  return xml;\n")
-      addXmlExtractScriptlet(node, s.toString, instances);
+      js.line("   return xml;")
+      addXmlExtractScriptlet(node, js.toString, instances);
     }
 
     private def transformToXmlValue(node: NodeBasic, value: String): String =
