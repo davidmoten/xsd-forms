@@ -644,6 +644,10 @@ package xsdforms {
       script.append("\n")
     }
 
+    private def addScript(js: JS) {
+      addScript(js.toString)
+    }
+
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
 
@@ -655,8 +659,7 @@ package xsdforms {
       forEachParticle(x => {
         val index = x._2 + 1
         addScript(
-          JS().line("$('#%s').hide();", choiceContentId(idPrefix, number, index, instances))
-            .toString)
+          JS().line("$('#%s').hide();", choiceContentId(idPrefix, number, index, instances)))
       })
     }
 
@@ -691,7 +694,7 @@ package xsdforms {
         .line
         .line("%s();", choiceChangeFunction)
 
-      addScript(js.toString)
+      addScript(js)
 
     }
 
@@ -735,9 +738,7 @@ package xsdforms {
         id = Some(id),
         classes = List(ClassRepeatingEnclosing))
       if (instances.last != 1 || e.minOccurs == 0)
-        addScriptWithMargin("""
-          |$('#""" + id + """').hide();
-          """)
+        addScript(JS().line("$('#%s').hide();", id))
     }
 
     private def nonRepeatingSimpleType(e: ElementWrapper, instances: Instances) {
@@ -888,7 +889,7 @@ package xsdforms {
       val itemId = getItemId(e, instances)
       getAnnotation(e, Annotation.Width) match {
         case Some(x) =>
-          addScriptWithMargin("|  $('#" + itemId + "').width('" + x + "');")
+          addScript(JS().line("  $('#%s').width('%s');", itemId, x).toString)
         case None =>
       }
     }
@@ -903,8 +904,7 @@ package xsdforms {
                 val pair = y.split(':')
                 if (pair.size != 2)
                   unexpected("css properties incorrect syntax\n" + pair)
-                addScriptWithMargin(
-                  "|  $('#" + itemId + "').css('" + pair(0) + "','" + pair(1) + "');")
+                addScript(JS().line("  $('#%s').css('%s','%s');", itemId, pair(0), pair(1)))
               })
         }
         case None =>
