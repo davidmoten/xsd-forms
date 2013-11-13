@@ -177,6 +177,7 @@ package xsdforms {
     private def testOnWebDriver(driver: WebDriver) {
       println("testing web driver " + driver.getClass().getSimpleName())
       driver.get(uri)
+      
       //TODO enable this
       //      testDateDefaultSet(driver, 11) 
       testMakeVisible(driver, 24)
@@ -541,6 +542,7 @@ package xsdforms {
       val xml = driver.findElement(By.id("submit-comments"))
       assertEquals("", xml.getText.trim)
       //fix errors
+      setInput(driver, 2, "illegal characters <>")
       setInput(driver, 6, "1")
       setInput(driver, 8, "1")
       setInput(driver, 10, "2013-12-25")

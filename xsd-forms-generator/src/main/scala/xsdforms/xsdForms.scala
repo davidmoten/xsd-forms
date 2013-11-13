@@ -593,7 +593,7 @@ package xsdforms {
         val instNos = instances add instanceNo
         js.line("  if (idVisible('%s'))", getRepeatingEnclosingId(number, instNos))
         val valueById =
-          if (isRadio(node.element)) "$('input[name=" + getItemName(number, instNos) + "]:radio:checked').val()"
+          if (isRadio(node.element)) "encodeHTML($('input[name=" + getItemName(number, instNos) + "]:radio:checked').val())"
           else valById(getItemId(node, instNos))
         js.line("    xml += %s%s;", spaces(instNos), xml(node, transformToXmlValue(node, valueById)))
       }
@@ -1408,7 +1408,7 @@ package xsdforms {
 <script type="text/javascript">
 
 function encodeHTML(s) {
-    if (typeof(myVariable) != "undefined")
+    if (typeof(s) != "undefined")
 	    return s.replace(/&/g, '&amp;')
 	               .replace(/</g, '&lt;')
 	               .replace(/>/g, '&gt;')
@@ -1416,6 +1416,16 @@ function encodeHTML(s) {
      else 
           return s; 
 }
+          
+function testEncodeHTML() {
+   console.log(encodeHTML('<>'));
+   test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
+}
+          
+function test(condition, message) {
+  if (!condition) alert(message);
+}
+          
           
 function encodedValueById(id) {
     return encodeHTML($("#"+id).val());
@@ -1466,6 +1476,10 @@ function toBoolean(s) {
 }
           
 $(function() {
+  //run js unit tests        
+  testEncodeHTML();
+  
+  //setup date and time pickers
   $('input').filter('.datepickerclass').datepicker();
   //now a workaround because datepicker does not use the initial value with the required format but expects mm/dd/yyyy
   $('input').filter('.datepickerclass').each(function() {
@@ -1510,6 +1524,7 @@ $(function() {
       $('#validation-errors').hide();
     var s = getXml1instance();
     s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + s;
+    s = s.replace(/&/g,"&amp;");
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
           
