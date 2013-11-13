@@ -626,11 +626,11 @@ package xsdforms {
     private def addXmlExtractScriptlet(node: Node, functionBody: String, instances: Instances) {
       val functionName = xmlFunctionName(node, instances)
       addScript(
-        JS().line("//extract xml from element <%s>", node.element.name.getOrElse("?"))
-          .line("function %s() {", functionName)
+        JS().line("  //extract xml from element <%s>", node.element.name.getOrElse("?"))
+          .line("  function %s() {", functionName)
           .line(functionBody)
-          .line("}")
-          .line("").toString)
+          .line("  }")
+          .line)
     }
 
     private def refById(id: String) = "$(\"#" + id + "\")"
@@ -675,7 +675,7 @@ package xsdforms {
       forEachParticle(x => {
         val index = x._2 + 1
         addScript(
-          JS().line("$('#%s').hide();", choiceContentId(idPrefix, number, index, instances)))
+          JS().line("  $('#%s').hide();", choiceContentId(idPrefix, number, index, instances)))
       })
     }
 
@@ -687,28 +687,28 @@ package xsdforms {
       val choiceChangeFunction = "choiceChange" + number + "instance" + instances;
 
       val js = JS()
-      js.line("var %s = function addChoiceChange%sinstance%s() {", choiceChangeFunction, number, instances)
-        .line("  $(':input[@name=%s]').change(function() {", getChoiceItemName(number, instances))
-        .line("    var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(number, instances))
+      js.line("  var %s = function addChoiceChange%sinstance%s() {", choiceChangeFunction, number, instances)
+        .line("    $(':input[@name=%s]').change(function() {", getChoiceItemName(number, instances))
+        .line("      var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(number, instances))
 
       forEachParticle(x => {
         val index = x._2 + 1
         val ccId =
           choiceContentId(idPrefix, number, index, instances)
-        js.line("    if (checked == '%s') {", getChoiceItemId(number, index, instances))
-          .line("      $('#%s').show();", ccId)
-          .line("      $('#%s').find('.item-path').attr('enabled','true');", ccId)
-          .line("    }")
-          .line("    else {")
-          .line("      $('#%s').hide();", ccId)
-          .line("      $('#%s').find('.item-path').attr('enabled','false');", ccId)
-          .line("    }")
+        js.line("      if (checked == '%s') {", getChoiceItemId(number, index, instances))
+          .line("        $('#%s').show();", ccId)
+          .line("        $('#%s').find('.item-path').attr('enabled','true');", ccId)
+          .line("      }")
+          .line("      else {")
+          .line("        $('#%s').hide();", ccId)
+          .line("        $('#%s').find('.item-path').attr('enabled','false');", ccId)
+          .line("      }")
 
       })
-      js.line("  });")
-        .line("}")
+      js.line("    });")
+        .line("  }")
         .line
-        .line("%s();", choiceChangeFunction)
+        .line("  %s();", choiceChangeFunction)
 
       addScript(js)
 
@@ -754,7 +754,7 @@ package xsdforms {
         id = Some(id),
         classes = List(ClassRepeatingEnclosing))
       if (instances.last != 1 || e.minOccurs == 0)
-        addScript(JS().line("$('#%s').hide();", id))
+        addScript(JS().line("  $('#%s').hide();", id))
     }
 
     private def nonRepeatingSimpleType(e: ElementWrapper, instances: Instances) {
@@ -827,7 +827,7 @@ package xsdforms {
         createClosingScriptlet(e, qn, instances))
 
       statements
-        .map(stripMargin(_))
+        .map(insertMargin(_))
         .foreach(x => if (x.length > 0) addScript(x))
 
     }
@@ -987,14 +987,15 @@ package xsdforms {
           getAnnotation(x._2, Annotation.MakeVisible) match {
             case Some(y: String) => {
               val refersTo = number.toInt + y.toInt
-              val js = JS().line("$('#%s').change( function() {", getItemId(number, instances))
-                .line("  var v = $('#%s');", getItemId(number, instances))
-                .line("  var refersTo = $('#%s');", getItemEnclosingId(refersTo + "", instances))
-                .line("  if ('%s' == v.val())", x._2.valueAttribute)
-                .line("    refersTo.show();")
-                .line("  else")
-                .line("    refersTo.hide();")
-                .line("})")
+              val js = JS()
+                .line("  $('#%s').change( function() {", getItemId(number, instances))
+                .line("    var v = $('#%s');", getItemId(number, instances))
+                .line("    var refersTo = $('#%s');", getItemEnclosingId(refersTo + "", instances))
+                .line("    if ('%s' == v.val())", x._2.valueAttribute)
+                .line("      refersTo.show();")
+                .line("    else")
+                .line("      refersTo.hide();")
+                .line("  })")
                 .line
               addScript(js)
             }
@@ -1073,7 +1074,8 @@ package xsdforms {
 
     private def createMandatoryTestScriptlet(node: NodeBasic) = {
       if (isMandatory(node.element, restriction(node)))
-        JS().line("  // mandatory test")
+        JS()
+          .line("  // mandatory test")
           .line("  if ((v.val() == null) || (v.val().length==0))")
           .line("    ok=false;")
           .toString
@@ -1188,6 +1190,7 @@ package xsdforms {
         .line("  else")
         .line("    error.hide();")
         .line("});")
+        .line
       if (e.minOccurs == 0 && e.default.isEmpty)
         js.line("//disable item-path due to minOccurs=0 and default is empty")
           .line("$('#%s').attr('enabled','false');", getPathId(number, instances))
@@ -1231,7 +1234,7 @@ package xsdforms {
       }
     }
 
-    private def stripMargin(s: String) =
+    private def insertMargin(s: String) =
       s.stripMargin.replaceAll("\n", "\n" + margin)
 
     private def isMultiple(node: Node): Boolean =
@@ -1248,14 +1251,14 @@ package xsdforms {
       if (isMultiple(e)) {
         val repeatButtonId = getRepeatButtonId(number, instances)
         val js = JS()
-          .line("$('#%s').click( function() {", repeatButtonId)
-          .line("  // loop through all repeats until find first nonInvisible repeat and make it visible")
-          .line("  var elem;")
+          .line("  $('#%s').click( function() {", repeatButtonId)
+          .line("    // loop through all repeats until find first nonInvisible repeat and make it visible")
+          .line("    var elem;")
           .line(
             repeatingEnclosingIds(e, instances)
-              .map(id => { "  elem = $('#" + id + "');\n  if (!elemVisible(elem))\n    { elem.show(); return; }" })
+              .map(id => { "    elem = $('#" + id + "');\n    if (!elemVisible(elem))\n      { elem.show(); return; }" })
               .mkString(""))
-          .line("})")
+          .line("  })")
           .line
 
         addScript(js)
