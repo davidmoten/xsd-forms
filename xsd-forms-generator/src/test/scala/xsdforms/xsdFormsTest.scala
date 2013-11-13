@@ -517,13 +517,13 @@ package xsdforms {
       assertFalse(id + " is visible and should not be", item.isDisplayed)
     }
 
-    private def setInput(driver: WebDriver, itemNo: Int, text: String,instances:Instances=Instances(List(1,1))) {
-      val in = getInput(driver, itemNo,instances)
+    private def setInput(driver: WebDriver, itemNo: Int, text: String, instances: Instances = Instances(List(1, 1))) {
+      val in = getInput(driver, itemNo, instances)
       in.clear
       in.sendKeys(text)
     }
-    
-    private def checkErrorDisplayed(driver: WebDriver, itemNo:Int) {
+
+    private def checkErrorDisplayed(driver: WebDriver, itemNo: Int) {
       assertTrue(getError(driver, itemNo).isDisplayed())
     }
 
@@ -546,7 +546,7 @@ package xsdforms {
       setInput(driver, 10, "2013-12-25")
       setInput(driver, 12, "22:45")
       setInput(driver, 14, "2013-12-25T04:45")
-      new Select(getInput(driver,19)).selectByIndex(1)
+      new Select(getInput(driver, 19)).selectByIndex(1)
       driver.findElement(By.id("c-item-23-instance-1_1-0")).click
       setInput(driver, 27, "a123")
       setInput(driver, 29, "a123")
@@ -560,10 +560,10 @@ package xsdforms {
       setInput(driver, 38, "1234")
       setInput(driver, 39, "1234")
       setInput(driver, 40, "1234")
-      setInput(driver, 51, "1901-11-30",Instances(List(1,1,1)))
+      setInput(driver, 51, "1901-11-30", Instances(List(1, 1, 1)))
 
-      val id = getChoiceItemId(idPrefix,"58", index = 1, Instances(List(1,1)))
-      println("58 id="+id)
+      val id = getChoiceItemId(idPrefix, "58", index = 1, Instances(List(1, 1)))
+      println("58 id=" + id)
       val elem = driver.findElement(By.id(id))
       elem.click
       elem.click
@@ -577,17 +577,17 @@ package xsdforms {
       assertFalse(errors.isDisplayed());
       assertTrue(xml.getText.trim.contains("xmlns"))
       val expectedXml = io.Source.fromInputStream(getClass.getResourceAsStream("/demo-form-expected.xml")).mkString
-      assertEquals(expectedXml.trim,xml.getText.trim )
+      assertEquals(expectedXml.trim, xml.getText.trim)
       // fail
 
       // attempt unmarshal of xml
       //TODO why need to remove namespace?
       val text = xml.getText.replaceAll("xmlns=\".*\"", "")
-      validateAgainstSchema(xml.getText,"/demo.xsd")
+      validateAgainstSchema(xml.getText, "/demo.xsd")
       val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(xml.getText))
     }
-    
-    private def validateAgainstSchema(xml:String,xsdPath:String) {
+
+    private def validateAgainstSchema(xml: String, xsdPath: String) {
       import javax.xml.validation._
       import javax.xml._
       import javax.xml.transform.stream._
@@ -636,6 +636,26 @@ package xsdforms {
       val fos = new java.io.FileOutputStream(outputFile);
       fos.write(text.getBytes)
       fos.close
+    }
+  }
+
+  @Test
+  class JSTest {
+    
+    import org.junit.Assert._
+
+    @Test
+    def test() {
+      val js = JS()
+        .line("function %s(doc,%s) {","logit","name")
+        .line("  console.log(doc);")
+        .line("}")
+      println(js)
+      val expected = """
+function logit(doc,name) {
+  console.log(doc);
+}"""
+      assertEquals(expected, js.toString)
     }
   }
 

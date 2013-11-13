@@ -288,6 +288,18 @@ package xsdforms {
     val Visible = XsdFormsAnnotation("visible")
   }
 
+  case class JS(lines:String="") {
+    def line(s:String, params: Object*):JS =  {
+      val b = new StringBuilder(0)
+      b append lines
+      b append "\n" 
+      b append String.format(s,params : _*)
+      JS(b.toString)
+    }
+    
+    override def toString = lines
+  }
+  
   /**
    * **************************************************************
    *
@@ -522,7 +534,7 @@ package xsdforms {
         addXmlExtractScriptlet(node, s.toString(), instances);
       }
     }
-
+    
     private def addXmlExtractScriptlet(node: NodeChoice, instances: Instances) {
       val s = new StringBuilder
       s.append("""
