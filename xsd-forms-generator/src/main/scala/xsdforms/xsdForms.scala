@@ -299,7 +299,7 @@ package xsdforms {
     def line: JS = line("")
 
     def line(s: String, params: Object*): JS = {
-      b append "\n|"
+      b append "\n"
       b append String.format(s, params: _*)
       this
     }
@@ -609,7 +609,7 @@ package xsdforms {
 
     private def addXmlExtractScriptlet(node: Node, functionBody: String, instances: Instances) {
       val functionName = xmlFunctionName(node, instances)
-      addScriptWithMargin(
+      addScript(
         JS().line("//extract xml from element <%s>", node.element.name.getOrElse("?"))
           .line("function %s() {", functionName)
           .line(functionBody)
@@ -654,7 +654,7 @@ package xsdforms {
 
       forEachParticle(x => {
         val index = x._2 + 1
-        addScriptWithMargin(
+        addScript(
           JS().line("$('#%s').hide();", choiceContentId(idPrefix, number, index, instances))
             .toString)
       })
@@ -691,7 +691,7 @@ package xsdforms {
         .line
         .line("%s();", choiceChangeFunction)
 
-      addScriptWithMargin(js.toString)
+      addScript(js.toString)
 
     }
 
