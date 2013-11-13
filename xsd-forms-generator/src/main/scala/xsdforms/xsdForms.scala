@@ -1138,11 +1138,16 @@ package xsdforms {
     }
 
     private def createPatternScriptlet(x: (String, Int)) =
-      """|
-|  // pattern test
-|  var regex""" + x._2 + """ = /^""" + x._1 + """$/ ;
-|  if (regex""" + x._2 + """.test(v.val())) 
-|    patternMatched = true;"""
+      JS().line("  // pattern test")
+          .line("  var regex%s = /^%s$/ ;",x._2.toString,x._1)
+          .line("  if (regex%s.test(v.val()))",x._2.toString)
+          .line("    patternMatched = true;")
+          .toString
+//      """|
+//|  // pattern test
+//|  var regex""" + x._2 + """ = /^""" + x._1 + """$/ ;
+//|  if (regex""" + x._2 + """.test(v.val())) 
+//|    patternMatched = true;"""
 
     private def createBasePatternTestScriptlet(qn: QN) = {
       val basePattern = getBasePattern(qn)
