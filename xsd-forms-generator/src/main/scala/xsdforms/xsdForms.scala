@@ -1057,10 +1057,10 @@ package xsdforms {
 
     private def createMandatoryTestScriptlet(node: NodeBasic) = {
       if (isMandatory(node.element, restriction(node)))
-        """
-|  // mandatory test
-|  if ((v.val() == null) || (v.val().length==0))
-|    ok=false;"""
+        JS().line("  // mandatory test")
+          .line("  if ((v.val() == null) || (v.val().length==0))")
+          .line("    ok=false;")
+          .toString
       else ""
     }
 
