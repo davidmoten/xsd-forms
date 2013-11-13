@@ -1,9 +1,11 @@
 package xsdforms {
 
   import xsd._
-  import xsd.ComplexTypeModelSequence1
-  import javax.xml.namespace.QName
-  import scalaxb._
+import xsd.ComplexTypeModelSequence1
+
+import javax.xml.namespace.QName
+
+import scalaxb._
 
   /**
    * **************************************************************
@@ -105,7 +107,8 @@ package xsdforms {
   class TreeCreatingVisitor extends Visitor {
 
     import Util._
-    import java.util.UUID
+
+import java.util.UUID
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
 
@@ -317,9 +320,10 @@ package xsdforms {
    */
 
   class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
+
     import TreeToHtmlConverter._
-    import XsdUtil._
-    import Util._
+import XsdUtil._
+import Util._
     private val script = new StringBuilder
 
     private var number = 0
@@ -1086,10 +1090,10 @@ package xsdforms {
     private def createCanExcludeScriptlet(e: Element) =
       if (e.minOccurs > 0) ""
       else {
-        """
-|  // minOccurs=0, disable if blank
-|  var includeInXml  = !((v.val() == null) || (v.val().length==0));
-|  pathDiv.attr('enabled','' + includeInXml);"""
+        JS().line("  // minOccurs=0, disable if blank")
+            .line("  var includeInXml  = !((v.val() == null) || (v.val().length==0));")
+            .line("  pathDiv.attr('enabled','' + includeInXml);")
+            .toString
       }
 
     private def createFacetTestScriptlet(r: Restriction) = {
@@ -1540,7 +1544,7 @@ $(function() {
 
   class SchemaTraversor(s: Schema, rootElement: String, visitor: Visitor) {
     import Util._
-    import XsdUtil._
+import XsdUtil._
 
     private val topLevelElements =
       s.schemasequence1.flatMap(_.schemaTopOption1.value match {
@@ -1718,7 +1722,7 @@ $(function() {
   }
 
   private class Html {
-    import Html._
+import Html._
     private case class HtmlElement(name: String, hasContent: Boolean)
     private val stack = new scala.collection.mutable.Stack[HtmlElement]
     private var s = new StringBuffer
