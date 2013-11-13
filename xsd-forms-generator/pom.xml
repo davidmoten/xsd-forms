@@ -11,8 +11,8 @@
 	<properties>
 		<selenium.version>2.36.0</selenium.version>
 		<webdriver.chrome.driver>/usr/local/bin/chromedriver</webdriver.chrome.driver>
-		 <m3.site.version>3.3</m3.site.version>
-		 <cobertura.version>2.6</cobertura.version>
+		<m3.site.version>3.3</m3.site.version>
+		<cobertura.version>2.6</cobertura.version>
 	</properties>
 	<profiles>
 		<profile>
@@ -130,25 +130,48 @@
 				</configuration>
 			</plugin>
 			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>zip-js-css</id>
-                        <phase>generate-resources</phase>
-                        <configuration>
-                            <target>
-                                <!-- Create a zip file. -->
-                                <zip basedir="${basedir}/src/main/webapp" includes="css/** js/**" destfile="${project.build.directory}/generated-resources/xsd-forms-js-css.zip" />
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>zip-js-css</id>
+						<phase>generate-resources</phase>
+						<configuration>
+							<target>
+								<!-- Create a zip file. -->
+								<zip basedir="${basedir}/src/main/webapp" includes="css/** js/**"
+									destfile="${project.build.directory}/generated-resources/xsd-forms-js-css.zip" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>add-resource</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/generated-resources</directory>
+									<targetPath></targetPath>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
@@ -190,7 +213,8 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -211,6 +235,25 @@
 										</versionRange>
 										<goals>
 											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											build-helper-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.8,)
+										</versionRange>
+										<goals>
+											<goal>add-resource</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
