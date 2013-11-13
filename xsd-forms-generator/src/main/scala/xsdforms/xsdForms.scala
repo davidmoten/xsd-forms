@@ -1046,11 +1046,13 @@ package xsdforms {
     private def createDeclarationScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
       val number = elementNumber(e)
       val itemId = getItemId(number, instances)
-      JS().line("// %s",e.name.get)
-                   .line("var validate%sinstance%s = function () {",number,instances)
-                   .line("  var ok = true;")
-                   .line("  var v = $('#%s');",itemId)
-                   .line("  var pathDiv = $('#%s');",getPathId(number, instances)).toString
+      JS()
+        .line("// %s", e.name.get)
+        .line("var validate%sinstance%s = function () {", number, instances)
+        .line("  var ok = true;")
+        .line("  var v = $('#%s');", itemId)
+        .line("  var pathDiv = $('#%s');", getPathId(number, instances))
+        .toString
     }
 
     private def createMandatoryTestScriptlet(node: NodeBasic) = {
