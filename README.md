@@ -46,7 +46,7 @@ How do I generate a form?
   * maven plugin (jvm developer) (*in development*)
   * web service (other) (*available*)
 
-A web service (Rest/SOAP) is available now on cloudbees at http://xsd-forms-generator.xuml-tools.cloudbees.net/. At this service you can 
+A web service is available at http://xsd-forms-generator.xuml-tools.cloudbees.net/. At this service you can 
 
   * Submit a schema document to the service and receive a zip archive in return of the generated files.
   * Submit a schema document and view the generated form 
