@@ -65,7 +65,7 @@ How do I generate a form?
 
   * direct call to java/scala library (Generator.generate and Generator.generateZip)
   * maven plugin (jvm developer) (*in development*)
-  * web service (other) (*available*)
+  * [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/)
 
 A web service is available at http://xsd-forms-generator.xuml-tools.cloudbees.net/. At this service you can 
 
