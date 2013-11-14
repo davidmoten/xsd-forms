@@ -39,7 +39,10 @@ There will be options for that.
   * ant script (java developer)
   * web service (other)
 
-Once a beta version is ready, we will deploy a web service (Rest/SOAP) to Google App Engine at http://xsd-forms.appspot.com. Submit a schema document to the service and receive a zip archive in return of the generated files.
+A web service (Rest/SOAP) is available now on cloudbees at http://xsd-forms-generator.xuml-tools.cloudbees.net/. At this service you can 
+
+  * Submit a schema document to the service and receive a zip archive in return of the generated files.
+  * Submit a schema document and view the generated form 
 
 Getting Started
 ----------------
