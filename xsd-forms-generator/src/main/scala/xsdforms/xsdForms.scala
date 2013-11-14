@@ -371,15 +371,13 @@ package xsdforms {
 
       val iterator = Iterator.continually(zipIn.getNextEntry).takeWhile(_ != null)
       iterator.foreach { zipEntry =>
-        {
-          val bytes = IOUtils.toByteArray(zipIn)
-          zipOut putNextEntry new ZipEntry(zipEntry.getName)
-          zipOut write bytes
-        }
+        val bytes = IOUtils.toByteArray(zipIn)
+        zipOut putNextEntry new ZipEntry(zipEntry.getName)
+        zipOut write bytes
       }
-      
+
       zipIn.close
-      
+
       val zipEntry = new ZipEntry("form.html")
       zipOut putNextEntry zipEntry
       zipOut write text.getBytes
