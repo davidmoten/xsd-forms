@@ -5,7 +5,7 @@ Moved from http://code.google.com/p/xsd-forms/
 
 Xml schemas contain nearly everything we need for many web forms except for presentation information. Instead of seeking full separation of presentation from the data model (the xml schema) there are significant advantages in [annotating the xsd itself](http://code.google.com/p/xsd-forms/source/browse/xsd-forms/trunk/demo-scalaxb/src/main/resources/demo.xsd) according to a [special schema](http://code.google.com/p/xsd-forms/source/browse/xsd-forms/trunk/xsd-scalaxb/src/main/xsd/xsd-forms.xsd) to indicate presentation details. For one, refactoring is much easier without specialized IDE tooling that can read both our xsd and our presentation format. 
 
-*Status:* pre-alpha. Alpha release planned for December 2013 (excuse delay, very busy on other projects!). UI elements mostly done, xml generation from the completed form not working properly yet. Update 27 Oct 2013: Doing major rewrite of xsd-forms to represent and process the schema as an abstract syntax tree. Have realized that the xml extraction step needs some major rework. Repetitions of elements requires quite a lot of extra smarts in the javascript. If interested can view progress in the [tree branch](https://github.com/davidmoten/xsd-forms/tree/tree).
+*Status:* pre-alpha. Alpha release planned for December 2013 (excuse delay, very busy on other projects!). UI elements mostly done, a major rewrite was merged to master on 15 Nov 2013 to use an abstract syntax tree and to handle element repetition in a simplistic way. Lots of bits and pieces to chase down but many simple forms will be correctly generated now (try it and see).
 
 Design
 -----------------
@@ -68,7 +68,7 @@ The use case is
 * *Given an xml schema, generate html, javascript and css files that will capture input, perform validation and prepare an xml representation of the form detail compliant with the schema.*
 
 ### Building from source 
-You need maven 3 installed and subversion binaries.
+You need maven 3 installed and git binaries.
 
     git clone https://github.com/davidmoten/xsd-forms.git
     cd xsd-forms
