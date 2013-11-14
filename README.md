@@ -31,10 +31,19 @@ The features of javascript libraries like [http://jquery.com](JQuery) mean that 
 
 Note that the examples are not fully working and are still in development. The examples  look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is partially working (click Submit on a form). 
 
-How to use it?
-----------------
+I've already got a schema, can I generate a form from it?
+--------------------------------------------------------------
+Probably not! Xsd-forms only supports a subset of xsd features. It was enough work for me to get this far, believe me! Supported features are documented in another section below. Your options are:
+
+  * use an XSLT to translate xml to your match schema
+  * translate the xml using some standard parser (xpath expressions etc)
+  * generate classes from both schemas and write code to translate using the generated code. This method gives you compile-time indications as the schemas change through time (and isn't change inevitable!). *This is my preferred option*.
+
+How do I generate a form?
+---------------------------------
 There will be options for that. 
 
+  * direct call to java/scala library
   * maven plugin (java developer)
   * ant script (java developer)
   * web service (other)
