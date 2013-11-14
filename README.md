@@ -85,6 +85,13 @@ where /opt/chromedriver is the directory containing the chromedriver executable.
 
 Then go to http://localhost:8080/demo-form.html.
 
+### Run the generator
+
+    cd xsd-forms-generator-webapp
+    mvn package jetty:run
+
+Then go to http://localhost:8080/
+
 ### Development plan
   * use jquery to insert clones of div blocks to model maxOccurs > 1
   * demonstrate choice presentation options (inline and post, labelled and unlabelled)
