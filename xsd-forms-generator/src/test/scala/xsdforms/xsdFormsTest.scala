@@ -672,7 +672,7 @@ function logit(doc,name) {
     def test() {
       val out = new File("target/out.zip")
       new FileOutputStream(out)
-      Generator.generateZip("c-", getClass.getResourceAsStream("/demo.xsd"), Some("main"), new FileOutputStream(out), None)
+      Generator.generateZip(getClass.getResourceAsStream("/demo.xsd"), new FileOutputStream(out))
       assertTrue(out.exists)
       val zipFile = new ZipFile(out)
       val names = enumerationAsScalaIterator(zipFile.entries()).map(_.getName).toSet

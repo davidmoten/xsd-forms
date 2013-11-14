@@ -342,32 +342,34 @@ package xsdforms {
 
   object Generator {
     import java.io._
+    import java.util.UUID
     import java.util.zip._
     import org.apache.commons.io._
 
+    
     def generateZip(
-      idPrefix: String,
-      schemaInputStream: InputStream,
-      rootElement: Option[String],
-      out: OutputStream,
+      schema: InputStream,
+      zip: OutputStream,
+      idPrefix: String = "a-",
+      rootElement: Option[String] = None,
       extraScript: Option[String] = None) {
 
       import scala.xml._
 
-      val schema = scalaxb.fromXML[Schema](
-        XML.load(schemaInputStream))
+      val schemaXb = scalaxb.fromXML[Schema](
+        XML.load(schema))
 
-      val ns = schema.targetNamespace.get.toString
+      val ns = schemaXb.targetNamespace.get.toString
 
       val visitor = new TreeCreatingVisitor()
 
-      new SchemaTraversor(schema, rootElement, visitor).traverse
+      new SchemaTraversor(schemaXb, rootElement, visitor).traverse
       println("tree:\n" + visitor)
 
       val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
 
       val zipIn = new ZipInputStream(Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
-      val zipOut = new ZipOutputStream(out)
+      val zipOut = new ZipOutputStream(zip)
 
       val iterator = Iterator.continually(zipIn.getNextEntry).takeWhile(_ != null)
       iterator.foreach { zipEntry =>
