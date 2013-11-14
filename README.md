@@ -35,9 +35,9 @@ I've already got a schema, can I generate a form from it?
 --------------------------------------------------------------
 Probably not! Xsd-forms only supports a subset of xsd features. It was enough work for me to get this far, believe me! Supported features are documented in another section below. Your options are:
 
-  * use an XSLT to translate xml to your match schema
+  * use an XSLT to translate xml to match your schema
   * translate the xml using some standard parser (xpath expressions etc)
-  * generate classes from both schemas and write code to translate using the generated code. This method gives you compile-time indications as the schemas change through time (and isn't change inevitable!). *This is my preferred option*.
+  * generate classes from both schemas and write code to translate using the generated classes. This method gives you compile-time indications as the schemas change through time (and isn't change inevitable!). *This is my preferred option*.
 
 How do I generate a form?
 ---------------------------------
