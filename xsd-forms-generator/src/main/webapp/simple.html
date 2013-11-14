@@ -11,7 +11,7 @@
 <script type="text/javascript">
 
 function encodeHTML(s) {
-    if (typeof(myVariable) != "undefined")
+    if (typeof(s) != "undefined")
 	    return s.replace(/&/g, '&amp;')
 	               .replace(/</g, '&lt;')
 	               .replace(/>/g, '&gt;')
@@ -19,40 +19,19 @@ function encodeHTML(s) {
      else 
           return s; 
 }
-
-function openTag(name) {
-	return "<" + name + ">";
+          
+function testEncodeHTML() {
+   console.log(encodeHTML('<>'));
+   test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
 }
           
-function openTagWithNs(name, namespace) {
-    return "<" + name + " xmlns=\"http://org.moten.david/example\">";
+function test(condition, message) {
+  if (!condition) alert(message);
 }
-
-function closeTag(name) {
-	return "</" + name + ">";
-}
-
-function getStartAt(previousItems, items) {
-	if (previousItems == null) return 0;
-
-	var startAt = 0;
-
-        for (var i=0; i<Math.min(previousItems.length,items.length); i++) {
-    		  if (!(items[i]==previousItems[i])) 
-    			  return startAt;
-    		  else 
-    			  startAt = i+1;
-    	}
-	return startAt;
-}
-
-function closePreviousItems(previousItems,startAt,s) {
-     if (previousItems!=null) {
-          for (var i=previousItems.length-2;i>=startAt;i--) {
-              s = s + "\n" + spaces(i*2) + closeTag(previousItems[i]);
-          }
-      }
-      return s;
+          
+          
+function encodedValueById(id) {
+    return encodeHTML($("#"+id).val());
 }
 
 function spaces(n) {
@@ -72,12 +51,50 @@ function cloneAndReplaceIds(element, suffix){
   return clone;
 }
     
-var repeatCount = 10000;
-
+function idVisible(id) {
+    return elemVisible($("#"+id));
+}
+    
+function elemVisible(elem) {
+    return elem.is(":visible");    
+}
+          
+function toXmlDate(s) {
+  return s;
+}
+          
+function toXmlDateTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toXmlTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toBoolean(s) {
+  if (s == "on" || s == "true")
+    return "true";
+  else 
+    return "false";
+}
+          
 $(function() {
+  //run js unit tests        
+  testEncodeHTML();
+  
+  //setup date and time pickers
   $('input').filter('.datepickerclass').datepicker();
-  $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","dd/mm/yy");
-  $('input').filter('.datetimepickerclass').datetimepicker();
+  //now a workaround because datepicker does not use the initial value with the required format but expects mm/dd/yyyy
+  $('input').filter('.datepickerclass').each(function() {
+    var elem = $(this);
+    var val = elem.attr('value');
+    elem.datepicker( "option", "dateFormat","yy-mm-dd");
+    if (typeof(val) != 'undefined') {
+      console.log("val="+val);
+      elem.datepicker('setDate',val);
+    }
+  });
+  $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm',separator: 'T'});
   $('input').filter('.timepickerclass').timepicker({});
 
   function callMethod(methodName, argument) {
@@ -92,7 +109,13 @@ $(function() {
       var elem = $('#' + thisId)
       // will do validations here
       //if elem visible then do the validation for that element
-      if (elem.is(":visible")) 
+      if (elemVisible(elem)) 
+        elem.change();
+    });
+    $('input:radio').each( function (index) {
+      console.log("radio.id="+ this.id);
+      var elem = $('#' + this.id)
+      if (elemVisible(elem))
         elem.change();
     });
     var count = $('.item-error').filter(":visible").length
@@ -102,104 +125,114 @@ $(function() {
     }
     else 
       $('#validation-errors').hide();
-    var s = getXml1();
+    var s = getXml1instance();
+    s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + s;
+    s = s.replace(/&/g,"&amp;");
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
+          
     $('#submit-comments').html(s);
   });
 
-  //extract xml from element <person>
-  function getXml1() {
-  
-      var xml = '<person xmlns="http://org.moten.david/example">' + "\n"; 
-      //now add sequence children
-      xml += getXml2() + "\n";
-      xml+="</person>";
-      return xml;
-  }
-   
-
-  
-              
-  //make a hidden copy of the enclosing item
-  var enclosing2 = $("#a-repeating-enclosing-2").clone();
-   
-  var lastRepeat2="a-repeating-enclosing-2";
-  $("#a-repeat-button-2").click(function() {
-    var clone = enclosing2.clone();
-    clone.insertAfter("#"+lastRepeat2);
-    var map = {};
-    clone.find('*').andSelf().each( function(index) {  
-      var id = $(this).attr("id");
-      if (typeof id === "undefined") 
-        return;
-      if (id.match(/^.*-\d+$/)) {
-        //extract the number
-        //extract the number from a choice id pattern first
-        var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
-        //if not found then extract from a standard id pattern
-        if (number == id)
-          number = id.replace(/^.*-(\d+)$/,"$1");
-        if (map[number] == null) {
-          repeatCount++;
-          map[number]=repeatCount;
-        }
-        var suffix = "-" + map[number];
-        var newId = id + suffix;
-        $(this).attr("id",newId);
-        //TODO fix up label for attribute (points to name attribute of input element)
-        if (id.match(/^a-item(-\d+)?-\d+$/)) {
-          var input = $('#'+newId);  
-          var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
-          if (numberFromId == id)
-            numberFromId = id.replace(/^.*-(\d+)$/,"$1");
-           
-          input.attr("name", "a-item-input-" + numberFromId + "-" + map[numberFromId]);
-          input.change( function() {
-            console.log("changed " + newId);
-            var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
-            var error= $("#a-item-error-" + numberFromId  + "-" + map[numberFromId]);
-            if (!(ok)) 
-              error.show();
-            else 
-              error.hide();
-          })
-        }
-      }
-    })
-    var nextId = clone.attr("id");
-    lastRepeat2=nextId;
-  })
-          
-
   // name
-  var validate2 = function() {
-    return validate2WithSuffix("");  
-  }
-  
-  var validate2WithSuffix = function (suffix) {
+  var validate2instance1_1 = function () {
     var ok = true;
-    var v = $("#a-item-2" + suffix);
-    var pathDiv = $("#a-item-path-2");
+    var v = $('#a-item-2-instance-1_1');
+    var pathDiv = $('#a-item-path-2-instance-1_1');
 
     return ok;
   }
-        
-  $("#a-item-2").change( function() {
-    var ok = validate2();
-    var error= $("#a-item-error-2");
+  
+  $('#a-item-2-instance-1_1').change( function() {
+    var ok = validate2instance1_1();
+    var error= $('#a-item-error-2-instance-1_1');
     if (!(ok)) 
       error.show();
-    else 
+    else
       error.hide();
-  })
+  });
   
 
-  //extract xml from element <name>
-  function getXml2() {
-      return '<name>' + encodeHTML($("#a-item-2").val()) + "</name>"
+  $('#a-repeating-enclosing-2-instance-1_2').hide();
+
+  // name
+  var validate2instance1_2 = function () {
+    var ok = true;
+    var v = $('#a-item-2-instance-1_2');
+    var pathDiv = $('#a-item-path-2-instance-1_2');
+
+    return ok;
   }
-   
+  
+  $('#a-item-2-instance-1_2').change( function() {
+    var ok = validate2instance1_2();
+    var error= $('#a-item-error-2-instance-1_2');
+    if (!(ok)) 
+      error.show();
+    else
+      error.hide();
+  });
+  
+
+  $('#a-repeating-enclosing-2-instance-1_3').hide();
+
+  // name
+  var validate2instance1_3 = function () {
+    var ok = true;
+    var v = $('#a-item-2-instance-1_3');
+    var pathDiv = $('#a-item-path-2-instance-1_3');
+
+    return ok;
+  }
+  
+  $('#a-item-2-instance-1_3').change( function() {
+    var ok = validate2instance1_3();
+    var error= $('#a-item-error-2-instance-1_3');
+    if (!(ok)) 
+      error.show();
+    else
+      error.hide();
+  });
+  
+
+  $('#a-repeat-button-2-instance-1').click( function() {
+    // loop through all repeats until find first nonInvisible repeat and make it visible
+    var elem;
+    elem = $('#a-repeating-enclosing-2-instance-1_1');
+    if (!elemVisible(elem))
+      { elem.show(); return; }    elem = $('#a-repeating-enclosing-2-instance-1_2');
+    if (!elemVisible(elem))
+      { elem.show(); return; }    elem = $('#a-repeating-enclosing-2-instance-1_3');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+  })
+
+
+  //extract xml from element <name>
+  function getXml2instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-2-instance-1_1'))
+    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_1") + '</name>';
+  if (idVisible('a-repeating-enclosing-2-instance-1_2'))
+    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_2") + '</name>';
+  if (idVisible('a-repeating-enclosing-2-instance-1_3'))
+    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_3") + '</name>';
+   return xml;
+  }
+
+
+  //extract xml from element <person>
+  function getXml1instance() {
+
+    var xml = '\n' + spaces(0) + '<person xmlns="http://org.moten.david/example">';
+    //now add sequence children for each instanceNo
+    if (idVisible('a-repeating-enclosing-1-instance-1'))
+    xml += getXml2instance1();
+    xml += '\n' + spaces(0) + '</person>';
+    return xml;
+  }
+
 
   $("#form").submit(function () { return false; }); // so it won't submit
 
@@ -212,22 +245,43 @@ $(function() {
 <form method="POST" action="form.html" name="form">
 
   <div class="sequence">
-    <div class="repeating-title">
+    <div class="non-repeating-title">
     </div>
-    <div id="a-repeating-enclosing-1" class="repeating-enclosing">
+    <div id="a-repeating-enclosing-1-instance-1" class="repeating-enclosing">
       <div class="sequence-label">Personal details</div>
-      <div id="a-sequence-1" class="sequence-content">
-        <div id="a-item-enclosing-2" class="item-enclosing">
-          <div class="repeating-title">
+      <div id="a-sequence-1-instance-1" class="sequence-content">
+        <div id="a-item-enclosing-2-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
           </div>
-          <div id="a-repeat-button-2" class="repeat-button white small">+</div>
-          <div id="a-repeating-enclosing-2" class="repeating-enclosing">
+          <div id="a-repeat-button-2-instance-1" class="repeat-button white small">+</div>
+          <div id="a-repeating-enclosing-2-instance-1_1" class="repeating-enclosing">
             <div class="item-number">2</div>
-            <label class="item-label" for="a-item-input-2">Full name</label>
+            <label class="item-label" for="a-item-input-2-instance-1_1">Full name</label>
             <div class="item-input">
-              <input number="2" name="a-item-input-2" id="a-item-2" class=" item-input-text" type="text">
+              <input number="2" name="a-item-input-2-instance-1_1" id="a-item-2-instance-1_1" class=" item-input-text" type="text">
               </input>
-              <div id="a-item-error-2" class="item-error">Invalid</div>
+              <div id="a-item-path-2-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-2-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+          <div id="a-repeating-enclosing-2-instance-1_2" class="repeating-enclosing">
+            <div class="item-number">2</div>
+            <label class="item-label" for="a-item-input-2-instance-1_2">Full name</label>
+            <div class="item-input">
+              <input number="2" name="a-item-input-2-instance-1_2" id="a-item-2-instance-1_2" class=" item-input-text" type="text">
+              </input>
+              <div id="a-item-path-2-instance-1_2" class="item-path" enabled="true"></div>
+              <div id="a-item-error-2-instance-1_2" class="item-error">Invalid</div>
+            </div>
+          </div>
+          <div id="a-repeating-enclosing-2-instance-1_3" class="repeating-enclosing">
+            <div class="item-number">2</div>
+            <label class="item-label" for="a-item-input-2-instance-1_3">Full name</label>
+            <div class="item-input">
+              <input number="2" name="a-item-input-2-instance-1_3" id="a-item-2-instance-1_3" class=" item-input-text" type="text">
+              </input>
+              <div id="a-item-path-2-instance-1_3" class="item-path" enabled="true"></div>
+              <div id="a-item-error-2-instance-1_3" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
