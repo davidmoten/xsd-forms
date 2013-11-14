@@ -8,6 +8,7 @@
     <version>0.1-SNAPSHOT</version>
   </parent>
   <artifactId>xsd-forms-maven-plugin</artifactId>
+  <name>${project.artifactId}</name>
   <packaging>maven-plugin</packaging>
   <name>${project.artifactId}</name>
   <url>http://maven.apache.org</url>

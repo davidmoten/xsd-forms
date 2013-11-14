@@ -7,7 +7,7 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>demo-scalaxb</artifactId>
-
+	<name>${project.artifactId}</name>
 	<build>
 		<plugins>
 			<plugin>
