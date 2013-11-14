@@ -9,6 +9,17 @@
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript">
+
+function encodeHTML(s) {
+    if (typeof(myVariable) != "undefined")
+	    return s.replace(/&/g, '&amp;')
+	               .replace(/</g, '&lt;')
+	               .replace(/>/g, '&gt;')
+	               .replace(/"/g, '&quot;');
+     else 
+          return s; 
+}
+
 function openTag(name) {
 	return "<" + name + ">";
 }
@@ -75,7 +86,6 @@ $(function() {
   }
 
   $('#pre-submit').click( function () {
-    var s = "";
     var previousItems = null;
     $('*[number]').each( function(index) {
       var thisId = this.id
@@ -92,40 +102,52 @@ $(function() {
     }
     else 
       $('#validation-errors').hide();
-    $('div[enabled="true"]').each( function(index) { 
-      var inputId = this.id.replace("path-","");
-      var value = $('#'+ inputId).val()
-     
-      var items = $(this).text().split('|');
-      var startAt = getStartAt(previousItems, items);
-      
-      s = closePreviousItems(previousItems, startAt,s);
-      
-      //handle closing multiple repeated elements see https://github.com/davidmoten/xsd-forms/issues/1
-      if (items.length>1 && startAt==items.length) {
-          var tag;
-          s = s + spaces((startAt-1)*2);
-          tag = openTag(items[items.length-1]);
-          s = s + "\n" + spaces(i*2) + tag;
-      }
-      
-      for (var i=startAt; i<items.length; i++) {
-          var tag;
-          if (i==0)
-            tag = openTagWithNs(items[i],"ns");
-          else
-            tag = openTag(items[i]);
-    	  s = s + "\n" + spaces(i*2) + tag;
-      }
-      s = s + value 
-      s = s + closeTag(items[items.length-1]);
-      previousItems = items;
-    });
-    s = closePreviousItems(previousItems, 0,s);
+    var s = getXml1();
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
     $('#submit-comments').html(s);
   });
+
+  //extract xml from element <census>
+  function getXml1() {
+  
+      var xml = '<census xmlns="http://org.moten.david/example2">' + "\n"; 
+      //now add sequence children
+      xml += getXml2() + "\n";
+      xml += getXml10() + "\n";
+      xml += getXml13() + "\n";
+      xml += getXml1() + "\n";
+      xml += getXml16() + "\n";
+      xml += getXml17() + "\n";
+      xml += getXml18() + "\n";
+      xml += getXml22() + "\n";
+      xml += getXml24() + "\n";
+      xml += getXml25() + "\n";
+      xml += getXml26() + "\n";
+      xml += getXml32() + "\n";
+      xml += getXml33() + "\n";
+      xml += getXml34() + "\n";
+      xml+="</census>";
+      return xml;
+  }
+   
+
+  //extract xml from element <dwelling-address>
+  function getXml2() {
+  
+      var xml = '<dwelling-address>' + "\n"; 
+      //now add sequence children
+      xml += getXml3() + "\n";
+      xml += getXml4() + "\n";
+      xml += getXml5() + "\n";
+      xml += getXml6() + "\n";
+      xml += getXml7() + "\n";
+      xml += getXml8() + "\n";
+      xml += getXml9() + "\n";
+      xml+="</dwelling-address>";
+      return xml;
+  }
+   
   $('#b-item-3').width('4em');
 
   // apartment-flat-unit-number
@@ -156,6 +178,12 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty  
   $("#b-item-path-3").attr('enabled','false');
+
+  //extract xml from element <apartment-flat-unit-number>
+  function getXml3() {
+      return '<apartment-flat-unit-number>' + encodeHTML($("#b-item-3").val()) + "</apartment-flat-unit-number>"
+  }
+   
   $('#b-item-4').width('5em');
 
   // street-number
@@ -186,6 +214,12 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty  
   $("#b-item-path-4").attr('enabled','false');
+
+  //extract xml from element <street-number>
+  function getXml4() {
+      return '<street-number>' + encodeHTML($("#b-item-4").val()) + "</street-number>"
+  }
+   
   $('#b-item-5').width('20em');
 
   // street-name
@@ -216,6 +250,12 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty  
   $("#b-item-path-5").attr('enabled','false');
+
+  //extract xml from element <street-name>
+  function getXml5() {
+      return '<street-name>' + encodeHTML($("#b-item-5").val()) + "</street-name>"
+  }
+   
   $('#b-item-6').width('20em');
 
   // suburb-locality
@@ -245,6 +285,12 @@ $(function() {
   })
   
 
+  //extract xml from element <suburb-locality>
+  function getXml6() {
+      return '<suburb-locality>' + encodeHTML($("#b-item-6").val()) + "</suburb-locality>"
+  }
+   
+
   // state
   var validate7 = function() {
     return validate7WithSuffix("");  
@@ -267,6 +313,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <state>
+  function getXml7() {
+      return '<state>' + encodeHTML($("#b-item-7").val()) + "</state>"
+  }
+   
   $('#b-item-8').width('4em');
 
   // postcode
@@ -303,6 +355,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <postcode>
+  function getXml8() {
+      return '<postcode>' + encodeHTML($("#b-item-8").val()) + "</postcode>"
+  }
+   
   $('#b-item-9').width('25em');
 
   // property-building-name
@@ -333,6 +391,24 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty  
   $("#b-item-path-9").attr('enabled','false');
+
+  //extract xml from element <property-building-name>
+  function getXml9() {
+      return '<property-building-name>' + encodeHTML($("#b-item-9").val()) + "</property-building-name>"
+  }
+   
+
+  //extract xml from element <name>
+  function getXml10() {
+  
+      var xml = '<name>' + "\n"; 
+      //now add sequence children
+      xml += getXml11() + "\n";
+      xml += getXml12() + "\n";
+      xml+="</name>";
+      return xml;
+  }
+   
   $('#b-item-11').css('width','20em');
 
   // first-name
@@ -357,6 +433,12 @@ $(function() {
       error.hide();
   })
   
+
+  //extract xml from element <first-name>
+  function getXml11() {
+      return '<first-name>' + encodeHTML($("#b-item-11").val()) + "</first-name>"
+  }
+   
   $('#b-item-12').width('20em');
 
   // last-name
@@ -382,6 +464,12 @@ $(function() {
   })
   
 
+  //extract xml from element <last-name>
+  function getXml12() {
+      return '<last-name>' + encodeHTML($("#b-item-12").val()) + "</last-name>"
+  }
+   
+
   // gender
   var validate13 = function() {
     return validate13WithSuffix("");  
@@ -405,38 +493,73 @@ $(function() {
   })
   
 
-  $("#b-choice-content-14-1").hide();
+  //extract xml from element <gender>
+  function getXml13() {
+      return '<gender>' + encodeHTML($("#b-item-13").val()) + "</gender>"
+  }
+   
 
-  $("#b-choice-content-14-2").hide();
+  $("#b-choice-content-1-1").hide();
 
-  var choiceChange14 = function addChoiceChange14(suffix) {
-    $(":input[@name='b-item-input-14" + suffix + "']").change(function() {
-      var checked = $(':input[name=b-item-input-14' + suffix + ']:checked').attr("id");
+  $("#b-choice-content-1-2").hide();
 
-      if (checked == "b-item-14-1" + suffix) {
-        $("#b-choice-content-14-1" + suffix).show();
-        $("#b-choice-content-14-1" + suffix).find('.item-path').attr('enabled','true');
+  var choiceChange1 = function addChoiceChange1(suffix) {
+    $(":input[@name='b-item-input-1" + suffix + "']").change(function() {
+      var checked = $(':input[name=b-item-input-1' + suffix + ']:checked').attr("id");
+
+      if (checked == "b-item-1-1" + suffix) {
+        $("#b-choice-content-1-1" + suffix).show();
+        $("#b-choice-content-1-1" + suffix).find('.item-path').attr('enabled','true');
       }
       else {
-        $("#b-choice-content-14-1" + suffix).hide();
-        $("#b-choice-content-14-1" + suffix).find('.item-path').attr('enabled','false');
+        $("#b-choice-content-1-1" + suffix).hide();
+        $("#b-choice-content-1-1" + suffix).find('.item-path').attr('enabled','false');
       }
 
-      if (checked == "b-item-14-2" + suffix) {
-        $("#b-choice-content-14-2" + suffix).show();
-        $("#b-choice-content-14-2" + suffix).find('.item-path').attr('enabled','true');
+      if (checked == "b-item-1-2" + suffix) {
+        $("#b-choice-content-1-2" + suffix).show();
+        $("#b-choice-content-1-2" + suffix).find('.item-path').attr('enabled','true');
       }
       else {
-        $("#b-choice-content-14-2" + suffix).hide();
-        $("#b-choice-content-14-2" + suffix).find('.item-path').attr('enabled','false');
+        $("#b-choice-content-1-2" + suffix).hide();
+        $("#b-choice-content-1-2" + suffix).find('.item-path').attr('enabled','false');
       }
 
     })
   }
   
-  choiceChange14("");
+  choiceChange1("");
 
   // date-of-birth
+  var validate14 = function() {
+    return validate14WithSuffix("");  
+  }
+  
+  var validate14WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-14" + suffix);
+    var pathDiv = $("#b-item-path-14");
+
+    return ok;
+  }
+        
+  $("#b-item-14").change( function() {
+    var ok = validate14();
+    var error= $("#b-item-error-14");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <date-of-birth>
+  function getXml14() {
+      return '<date-of-birth>' + encodeHTML($("#b-item-14").val()) + "</date-of-birth>"
+  }
+   
+
+  // age-last-birthday
   var validate15 = function() {
     return validate15WithSuffix("");  
   }
@@ -445,29 +568,6 @@ $(function() {
     var ok = true;
     var v = $("#b-item-15" + suffix);
     var pathDiv = $("#b-item-path-15");
-
-    return ok;
-  }
-        
-  $("#b-item-15").change( function() {
-    var ok = validate15();
-    var error= $("#b-item-error-15");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // age-last-birthday
-  var validate16 = function() {
-    return validate16WithSuffix("");  
-  }
-  
-  var validate16WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-16" + suffix);
-    var pathDiv = $("#b-item-path-16");
     	  
     // base pattern test
     var regex = /^\d+$/ ;
@@ -484,6 +584,50 @@ $(function() {
     return ok;
   }
         
+  $("#b-item-15").change( function() {
+    var ok = validate15();
+    var error= $("#b-item-error-15");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <age-last-birthday>
+  function getXml15() {
+      return '<age-last-birthday>' + encodeHTML($("#b-item-15").val()) + "</age-last-birthday>"
+  }
+   
+
+  //extract xml from element <census>
+  function getXml1() {
+  
+      var xml = '<census xmlns="http://org.moten.david/example2">' + "\n"; 
+      //now optionally add selected child if any
+      var suffix=""; //what is suffix used for?
+      var checked = $(':input[name=b-item-input-1' + suffix + ']:checked').attr("id");
+   
+      if (checked == "b-item-1-1") xml += getXml14() + "\n";
+      if (checked == "b-item-1-2") xml += getXml15() + "\n";
+      xml+="</census>";
+      return xml;
+  }
+   
+
+  // marital-status
+  var validate16 = function() {
+    return validate16WithSuffix("");  
+  }
+  
+  var validate16WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-16" + suffix);
+    var pathDiv = $("#b-item-path-16");
+
+    return ok;
+  }
+        
   $("#b-item-16").change( function() {
     var ok = validate16();
     var error= $("#b-item-error-16");
@@ -494,7 +638,13 @@ $(function() {
   })
   
 
-  // marital-status
+  //extract xml from element <marital-status>
+  function getXml16() {
+      return '<marital-status>' + encodeHTML($("#b-item-16").val()) + "</marital-status>"
+  }
+   
+
+  // indigenous-origin
   var validate17 = function() {
     return validate17WithSuffix("");  
   }
@@ -517,104 +667,110 @@ $(function() {
   })
   
 
-  // indigenous-origin
-  var validate18 = function() {
-    return validate18WithSuffix("");  
+  //extract xml from element <indigenous-origin>
+  function getXml17() {
+      return '<indigenous-origin>' + encodeHTML($("#b-item-17").val()) + "</indigenous-origin>"
   }
-  
-  var validate18WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-18" + suffix);
-    var pathDiv = $("#b-item-path-18");
+   
 
-    return ok;
-  }
-        
-  $("#b-item-18").change( function() {
-    var ok = validate18();
-    var error= $("#b-item-error-18");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
+  $("#b-choice-content-18-1").hide();
 
-  $("#b-choice-content-19-1").hide();
+  $("#b-choice-content-18-2").hide();
 
-  $("#b-choice-content-19-2").hide();
+  $("#b-choice-content-18-3").hide();
 
-  $("#b-choice-content-19-3").hide();
+  var choiceChange18 = function addChoiceChange18(suffix) {
+    $(":input[@name='b-item-input-18" + suffix + "']").change(function() {
+      var checked = $(':input[name=b-item-input-18' + suffix + ']:checked').attr("id");
 
-  var choiceChange19 = function addChoiceChange19(suffix) {
-    $(":input[@name='b-item-input-19" + suffix + "']").change(function() {
-      var checked = $(':input[name=b-item-input-19' + suffix + ']:checked').attr("id");
-
-      if (checked == "b-item-19-1" + suffix) {
-        $("#b-choice-content-19-1" + suffix).show();
-        $("#b-choice-content-19-1" + suffix).find('.item-path').attr('enabled','true');
+      if (checked == "b-item-18-1" + suffix) {
+        $("#b-choice-content-18-1" + suffix).show();
+        $("#b-choice-content-18-1" + suffix).find('.item-path').attr('enabled','true');
       }
       else {
-        $("#b-choice-content-19-1" + suffix).hide();
-        $("#b-choice-content-19-1" + suffix).find('.item-path').attr('enabled','false');
+        $("#b-choice-content-18-1" + suffix).hide();
+        $("#b-choice-content-18-1" + suffix).find('.item-path').attr('enabled','false');
       }
 
-      if (checked == "b-item-19-2" + suffix) {
-        $("#b-choice-content-19-2" + suffix).show();
-        $("#b-choice-content-19-2" + suffix).find('.item-path').attr('enabled','true');
+      if (checked == "b-item-18-2" + suffix) {
+        $("#b-choice-content-18-2" + suffix).show();
+        $("#b-choice-content-18-2" + suffix).find('.item-path').attr('enabled','true');
       }
       else {
-        $("#b-choice-content-19-2" + suffix).hide();
-        $("#b-choice-content-19-2" + suffix).find('.item-path').attr('enabled','false');
+        $("#b-choice-content-18-2" + suffix).hide();
+        $("#b-choice-content-18-2" + suffix).find('.item-path').attr('enabled','false');
       }
 
-      if (checked == "b-item-19-3" + suffix) {
-        $("#b-choice-content-19-3" + suffix).show();
-        $("#b-choice-content-19-3" + suffix).find('.item-path').attr('enabled','true');
+      if (checked == "b-item-18-3" + suffix) {
+        $("#b-choice-content-18-3" + suffix).show();
+        $("#b-choice-content-18-3" + suffix).find('.item-path').attr('enabled','true');
       }
       else {
-        $("#b-choice-content-19-3" + suffix).hide();
-        $("#b-choice-content-19-3" + suffix).find('.item-path').attr('enabled','false');
+        $("#b-choice-content-18-3" + suffix).hide();
+        $("#b-choice-content-18-3" + suffix).find('.item-path').attr('enabled','false');
       }
 
     })
   }
   
-  choiceChange19("");
+  choiceChange18("");
 
   // residential-same-as-dwelling-address
-  var validate20 = function() {
-    return validate20WithSuffix("");  
+  var validate19 = function() {
+    return validate19WithSuffix("");  
   }
   
-  var validate20WithSuffix = function (suffix) {
+  var validate19WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#b-item-20" + suffix);
-    var pathDiv = $("#b-item-path-20");
+    var v = $("#b-item-19" + suffix);
+    var pathDiv = $("#b-item-path-19");
 
     return ok;
   }
         
-  $("#b-item-20").change( function() {
-    var ok = validate20();
-    var error= $("#b-item-error-20");
+  $("#b-item-19").change( function() {
+    var ok = validate19();
+    var error= $("#b-item-error-19");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
-  $('#b-item-22').width('4em');
+
+  //extract xml from element <residential-same-as-dwelling-address>
+  function getXml19() {
+      return '<residential-same-as-dwelling-address>' + encodeHTML($("#b-item-19").val()) + "</residential-same-as-dwelling-address>"
+  }
+   
+
+  //extract xml from element <residential-address>
+  function getXml20() {
+  
+      var xml = '<residential-address>' + "\n"; 
+      //now add sequence children
+      xml += getXml3() + "\n";
+      xml += getXml4() + "\n";
+      xml += getXml5() + "\n";
+      xml += getXml6() + "\n";
+      xml += getXml7() + "\n";
+      xml += getXml8() + "\n";
+      xml += getXml9() + "\n";
+      xml+="</residential-address>";
+      return xml;
+  }
+   
+  $('#b-item-3').width('4em');
 
   // apartment-flat-unit-number
-  var validate22 = function() {
-    return validate22WithSuffix("");  
+  var validate3 = function() {
+    return validate3WithSuffix("");  
   }
   
-  var validate22WithSuffix = function (suffix) {
+  var validate3WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#b-item-22" + suffix);
-    var pathDiv = $("#b-item-path-22");
+    var v = $("#b-item-3" + suffix);
+    var pathDiv = $("#b-item-path-3");
 
     // minOccurs=0, disable if blank
     var includeInXml  = !((v.val() == null) || (v.val().length==0));
@@ -623,9 +779,9 @@ $(function() {
     return ok;
   }
         
-  $("#b-item-22").change( function() {
-    var ok = validate22();
-    var error= $("#b-item-error-22");
+  $("#b-item-3").change( function() {
+    var ok = validate3();
+    var error= $("#b-item-error-3");
     if (!(ok)) 
       error.show();
     else 
@@ -633,18 +789,24 @@ $(function() {
   })
   
   //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-22").attr('enabled','false');
-  $('#b-item-23').width('5em');
+  $("#b-item-path-3").attr('enabled','false');
+
+  //extract xml from element <apartment-flat-unit-number>
+  function getXml3() {
+      return '<apartment-flat-unit-number>' + encodeHTML($("#b-item-3").val()) + "</apartment-flat-unit-number>"
+  }
+   
+  $('#b-item-4').width('5em');
 
   // street-number
-  var validate23 = function() {
-    return validate23WithSuffix("");  
+  var validate4 = function() {
+    return validate4WithSuffix("");  
   }
   
-  var validate23WithSuffix = function (suffix) {
+  var validate4WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#b-item-23" + suffix);
-    var pathDiv = $("#b-item-path-23");
+    var v = $("#b-item-4" + suffix);
+    var pathDiv = $("#b-item-path-4");
 
     // minOccurs=0, disable if blank
     var includeInXml  = !((v.val() == null) || (v.val().length==0));
@@ -653,9 +815,9 @@ $(function() {
     return ok;
   }
         
-  $("#b-item-23").change( function() {
-    var ok = validate23();
-    var error= $("#b-item-error-23");
+  $("#b-item-4").change( function() {
+    var ok = validate4();
+    var error= $("#b-item-error-4");
     if (!(ok)) 
       error.show();
     else 
@@ -663,18 +825,24 @@ $(function() {
   })
   
   //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-23").attr('enabled','false');
-  $('#b-item-24').width('20em');
+  $("#b-item-path-4").attr('enabled','false');
+
+  //extract xml from element <street-number>
+  function getXml4() {
+      return '<street-number>' + encodeHTML($("#b-item-4").val()) + "</street-number>"
+  }
+   
+  $('#b-item-5').width('20em');
 
   // street-name
-  var validate24 = function() {
-    return validate24WithSuffix("");  
+  var validate5 = function() {
+    return validate5WithSuffix("");  
   }
   
-  var validate24WithSuffix = function (suffix) {
+  var validate5WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#b-item-24" + suffix);
-    var pathDiv = $("#b-item-path-24");
+    var v = $("#b-item-5" + suffix);
+    var pathDiv = $("#b-item-path-5");
 
     // minOccurs=0, disable if blank
     var includeInXml  = !((v.val() == null) || (v.val().length==0));
@@ -683,9 +851,9 @@ $(function() {
     return ok;
   }
         
-  $("#b-item-24").change( function() {
-    var ok = validate24();
-    var error= $("#b-item-error-24");
+  $("#b-item-5").change( function() {
+    var ok = validate5();
+    var error= $("#b-item-error-5");
     if (!(ok)) 
       error.show();
     else 
@@ -693,18 +861,24 @@ $(function() {
   })
   
   //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-24").attr('enabled','false');
-  $('#b-item-25').width('20em');
+  $("#b-item-path-5").attr('enabled','false');
+
+  //extract xml from element <street-name>
+  function getXml5() {
+      return '<street-name>' + encodeHTML($("#b-item-5").val()) + "</street-name>"
+  }
+   
+  $('#b-item-6').width('20em');
 
   // suburb-locality
-  var validate25 = function() {
-    return validate25WithSuffix("");  
+  var validate6 = function() {
+    return validate6WithSuffix("");  
   }
   
-  var validate25WithSuffix = function (suffix) {
+  var validate6WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#b-item-25" + suffix);
-    var pathDiv = $("#b-item-path-25");
+    var v = $("#b-item-6" + suffix);
+    var pathDiv = $("#b-item-path-6");
 
     //length test
     if (v.val().length <1)
@@ -713,9 +887,9 @@ $(function() {
     return ok;
   }
         
-  $("#b-item-25").change( function() {
-    var ok = validate25();
-    var error= $("#b-item-error-25");
+  $("#b-item-6").change( function() {
+    var ok = validate6();
+    var error= $("#b-item-error-6");
     if (!(ok)) 
       error.show();
     else 
@@ -723,39 +897,51 @@ $(function() {
   })
   
 
+  //extract xml from element <suburb-locality>
+  function getXml6() {
+      return '<suburb-locality>' + encodeHTML($("#b-item-6").val()) + "</suburb-locality>"
+  }
+   
+
   // state
-  var validate26 = function() {
-    return validate26WithSuffix("");  
+  var validate7 = function() {
+    return validate7WithSuffix("");  
   }
   
-  var validate26WithSuffix = function (suffix) {
+  var validate7WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#b-item-26" + suffix);
-    var pathDiv = $("#b-item-path-26");
+    var v = $("#b-item-7" + suffix);
+    var pathDiv = $("#b-item-path-7");
 
     return ok;
   }
         
-  $("#b-item-26").change( function() {
-    var ok = validate26();
-    var error= $("#b-item-error-26");
+  $("#b-item-7").change( function() {
+    var ok = validate7();
+    var error= $("#b-item-error-7");
     if (!(ok)) 
       error.show();
     else 
       error.hide();
   })
   
-  $('#b-item-27').width('4em');
+
+  //extract xml from element <state>
+  function getXml7() {
+      return '<state>' + encodeHTML($("#b-item-7").val()) + "</state>"
+  }
+   
+  $('#b-item-8').width('4em');
 
   // postcode
-  var validate27 = function() {
-    return validate27WithSuffix("");  
+  var validate8 = function() {
+    return validate8WithSuffix("");  
   }
   
-  var validate27WithSuffix = function (suffix) {
+  var validate8WithSuffix = function (suffix) {
     var ok = true;
-    var v = $("#b-item-27" + suffix);
-    var pathDiv = $("#b-item-path-27");
+    var v = $("#b-item-8" + suffix);
+    var pathDiv = $("#b-item-path-8");
 
     // mandatory test
     if ((v.val() == null) || (v.val().length==0))
@@ -772,6 +958,940 @@ $(function() {
     return ok;
   }
         
+  $("#b-item-8").change( function() {
+    var ok = validate8();
+    var error= $("#b-item-error-8");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <postcode>
+  function getXml8() {
+      return '<postcode>' + encodeHTML($("#b-item-8").val()) + "</postcode>"
+  }
+   
+  $('#b-item-9').width('25em');
+
+  // property-building-name
+  var validate9 = function() {
+    return validate9WithSuffix("");  
+  }
+  
+  var validate9WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-9" + suffix);
+    var pathDiv = $("#b-item-path-9");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#b-item-9").change( function() {
+    var ok = validate9();
+    var error= $("#b-item-error-9");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#b-item-path-9").attr('enabled','false');
+
+  //extract xml from element <property-building-name>
+  function getXml9() {
+      return '<property-building-name>' + encodeHTML($("#b-item-9").val()) + "</property-building-name>"
+  }
+   
+
+  // other-country
+  var validate21 = function() {
+    return validate21WithSuffix("");  
+  }
+  
+  var validate21WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-21" + suffix);
+    var pathDiv = $("#b-item-path-21");
+
+    return ok;
+  }
+        
+  $("#b-item-21").change( function() {
+    var ok = validate21();
+    var error= $("#b-item-error-21");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <other-country>
+  function getXml21() {
+      return '<other-country>' + encodeHTML($("#b-item-21").val()) + "</other-country>"
+  }
+   
+
+  //extract xml from element <residential address>
+  function getXml18() {
+  
+      var xml = '<residential address>' + "\n"; 
+      //now optionally add selected child if any
+      var suffix=""; //what is suffix used for?
+      var checked = $(':input[name=b-item-input-18' + suffix + ']:checked').attr("id");
+   
+      if (checked == "b-item-18-1") xml += getXml19() + "\n";
+      if (checked == "b-item-18-2") xml += getXml20() + "\n";
+      if (checked == "b-item-18-3") xml += getXml21() + "\n";
+      xml+="</residential address>";
+      return xml;
+  }
+   
+
+  $("#b-choice-content-22-1").hide();
+
+  $("#b-choice-content-22-2").hide();
+
+  $("#b-choice-content-22-3").hide();
+
+  var choiceChange22 = function addChoiceChange22(suffix) {
+    $(":input[@name='b-item-input-22" + suffix + "']").change(function() {
+      var checked = $(':input[name=b-item-input-22' + suffix + ']:checked').attr("id");
+
+      if (checked == "b-item-22-1" + suffix) {
+        $("#b-choice-content-22-1" + suffix).show();
+        $("#b-choice-content-22-1" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#b-choice-content-22-1" + suffix).hide();
+        $("#b-choice-content-22-1" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+      if (checked == "b-item-22-2" + suffix) {
+        $("#b-choice-content-22-2" + suffix).show();
+        $("#b-choice-content-22-2" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#b-choice-content-22-2" + suffix).hide();
+        $("#b-choice-content-22-2" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+      if (checked == "b-item-22-3" + suffix) {
+        $("#b-choice-content-22-3" + suffix).show();
+        $("#b-choice-content-22-3" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#b-choice-content-22-3" + suffix).hide();
+        $("#b-choice-content-22-3" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+    })
+  }
+  
+  choiceChange22("");
+
+  // residential-same-as-current
+  var validate23 = function() {
+    return validate23WithSuffix("");  
+  }
+  
+  var validate23WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-23" + suffix);
+    var pathDiv = $("#b-item-path-23");
+
+    return ok;
+  }
+        
+  $("#b-item-23").change( function() {
+    var ok = validate23();
+    var error= $("#b-item-error-23");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <residential-same-as-current>
+  function getXml23() {
+      return '<residential-same-as-current>' + encodeHTML($("#b-item-23").val()) + "</residential-same-as-current>"
+  }
+   
+
+  //extract xml from element <residential-address>
+  function getXml20() {
+  
+      var xml = '<residential-address>' + "\n"; 
+      //now add sequence children
+      xml += getXml3() + "\n";
+      xml += getXml4() + "\n";
+      xml += getXml5() + "\n";
+      xml += getXml6() + "\n";
+      xml += getXml7() + "\n";
+      xml += getXml8() + "\n";
+      xml += getXml9() + "\n";
+      xml+="</residential-address>";
+      return xml;
+  }
+   
+  $('#b-item-3').width('4em');
+
+  // apartment-flat-unit-number
+  var validate3 = function() {
+    return validate3WithSuffix("");  
+  }
+  
+  var validate3WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-3" + suffix);
+    var pathDiv = $("#b-item-path-3");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#b-item-3").change( function() {
+    var ok = validate3();
+    var error= $("#b-item-error-3");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#b-item-path-3").attr('enabled','false');
+
+  //extract xml from element <apartment-flat-unit-number>
+  function getXml3() {
+      return '<apartment-flat-unit-number>' + encodeHTML($("#b-item-3").val()) + "</apartment-flat-unit-number>"
+  }
+   
+  $('#b-item-4').width('5em');
+
+  // street-number
+  var validate4 = function() {
+    return validate4WithSuffix("");  
+  }
+  
+  var validate4WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-4" + suffix);
+    var pathDiv = $("#b-item-path-4");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#b-item-4").change( function() {
+    var ok = validate4();
+    var error= $("#b-item-error-4");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#b-item-path-4").attr('enabled','false');
+
+  //extract xml from element <street-number>
+  function getXml4() {
+      return '<street-number>' + encodeHTML($("#b-item-4").val()) + "</street-number>"
+  }
+   
+  $('#b-item-5').width('20em');
+
+  // street-name
+  var validate5 = function() {
+    return validate5WithSuffix("");  
+  }
+  
+  var validate5WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-5" + suffix);
+    var pathDiv = $("#b-item-path-5");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#b-item-5").change( function() {
+    var ok = validate5();
+    var error= $("#b-item-error-5");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#b-item-path-5").attr('enabled','false');
+
+  //extract xml from element <street-name>
+  function getXml5() {
+      return '<street-name>' + encodeHTML($("#b-item-5").val()) + "</street-name>"
+  }
+   
+  $('#b-item-6').width('20em');
+
+  // suburb-locality
+  var validate6 = function() {
+    return validate6WithSuffix("");  
+  }
+  
+  var validate6WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-6" + suffix);
+    var pathDiv = $("#b-item-path-6");
+
+    //length test
+    if (v.val().length <1)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#b-item-6").change( function() {
+    var ok = validate6();
+    var error= $("#b-item-error-6");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <suburb-locality>
+  function getXml6() {
+      return '<suburb-locality>' + encodeHTML($("#b-item-6").val()) + "</suburb-locality>"
+  }
+   
+
+  // state
+  var validate7 = function() {
+    return validate7WithSuffix("");  
+  }
+  
+  var validate7WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-7" + suffix);
+    var pathDiv = $("#b-item-path-7");
+
+    return ok;
+  }
+        
+  $("#b-item-7").change( function() {
+    var ok = validate7();
+    var error= $("#b-item-error-7");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <state>
+  function getXml7() {
+      return '<state>' + encodeHTML($("#b-item-7").val()) + "</state>"
+  }
+   
+  $('#b-item-8').width('4em');
+
+  // postcode
+  var validate8 = function() {
+    return validate8WithSuffix("");  
+  }
+  
+  var validate8WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-8" + suffix);
+    var pathDiv = $("#b-item-path-8");
+
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+  
+    // pattern test
+    var regex0 = /^[0-9]{4}$/ ;
+    if (regex0.test(v.val())) 
+      patternMatched = true;
+    if (!(patternMatched))
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#b-item-8").change( function() {
+    var ok = validate8();
+    var error= $("#b-item-error-8");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <postcode>
+  function getXml8() {
+      return '<postcode>' + encodeHTML($("#b-item-8").val()) + "</postcode>"
+  }
+   
+  $('#b-item-9').width('25em');
+
+  // property-building-name
+  var validate9 = function() {
+    return validate9WithSuffix("");  
+  }
+  
+  var validate9WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-9" + suffix);
+    var pathDiv = $("#b-item-path-9");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#b-item-9").change( function() {
+    var ok = validate9();
+    var error= $("#b-item-error-9");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#b-item-path-9").attr('enabled','false');
+
+  //extract xml from element <property-building-name>
+  function getXml9() {
+      return '<property-building-name>' + encodeHTML($("#b-item-9").val()) + "</property-building-name>"
+  }
+   
+
+  // other-country
+  var validate21 = function() {
+    return validate21WithSuffix("");  
+  }
+  
+  var validate21WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-21" + suffix);
+    var pathDiv = $("#b-item-path-21");
+
+    return ok;
+  }
+        
+  $("#b-item-21").change( function() {
+    var ok = validate21();
+    var error= $("#b-item-error-21");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <other-country>
+  function getXml21() {
+      return '<other-country>' + encodeHTML($("#b-item-21").val()) + "</other-country>"
+  }
+   
+
+  //extract xml from element <residential address-one-year-ago>
+  function getXml22() {
+  
+      var xml = '<residential address-one-year-ago>' + "\n"; 
+      //now optionally add selected child if any
+      var suffix=""; //what is suffix used for?
+      var checked = $(':input[name=b-item-input-22' + suffix + ']:checked').attr("id");
+   
+      if (checked == "b-item-22-1") xml += getXml23() + "\n";
+      if (checked == "b-item-22-2") xml += getXml20() + "\n";
+      if (checked == "b-item-22-3") xml += getXml21() + "\n";
+      xml+="</residential address-one-year-ago>";
+      return xml;
+  }
+   
+
+  $("#b-choice-content-24-1").hide();
+
+  $("#b-choice-content-24-2").hide();
+
+  $("#b-choice-content-24-3").hide();
+
+  var choiceChange24 = function addChoiceChange24(suffix) {
+    $(":input[@name='b-item-input-24" + suffix + "']").change(function() {
+      var checked = $(':input[name=b-item-input-24' + suffix + ']:checked').attr("id");
+
+      if (checked == "b-item-24-1" + suffix) {
+        $("#b-choice-content-24-1" + suffix).show();
+        $("#b-choice-content-24-1" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#b-choice-content-24-1" + suffix).hide();
+        $("#b-choice-content-24-1" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+      if (checked == "b-item-24-2" + suffix) {
+        $("#b-choice-content-24-2" + suffix).show();
+        $("#b-choice-content-24-2" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#b-choice-content-24-2" + suffix).hide();
+        $("#b-choice-content-24-2" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+      if (checked == "b-item-24-3" + suffix) {
+        $("#b-choice-content-24-3" + suffix).show();
+        $("#b-choice-content-24-3" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#b-choice-content-24-3" + suffix).hide();
+        $("#b-choice-content-24-3" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+    })
+  }
+  
+  choiceChange24("");
+
+  // residential-same-as-current
+  var validate23 = function() {
+    return validate23WithSuffix("");  
+  }
+  
+  var validate23WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-23" + suffix);
+    var pathDiv = $("#b-item-path-23");
+
+    return ok;
+  }
+        
+  $("#b-item-23").change( function() {
+    var ok = validate23();
+    var error= $("#b-item-error-23");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <residential-same-as-current>
+  function getXml23() {
+      return '<residential-same-as-current>' + encodeHTML($("#b-item-23").val()) + "</residential-same-as-current>"
+  }
+   
+
+  //extract xml from element <residential-address>
+  function getXml20() {
+  
+      var xml = '<residential-address>' + "\n"; 
+      //now add sequence children
+      xml += getXml3() + "\n";
+      xml += getXml4() + "\n";
+      xml += getXml5() + "\n";
+      xml += getXml6() + "\n";
+      xml += getXml7() + "\n";
+      xml += getXml8() + "\n";
+      xml += getXml9() + "\n";
+      xml+="</residential-address>";
+      return xml;
+  }
+   
+  $('#b-item-3').width('4em');
+
+  // apartment-flat-unit-number
+  var validate3 = function() {
+    return validate3WithSuffix("");  
+  }
+  
+  var validate3WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-3" + suffix);
+    var pathDiv = $("#b-item-path-3");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#b-item-3").change( function() {
+    var ok = validate3();
+    var error= $("#b-item-error-3");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#b-item-path-3").attr('enabled','false');
+
+  //extract xml from element <apartment-flat-unit-number>
+  function getXml3() {
+      return '<apartment-flat-unit-number>' + encodeHTML($("#b-item-3").val()) + "</apartment-flat-unit-number>"
+  }
+   
+  $('#b-item-4').width('5em');
+
+  // street-number
+  var validate4 = function() {
+    return validate4WithSuffix("");  
+  }
+  
+  var validate4WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-4" + suffix);
+    var pathDiv = $("#b-item-path-4");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#b-item-4").change( function() {
+    var ok = validate4();
+    var error= $("#b-item-error-4");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#b-item-path-4").attr('enabled','false');
+
+  //extract xml from element <street-number>
+  function getXml4() {
+      return '<street-number>' + encodeHTML($("#b-item-4").val()) + "</street-number>"
+  }
+   
+  $('#b-item-5').width('20em');
+
+  // street-name
+  var validate5 = function() {
+    return validate5WithSuffix("");  
+  }
+  
+  var validate5WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-5" + suffix);
+    var pathDiv = $("#b-item-path-5");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#b-item-5").change( function() {
+    var ok = validate5();
+    var error= $("#b-item-error-5");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#b-item-path-5").attr('enabled','false');
+
+  //extract xml from element <street-name>
+  function getXml5() {
+      return '<street-name>' + encodeHTML($("#b-item-5").val()) + "</street-name>"
+  }
+   
+  $('#b-item-6').width('20em');
+
+  // suburb-locality
+  var validate6 = function() {
+    return validate6WithSuffix("");  
+  }
+  
+  var validate6WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-6" + suffix);
+    var pathDiv = $("#b-item-path-6");
+
+    //length test
+    if (v.val().length <1)
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#b-item-6").change( function() {
+    var ok = validate6();
+    var error= $("#b-item-error-6");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <suburb-locality>
+  function getXml6() {
+      return '<suburb-locality>' + encodeHTML($("#b-item-6").val()) + "</suburb-locality>"
+  }
+   
+
+  // state
+  var validate7 = function() {
+    return validate7WithSuffix("");  
+  }
+  
+  var validate7WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-7" + suffix);
+    var pathDiv = $("#b-item-path-7");
+
+    return ok;
+  }
+        
+  $("#b-item-7").change( function() {
+    var ok = validate7();
+    var error= $("#b-item-error-7");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <state>
+  function getXml7() {
+      return '<state>' + encodeHTML($("#b-item-7").val()) + "</state>"
+  }
+   
+  $('#b-item-8').width('4em');
+
+  // postcode
+  var validate8 = function() {
+    return validate8WithSuffix("");  
+  }
+  
+  var validate8WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-8" + suffix);
+    var pathDiv = $("#b-item-path-8");
+
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+  
+    // pattern test
+    var regex0 = /^[0-9]{4}$/ ;
+    if (regex0.test(v.val())) 
+      patternMatched = true;
+    if (!(patternMatched))
+      ok = false;
+
+    return ok;
+  }
+        
+  $("#b-item-8").change( function() {
+    var ok = validate8();
+    var error= $("#b-item-error-8");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <postcode>
+  function getXml8() {
+      return '<postcode>' + encodeHTML($("#b-item-8").val()) + "</postcode>"
+  }
+   
+  $('#b-item-9').width('25em');
+
+  // property-building-name
+  var validate9 = function() {
+    return validate9WithSuffix("");  
+  }
+  
+  var validate9WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-9" + suffix);
+    var pathDiv = $("#b-item-path-9");
+
+    // minOccurs=0, disable if blank
+    var includeInXml  = !((v.val() == null) || (v.val().length==0));
+    pathDiv.attr('enabled','' + includeInXml);
+
+    return ok;
+  }
+        
+  $("#b-item-9").change( function() {
+    var ok = validate9();
+    var error= $("#b-item-error-9");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+  //disable item-path due to minOccurs=0 and default is empty  
+  $("#b-item-path-9").attr('enabled','false');
+
+  //extract xml from element <property-building-name>
+  function getXml9() {
+      return '<property-building-name>' + encodeHTML($("#b-item-9").val()) + "</property-building-name>"
+  }
+   
+
+  // other-country
+  var validate21 = function() {
+    return validate21WithSuffix("");  
+  }
+  
+  var validate21WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-21" + suffix);
+    var pathDiv = $("#b-item-path-21");
+
+    return ok;
+  }
+        
+  $("#b-item-21").change( function() {
+    var ok = validate21();
+    var error= $("#b-item-error-21");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <other-country>
+  function getXml21() {
+      return '<other-country>' + encodeHTML($("#b-item-21").val()) + "</other-country>"
+  }
+   
+
+  //extract xml from element <residential address-five-years-ago>
+  function getXml24() {
+  
+      var xml = '<residential address-five-years-ago>' + "\n"; 
+      //now optionally add selected child if any
+      var suffix=""; //what is suffix used for?
+      var checked = $(':input[name=b-item-input-24' + suffix + ']:checked').attr("id");
+   
+      if (checked == "b-item-24-1") xml += getXml23() + "\n";
+      if (checked == "b-item-24-2") xml += getXml20() + "\n";
+      if (checked == "b-item-24-3") xml += getXml21() + "\n";
+      xml+="</residential address-five-years-ago>";
+      return xml;
+  }
+   
+
+  // citizen
+  var validate25 = function() {
+    return validate25WithSuffix("");  
+  }
+  
+  var validate25WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-25" + suffix);
+    var pathDiv = $("#b-item-path-25");
+
+    return ok;
+  }
+        
+  $("#b-item-25").change( function() {
+    var ok = validate25();
+    var error= $("#b-item-error-25");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <citizen>
+  function getXml25() {
+      return '<citizen>' + encodeHTML($("#b-item-25").val()) + "</citizen>"
+  }
+   
+
+  $("#b-choice-content-26-1").hide();
+
+  $("#b-choice-content-26-2").hide();
+
+  var choiceChange26 = function addChoiceChange26(suffix) {
+    $(":input[@name='b-item-input-26" + suffix + "']").change(function() {
+      var checked = $(':input[name=b-item-input-26' + suffix + ']:checked').attr("id");
+
+      if (checked == "b-item-26-1" + suffix) {
+        $("#b-choice-content-26-1" + suffix).show();
+        $("#b-choice-content-26-1" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#b-choice-content-26-1" + suffix).hide();
+        $("#b-choice-content-26-1" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+      if (checked == "b-item-26-2" + suffix) {
+        $("#b-choice-content-26-2" + suffix).show();
+        $("#b-choice-content-26-2" + suffix).find('.item-path').attr('enabled','true');
+      }
+      else {
+        $("#b-choice-content-26-2" + suffix).hide();
+        $("#b-choice-content-26-2" + suffix).find('.item-path').attr('enabled','false');
+      }
+
+    })
+  }
+  
+  choiceChange26("");
+
+  // australia
+  var validate27 = function() {
+    return validate27WithSuffix("");  
+  }
+  
+  var validate27WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-27" + suffix);
+    var pathDiv = $("#b-item-path-27");
+
+    return ok;
+  }
+        
   $("#b-item-27").change( function() {
     var ok = validate27();
     var error= $("#b-item-error-27");
@@ -781,38 +1901,37 @@ $(function() {
       error.hide();
   })
   
-  $('#b-item-28').width('25em');
 
-  // property-building-name
-  var validate28 = function() {
-    return validate28WithSuffix("");  
+  //extract xml from element <australia>
+  function getXml27() {
+      return '<australia>' + encodeHTML($("#b-item-27").val()) + "</australia>"
   }
+   
+
+  //extract xml from element <other>
+  function getXml28() {
   
-  var validate28WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-28" + suffix);
-    var pathDiv = $("#b-item-path-28");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
-
-    return ok;
+      var xml = '<other>' + "\n"; 
+      //now add sequence children
+      xml += getXml29() + "\n";
+      xml += getXml30() + "\n";
+      xml += getXml31() + "\n";
+      xml+="</other>";
+      return xml;
   }
-        
-  $("#b-item-28").change( function() {
-    var ok = validate28();
-    var error= $("#b-item-error-28");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-28").attr('enabled','false');
+   
 
-  // other-country
+    $("#b-item-29").change( function() {
+      var v = $("#b-item-29");
+      var refersTo = $("#b-item-enclosing-30") 
+      if ("Other" == v.val()) 
+        refersTo.show();
+      else
+        refersTo.hide();
+    })
+  
+
+  // country
   var validate29 = function() {
     return validate29WithSuffix("");  
   }
@@ -835,49 +1954,42 @@ $(function() {
   })
   
 
-  $("#b-choice-content-30-1").hide();
+  //extract xml from element <country>
+  function getXml29() {
+      return '<country>' + encodeHTML($("#b-item-29").val()) + "</country>"
+  }
+   
 
-  $("#b-choice-content-30-2").hide();
-
-  $("#b-choice-content-30-3").hide();
-
-  var choiceChange30 = function addChoiceChange30(suffix) {
-    $(":input[@name='b-item-input-30" + suffix + "']").change(function() {
-      var checked = $(':input[name=b-item-input-30' + suffix + ']:checked').attr("id");
-
-      if (checked == "b-item-30-1" + suffix) {
-        $("#b-choice-content-30-1" + suffix).show();
-        $("#b-choice-content-30-1" + suffix).find('.item-path').attr('enabled','true');
-      }
-      else {
-        $("#b-choice-content-30-1" + suffix).hide();
-        $("#b-choice-content-30-1" + suffix).find('.item-path').attr('enabled','false');
-      }
-
-      if (checked == "b-item-30-2" + suffix) {
-        $("#b-choice-content-30-2" + suffix).show();
-        $("#b-choice-content-30-2" + suffix).find('.item-path').attr('enabled','true');
-      }
-      else {
-        $("#b-choice-content-30-2" + suffix).hide();
-        $("#b-choice-content-30-2" + suffix).find('.item-path').attr('enabled','false');
-      }
-
-      if (checked == "b-item-30-3" + suffix) {
-        $("#b-choice-content-30-3" + suffix).show();
-        $("#b-choice-content-30-3" + suffix).find('.item-path').attr('enabled','true');
-      }
-      else {
-        $("#b-choice-content-30-3" + suffix).hide();
-        $("#b-choice-content-30-3" + suffix).find('.item-path').attr('enabled','false');
-      }
-
-    })
+  // other-country
+  var validate30 = function() {
+    return validate30WithSuffix("");  
   }
   
-  choiceChange30("");
+  var validate30WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-30" + suffix);
+    var pathDiv = $("#b-item-path-30");
 
-  // residential-same-as-current
+    return ok;
+  }
+        
+  $("#b-item-30").change( function() {
+    var ok = validate30();
+    var error= $("#b-item-error-30");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <other-country>
+  function getXml30() {
+      return '<other-country>' + encodeHTML($("#b-item-30").val()) + "</other-country>"
+  }
+   
+
+  // year-of-arrival
   var validate31 = function() {
     return validate31WithSuffix("");  
   }
@@ -886,6 +1998,11 @@ $(function() {
     var ok = true;
     var v = $("#b-item-31" + suffix);
     var pathDiv = $("#b-item-path-31");
+    	  
+    // base pattern test
+    var regex = /^\d+$/ ;
+    if (!(regex.test(v.val()))) 
+      ok = false;
 
     return ok;
   }
@@ -899,9 +2016,58 @@ $(function() {
       error.hide();
   })
   
-  $('#b-item-33').width('4em');
 
-  // apartment-flat-unit-number
+  //extract xml from element <year-of-arrival>
+  function getXml31() {
+      return '<year-of-arrival>' + encodeHTML($("#b-item-31").val()) + "</year-of-arrival>"
+  }
+   
+
+  //extract xml from element <country-of-birth>
+  function getXml26() {
+  
+      var xml = '<country-of-birth>' + "\n"; 
+      //now optionally add selected child if any
+      var suffix=""; //what is suffix used for?
+      var checked = $(':input[name=b-item-input-26' + suffix + ']:checked').attr("id");
+   
+      if (checked == "b-item-26-1") xml += getXml27() + "\n";
+      if (checked == "b-item-26-2") xml += getXml28() + "\n";
+      xml+="</country-of-birth>";
+      return xml;
+  }
+   
+
+  // father-place-of-birth
+  var validate32 = function() {
+    return validate32WithSuffix("");  
+  }
+  
+  var validate32WithSuffix = function (suffix) {
+    var ok = true;
+    var v = $("#b-item-32" + suffix);
+    var pathDiv = $("#b-item-path-32");
+
+    return ok;
+  }
+        
+  $("#b-item-32").change( function() {
+    var ok = validate32();
+    var error= $("#b-item-error-32");
+    if (!(ok)) 
+      error.show();
+    else 
+      error.hide();
+  })
+  
+
+  //extract xml from element <father-place-of-birth>
+  function getXml32() {
+      return '<father-place-of-birth>' + encodeHTML($("#b-item-32").val()) + "</father-place-of-birth>"
+  }
+   
+
+  // mother-place-of-birth
   var validate33 = function() {
     return validate33WithSuffix("");  
   }
@@ -910,10 +2076,6 @@ $(function() {
     var ok = true;
     var v = $("#b-item-33" + suffix);
     var pathDiv = $("#b-item-path-33");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
 
     return ok;
   }
@@ -927,41 +2089,36 @@ $(function() {
       error.hide();
   })
   
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-33").attr('enabled','false');
-  $('#b-item-34').width('5em');
 
-  // street-number
-  var validate34 = function() {
-    return validate34WithSuffix("");  
+  //extract xml from element <mother-place-of-birth>
+  function getXml33() {
+      return '<mother-place-of-birth>' + encodeHTML($("#b-item-33").val()) + "</mother-place-of-birth>"
   }
+   
+
+  //extract xml from element <language-at-home>
+  function getXml34() {
   
-  var validate34WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-34" + suffix);
-    var pathDiv = $("#b-item-path-34");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
-
-    return ok;
+      var xml = '<language-at-home>' + "\n"; 
+      //now add sequence children
+      xml += getXml35() + "\n";
+      xml += getXml36() + "\n";
+      xml+="</language-at-home>";
+      return xml;
   }
-        
-  $("#b-item-34").change( function() {
-    var ok = validate34();
-    var error= $("#b-item-error-34");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-34").attr('enabled','false');
-  $('#b-item-35').width('20em');
+   
 
-  // street-name
+    $("#b-item-35").change( function() {
+      var v = $("#b-item-35");
+      var refersTo = $("#b-item-enclosing-36") 
+      if ("Other" == v.val()) 
+        refersTo.show();
+      else
+        refersTo.hide();
+    })
+  
+
+  // language-at-home
   var validate35 = function() {
     return validate35WithSuffix("");  
   }
@@ -970,10 +2127,6 @@ $(function() {
     var ok = true;
     var v = $("#b-item-35" + suffix);
     var pathDiv = $("#b-item-path-35");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
 
     return ok;
   }
@@ -987,11 +2140,14 @@ $(function() {
       error.hide();
   })
   
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-35").attr('enabled','false');
-  $('#b-item-36').width('20em');
 
-  // suburb-locality
+  //extract xml from element <language-at-home>
+  function getXml35() {
+      return '<language-at-home>' + encodeHTML($("#b-item-35").val()) + "</language-at-home>"
+  }
+   
+
+  // language-at-home-other
   var validate36 = function() {
     return validate36WithSuffix("");  
   }
@@ -1000,10 +2156,6 @@ $(function() {
     var ok = true;
     var v = $("#b-item-36" + suffix);
     var pathDiv = $("#b-item-path-36");
-
-    //length test
-    if (v.val().length <1)
-      ok = false;
 
     return ok;
   }
@@ -1018,675 +2170,11 @@ $(function() {
   })
   
 
-  // state
-  var validate37 = function() {
-    return validate37WithSuffix("");  
+  //extract xml from element <language-at-home-other>
+  function getXml36() {
+      return '<language-at-home-other>' + encodeHTML($("#b-item-36").val()) + "</language-at-home-other>"
   }
-  
-  var validate37WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-37" + suffix);
-    var pathDiv = $("#b-item-path-37");
-
-    return ok;
-  }
-        
-  $("#b-item-37").change( function() {
-    var ok = validate37();
-    var error= $("#b-item-error-37");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  $('#b-item-38').width('4em');
-
-  // postcode
-  var validate38 = function() {
-    return validate38WithSuffix("");  
-  }
-  
-  var validate38WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-38" + suffix);
-    var pathDiv = $("#b-item-path-38");
-
-    // mandatory test
-    if ((v.val() == null) || (v.val().length==0))
-      ok=false;
-    var patternMatched =false;
-  
-    // pattern test
-    var regex0 = /^[0-9]{4}$/ ;
-    if (regex0.test(v.val())) 
-      patternMatched = true;
-    if (!(patternMatched))
-      ok = false;
-
-    return ok;
-  }
-        
-  $("#b-item-38").change( function() {
-    var ok = validate38();
-    var error= $("#b-item-error-38");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  $('#b-item-39').width('25em');
-
-  // property-building-name
-  var validate39 = function() {
-    return validate39WithSuffix("");  
-  }
-  
-  var validate39WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-39" + suffix);
-    var pathDiv = $("#b-item-path-39");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
-
-    return ok;
-  }
-        
-  $("#b-item-39").change( function() {
-    var ok = validate39();
-    var error= $("#b-item-error-39");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-39").attr('enabled','false');
-
-  // other-country
-  var validate40 = function() {
-    return validate40WithSuffix("");  
-  }
-  
-  var validate40WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-40" + suffix);
-    var pathDiv = $("#b-item-path-40");
-
-    return ok;
-  }
-        
-  $("#b-item-40").change( function() {
-    var ok = validate40();
-    var error= $("#b-item-error-40");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  $("#b-choice-content-41-1").hide();
-
-  $("#b-choice-content-41-2").hide();
-
-  $("#b-choice-content-41-3").hide();
-
-  var choiceChange41 = function addChoiceChange41(suffix) {
-    $(":input[@name='b-item-input-41" + suffix + "']").change(function() {
-      var checked = $(':input[name=b-item-input-41' + suffix + ']:checked').attr("id");
-
-      if (checked == "b-item-41-1" + suffix) {
-        $("#b-choice-content-41-1" + suffix).show();
-        $("#b-choice-content-41-1" + suffix).find('.item-path').attr('enabled','true');
-      }
-      else {
-        $("#b-choice-content-41-1" + suffix).hide();
-        $("#b-choice-content-41-1" + suffix).find('.item-path').attr('enabled','false');
-      }
-
-      if (checked == "b-item-41-2" + suffix) {
-        $("#b-choice-content-41-2" + suffix).show();
-        $("#b-choice-content-41-2" + suffix).find('.item-path').attr('enabled','true');
-      }
-      else {
-        $("#b-choice-content-41-2" + suffix).hide();
-        $("#b-choice-content-41-2" + suffix).find('.item-path').attr('enabled','false');
-      }
-
-      if (checked == "b-item-41-3" + suffix) {
-        $("#b-choice-content-41-3" + suffix).show();
-        $("#b-choice-content-41-3" + suffix).find('.item-path').attr('enabled','true');
-      }
-      else {
-        $("#b-choice-content-41-3" + suffix).hide();
-        $("#b-choice-content-41-3" + suffix).find('.item-path').attr('enabled','false');
-      }
-
-    })
-  }
-  
-  choiceChange41("");
-
-  // residential-same-as-current
-  var validate42 = function() {
-    return validate42WithSuffix("");  
-  }
-  
-  var validate42WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-42" + suffix);
-    var pathDiv = $("#b-item-path-42");
-
-    return ok;
-  }
-        
-  $("#b-item-42").change( function() {
-    var ok = validate42();
-    var error= $("#b-item-error-42");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  $('#b-item-44').width('4em');
-
-  // apartment-flat-unit-number
-  var validate44 = function() {
-    return validate44WithSuffix("");  
-  }
-  
-  var validate44WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-44" + suffix);
-    var pathDiv = $("#b-item-path-44");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
-
-    return ok;
-  }
-        
-  $("#b-item-44").change( function() {
-    var ok = validate44();
-    var error= $("#b-item-error-44");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-44").attr('enabled','false');
-  $('#b-item-45').width('5em');
-
-  // street-number
-  var validate45 = function() {
-    return validate45WithSuffix("");  
-  }
-  
-  var validate45WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-45" + suffix);
-    var pathDiv = $("#b-item-path-45");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
-
-    return ok;
-  }
-        
-  $("#b-item-45").change( function() {
-    var ok = validate45();
-    var error= $("#b-item-error-45");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-45").attr('enabled','false');
-  $('#b-item-46').width('20em');
-
-  // street-name
-  var validate46 = function() {
-    return validate46WithSuffix("");  
-  }
-  
-  var validate46WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-46" + suffix);
-    var pathDiv = $("#b-item-path-46");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
-
-    return ok;
-  }
-        
-  $("#b-item-46").change( function() {
-    var ok = validate46();
-    var error= $("#b-item-error-46");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-46").attr('enabled','false');
-  $('#b-item-47').width('20em');
-
-  // suburb-locality
-  var validate47 = function() {
-    return validate47WithSuffix("");  
-  }
-  
-  var validate47WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-47" + suffix);
-    var pathDiv = $("#b-item-path-47");
-
-    //length test
-    if (v.val().length <1)
-      ok = false;
-
-    return ok;
-  }
-        
-  $("#b-item-47").change( function() {
-    var ok = validate47();
-    var error= $("#b-item-error-47");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // state
-  var validate48 = function() {
-    return validate48WithSuffix("");  
-  }
-  
-  var validate48WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-48" + suffix);
-    var pathDiv = $("#b-item-path-48");
-
-    return ok;
-  }
-        
-  $("#b-item-48").change( function() {
-    var ok = validate48();
-    var error= $("#b-item-error-48");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  $('#b-item-49').width('4em');
-
-  // postcode
-  var validate49 = function() {
-    return validate49WithSuffix("");  
-  }
-  
-  var validate49WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-49" + suffix);
-    var pathDiv = $("#b-item-path-49");
-
-    // mandatory test
-    if ((v.val() == null) || (v.val().length==0))
-      ok=false;
-    var patternMatched =false;
-  
-    // pattern test
-    var regex0 = /^[0-9]{4}$/ ;
-    if (regex0.test(v.val())) 
-      patternMatched = true;
-    if (!(patternMatched))
-      ok = false;
-
-    return ok;
-  }
-        
-  $("#b-item-49").change( function() {
-    var ok = validate49();
-    var error= $("#b-item-error-49");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  $('#b-item-50').width('25em');
-
-  // property-building-name
-  var validate50 = function() {
-    return validate50WithSuffix("");  
-  }
-  
-  var validate50WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-50" + suffix);
-    var pathDiv = $("#b-item-path-50");
-
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
-
-    return ok;
-  }
-        
-  $("#b-item-50").change( function() {
-    var ok = validate50();
-    var error= $("#b-item-error-50");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-  //disable item-path due to minOccurs=0 and default is empty  
-  $("#b-item-path-50").attr('enabled','false');
-
-  // other-country
-  var validate51 = function() {
-    return validate51WithSuffix("");  
-  }
-  
-  var validate51WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-51" + suffix);
-    var pathDiv = $("#b-item-path-51");
-
-    return ok;
-  }
-        
-  $("#b-item-51").change( function() {
-    var ok = validate51();
-    var error= $("#b-item-error-51");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // citizen
-  var validate52 = function() {
-    return validate52WithSuffix("");  
-  }
-  
-  var validate52WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-52" + suffix);
-    var pathDiv = $("#b-item-path-52");
-
-    return ok;
-  }
-        
-  $("#b-item-52").change( function() {
-    var ok = validate52();
-    var error= $("#b-item-error-52");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  $("#b-choice-content-53-1").hide();
-
-  $("#b-choice-content-53-2").hide();
-
-  var choiceChange53 = function addChoiceChange53(suffix) {
-    $(":input[@name='b-item-input-53" + suffix + "']").change(function() {
-      var checked = $(':input[name=b-item-input-53' + suffix + ']:checked').attr("id");
-
-      if (checked == "b-item-53-1" + suffix) {
-        $("#b-choice-content-53-1" + suffix).show();
-        $("#b-choice-content-53-1" + suffix).find('.item-path').attr('enabled','true');
-      }
-      else {
-        $("#b-choice-content-53-1" + suffix).hide();
-        $("#b-choice-content-53-1" + suffix).find('.item-path').attr('enabled','false');
-      }
-
-      if (checked == "b-item-53-2" + suffix) {
-        $("#b-choice-content-53-2" + suffix).show();
-        $("#b-choice-content-53-2" + suffix).find('.item-path').attr('enabled','true');
-      }
-      else {
-        $("#b-choice-content-53-2" + suffix).hide();
-        $("#b-choice-content-53-2" + suffix).find('.item-path').attr('enabled','false');
-      }
-
-    })
-  }
-  
-  choiceChange53("");
-
-  // australia
-  var validate54 = function() {
-    return validate54WithSuffix("");  
-  }
-  
-  var validate54WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-54" + suffix);
-    var pathDiv = $("#b-item-path-54");
-
-    return ok;
-  }
-        
-  $("#b-item-54").change( function() {
-    var ok = validate54();
-    var error= $("#b-item-error-54");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-    $("#b-item-56").change( function() {
-      var v = $("#b-item-56");
-      var refersTo = $("#b-item-enclosing-57") 
-      if ("Other" == v.val()) 
-        refersTo.show();
-      else
-        refersTo.hide();
-    })
-  
-
-  // country
-  var validate56 = function() {
-    return validate56WithSuffix("");  
-  }
-  
-  var validate56WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-56" + suffix);
-    var pathDiv = $("#b-item-path-56");
-
-    return ok;
-  }
-        
-  $("#b-item-56").change( function() {
-    var ok = validate56();
-    var error= $("#b-item-error-56");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // other-country
-  var validate57 = function() {
-    return validate57WithSuffix("");  
-  }
-  
-  var validate57WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-57" + suffix);
-    var pathDiv = $("#b-item-path-57");
-
-    return ok;
-  }
-        
-  $("#b-item-57").change( function() {
-    var ok = validate57();
-    var error= $("#b-item-error-57");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // year-of-arrival
-  var validate58 = function() {
-    return validate58WithSuffix("");  
-  }
-  
-  var validate58WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-58" + suffix);
-    var pathDiv = $("#b-item-path-58");
-    	  
-    // base pattern test
-    var regex = /^\d+$/ ;
-    if (!(regex.test(v.val()))) 
-      ok = false;
-
-    return ok;
-  }
-        
-  $("#b-item-58").change( function() {
-    var ok = validate58();
-    var error= $("#b-item-error-58");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // father-place-of-birth
-  var validate59 = function() {
-    return validate59WithSuffix("");  
-  }
-  
-  var validate59WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-59" + suffix);
-    var pathDiv = $("#b-item-path-59");
-
-    return ok;
-  }
-        
-  $("#b-item-59").change( function() {
-    var ok = validate59();
-    var error= $("#b-item-error-59");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // mother-place-of-birth
-  var validate60 = function() {
-    return validate60WithSuffix("");  
-  }
-  
-  var validate60WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-60" + suffix);
-    var pathDiv = $("#b-item-path-60");
-
-    return ok;
-  }
-        
-  $("#b-item-60").change( function() {
-    var ok = validate60();
-    var error= $("#b-item-error-60");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-    $("#b-item-62").change( function() {
-      var v = $("#b-item-62");
-      var refersTo = $("#b-item-enclosing-63") 
-      if ("Other" == v.val()) 
-        refersTo.show();
-      else
-        refersTo.hide();
-    })
-  
-
-  // language-at-home
-  var validate62 = function() {
-    return validate62WithSuffix("");  
-  }
-  
-  var validate62WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-62" + suffix);
-    var pathDiv = $("#b-item-path-62");
-
-    return ok;
-  }
-        
-  $("#b-item-62").change( function() {
-    var ok = validate62();
-    var error= $("#b-item-error-62");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
-
-  // language-at-home-other
-  var validate63 = function() {
-    return validate63WithSuffix("");  
-  }
-  
-  var validate63WithSuffix = function (suffix) {
-    var ok = true;
-    var v = $("#b-item-63" + suffix);
-    var pathDiv = $("#b-item-path-63");
-
-    return ok;
-  }
-        
-  $("#b-item-63").change( function() {
-    var ok = validate63();
-    var error= $("#b-item-error-63");
-    if (!(ok)) 
-      error.show();
-    else 
-      error.hide();
-  })
-  
+   
 
   $("#form").submit(function () { return false; }); // so it won't submit
 
@@ -1720,7 +2208,6 @@ $(function() {
                     <input number="3" name="b-item-input-3" id="b-item-3" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-error-3" class="item-error">Invalid</div>
-                    <div id="b-item-path-3" class="item-path" enabled="true">census|dwelling-address|apartment-flat-unit-number</div>
                   </div>
                 </div>
               </div>
@@ -1734,7 +2221,6 @@ $(function() {
                     <input number="4" name="b-item-input-4" id="b-item-4" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-error-4" class="item-error">Invalid</div>
-                    <div id="b-item-path-4" class="item-path" enabled="true">census|dwelling-address|street-number</div>
                   </div>
                 </div>
               </div>
@@ -1748,7 +2234,6 @@ $(function() {
                     <input number="5" name="b-item-input-5" id="b-item-5" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-error-5" class="item-error">Invalid</div>
-                    <div id="b-item-path-5" class="item-path" enabled="true">census|dwelling-address|street-name</div>
                   </div>
                 </div>
               </div>
@@ -1762,7 +2247,6 @@ $(function() {
                     <input number="6" name="b-item-input-6" id="b-item-6" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-error-6" class="item-error">Invalid</div>
-                    <div id="b-item-path-6" class="item-path" enabled="true">census|dwelling-address|suburb-locality</div>
                   </div>
                 </div>
               </div>
@@ -1785,7 +2269,6 @@ $(function() {
                       <option value="WA">WA</option>
                     </select>
                     <div id="b-item-error-7" class="item-error">Invalid</div>
-                    <div id="b-item-path-7" class="item-path" enabled="true">census|dwelling-address|state</div>
                   </div>
                 </div>
               </div>
@@ -1799,7 +2282,6 @@ $(function() {
                     <input number="8" name="b-item-input-8" id="b-item-8" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-error-8" class="item-error">Not a valid postcode</div>
-                    <div id="b-item-path-8" class="item-path" enabled="true">census|dwelling-address|postcode</div>
                   </div>
                 </div>
               </div>
@@ -1813,7 +2295,6 @@ $(function() {
                     <input number="9" name="b-item-input-9" id="b-item-9" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-error-9" class="item-error">Invalid</div>
-                    <div id="b-item-path-9" class="item-path" enabled="true">census|dwelling-address|property-building-name</div>
                   </div>
                 </div>
               </div>
@@ -1836,7 +2317,6 @@ $(function() {
                     <input number="11" name="b-item-input-11" id="b-item-11" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-error-11" class="item-error">Invalid</div>
-                    <div id="b-item-path-11" class="item-path" enabled="true">census|name|first-name</div>
                   </div>
                 </div>
               </div>
@@ -1850,7 +2330,6 @@ $(function() {
                     <input number="12" name="b-item-input-12" id="b-item-12" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-error-12" class="item-error">Invalid</div>
-                    <div id="b-item-path-12" class="item-path" enabled="true">census|name|last-name</div>
                   </div>
                 </div>
               </div>
@@ -1870,65 +2349,62 @@ $(function() {
                 <option value="Female">Female</option>
               </select>
               <div id="b-item-error-13" class="item-error">Invalid</div>
-              <div id="b-item-path-13" class="item-path" enabled="true">census|gender</div>
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-14" class="choice">
+        <div id="b-item-enclosing-1" class="choice">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-14" class="repeating-enclosing">
+          <div id="b-repeating-enclosing-1" class="repeating-enclosing">
             <div class="choice-label">What is the person's date of birth (or age last birthday)?</div>
-            <div id="b-div-choice-item-14-1" class="div-choice-item">
-              <input number="14" name="b-item-input-14" id="b-item-14-1" class="choice-item" type="radio" value="number">Date of birth</input>
+            <div id="b-div-choice-item-1-1" class="div-choice-item">
+              <input number="1" name="b-item-input-1" id="b-item-1-1" class="choice-item" type="radio" value="number">Date of birth</input>
             </div>
-            <div id="b-div-choice-item-14-2" class="div-choice-item">
-              <input number="14" name="b-item-input-14" id="b-item-14-2" class="choice-item" type="radio" value="number">Age last birthday</input>
+            <div id="b-div-choice-item-1-2" class="div-choice-item">
+              <input number="1" name="b-item-input-1" id="b-item-1-2" class="choice-item" type="radio" value="number">Age last birthday</input>
             </div>
-            <div id="b-choice-content-14-1" class="invisible">
+            <div id="b-choice-content-1-1" class="invisible">
+              <div id="b-item-enclosing-14" class="item-enclosing">
+                <div class="repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-14" class="repeating-enclosing">
+                  <div class="item-number">14</div>
+                  <label class="item-label" for="b-item-input-14"><em>*</em></label>
+                  <div class="item-input">
+                    <input number="14" name="b-item-input-14" id="b-item-14" class="datepickerclass  item-input-text" type="text">
+                    </input>
+                    <div id="b-item-error-14" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-1-2" class="invisible">
               <div id="b-item-enclosing-15" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
                 <div id="b-repeating-enclosing-15" class="repeating-enclosing">
                   <div class="item-number">15</div>
-                  <label class="item-label" for="b-item-input-15"><em>*</em></label>
+                  <label class="item-label" for="b-item-input-15"></label>
                   <div class="item-input">
-                    <input number="15" name="b-item-input-15" id="b-item-15" class="datepickerclass  item-input-text" type="text">
+                    <input number="15" name="b-item-input-15" id="b-item-15" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-error-15" class="item-error">Invalid</div>
-                    <div id="b-item-path-15" class="item-path" enabled="true">census|census|date-of-birth</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="b-choice-content-14-2" class="invisible">
-              <div id="b-item-enclosing-16" class="item-enclosing">
-                <div class="repeating-title">
-                </div>
-                <div id="b-repeating-enclosing-16" class="repeating-enclosing">
-                  <div class="item-number">16</div>
-                  <label class="item-label" for="b-item-input-16"></label>
-                  <div class="item-input">
-                    <input number="16" name="b-item-input-16" id="b-item-16" class=" item-input-text" type="text">
-                    </input>
-                    <div id="b-item-error-16" class="item-error">Invalid</div>
-                    <div id="b-item-path-16" class="item-path" enabled="true">census|census|age-last-birthday</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-17" class="item-enclosing">
+        <div id="b-item-enclosing-16" class="item-enclosing">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-17" class="repeating-enclosing">
+          <div id="b-repeating-enclosing-16" class="repeating-enclosing">
             <div class="item-title">What is the person's current marital status?</div>
             <div class="item-before">'Married refers to registered marriages.</div>
-            <div class="item-number">17</div>
-            <label class="item-label" for="b-item-input-17">Marital Status</label>
+            <div class="item-number">16</div>
+            <label class="item-label" for="b-item-input-16">Marital Status</label>
             <div class="item-input">
-              <select id="b-item-17" class="select" name="b-item-input-17" number="17">
+              <select id="b-item-16" class="select" name="b-item-input-16" number="16">
                 <option value="">Select one...</option>
                 <option value="Never married">Never married</option>
                 <option value="Widowed">Widowed</option>
@@ -1936,302 +2412,286 @@ $(function() {
                 <option value="Separated but not divorced">Separated but not divorced</option>
                 <option value="Married">Married</option>
               </select>
-              <div id="b-item-error-17" class="item-error">Invalid</div>
-              <div id="b-item-path-17" class="item-path" enabled="true">census|marital-status</div>
+              <div id="b-item-error-16" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-18" class="item-enclosing">
+        <div id="b-item-enclosing-17" class="item-enclosing">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-18" class="repeating-enclosing">
+          <div id="b-repeating-enclosing-17" class="repeating-enclosing">
             <div class="item-title">Is the person of Aboriginal or Torres Strait Islander origin?</div>
             <div class="item-before">For persons of both Aboriginal and Torres Strait Islander origin, select 'Both'.</div>
-            <div class="item-number">18</div>
-            <label class="item-label" for="b-item-input-18"></label>
+            <div class="item-number">17</div>
+            <label class="item-label" for="b-item-input-17"></label>
             <div class="item-input">
-              <select id="b-item-18" class="select" name="b-item-input-18" number="18">
+              <select id="b-item-17" class="select" name="b-item-input-17" number="17">
                 <option value="">Select one...</option>
                 <option value="No">No</option>
                 <option value="Aboriginal">Aboriginal</option>
                 <option value="Torres Strait Islander">Torres Strait Islander</option>
                 <option value="Both">Both</option>
               </select>
-              <div id="b-item-error-18" class="item-error">Invalid</div>
-              <div id="b-item-path-18" class="item-path" enabled="true">census|indigenous-origin</div>
+              <div id="b-item-error-17" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-19" class="choice">
+        <div id="b-item-enclosing-18" class="choice">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-19" class="repeating-enclosing">
+          <div id="b-repeating-enclosing-18" class="repeating-enclosing">
             <div class="choice-label">Where does the person usually live?</div>
-            <div id="b-div-choice-item-19-1" class="div-choice-item">
-              <input number="19" name="b-item-input-19" id="b-item-19-1" class="choice-item" type="radio" value="number">Same as address of dwelling at top of form</input>
+            <div id="b-div-choice-item-18-1" class="div-choice-item">
+              <input number="18" name="b-item-input-18" id="b-item-18-1" class="choice-item" type="radio" value="number">Same as address of dwelling at top of form</input>
             </div>
-            <div id="b-div-choice-item-19-2" class="div-choice-item">
-              <input number="19" name="b-item-input-19" id="b-item-19-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
+            <div id="b-div-choice-item-18-2" class="div-choice-item">
+              <input number="18" name="b-item-input-18" id="b-item-18-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
             </div>
-            <div id="b-div-choice-item-19-3" class="div-choice-item">
-              <input number="19" name="b-item-input-19" id="b-item-19-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
+            <div id="b-div-choice-item-18-3" class="div-choice-item">
+              <input number="18" name="b-item-input-18" id="b-item-18-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
             </div>
-            <div id="b-choice-content-19-1" class="invisible">
-              <div id="b-item-enclosing-20" class="item-enclosing invisible">
+            <div id="b-choice-content-18-1" class="invisible">
+              <div id="b-item-enclosing-19" class="item-enclosing invisible">
+                <div class="repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-19" class="repeating-enclosing">
+                  <div class="item-number">19</div>
+                  <label class="item-label" for="b-item-input-19">Same as address of dwelling at top of form<em>*</em></label>
+                  <div class="item-input">
+                    <select id="b-item-19" class="select" name="b-item-input-19" number="19">
+                      <option value="true">true</option>
+                    </select>
+                    <div id="b-item-error-19" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-18-2" class="invisible">
+              <div class="sequence">
                 <div class="repeating-title">
                 </div>
                 <div id="b-repeating-enclosing-20" class="repeating-enclosing">
-                  <div class="item-number">20</div>
-                  <label class="item-label" for="b-item-input-20">Same as address of dwelling at top of form<em>*</em></label>
-                  <div class="item-input">
-                    <select id="b-item-20" class="select" name="b-item-input-20" number="20">
-                      <option value="true">true</option>
-                    </select>
-                    <div id="b-item-error-20" class="item-error">Invalid</div>
-                    <div id="b-item-path-20" class="item-path" enabled="true">census|residential address|residential-same-as-dwelling-address</div>
+                  <div class="sequence-label"></div>
+                  <div id="b-sequence-20" class="sequence-content">
+                    <div id="b-item-enclosing-3" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-3" class="repeating-enclosing">
+                        <div class="item-number">3</div>
+                        <label class="item-label" for="b-item-input-3">Apartment/Flat/Unit number</label>
+                        <div class="item-input">
+                          <input number="3" name="b-item-input-3" id="b-item-3" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-error-3" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-4" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-4" class="repeating-enclosing">
+                        <div class="item-number">4</div>
+                        <label class="item-label" for="b-item-input-4">Street Number</label>
+                        <div class="item-input">
+                          <input number="4" name="b-item-input-4" id="b-item-4" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-error-4" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-5" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-5" class="repeating-enclosing">
+                        <div class="item-number">5</div>
+                        <label class="item-label" for="b-item-input-5">Street Name</label>
+                        <div class="item-input">
+                          <input number="5" name="b-item-input-5" id="b-item-5" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-error-5" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-6" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-6" class="repeating-enclosing">
+                        <div class="item-number">6</div>
+                        <label class="item-label" for="b-item-input-6">Suburb Locality</label>
+                        <div class="item-input">
+                          <input number="6" name="b-item-input-6" id="b-item-6" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-error-6" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-7" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-7" class="repeating-enclosing">
+                        <div class="item-number">7</div>
+                        <label class="item-label" for="b-item-input-7">State</label>
+                        <div class="item-input">
+                          <select id="b-item-7" class="select" name="b-item-input-7" number="7">
+                            <option value="">Select one...</option>
+                            <option value="ACT">ACT</option>
+                            <option value="NSW">NSW</option>
+                            <option value="NT">NT</option>
+                            <option value="QLD">QLD</option>
+                            <option value="SA">SA</option>
+                            <option value="TAS">TAS</option>
+                            <option value="VIC">VIC</option>
+                            <option value="WA">WA</option>
+                          </select>
+                          <div id="b-item-error-7" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-8" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-8" class="repeating-enclosing">
+                        <div class="item-number">8</div>
+                        <label class="item-label" for="b-item-input-8">Postcode<em>*</em></label>
+                        <div class="item-input">
+                          <input number="8" name="b-item-input-8" id="b-item-8" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-error-8" class="item-error">Not a valid postcode</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-9" class="item-enclosing">
+                      <div class="repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-9" class="repeating-enclosing">
+                        <div class="item-number">9</div>
+                        <label class="item-label" for="b-item-input-9">Property Building Name</label>
+                        <div class="item-input">
+                          <input number="9" name="b-item-input-9" id="b-item-9" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-error-9" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div id="b-choice-content-19-2" class="invisible">
-              <div class="sequence">
+            <div id="b-choice-content-18-3" class="invisible">
+              <div id="b-item-enclosing-21" class="item-enclosing invisible">
                 <div class="repeating-title">
                 </div>
                 <div id="b-repeating-enclosing-21" class="repeating-enclosing">
-                  <div class="sequence-label"></div>
-                  <div id="b-sequence-21" class="sequence-content">
-                    <div id="b-item-enclosing-22" class="item-enclosing">
-                      <div class="repeating-title">
-                      </div>
-                      <div id="b-repeating-enclosing-22" class="repeating-enclosing">
-                        <div class="item-number">22</div>
-                        <label class="item-label" for="b-item-input-22">Apartment/Flat/Unit number</label>
-                        <div class="item-input">
-                          <input number="22" name="b-item-input-22" id="b-item-22" class=" item-input-text" type="text">
-                          </input>
-                          <div id="b-item-error-22" class="item-error">Invalid</div>
-                          <div id="b-item-path-22" class="item-path" enabled="true">census|residential address|residential-address|apartment-flat-unit-number</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div id="b-item-enclosing-23" class="item-enclosing">
-                      <div class="repeating-title">
-                      </div>
-                      <div id="b-repeating-enclosing-23" class="repeating-enclosing">
-                        <div class="item-number">23</div>
-                        <label class="item-label" for="b-item-input-23">Street Number</label>
-                        <div class="item-input">
-                          <input number="23" name="b-item-input-23" id="b-item-23" class=" item-input-text" type="text">
-                          </input>
-                          <div id="b-item-error-23" class="item-error">Invalid</div>
-                          <div id="b-item-path-23" class="item-path" enabled="true">census|residential address|residential-address|street-number</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div id="b-item-enclosing-24" class="item-enclosing">
-                      <div class="repeating-title">
-                      </div>
-                      <div id="b-repeating-enclosing-24" class="repeating-enclosing">
-                        <div class="item-number">24</div>
-                        <label class="item-label" for="b-item-input-24">Street Name</label>
-                        <div class="item-input">
-                          <input number="24" name="b-item-input-24" id="b-item-24" class=" item-input-text" type="text">
-                          </input>
-                          <div id="b-item-error-24" class="item-error">Invalid</div>
-                          <div id="b-item-path-24" class="item-path" enabled="true">census|residential address|residential-address|street-name</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div id="b-item-enclosing-25" class="item-enclosing">
-                      <div class="repeating-title">
-                      </div>
-                      <div id="b-repeating-enclosing-25" class="repeating-enclosing">
-                        <div class="item-number">25</div>
-                        <label class="item-label" for="b-item-input-25">Suburb Locality</label>
-                        <div class="item-input">
-                          <input number="25" name="b-item-input-25" id="b-item-25" class=" item-input-text" type="text">
-                          </input>
-                          <div id="b-item-error-25" class="item-error">Invalid</div>
-                          <div id="b-item-path-25" class="item-path" enabled="true">census|residential address|residential-address|suburb-locality</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div id="b-item-enclosing-26" class="item-enclosing">
-                      <div class="repeating-title">
-                      </div>
-                      <div id="b-repeating-enclosing-26" class="repeating-enclosing">
-                        <div class="item-number">26</div>
-                        <label class="item-label" for="b-item-input-26">State</label>
-                        <div class="item-input">
-                          <select id="b-item-26" class="select" name="b-item-input-26" number="26">
-                            <option value="">Select one...</option>
-                            <option value="ACT">ACT</option>
-                            <option value="NSW">NSW</option>
-                            <option value="NT">NT</option>
-                            <option value="QLD">QLD</option>
-                            <option value="SA">SA</option>
-                            <option value="TAS">TAS</option>
-                            <option value="VIC">VIC</option>
-                            <option value="WA">WA</option>
-                          </select>
-                          <div id="b-item-error-26" class="item-error">Invalid</div>
-                          <div id="b-item-path-26" class="item-path" enabled="true">census|residential address|residential-address|state</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div id="b-item-enclosing-27" class="item-enclosing">
-                      <div class="repeating-title">
-                      </div>
-                      <div id="b-repeating-enclosing-27" class="repeating-enclosing">
-                        <div class="item-number">27</div>
-                        <label class="item-label" for="b-item-input-27">Postcode<em>*</em></label>
-                        <div class="item-input">
-                          <input number="27" name="b-item-input-27" id="b-item-27" class=" item-input-text" type="text">
-                          </input>
-                          <div id="b-item-error-27" class="item-error">Not a valid postcode</div>
-                          <div id="b-item-path-27" class="item-path" enabled="true">census|residential address|residential-address|postcode</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div id="b-item-enclosing-28" class="item-enclosing">
-                      <div class="repeating-title">
-                      </div>
-                      <div id="b-repeating-enclosing-28" class="repeating-enclosing">
-                        <div class="item-number">28</div>
-                        <label class="item-label" for="b-item-input-28">Property Building Name</label>
-                        <div class="item-input">
-                          <input number="28" name="b-item-input-28" id="b-item-28" class=" item-input-text" type="text">
-                          </input>
-                          <div id="b-item-error-28" class="item-error">Invalid</div>
-                          <div id="b-item-path-28" class="item-path" enabled="true">census|residential address|residential-address|property-building-name</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div id="b-choice-content-19-3" class="invisible">
-              <div id="b-item-enclosing-29" class="item-enclosing invisible">
-                <div class="repeating-title">
-                </div>
-                <div id="b-repeating-enclosing-29" class="repeating-enclosing">
-                  <div class="item-number">29</div>
-                  <label class="item-label" for="b-item-input-29">Other Country<em>*</em></label>
+                  <div class="item-number">21</div>
+                  <label class="item-label" for="b-item-input-21">Other Country<em>*</em></label>
                   <div class="item-input">
-                    <select id="b-item-29" class="select" name="b-item-input-29" number="29">
+                    <select id="b-item-21" class="select" name="b-item-input-21" number="21">
                       <option value="true">true</option>
                     </select>
-                    <div id="b-item-error-29" class="item-error">Invalid</div>
-                    <div id="b-item-path-29" class="item-path" enabled="true">census|residential address|other-country</div>
+                    <div id="b-item-error-21" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-30" class="choice">
+        <div id="b-item-enclosing-22" class="choice">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-30" class="repeating-enclosing">
+          <div id="b-repeating-enclosing-22" class="repeating-enclosing">
             <div class="choice-label">Where did the person usually live one year ago (at 9 August 2010)?</div>
-            <div id="b-div-choice-item-30-1" class="div-choice-item">
-              <input number="30" name="b-item-input-30" id="b-item-30-1" class="choice-item" type="radio" value="number">Same as address in last question</input>
+            <div id="b-div-choice-item-22-1" class="div-choice-item">
+              <input number="22" name="b-item-input-22" id="b-item-22-1" class="choice-item" type="radio" value="number">Same as address in last question</input>
             </div>
-            <div id="b-div-choice-item-30-2" class="div-choice-item">
-              <input number="30" name="b-item-input-30" id="b-item-30-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
+            <div id="b-div-choice-item-22-2" class="div-choice-item">
+              <input number="22" name="b-item-input-22" id="b-item-22-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
             </div>
-            <div id="b-div-choice-item-30-3" class="div-choice-item">
-              <input number="30" name="b-item-input-30" id="b-item-30-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
+            <div id="b-div-choice-item-22-3" class="div-choice-item">
+              <input number="22" name="b-item-input-22" id="b-item-22-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
             </div>
-            <div id="b-choice-content-30-1" class="invisible">
-              <div id="b-item-enclosing-31" class="item-enclosing invisible">
+            <div id="b-choice-content-22-1" class="invisible">
+              <div id="b-item-enclosing-23" class="item-enclosing invisible">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-31" class="repeating-enclosing">
-                  <div class="item-number">31</div>
-                  <label class="item-label" for="b-item-input-31">Same as address in last question<em>*</em></label>
+                <div id="b-repeating-enclosing-23" class="repeating-enclosing">
+                  <div class="item-number">23</div>
+                  <label class="item-label" for="b-item-input-23">Same as address in last question<em>*</em></label>
                   <div class="item-input">
-                    <select id="b-item-31" class="select" name="b-item-input-31" number="31">
+                    <select id="b-item-23" class="select" name="b-item-input-23" number="23">
                       <option value="true">true</option>
                     </select>
-                    <div id="b-item-error-31" class="item-error">Invalid</div>
-                    <div id="b-item-path-31" class="item-path" enabled="true">census|residential address-one-year-ago|residential-same-as-current</div>
+                    <div id="b-item-error-23" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div id="b-choice-content-30-2" class="invisible">
+            <div id="b-choice-content-22-2" class="invisible">
               <div class="sequence">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-32" class="repeating-enclosing">
+                <div id="b-repeating-enclosing-20" class="repeating-enclosing">
                   <div class="sequence-label"></div>
-                  <div id="b-sequence-32" class="sequence-content">
-                    <div id="b-item-enclosing-33" class="item-enclosing">
+                  <div id="b-sequence-20" class="sequence-content">
+                    <div id="b-item-enclosing-3" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-33" class="repeating-enclosing">
-                        <div class="item-number">33</div>
-                        <label class="item-label" for="b-item-input-33">Apartment/Flat/Unit number</label>
+                      <div id="b-repeating-enclosing-3" class="repeating-enclosing">
+                        <div class="item-number">3</div>
+                        <label class="item-label" for="b-item-input-3">Apartment/Flat/Unit number</label>
                         <div class="item-input">
-                          <input number="33" name="b-item-input-33" id="b-item-33" class=" item-input-text" type="text">
+                          <input number="3" name="b-item-input-3" id="b-item-3" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-33" class="item-error">Invalid</div>
-                          <div id="b-item-path-33" class="item-path" enabled="true">census|residential address-one-year-ago|residential-address|apartment-flat-unit-number</div>
+                          <div id="b-item-error-3" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-34" class="item-enclosing">
+                    <div id="b-item-enclosing-4" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-34" class="repeating-enclosing">
-                        <div class="item-number">34</div>
-                        <label class="item-label" for="b-item-input-34">Street Number</label>
+                      <div id="b-repeating-enclosing-4" class="repeating-enclosing">
+                        <div class="item-number">4</div>
+                        <label class="item-label" for="b-item-input-4">Street Number</label>
                         <div class="item-input">
-                          <input number="34" name="b-item-input-34" id="b-item-34" class=" item-input-text" type="text">
+                          <input number="4" name="b-item-input-4" id="b-item-4" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-34" class="item-error">Invalid</div>
-                          <div id="b-item-path-34" class="item-path" enabled="true">census|residential address-one-year-ago|residential-address|street-number</div>
+                          <div id="b-item-error-4" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-35" class="item-enclosing">
+                    <div id="b-item-enclosing-5" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-35" class="repeating-enclosing">
-                        <div class="item-number">35</div>
-                        <label class="item-label" for="b-item-input-35">Street Name</label>
+                      <div id="b-repeating-enclosing-5" class="repeating-enclosing">
+                        <div class="item-number">5</div>
+                        <label class="item-label" for="b-item-input-5">Street Name</label>
                         <div class="item-input">
-                          <input number="35" name="b-item-input-35" id="b-item-35" class=" item-input-text" type="text">
+                          <input number="5" name="b-item-input-5" id="b-item-5" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-35" class="item-error">Invalid</div>
-                          <div id="b-item-path-35" class="item-path" enabled="true">census|residential address-one-year-ago|residential-address|street-name</div>
+                          <div id="b-item-error-5" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-36" class="item-enclosing">
+                    <div id="b-item-enclosing-6" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-36" class="repeating-enclosing">
-                        <div class="item-number">36</div>
-                        <label class="item-label" for="b-item-input-36">Suburb Locality</label>
+                      <div id="b-repeating-enclosing-6" class="repeating-enclosing">
+                        <div class="item-number">6</div>
+                        <label class="item-label" for="b-item-input-6">Suburb Locality</label>
                         <div class="item-input">
-                          <input number="36" name="b-item-input-36" id="b-item-36" class=" item-input-text" type="text">
+                          <input number="6" name="b-item-input-6" id="b-item-6" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-36" class="item-error">Invalid</div>
-                          <div id="b-item-path-36" class="item-path" enabled="true">census|residential address-one-year-ago|residential-address|suburb-locality</div>
+                          <div id="b-item-error-6" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-37" class="item-enclosing">
+                    <div id="b-item-enclosing-7" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-37" class="repeating-enclosing">
-                        <div class="item-number">37</div>
-                        <label class="item-label" for="b-item-input-37">State</label>
+                      <div id="b-repeating-enclosing-7" class="repeating-enclosing">
+                        <div class="item-number">7</div>
+                        <label class="item-label" for="b-item-input-7">State</label>
                         <div class="item-input">
-                          <select id="b-item-37" class="select" name="b-item-input-37" number="37">
+                          <select id="b-item-7" class="select" name="b-item-input-7" number="7">
                             <option value="">Select one...</option>
                             <option value="ACT">ACT</option>
                             <option value="NSW">NSW</option>
@@ -2242,36 +2702,33 @@ $(function() {
                             <option value="VIC">VIC</option>
                             <option value="WA">WA</option>
                           </select>
-                          <div id="b-item-error-37" class="item-error">Invalid</div>
-                          <div id="b-item-path-37" class="item-path" enabled="true">census|residential address-one-year-ago|residential-address|state</div>
+                          <div id="b-item-error-7" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-38" class="item-enclosing">
+                    <div id="b-item-enclosing-8" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-38" class="repeating-enclosing">
-                        <div class="item-number">38</div>
-                        <label class="item-label" for="b-item-input-38">Postcode<em>*</em></label>
+                      <div id="b-repeating-enclosing-8" class="repeating-enclosing">
+                        <div class="item-number">8</div>
+                        <label class="item-label" for="b-item-input-8">Postcode<em>*</em></label>
                         <div class="item-input">
-                          <input number="38" name="b-item-input-38" id="b-item-38" class=" item-input-text" type="text">
+                          <input number="8" name="b-item-input-8" id="b-item-8" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-38" class="item-error">Not a valid postcode</div>
-                          <div id="b-item-path-38" class="item-path" enabled="true">census|residential address-one-year-ago|residential-address|postcode</div>
+                          <div id="b-item-error-8" class="item-error">Not a valid postcode</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-39" class="item-enclosing">
+                    <div id="b-item-enclosing-9" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-39" class="repeating-enclosing">
-                        <div class="item-number">39</div>
-                        <label class="item-label" for="b-item-input-39">Property Building Name</label>
+                      <div id="b-repeating-enclosing-9" class="repeating-enclosing">
+                        <div class="item-number">9</div>
+                        <label class="item-label" for="b-item-input-9">Property Building Name</label>
                         <div class="item-input">
-                          <input number="39" name="b-item-input-39" id="b-item-39" class=" item-input-text" type="text">
+                          <input number="9" name="b-item-input-9" id="b-item-9" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-39" class="item-error">Invalid</div>
-                          <div id="b-item-path-39" class="item-path" enabled="true">census|residential address-one-year-ago|residential-address|property-building-name</div>
+                          <div id="b-item-error-9" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
@@ -2279,127 +2736,121 @@ $(function() {
                 </div>
               </div>
             </div>
-            <div id="b-choice-content-30-3" class="invisible">
-              <div id="b-item-enclosing-40" class="item-enclosing invisible">
+            <div id="b-choice-content-22-3" class="invisible">
+              <div id="b-item-enclosing-21" class="item-enclosing invisible">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-40" class="repeating-enclosing">
-                  <div class="item-number">40</div>
-                  <label class="item-label" for="b-item-input-40">Other Country<em>*</em></label>
+                <div id="b-repeating-enclosing-21" class="repeating-enclosing">
+                  <div class="item-number">21</div>
+                  <label class="item-label" for="b-item-input-21">Other Country<em>*</em></label>
                   <div class="item-input">
-                    <select id="b-item-40" class="select" name="b-item-input-40" number="40">
+                    <select id="b-item-21" class="select" name="b-item-input-21" number="21">
                       <option value="true">true</option>
                     </select>
-                    <div id="b-item-error-40" class="item-error">Invalid</div>
-                    <div id="b-item-path-40" class="item-path" enabled="true">census|residential address-one-year-ago|other-country</div>
+                    <div id="b-item-error-21" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-41" class="choice">
+        <div id="b-item-enclosing-24" class="choice">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-41" class="repeating-enclosing">
+          <div id="b-repeating-enclosing-24" class="repeating-enclosing">
             <div class="choice-label">Where did the person usually live five years ago (at 9 August 2006)?</div>
-            <div id="b-div-choice-item-41-1" class="div-choice-item">
-              <input number="41" name="b-item-input-41" id="b-item-41-1" class="choice-item" type="radio" value="number">Same as address in last question</input>
+            <div id="b-div-choice-item-24-1" class="div-choice-item">
+              <input number="24" name="b-item-input-24" id="b-item-24-1" class="choice-item" type="radio" value="number">Same as address in last question</input>
             </div>
-            <div id="b-div-choice-item-41-2" class="div-choice-item">
-              <input number="41" name="b-item-input-41" id="b-item-41-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
+            <div id="b-div-choice-item-24-2" class="div-choice-item">
+              <input number="24" name="b-item-input-24" id="b-item-24-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
             </div>
-            <div id="b-div-choice-item-41-3" class="div-choice-item">
-              <input number="41" name="b-item-input-41" id="b-item-41-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
+            <div id="b-div-choice-item-24-3" class="div-choice-item">
+              <input number="24" name="b-item-input-24" id="b-item-24-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
             </div>
-            <div id="b-choice-content-41-1" class="invisible">
-              <div id="b-item-enclosing-42" class="item-enclosing invisible">
+            <div id="b-choice-content-24-1" class="invisible">
+              <div id="b-item-enclosing-23" class="item-enclosing invisible">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-42" class="repeating-enclosing">
-                  <div class="item-number">42</div>
-                  <label class="item-label" for="b-item-input-42">Same as address in last question<em>*</em></label>
+                <div id="b-repeating-enclosing-23" class="repeating-enclosing">
+                  <div class="item-number">23</div>
+                  <label class="item-label" for="b-item-input-23">Same as address in last question<em>*</em></label>
                   <div class="item-input">
-                    <select id="b-item-42" class="select" name="b-item-input-42" number="42">
+                    <select id="b-item-23" class="select" name="b-item-input-23" number="23">
                       <option value="true">true</option>
                     </select>
-                    <div id="b-item-error-42" class="item-error">Invalid</div>
-                    <div id="b-item-path-42" class="item-path" enabled="true">census|residential address-five-years-ago|residential-same-as-current</div>
+                    <div id="b-item-error-23" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div id="b-choice-content-41-2" class="invisible">
+            <div id="b-choice-content-24-2" class="invisible">
               <div class="sequence">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-43" class="repeating-enclosing">
+                <div id="b-repeating-enclosing-20" class="repeating-enclosing">
                   <div class="sequence-label"></div>
-                  <div id="b-sequence-43" class="sequence-content">
-                    <div id="b-item-enclosing-44" class="item-enclosing">
+                  <div id="b-sequence-20" class="sequence-content">
+                    <div id="b-item-enclosing-3" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-44" class="repeating-enclosing">
-                        <div class="item-number">44</div>
-                        <label class="item-label" for="b-item-input-44">Apartment/Flat/Unit number</label>
+                      <div id="b-repeating-enclosing-3" class="repeating-enclosing">
+                        <div class="item-number">3</div>
+                        <label class="item-label" for="b-item-input-3">Apartment/Flat/Unit number</label>
                         <div class="item-input">
-                          <input number="44" name="b-item-input-44" id="b-item-44" class=" item-input-text" type="text">
+                          <input number="3" name="b-item-input-3" id="b-item-3" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-44" class="item-error">Invalid</div>
-                          <div id="b-item-path-44" class="item-path" enabled="true">census|residential address-five-years-ago|residential-address|apartment-flat-unit-number</div>
+                          <div id="b-item-error-3" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-45" class="item-enclosing">
+                    <div id="b-item-enclosing-4" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-45" class="repeating-enclosing">
-                        <div class="item-number">45</div>
-                        <label class="item-label" for="b-item-input-45">Street Number</label>
+                      <div id="b-repeating-enclosing-4" class="repeating-enclosing">
+                        <div class="item-number">4</div>
+                        <label class="item-label" for="b-item-input-4">Street Number</label>
                         <div class="item-input">
-                          <input number="45" name="b-item-input-45" id="b-item-45" class=" item-input-text" type="text">
+                          <input number="4" name="b-item-input-4" id="b-item-4" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-45" class="item-error">Invalid</div>
-                          <div id="b-item-path-45" class="item-path" enabled="true">census|residential address-five-years-ago|residential-address|street-number</div>
+                          <div id="b-item-error-4" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-46" class="item-enclosing">
+                    <div id="b-item-enclosing-5" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-46" class="repeating-enclosing">
-                        <div class="item-number">46</div>
-                        <label class="item-label" for="b-item-input-46">Street Name</label>
+                      <div id="b-repeating-enclosing-5" class="repeating-enclosing">
+                        <div class="item-number">5</div>
+                        <label class="item-label" for="b-item-input-5">Street Name</label>
                         <div class="item-input">
-                          <input number="46" name="b-item-input-46" id="b-item-46" class=" item-input-text" type="text">
+                          <input number="5" name="b-item-input-5" id="b-item-5" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-46" class="item-error">Invalid</div>
-                          <div id="b-item-path-46" class="item-path" enabled="true">census|residential address-five-years-ago|residential-address|street-name</div>
+                          <div id="b-item-error-5" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-47" class="item-enclosing">
+                    <div id="b-item-enclosing-6" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-47" class="repeating-enclosing">
-                        <div class="item-number">47</div>
-                        <label class="item-label" for="b-item-input-47">Suburb Locality</label>
+                      <div id="b-repeating-enclosing-6" class="repeating-enclosing">
+                        <div class="item-number">6</div>
+                        <label class="item-label" for="b-item-input-6">Suburb Locality</label>
                         <div class="item-input">
-                          <input number="47" name="b-item-input-47" id="b-item-47" class=" item-input-text" type="text">
+                          <input number="6" name="b-item-input-6" id="b-item-6" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-47" class="item-error">Invalid</div>
-                          <div id="b-item-path-47" class="item-path" enabled="true">census|residential address-five-years-ago|residential-address|suburb-locality</div>
+                          <div id="b-item-error-6" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-48" class="item-enclosing">
+                    <div id="b-item-enclosing-7" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-48" class="repeating-enclosing">
-                        <div class="item-number">48</div>
-                        <label class="item-label" for="b-item-input-48">State</label>
+                      <div id="b-repeating-enclosing-7" class="repeating-enclosing">
+                        <div class="item-number">7</div>
+                        <label class="item-label" for="b-item-input-7">State</label>
                         <div class="item-input">
-                          <select id="b-item-48" class="select" name="b-item-input-48" number="48">
+                          <select id="b-item-7" class="select" name="b-item-input-7" number="7">
                             <option value="">Select one...</option>
                             <option value="ACT">ACT</option>
                             <option value="NSW">NSW</option>
@@ -2410,36 +2861,33 @@ $(function() {
                             <option value="VIC">VIC</option>
                             <option value="WA">WA</option>
                           </select>
-                          <div id="b-item-error-48" class="item-error">Invalid</div>
-                          <div id="b-item-path-48" class="item-path" enabled="true">census|residential address-five-years-ago|residential-address|state</div>
+                          <div id="b-item-error-7" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-49" class="item-enclosing">
+                    <div id="b-item-enclosing-8" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-49" class="repeating-enclosing">
-                        <div class="item-number">49</div>
-                        <label class="item-label" for="b-item-input-49">Postcode<em>*</em></label>
+                      <div id="b-repeating-enclosing-8" class="repeating-enclosing">
+                        <div class="item-number">8</div>
+                        <label class="item-label" for="b-item-input-8">Postcode<em>*</em></label>
                         <div class="item-input">
-                          <input number="49" name="b-item-input-49" id="b-item-49" class=" item-input-text" type="text">
+                          <input number="8" name="b-item-input-8" id="b-item-8" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-49" class="item-error">Not a valid postcode</div>
-                          <div id="b-item-path-49" class="item-path" enabled="true">census|residential address-five-years-ago|residential-address|postcode</div>
+                          <div id="b-item-error-8" class="item-error">Not a valid postcode</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-50" class="item-enclosing">
+                    <div id="b-item-enclosing-9" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-50" class="repeating-enclosing">
-                        <div class="item-number">50</div>
-                        <label class="item-label" for="b-item-input-50">Property Building Name</label>
+                      <div id="b-repeating-enclosing-9" class="repeating-enclosing">
+                        <div class="item-number">9</div>
+                        <label class="item-label" for="b-item-input-9">Property Building Name</label>
                         <div class="item-input">
-                          <input number="50" name="b-item-input-50" id="b-item-50" class=" item-input-text" type="text">
+                          <input number="9" name="b-item-input-9" id="b-item-9" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-50" class="item-error">Invalid</div>
-                          <div id="b-item-path-50" class="item-path" enabled="true">census|residential address-five-years-ago|residential-address|property-building-name</div>
+                          <div id="b-item-error-9" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
@@ -2447,83 +2895,80 @@ $(function() {
                 </div>
               </div>
             </div>
-            <div id="b-choice-content-41-3" class="invisible">
-              <div id="b-item-enclosing-51" class="item-enclosing invisible">
+            <div id="b-choice-content-24-3" class="invisible">
+              <div id="b-item-enclosing-21" class="item-enclosing invisible">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-51" class="repeating-enclosing">
-                  <div class="item-number">51</div>
-                  <label class="item-label" for="b-item-input-51">Other Country<em>*</em></label>
+                <div id="b-repeating-enclosing-21" class="repeating-enclosing">
+                  <div class="item-number">21</div>
+                  <label class="item-label" for="b-item-input-21">Other Country<em>*</em></label>
                   <div class="item-input">
-                    <select id="b-item-51" class="select" name="b-item-input-51" number="51">
+                    <select id="b-item-21" class="select" name="b-item-input-21" number="21">
                       <option value="true">true</option>
                     </select>
-                    <div id="b-item-error-51" class="item-error">Invalid</div>
-                    <div id="b-item-path-51" class="item-path" enabled="true">census|residential address-five-years-ago|other-country</div>
+                    <div id="b-item-error-21" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-52" class="item-enclosing">
+        <div id="b-item-enclosing-25" class="item-enclosing">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-52" class="repeating-enclosing">
+          <div id="b-repeating-enclosing-25" class="repeating-enclosing">
             <div class="item-title">Citizenship</div>
-            <div class="item-number">52</div>
-            <label class="item-label" for="b-item-input-52">The person is an Australian citizen<em>*</em></label>
+            <div class="item-number">25</div>
+            <label class="item-label" for="b-item-input-25">The person is an Australian citizen<em>*</em></label>
             <div class="item-input">
-              <input number="52" name="b-item-input-52" id="b-item-52" class=" item-input-text" type="checkbox">
+              <input number="25" name="b-item-input-25" id="b-item-25" class=" item-input-text" type="checkbox">
               </input>
-              <div id="b-item-error-52" class="item-error">Invalid</div>
-              <div id="b-item-path-52" class="item-path" enabled="true">census|citizen</div>
+              <div id="b-item-error-25" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-53" class="choice">
+        <div id="b-item-enclosing-26" class="choice">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-53" class="repeating-enclosing">
+          <div id="b-repeating-enclosing-26" class="repeating-enclosing">
             <div class="choice-label">In which country was the person born?</div>
-            <div id="b-div-choice-item-53-1" class="div-choice-item">
-              <input number="53" name="b-item-input-53" id="b-item-53-1" class="choice-item" type="radio" value="number">Australia<em>*</em></input>
+            <div id="b-div-choice-item-26-1" class="div-choice-item">
+              <input number="26" name="b-item-input-26" id="b-item-26-1" class="choice-item" type="radio" value="number">Australia<em>*</em></input>
             </div>
-            <div id="b-div-choice-item-53-2" class="div-choice-item">
-              <input number="53" name="b-item-input-53" id="b-item-53-2" class="choice-item" type="radio" value="number">Other<em>*</em></input>
+            <div id="b-div-choice-item-26-2" class="div-choice-item">
+              <input number="26" name="b-item-input-26" id="b-item-26-2" class="choice-item" type="radio" value="number">Other<em>*</em></input>
             </div>
-            <div id="b-choice-content-53-1" class="invisible">
-              <div id="b-item-enclosing-54" class="item-enclosing invisible">
+            <div id="b-choice-content-26-1" class="invisible">
+              <div id="b-item-enclosing-27" class="item-enclosing invisible">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-54" class="repeating-enclosing">
-                  <div class="item-number">54</div>
-                  <label class="item-label" for="b-item-input-54">Australia<em>*</em></label>
+                <div id="b-repeating-enclosing-27" class="repeating-enclosing">
+                  <div class="item-number">27</div>
+                  <label class="item-label" for="b-item-input-27">Australia<em>*</em></label>
                   <div class="item-input">
-                    <select id="b-item-54" class="select" name="b-item-input-54" number="54">
+                    <select id="b-item-27" class="select" name="b-item-input-27" number="27">
                       <option value="true">true</option>
                     </select>
-                    <div id="b-item-error-54" class="item-error">Invalid</div>
-                    <div id="b-item-path-54" class="item-path" enabled="true">census|country-of-birth|australia</div>
+                    <div id="b-item-error-27" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div id="b-choice-content-53-2" class="invisible">
+            <div id="b-choice-content-26-2" class="invisible">
               <div class="sequence">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-55" class="repeating-enclosing">
+                <div id="b-repeating-enclosing-28" class="repeating-enclosing">
                   <div class="sequence-label"></div>
-                  <div id="b-sequence-55" class="sequence-content">
-                    <div id="b-item-enclosing-56" class="item-enclosing">
+                  <div id="b-sequence-28" class="sequence-content">
+                    <div id="b-item-enclosing-29" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-56" class="repeating-enclosing">
-                        <div class="item-number">56</div>
-                        <label class="item-label" for="b-item-input-56">Country</label>
+                      <div id="b-repeating-enclosing-29" class="repeating-enclosing">
+                        <div class="item-number">29</div>
+                        <label class="item-label" for="b-item-input-29">Country</label>
                         <div class="item-input">
-                          <select id="b-item-56" class="select" name="b-item-input-56" number="56">
+                          <select id="b-item-29" class="select" name="b-item-input-29" number="29">
                             <option value="">Select one...</option>
                             <option value="England">England</option>
                             <option value="New Zealand">New Zealand</option>
@@ -2533,36 +2978,33 @@ $(function() {
                             <option value="Scotland">Scotland</option>
                             <option value="Other">Other</option>
                           </select>
-                          <div id="b-item-error-56" class="item-error">Invalid</div>
-                          <div id="b-item-path-56" class="item-path" enabled="true">census|country-of-birth|other|country</div>
+                          <div id="b-item-error-29" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-57" class="item-enclosing invisible">
+                    <div id="b-item-enclosing-30" class="item-enclosing invisible">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-57" class="repeating-enclosing">
-                        <div class="item-number">57</div>
-                        <label class="item-label" for="b-item-input-57">Country</label>
+                      <div id="b-repeating-enclosing-30" class="repeating-enclosing">
+                        <div class="item-number">30</div>
+                        <label class="item-label" for="b-item-input-30">Country</label>
                         <div class="item-input">
-                          <input number="57" name="b-item-input-57" id="b-item-57" class=" item-input-text" type="text">
+                          <input number="30" name="b-item-input-30" id="b-item-30" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-57" class="item-error">Invalid</div>
-                          <div id="b-item-path-57" class="item-path" enabled="true">census|country-of-birth|other|other-country</div>
+                          <div id="b-item-error-30" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
-                    <div id="b-item-enclosing-58" class="item-enclosing">
+                    <div id="b-item-enclosing-31" class="item-enclosing">
                       <div class="repeating-title">
                       </div>
-                      <div id="b-repeating-enclosing-58" class="repeating-enclosing">
-                        <div class="item-number">58</div>
-                        <label class="item-label" for="b-item-input-58">Year Of Arrival<em>*</em></label>
+                      <div id="b-repeating-enclosing-31" class="repeating-enclosing">
+                        <div class="item-number">31</div>
+                        <label class="item-label" for="b-item-input-31">Year Of Arrival<em>*</em></label>
                         <div class="item-input">
-                          <input number="58" name="b-item-input-58" id="b-item-58" class=" item-input-text" type="text">
+                          <input number="31" name="b-item-input-31" id="b-item-31" class=" item-input-text" type="text">
                           </input>
-                          <div id="b-item-error-58" class="item-error">Invalid</div>
-                          <div id="b-item-path-58" class="item-path" enabled="true">census|country-of-birth|other|year-of-arrival</div>
+                          <div id="b-item-error-31" class="item-error">Invalid</div>
                         </div>
                       </div>
                     </div>
@@ -2572,55 +3014,53 @@ $(function() {
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-59" class="item-enclosing">
+        <div id="b-item-enclosing-32" class="item-enclosing">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-59" class="repeating-enclosing">
-            <div class="item-number">59</div>
-            <label class="item-label" for="b-item-input-59">Was the person's father born in Australia or overseas?</label>
+          <div id="b-repeating-enclosing-32" class="repeating-enclosing">
+            <div class="item-number">32</div>
+            <label class="item-label" for="b-item-input-32">Was the person's father born in Australia or overseas?</label>
             <div class="item-input">
-              <select id="b-item-59" class="select" name="b-item-input-59" number="59">
+              <select id="b-item-32" class="select" name="b-item-input-32" number="32">
                 <option value="">Select one...</option>
                 <option value="Australia">Australia</option>
                 <option value="Overseas">Overseas</option>
               </select>
-              <div id="b-item-error-59" class="item-error">Invalid</div>
-              <div id="b-item-path-59" class="item-path" enabled="true">census|father-place-of-birth</div>
+              <div id="b-item-error-32" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
-        <div id="b-item-enclosing-60" class="item-enclosing">
+        <div id="b-item-enclosing-33" class="item-enclosing">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-60" class="repeating-enclosing">
-            <div class="item-number">60</div>
-            <label class="item-label" for="b-item-input-60">Was the person's mother born in Australia or overseas?</label>
+          <div id="b-repeating-enclosing-33" class="repeating-enclosing">
+            <div class="item-number">33</div>
+            <label class="item-label" for="b-item-input-33">Was the person's mother born in Australia or overseas?</label>
             <div class="item-input">
-              <select id="b-item-60" class="select" name="b-item-input-60" number="60">
+              <select id="b-item-33" class="select" name="b-item-input-33" number="33">
                 <option value="">Select one...</option>
                 <option value="Australia">Australia</option>
                 <option value="Overseas">Overseas</option>
               </select>
-              <div id="b-item-error-60" class="item-error">Invalid</div>
-              <div id="b-item-path-60" class="item-path" enabled="true">census|mother-place-of-birth</div>
+              <div id="b-item-error-33" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
         <div class="sequence">
           <div class="repeating-title">
           </div>
-          <div id="b-repeating-enclosing-61" class="repeating-enclosing">
+          <div id="b-repeating-enclosing-34" class="repeating-enclosing">
             <div class="sequence-label">Does the person speak a language other than English at home?</div>
-            <div id="b-sequence-61" class="sequence-content">
-              <div id="b-item-enclosing-62" class="item-enclosing">
+            <div id="b-sequence-34" class="sequence-content">
+              <div id="b-item-enclosing-35" class="item-enclosing">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-62" class="repeating-enclosing">
+                <div id="b-repeating-enclosing-35" class="repeating-enclosing">
                   <div class="item-before">If more than one language spoken other than English select the one that is spoken most often</div>
-                  <div class="item-number">62</div>
-                  <label class="item-label" for="b-item-input-62">Language</label>
+                  <div class="item-number">35</div>
+                  <label class="item-label" for="b-item-input-35">Language</label>
                   <div class="item-input">
-                    <select id="b-item-62" class="select" name="b-item-input-62" number="62">
+                    <select id="b-item-35" class="select" name="b-item-input-35" number="35">
                       <option value="">Select one...</option>
                       <option value="English only">English only</option>
                       <option value="Italian">Italian</option>
@@ -2631,22 +3071,20 @@ $(function() {
                       <option value="Vietnamese">Vietnamese</option>
                       <option value="Other">Other</option>
                     </select>
-                    <div id="b-item-error-62" class="item-error">Invalid</div>
-                    <div id="b-item-path-62" class="item-path" enabled="true">census|language-at-home|language-at-home</div>
+                    <div id="b-item-error-35" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>
-              <div id="b-item-enclosing-63" class="item-enclosing invisible">
+              <div id="b-item-enclosing-36" class="item-enclosing invisible">
                 <div class="repeating-title">
                 </div>
-                <div id="b-repeating-enclosing-63" class="repeating-enclosing">
-                  <div class="item-number">63</div>
-                  <label class="item-label" for="b-item-input-63">Other language at home</label>
+                <div id="b-repeating-enclosing-36" class="repeating-enclosing">
+                  <div class="item-number">36</div>
+                  <label class="item-label" for="b-item-input-36">Other language at home</label>
                   <div class="item-input">
-                    <input number="63" name="b-item-input-63" id="b-item-63" class=" item-input-text" type="text">
+                    <input number="36" name="b-item-input-36" id="b-item-36" class=" item-input-text" type="text">
                     </input>
-                    <div id="b-item-error-63" class="item-error">Invalid</div>
-                    <div id="b-item-path-63" class="item-path" enabled="true">census|language-at-home|language-at-home-other</div>
+                    <div id="b-item-error-36" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>

@@ -1,8 +1,8 @@
 <xs:schema targetNamespace="http://org.moten.david/xsd-forms/demo"
 	xmlns="http://org.moten.david/xsd-forms/demo" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:i="http://moten.david.org/xsd-forms" xs:elementFormDefault="qualified">
+	xmlns:i="http://moten.david.org/xsd-forms"  elementFormDefault="qualified">
+	
 	<xs:annotation i:numberItems="true" />
-
 
 	<xs:element name="main" type="main" />
 
@@ -42,7 +42,7 @@
 				<xs:annotation i:label="datetime element TODO" />
 			</xs:element>
 			<xs:element name="datetime-element-with-default" type="xs:dateTime"
-				default="2002-05-30T09:30:10.5">
+				default="2002-05-30T09:30:00">
 				<xs:annotation i:label="Datetime element with default TODO" />
 			</xs:element>
 			<xs:element name="boolean-element" type="xs:boolean">
@@ -69,7 +69,7 @@
 					i:before="When Option B is selected then the next (makeVisible=1) input element will be made visible so that Further Details for Option B can be captured. The Further Details element should have i:visible=false annotation." />
 			</xs:element>
 			<xs:element name="further-details-for-option-b" type="xs:string">
-				<xs:annotation i:selector="radio" i:visible="false" />
+				<xs:annotation i:visible="false" />
 			</xs:element>
 			<xs:element name="label-override" type="xs:string">
 				<xs:annotation i:label="Label overriden"
@@ -120,7 +120,7 @@
 					i:validation="Invalid format, must have a minimum of 3 digits." />
 				<xs:simpleType>
 					<xs:restriction base="xs:integer">
-						<xs:minLength value="3" />
+						<xs:minInclusive value="100" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -129,7 +129,7 @@
 					i:validation="Invalid format, must have a minimum of 3 characters." />
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
-						<xs:minLength value="3" />
+						<xs:fractionDigits value="2" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -149,7 +149,7 @@
 					i:validation="Invalid format, must have a maximum of 4 digits." />
 				<xs:simpleType>
 					<xs:restriction base="xs:integer">
-						<xs:maxLength value="4" />
+						<xs:maxInclusive value="9999" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -158,7 +158,7 @@
 					i:validation="Invalid format, must have a maximum of 4 characters." />
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
-						<xs:maxLength value="4" />
+						<xs:fractionDigits value="2" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -180,7 +180,8 @@
 					i:validation="Invalid format, must have exactly 4 digits." />
 				<xs:simpleType>
 					<xs:restriction base="xs:integer">
-						<xs:length value="4" />
+						<xs:minInclusive value="1000" />
+						<xs:maxInclusive value="9999"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -189,7 +190,8 @@
 					i:validation="Invalid format, must be a decimal value with exactly 4 characters." />
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
-						<xs:length value="4" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="9999"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -293,24 +295,24 @@
 
 			<xs:element name="max-occurs-example-1" type="xs:decimal"
 				maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable item"
+				<xs:annotation i:nonRepeatingTitle="Repeatable item"
 					i:label="Number" />
 			</xs:element>
 
 			<xs:element name="max-occurs-example-2" type="xs:decimal" minOccurs="0"
 				maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable item minOccurs=0"
+				<xs:annotation i:nonRepeatingTitle="Repeatable item minOccurs=0"
 					i:label="Number" />
 			</xs:element>
 
 			<xs:element name="max-occurs-example-3" type="xs:string"
 				maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable item with button label"
+				<xs:annotation i:nonRepeatingTitle="Repeatable item with button label"
 					i:label="String" i:repeatLabel="Another" />
 			</xs:element>
 
 			<xs:element name="max-occurs-example-4" maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable complex type" />
+				<xs:annotation i:nonRepeatingTitle="Repeatable complex type" />
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="A" type="xs:string" />
@@ -320,7 +322,7 @@
 			</xs:element>
 
 			<xs:element name="max-occurs-example-5" maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable choice" />
+				<xs:annotation i:nonRepeatingTitle="Repeatable choice" />
 				<xs:complexType>
 					<xs:choice>
 						<xs:element name="A" type="xs:string" />
@@ -331,7 +333,7 @@
 
 
 			<xs:element name="max-occurs-example-6" maxOccurs="unbounded">
-				<xs:annotation i:repeatingTitle="Repeatable complex type with title" i:label="Two items" />
+				<xs:annotation i:nonRepeatingTitle="Repeatable complex type with title" i:label="Two items" />
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="A" type="xs:string" />

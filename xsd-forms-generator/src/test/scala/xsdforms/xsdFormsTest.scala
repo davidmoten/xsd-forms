@@ -1,5 +1,6 @@
 package xsdforms {
   import org.junit.Test
+  import org.junit.Before
   import xsd.Schema
   import org.junit.runners.BlockJUnit4ClassRunner
   import org.junit.runner.notification.Failure
@@ -10,6 +11,8 @@ package xsdforms {
   object TstUtil {
 
     import org.apache.commons.io._
+
+    val idPrefix = "c-"
 
     def generate(
       idPrefix: String,
@@ -22,16 +25,18 @@ package xsdforms {
 
       val schema = scalaxb.fromXML[Schema](
         XML.load(schemaInputStream))
+
       val ns = schema.targetNamespace.get.toString
-      val visitor = new HtmlVisitor(ns, idPrefix, extraScript)
 
-      //println(schema.toString.replaceAll("\\(", "(\n"))
+      val visitor = new TreeCreatingVisitor()
 
-      new Traversor(schema, rootElement, visitor).process
-      //println(visitor.text)
+      new SchemaTraversor(schema, Some(rootElement), visitor).traverse
+      println("tree:\n" + visitor)
+
+      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
       outputFile.getParentFile().mkdirs
       val fos = new java.io.FileOutputStream(outputFile);
-      fos.write(visitor.text.getBytes)
+      fos.write(text.getBytes)
       fos.close
 
       //println(visitor)
@@ -41,7 +46,7 @@ package xsdforms {
     def generateDemoForm(file: File) {
       println("generating demo form")
       generate(
-        idPrefix = "c-",
+        idPrefix = idPrefix,
         schemaInputStream = TstUtil.getClass().getResourceAsStream("/demo.xsd"),
         rootElement = "main",
         outputFile = file)
@@ -66,6 +71,23 @@ package xsdforms {
     @Test
     def testSetupWebapp() {
       setupDemoWebapp
+    }
+
+    @Before
+    def setupCssJsFiles {
+      {
+        val directory = new File("target/generated-webapp/css")
+        directory.mkdirs
+        FileUtils.deleteDirectory(directory)
+        FileUtils.copyDirectory(new File("src/main/webapp/css"), directory)
+      }
+      {
+        val directory = new File("target/generated-webapp/js")
+        directory.mkdirs
+        FileUtils.deleteDirectory(directory)
+        FileUtils.copyDirectory(new File("src/main/webapp/js"), directory)
+      }
+      println("copied css+js directories to target/generated-webapp")
     }
 
     @Test
@@ -112,6 +134,7 @@ package xsdforms {
 
     import org.openqa.selenium.By
     import org.openqa.selenium.Keys
+    import org.openqa.selenium.support.ui.Select
     import org.openqa.selenium.Proxy
     import org.openqa.selenium.WebDriver
     import org.openqa.selenium.WebElement
@@ -123,6 +146,7 @@ package xsdforms {
     import org.junit.matchers.JUnitMatchers._
     import org.apache.commons.io._
     import TstUtil._
+    import TreeToHtmlConverter._
 
     private val uri = new File("target/demo/demo-form.html").toURI().toString()
     private val WebDriverChromeDriverKey = "webdriver.chrome.driver"
@@ -153,18 +177,17 @@ package xsdforms {
     private def testOnWebDriver(driver: WebDriver) {
       println("testing web driver " + driver.getClass().getSimpleName())
       driver.get(uri)
+
+      //TODO enable this
+      //      testDateDefaultSet(driver, 11) 
       testMakeVisible(driver, 24)
       testPatternValidation(driver, 29)
       testMultiplePatternValidation(driver, 31)
       testStringMinLength(driver, 32)
-      testIntegerMinLength(driver, 33)
-      testDecimalMinLength(driver, 34)
       testStringMaxLength(driver, 35)
       testIntegerMaxLength(driver, 36)
       testDecimalMaxLength(driver, 37)
       testStringLength(driver, 38)
-      testIntegerLength(driver, 39)
-      testDecimalLength(driver, 40)
       testIntegerMinInclusive(driver, 41)
       testDecimalMinInclusive(driver, 42)
       testIntegerMaxInclusive(driver, 43)
@@ -176,6 +199,7 @@ package xsdforms {
       testChoice(driver, 49)
       testRepeat(driver, 52)
       testRepeatWhenMinOccursIsZero(driver, 53)
+      //TODO reenable 
       //testChoiceRepeat(driver,58)
       testSubmission(driver)
       driver.close
@@ -183,11 +207,20 @@ package xsdforms {
       if (log.exists) log.delete();
     }
 
-    private def getInput(driver: WebDriver, itemNo: Int) =
-      driver.findElement(By.id("c-item-" + itemNo));
+    private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List(1, 1))) = {
+      val id = getItemId(idPrefix, itemNo.toString, instanceNos)
+      println("getInput: id=" + id)
+      driver.findElement(By.id(id));
+    }
 
-    private def getError(driver: WebDriver, itemNo: Int) =
-      driver.findElement(By.id("c-item-error-" + itemNo))
+    private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List(1, 1))) =
+      driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos)))
+
+    private def testDateDefaultSet(driver: WebDriver, itemNo: Int) {
+
+      val input = getInput(driver, itemNo)
+      assertEquals("1973-06-12", input.getText)
+    }
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {
       val input = getInput(driver, itemNo)
@@ -249,38 +282,6 @@ package xsdforms {
       assertTrue(error.isDisplayed)
     }
 
-    private def testIntegerMinLength(driver: WebDriver, itemNo: Int) {
-      val input = getInput(driver, itemNo)
-      val error = getError(driver, itemNo)
-      assertFalse(error.isDisplayed)
-      input.sendKeys("ABC\n")
-      assertTrue(error.isDisplayed)
-      input.sendKeys("\b\b\b\n");
-      assertTrue(error.isDisplayed)
-      input.sendKeys("12\n")
-      assertTrue(error.isDisplayed)
-      input.sendKeys("3\n");
-      assertFalse(error.isDisplayed)
-      input.sendKeys("\b\b\b\b\n")
-      assertTrue(error.isDisplayed)
-    }
-
-    private def testDecimalMinLength(driver: WebDriver, itemNo: Int) {
-      val input = getInput(driver, itemNo)
-      val error = getError(driver, itemNo)
-      assertFalse(error.isDisplayed)
-      input.sendKeys("ABC\n")
-      assertTrue(error.isDisplayed)
-      input.sendKeys("\b\b\b\n");
-      assertTrue(error.isDisplayed)
-      input.sendKeys("1.\n")
-      assertTrue(error.isDisplayed)
-      input.sendKeys("2\n");
-      assertFalse(error.isDisplayed)
-      input.sendKeys("\b\b\b\b\n")
-      assertTrue(error.isDisplayed)
-    }
-
     private def testStringMaxLength(driver: WebDriver, itemNo: Int) {
       val input = getInput(driver, itemNo)
       val error = getError(driver, itemNo)
@@ -334,34 +335,6 @@ package xsdforms {
       assertTrue(error.isDisplayed)
       input.clear
       input.sendKeys("abcd\n")
-      assertFalse(error.isDisplayed)
-    }
-
-    private def testIntegerLength(driver: WebDriver, itemNo: Int) {
-      val input = getInput(driver, itemNo)
-      val error = getError(driver, itemNo)
-      assertFalse(error.isDisplayed)
-      input.sendKeys("12345\n")
-      assertTrue(error.isDisplayed)
-      input.clear
-      input.sendKeys("123\n")
-      assertTrue(error.isDisplayed)
-      input.clear
-      input.sendKeys("1234\n")
-      assertFalse(error.isDisplayed)
-    }
-
-    private def testDecimalLength(driver: WebDriver, itemNo: Int) {
-      val input = getInput(driver, itemNo)
-      val error = getError(driver, itemNo)
-      assertFalse(error.isDisplayed)
-      input.sendKeys("1.234\n")
-      assertTrue(error.isDisplayed)
-      input.clear
-      input.sendKeys("1.2\n")
-      assertTrue(error.isDisplayed)
-      input.clear
-      input.sendKeys("1.23\n")
       assertFalse(error.isDisplayed)
     }
 
@@ -457,36 +430,47 @@ package xsdforms {
     }
 
     private def testChoice(driver: WebDriver, itemNo: Int) {
-      val input = driver.findElement(By.name("c-item-input-" + itemNo));
-      val option1 = driver.findElement(By.id("c-item-" + itemNo + "-1"))
-      val option2 = driver.findElement(By.id("c-item-" + itemNo + "-2"))
+      val instanceNos = Instances(List(1, 1))
+      val input = driver.findElement(By.name(getChoiceItemName(idPrefix, itemNo.toString, instanceNos)));
+      val option1 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo.toString, index = 1, instanceNos)))
+      val option2 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo.toString, index = 2, instanceNos)))
       assertFalse(input.isSelected)
       option1.click
-      assertTrue(getInput(driver, itemNo + 1).isDisplayed)
-      assertFalse(getInput(driver, itemNo + 2).isDisplayed)
+      assertTrue(getInput(driver, itemNo + 1, instanceNos add 1).isDisplayed)
+      assertFalse(getInput(driver, itemNo + 2, instanceNos add 1).isDisplayed)
       option2.click
-      assertFalse(getInput(driver, itemNo + 1).isDisplayed)
-      assertTrue(getInput(driver, itemNo + 2).isDisplayed)
+      assertFalse(getInput(driver, itemNo + 1, instanceNos add 1).isDisplayed)
+      assertTrue(getInput(driver, itemNo + 2, instanceNos add 1).isDisplayed)
+    }
+
+    private def elementById(driver: WebDriver, id: String) = {
+      println("finding id " + id)
+      driver.findElement(By.id(id))
     }
 
     private def testRepeat(driver: WebDriver, itemNo: Int) {
-      val button = driver.findElement(By.id("c-repeat-button-" + itemNo))
+      val instanceNos = Instances(List(1))
+      val button = elementById(driver, getRepeatButtonId(idPrefix, itemNo.toString, instanceNos))
+      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1))
+      checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 2))
+      checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 3))
       button.click;
-      checkDisplayedById(driver, "c-repeating-enclosing-" + itemNo + "-10001")
-      checkDisplayedById(driver, "c-item-" + itemNo + "-10001")
+      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1))
+      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 2))
+      checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 3))
       button.click
-      checkDisplayedById(driver, "c-repeating-enclosing-" + itemNo + "-10002")
-      checkDisplayedById(driver, "c-item-" + itemNo + "-10002")
+      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 3))
+      checkDisplayedById(driver, getItemId(idPrefix, itemNo.toString, instanceNos add 3))
 
       //clear validation for integer value
-      val input = driver.findElement(By.id("c-item-" + itemNo))
+      val input = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 1)))
       //put integer in so passes validation on submission
       input.sendKeys("456\n")
 
-      val input1 = driver.findElement(By.id("c-item-" + itemNo + "-10001"))
-      val error1 = driver.findElement(By.id("c-item-error-" + itemNo + "-10001"))
-      val input2 = driver.findElement(By.id("c-item-" + itemNo + "-10002"))
-      val error2 = driver.findElement(By.id("c-item-error-" + itemNo + "-10002"))
+      val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 2)))
+      val error1 = driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos add 2)))
+      val input2 = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 3)))
+      val error2 = driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos add 3)))
 
       input1.sendKeys("123\n")
       assertFalse(error1.isDisplayed)
@@ -500,36 +484,48 @@ package xsdforms {
     }
 
     private def testRepeatWhenMinOccursIsZero(driver: WebDriver, itemNo: Int) {
+      val instanceNos = Instances(List(1))
       //default input should not be visible because minOccurs=0
-      val input = driver.findElement(By.id("c-repeating-enclosing-" + itemNo))
+      val input = driver.findElement(By.id(getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertFalse(input.isDisplayed)
-      val button = driver.findElement(By.id("c-repeat-button-" + itemNo))
+      val button = driver.findElement(By.id(getRepeatButtonId(idPrefix, itemNo.toString, instanceNos)))
       button.click;
-      val input1 = driver.findElement(By.id("c-item-" + itemNo + "-10003"))
+      val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertTrue(input1.isDisplayed)
       //make sure it validates come submission time
       input1.sendKeys("123\n")
     }
 
     private def testChoiceRepeat(driver: WebDriver, itemNo: Int) {
-      val input = driver.findElement(By.id("c-repeating-enclosing-" + itemNo))
+      val instanceNos = Instances(List(1))
+      val input = driver.findElement(By.id(getRepeatingEnclosingId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertTrue(input.isDisplayed)
-      val button = driver.findElement(By.id("c-repeat-button-" + itemNo))
+      val button = driver.findElement(By.id(getRepeatButtonId(idPrefix, itemNo.toString, instanceNos)))
       button.click;
-      val input1 = driver.findElement(By.id("c-item-" + itemNo + "-1-10004"))
+
+      //TODO 
+      val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo.toString, instanceNos add 1)))
       assertTrue(input1.isDisplayed)
-      assertEquals("c-item-input-" + itemNo + "-10004", input1.getAttribute("name"))
     }
 
     private def checkDisplayedById(driver: WebDriver, id: String) {
       val item = driver.findElement(By.id(id))
-      assertTrue(item.isDisplayed)
+      assertTrue(id + " is not visible and should be", item.isDisplayed)
     }
 
-    private def setInput(driver: WebDriver, itemNo: Int, text: String) {
-      val in = getInput(driver, itemNo)
+    private def checkNotDisplayedById(driver: WebDriver, id: String) {
+      val item = driver.findElement(By.id(id))
+      assertFalse(id + " is visible and should not be", item.isDisplayed)
+    }
+
+    private def setInput(driver: WebDriver, itemNo: Int, text: String, instances: Instances = Instances(List(1, 1))) {
+      val in = getInput(driver, itemNo, instances)
       in.clear
       in.sendKeys(text)
+    }
+
+    private def checkErrorDisplayed(driver: WebDriver, itemNo: Int) {
+      assertTrue(getError(driver, itemNo).isDisplayed())
     }
 
     private def testSubmission(driver: WebDriver) {
@@ -538,11 +534,22 @@ package xsdforms {
       assertFalse(errors.isDisplayed());
       preSubmit.click
       assertTrue(errors.isDisplayed());
+      checkErrorDisplayed(driver, 10)
+      checkErrorDisplayed(driver, 12)
+      checkErrorDisplayed(driver, 14)
+      checkErrorDisplayed(driver, 19)
+      checkErrorDisplayed(driver, 23)
       val xml = driver.findElement(By.id("submit-comments"))
       assertEquals("", xml.getText.trim)
       //fix errors
+      setInput(driver, 2, "illegal characters <>")
       setInput(driver, 6, "1")
       setInput(driver, 8, "1")
+      setInput(driver, 10, "2013-12-25")
+      setInput(driver, 12, "22:45")
+      setInput(driver, 14, "2013-12-25T04:45")
+      new Select(getInput(driver, 19)).selectByIndex(1)
+      driver.findElement(By.id("c-item-23-instance-1_1-0")).click
       setInput(driver, 27, "a123")
       setInput(driver, 29, "a123")
       setInput(driver, 30, "a123")
@@ -555,16 +562,42 @@ package xsdforms {
       setInput(driver, 38, "1234")
       setInput(driver, 39, "1234")
       setInput(driver, 40, "1234")
+      setInput(driver, 51, "1901-11-30", Instances(List(1, 1, 1)))
+
+      val id = getChoiceItemId(idPrefix, "58", index = 1, Instances(List(1, 1)))
+      println("58 id=" + id)
+      val elem = driver.findElement(By.id(id))
+      elem.click
+      elem.click
+      assertTrue(elem.isSelected())
+
       preSubmit.click
       preSubmit.click
       //TODO why twice to get chrome to work?
-      println("xml=" + xml)
+
+      println("xml=" + xml.getText)
       assertFalse(errors.isDisplayed());
       assertTrue(xml.getText.trim.contains("xmlns"))
+      val expectedXml = io.Source.fromInputStream(getClass.getResourceAsStream("/demo-form-expected.xml")).mkString
+      assertEquals(expectedXml.trim, xml.getText.trim)
+      // fail
 
-      //TODO generate objects from demo schema and attempt unmarshal of xml
-      //      val text = xml.getText.replaceAll("xmlns=\".*\"", "")
-      //val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(text))
+      // attempt unmarshal of xml
+      //TODO why need to remove namespace?
+      val text = xml.getText.replaceAll("xmlns=\".*\"", "")
+      validateAgainstSchema(xml.getText, "/demo.xsd")
+      val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(xml.getText))
+    }
+
+    private def validateAgainstSchema(xml: String, xsdPath: String) {
+      import javax.xml.validation._
+      import javax.xml._
+      import javax.xml.transform.stream._
+      import java.io._
+      val factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+      val schema = factory.newSchema(new StreamSource(getClass.getResourceAsStream(xsdPath)))
+      val validator = schema.newValidator
+      validator.validate(new StreamSource(new StringReader(xml)))
     }
   }
 
@@ -573,10 +606,10 @@ package xsdforms {
     @Test
     def test() {
       generate(
-        idPrefix = "a-",
-        schemaInputStream = TstUtil.getClass().getResourceAsStream("/test.xsd"),
-        rootElement = "person",
-        outputFile = new File("target/generated-webapp/person-form.html"))
+        idPrefix = "c-",
+        schemaInputStream = TstUtil.getClass().getResourceAsStream("/demo.xsd"),
+        rootElement = "main",
+        outputFile = new File("target/demo/demo-form-tree.html"))
     }
 
     def generate(
@@ -593,9 +626,64 @@ package xsdforms {
       val ns = schema.targetNamespace.get.toString
       val visitor = new TreeCreatingVisitor()
 
-      new Traversor(schema, rootElement, visitor).process
-      println("tree:\n"+ visitor)
+      new SchemaTraversor(schema, Some(rootElement), visitor).traverse
+      println("tree:\n" + visitor)
+
+      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
+      println(text)
       println("generated")
+
+      //write results to a file
+      outputFile.getParentFile().mkdirs
+      val fos = new java.io.FileOutputStream(outputFile);
+      fos.write(text.getBytes)
+      fos.close
     }
   }
+
+  @Test
+  class JSTest {
+
+    import org.junit.Assert._
+
+    @Test
+    def testJS() {
+      val js = JS()
+        .line("function %s(doc,%s) {", "logit", "name")
+        .line("  console.log(doc);")
+        .line("}")
+      println(js)
+      val expected = """
+function logit(doc,name) {
+  console.log(doc);
+}"""
+      assertEquals(expected, js.toString)
+    }
+  }
+
+  @Test
+  class GeneratorTest {
+    import java.io._
+    import org.junit.Assert._
+    import java.util.zip._
+    import scala.collection.JavaConversions._
+
+    @Test
+    def testGenerateZip() {
+      val out = new File("target/out.zip")
+      new FileOutputStream(out)
+      Generator.generateZip(getClass.getResourceAsStream("/demo.xsd"), new FileOutputStream(out))
+      assertTrue(out.exists)
+      val zipFile = new ZipFile(out)
+      val names = enumerationAsScalaIterator(zipFile.entries()).map(_.getName).toSet
+      
+      assertTrue(names.contains("form.html"))
+      assertTrue(names.contains("css/"))
+      assertTrue(names.contains("js/"))
+      
+      Option.empty
+    }
+
+  }
+
 }

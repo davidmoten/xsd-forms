@@ -2,10 +2,19 @@ package xsdforms {
 
   import xsd._
   import xsd.ComplexTypeModelSequence1
+
   import javax.xml.namespace.QName
+
   import scalaxb._
 
-  private case class BaseType(qName: QName);
+  /**
+   * **************************************************************
+   *
+   *   Util
+   *
+   *
+   * **************************************************************
+   */
 
   object Util {
     def unexpected(s: String) = throw new RuntimeException(s)
@@ -13,20 +22,18 @@ package xsdforms {
   }
 
   object XsdUtil {
+    val Xsd = "http://www.w3.org/2001/XMLSchema"
+    val AppInfoSchema = "http://moten.david.org/xsd-forms"
     def qn(namespaceUri: String, localPart: String) = new QName(namespaceUri, localPart)
-    def qn(localPart: String): QName = new QName(xs, localPart)
-    val xs = "http://www.w3.org/2001/XMLSchema"
-    val appInfoSchema = "http://moten.david.org/xsd-forms"
+    def qn(localPart: String): QName = new QName(Xsd, localPart)
+    val XsdDateTime = "dateTime"
+    val XsdDate = "date"
+    val XsdTime = "time"
+    val XsdInteger = "integer"
+    val XsdDecimal = "decimal"
+    val XsdBoolean = "boolean"
+    val XsdString = "string"
   }
-
-  case class Sequence(group: ExplicitGroupable)
-  case class Choice(group: ExplicitGroupable)
-
-  //every element is either a sequence, choice or simpleType
-  // simpleTypes may be based on string, decimal, boolean, date, datetime
-  // and may be restricted to a regex pattern, have min, max ranges
-  // or be an enumeration. all elements may have  minOccurs and maxOccurs
-  //attributes.
 
   /**
    * **************************************************************
@@ -48,16 +55,54 @@ package xsdforms {
     def baseType(e: Element, typ: BaseType)
   }
 
+  //every element is either a sequence, choice or simpleType
+  // simpleTypes may be based on string, decimal, boolean, date, datetime
+  // and may be restricted to a regex pattern, have min, max ranges
+  // or be an enumeration. all elements may have  minOccurs and maxOccurs
+  //attributes.
+  case class Sequence(group: ExplicitGroupable)
+  case class Choice(group: ExplicitGroupable)
+  case class BaseType(qName: QName);
+
+  /**
+   * **************************************************************
+   *
+   *   Tree
+   *
+   *
+   * **************************************************************
+   */
+
   import scala.collection.mutable.MutableList
 
-  private trait Node
-  private trait NodeGroup extends Node {
-    val children: MutableList[Node] = MutableList();
+  trait Node {
+    val element: ElementWrapper
   }
-  private case class NodeSequence(e: Element, override val children: MutableList[Node]) extends NodeGroup
-  private case class NodeChoice(e: Element, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
-  private case class NodeSimpleType(e: Element, typ: SimpleType) extends Node
-  private case class NodeBaseType(e: Element, typ: BaseType) extends Node
+  trait NodeGroup extends Node {
+    val children: MutableList[Node] = MutableList()
+  }
+
+  // immutable would be preferrable but should be safe because not changed after tree created
+  case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
+  trait NodeBasic extends Node
+  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic
+  case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
+
+  /**
+   * **************************************************************
+   *
+   *   ElementWrapper
+   *
+   *
+   * **************************************************************
+   */
+
+  object ElementWrapper {
+    implicit def unwrap(wrapped: ElementWrapper): Element = wrapped.element
+  }
+
+  case class ElementWrapper(element: Element, uniqueId: String)
 
   /**
    * **************************************************************
@@ -67,11 +112,16 @@ package xsdforms {
    *
    * **************************************************************
    */
+
   class TreeCreatingVisitor extends Visitor {
 
     import Util._
+
+    import java.util.UUID
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
+
+    private implicit def wrap(e: Element): ElementWrapper = ElementWrapper(e, UUID.randomUUID.toString)
 
     override def startSequence(e: Element) {
       val seq = NodeSequence(e, MutableList())
@@ -143,577 +193,766 @@ package xsdforms {
         toString(tree.get, "")
     }
 
+    def rootNode: Node = tree.get;
+
   }
 
   /**
    * **************************************************************
    *
-   *   TreeToHtmlConverter
+   *   Instances
+   *
+   *
+   * **************************************************************
+   */
+
+  case class Instances(heirarchy: Seq[Int] = List()) {
+    def add(instance: Int): Instances = Instances(heirarchy :+ instance)
+    override def toString = heirarchy.mkString("_")
+    def last = heirarchy.last
+    def size = heirarchy.size
+  }
+
+  /**
+   * **************************************************************
+   *
+   *   TreeToHtmlConverter object
    *
    *
    * **************************************************************
    */
 
   object TreeToHtmlConverter {
+    val InstanceDelimiter = "-instance-"
+    val ChoiceIndexDelimiter = "-choice-"
 
-    def toHtml(node: Node): String = {
-      return ""
-    }
+    def getItemId(idPrefix: String, number: String, instances: Instances) =
+      idPrefix + "item-" + number + InstanceDelimiter + instances
 
+    def getItemErrorId(idPrefix: String, number: String, instances: Instances) =
+      idPrefix + "item-error-" + number + InstanceDelimiter + instances
+
+    def getChoiceItemId(idPrefix: String, number: String, index: Int, instances: Instances): String =
+      getItemId(idPrefix, number, instances) + ChoiceIndexDelimiter + index
+
+    def getChoiceItemName(idPrefix: String, number: String, instances: Instances) =
+      idPrefix + "item-input-" + number + InstanceDelimiter + instances
+
+    def getRepeatButtonId(idPrefix: String, number: String, instances: Instances) =
+      idPrefix + "repeat-button-" + number + InstanceDelimiter + instances
+
+    def getRepeatingEnclosingId(idPrefix: String, number: String, instances: Instances): String =
+      idPrefix + "repeating-enclosing-" + number + InstanceDelimiter + instances
+
+    val ClassInvisible = "invisible"
+    val ClassSequence = "sequence"
+    val ClassSequenceLabel = "sequence-label"
+    val ClassSequenceContent = "sequence-content"
+    val ClassFieldset = "fieldset"
+    val ClassChoiceLabel = "choice-label"
+    val ClassDivChoiceItem = "div-choice-item"
+    val ClassItemNumber = "item-number"
+    val ClassItemTitle = "item-title"
+    val ClassItemLabel = "item-label"
+    val ClassItemInput = "item-input"
+    val ClassItemHelp = "item-help"
+    val ClassItemBefore = "item-before"
+    val ClassItemAfter = "item-after"
+    val ClassItemPath = "item-path"
+    val ClassItemEnclosing = "item-enclosing"
+    val ClassItemError = "item-error"
+    val ClassChoiceItem = "choice-item"
+    val ClassNonRepeatingTitle = "non-repeating-title"
+    val ClassRepeatButton = "repeat-button"
+    val ClassRepeatingEnclosing = "repeating-enclosing"
+    val ClassItemInputTextarea = "item-input-textarea"
+    val ClassItemInputText = "item-input-text"
+    val ClassSelect = "select"
+    val ClassChoice = "choice"
+    val ClassWhite = "white"
+    val ClassSmall = "small"
+    val ClassItemDescription = "item-description"
+    val ClassTimePicker = "timepickerclass"
+    val ClassDatePicker = "datepickerclass"
+    val ClassDateTimePicker = "datetimepickerclass"
+
+  }
+
+  case class XsdFormsAnnotation(name: String)
+
+  object Annotation {
+    //TODO document each of the annotations in scaladoc
+    val Label = XsdFormsAnnotation("label")
+    val Choice = XsdFormsAnnotation("choice")
+    val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
+    val Legend = XsdFormsAnnotation("legend")
+    val RepeatLabel = XsdFormsAnnotation("repeatLabel")
+    val Title = XsdFormsAnnotation("title")
+    val Before = XsdFormsAnnotation("before")
+    val After = XsdFormsAnnotation("after")
+    val Text = XsdFormsAnnotation("text")
+    val Width = XsdFormsAnnotation("width")
+    val Selector = XsdFormsAnnotation("selector")
+    val AddBlank = XsdFormsAnnotation("addBlank")
+    val Css = XsdFormsAnnotation("css")
+    val Validation = XsdFormsAnnotation("validation")
+    val Help = XsdFormsAnnotation("help")
+    val MakeVisible = XsdFormsAnnotation("makeVisible")
+    val NonRepeatingTitle = XsdFormsAnnotation("nonRepeatingTitle")
+    val Description = XsdFormsAnnotation("description")
+    val Visible = XsdFormsAnnotation("visible")
   }
 
   /**
    * **************************************************************
    *
-   *   HtmlVisitor
+   *   JS
    *
    *
    * **************************************************************
    */
 
-  class HtmlVisitor(targetNamespace: String, idPrefix: String, extraScript: Option[String]) extends Visitor {
+  case class JS() {
+    val b = new StringBuffer()
+
+    def lines(s: String): JS = {
+      b append s
+      this
+    }
+
+    def line: JS = line("")
+
+    def line(s: String, params: Object*): JS = {
+      b append "\n"
+      b append String.format(s, params: _*)
+      this
+    }
+
+    override def toString = b.toString
+  }
+
+  /**
+   * **************************************************************
+   *
+   *   Generator
+   *
+   *
+   * **************************************************************
+   */
+
+  object Generator {
+    import java.io._
+    import java.util.UUID
+    import java.util.zip._
+    import org.apache.commons.io._
+
+    def generateZip(
+      schema: InputStream,
+      zip: OutputStream,
+      idPrefix: String = "a-",
+      rootElement: Option[String] = None,
+      extraScript: Option[String] = None) {
+
+      import scala.xml._
+
+      val schemaXb = scalaxb.fromXML[Schema](
+        XML.load(schema))
+
+      val ns = schemaXb.targetNamespace.get.toString
+
+      val visitor = new TreeCreatingVisitor()
+
+      new SchemaTraversor(schemaXb, rootElement, visitor).traverse
+      println("tree:\n" + visitor)
+
+      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
+
+      val zipIn = new ZipInputStream(Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
+      val zipOut = new ZipOutputStream(zip)
+
+      val iterator = Iterator.continually(zipIn.getNextEntry).takeWhile(_ != null)
+      iterator.foreach { zipEntry =>
+        val bytes = IOUtils.toByteArray(zipIn)
+        zipOut putNextEntry new ZipEntry(zipEntry.getName)
+        zipOut write bytes
+      }
+
+      zipIn.close
+
+      val zipEntry = new ZipEntry("form.html")
+      zipOut putNextEntry zipEntry
+      zipOut write text.getBytes
+      zipOut.close
+
+      println("generated")
+    }
+    
+    def generateHtml(schema: InputStream,
+      html: OutputStream,
+      idPrefix: String = "a-",
+      rootElement: Option[String] = None,
+      extraScript: Option[String] = None) {
+
+      import scala.xml._
+
+      val schemaXb = scalaxb.fromXML[Schema](
+        XML.load(schema))
+
+      val ns = schemaXb.targetNamespace.get.toString
+
+      val visitor = new TreeCreatingVisitor()
+
+      new SchemaTraversor(schemaXb, rootElement, visitor).traverse
+      println("tree:\n" + visitor)
+
+      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
+      html write text.getBytes
+    }
+  }
+
+  /**
+   * **************************************************************
+   *
+   *   TreeToHtmlConverter class
+   *
+   *
+   * **************************************************************
+   */
+
+  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
+
+    import TreeToHtmlConverter._
     import XsdUtil._
     import Util._
     private val script = new StringBuilder
 
     private var number = 0
     val margin = "  "
+    private val Plus = " + "
 
     private sealed trait Entry
     private sealed trait StackEntry
-    private val stack = new scala.collection.mutable.Stack[StackEntry]
-    private val path = new scala.collection.mutable.Stack[String]
     private val html = new Html
 
-    override def toString = html.toString
+    private val NumInstancesForMultiple = 3
+
+    import scala.collection.mutable.HashMap
+    private val elementNumbers = new HashMap[ElementWrapper, String]()
+
+    //assign element numbers so that order of display on page 
+    //will match order of element numbers. To do this must 
+    //traverse children before siblings
+    assignElementNumbers(tree)
+
+    //process the abstract syntax tree
+    doNode(tree, new Instances)
+
+    addXmlExtractScriptlet(tree, new Instances)
+
+    /**
+     * Traverse children before siblings to provide element
+     * numbers matching page display order.
+     * @param node
+     */
+    private def assignElementNumbers(node: Node) {
+      elementNumber(node)
+      node match {
+        case n: NodeGroup => n.children.foreach { assignElementNumbers(_) }
+        case _ => ;
+      }
+    }
+
+    private def doNode(node: Node, instances: Instances) {
+      node match {
+        case n: NodeSimpleType => doNode(n, instances)
+        case n: NodeBaseType => doNode(n, instances)
+        case n: NodeSequence => doNode(n, instances)
+        case n: NodeChoice => doNode(n, instances)
+        case _ => Util.unexpected
+      }
+    }
+
+    private def addXmlExtractScriptlet(node: Node, instances: Instances) {
+      node match {
+        case n: NodeSimpleType => addXmlExtractScriptlet(n, instances)
+        case n: NodeBaseType => addXmlExtractScriptlet(n, instances)
+        case n: NodeSequence => addXmlExtractScriptlet(n, instances)
+        case n: NodeChoice => addXmlExtractScriptlet(n, instances)
+        case _ => Util.unexpected
+      }
+    }
+
+    private def doNode(node: NodeSequence, instances: Instances) {
+      val e = node.element
+      val number = elementNumber(node)
+      val legend = getAnnotation(e, Annotation.Legend)
+      val usesFieldset = legend.isDefined
+
+      val label = getAnnotation(e, Annotation.Label).mkString
+
+      html
+        .div(classes = List(ClassSequence))
+      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instances)
+      for (instanceNo <- repeats(e)) {
+        val instNos = instances add instanceNo
+        repeatingEnclosing(e, instNos)
+        html.div(classes = List(ClassSequenceLabel), content = Some(label))
+          .closeTag
+          .div(id = Some(idPrefix + "sequence-" + number + InstanceDelimiter + instanceNo),
+            classes = List(ClassSequenceContent))
+        if (usesFieldset)
+          html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
+
+        doNodes(node.children, instNos)
+
+        if (usesFieldset)
+          html.closeTag
+        html.closeTag
+      }
+      html
+        .closeTag(2)
+      addMaxOccursScriptlet(e, instances)
+
+    }
+
+    private def doNode(node: NodeChoice, instances: Instances) {
+      val choice = node.choice
+      val e = node.element
+      val choiceInline = displayChoiceInline(choice)
+
+      val number = elementNumber(e)
+
+      html.div(id = Some(getItemEnclosingId(number, instances add 1)), classes = List(ClassChoice))
+      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instances)
+      for (instanceNo <- repeats(e)) {
+        val instNos = instances add instanceNo
+        repeatingEnclosing(e, instNos)
+        val particles = choice.group.particleOption3.map(_.value)
+        addChoiceHideOnStartScriptlet(particles, number, instNos)
+        addChoiceShowHideOnSelectionScriptlet(particles, number, instNos)
+
+        html.div(
+          classes = List(ClassChoiceLabel),
+          content = Some(getAnnotation(choice.group, Annotation.Label).mkString))
+          .closeTag
+
+        val forEachParticle = particles.zipWithIndex.foreach _
+
+        forEachParticle(x => {
+          val particle = x._1
+          val index = x._2 + 1
+          html.div(
+            id = Some(idPrefix + "div-choice-item-" + number + InstanceDelimiter + instanceNo + ChoiceIndexDelimiter + index),
+            classes = List(ClassDivChoiceItem))
+          html.input(
+            id = Some(getChoiceItemId(number, index, instNos)),
+            name = getChoiceItemName(number, instNos),
+            classes = List(ClassChoiceItem),
+            typ = Some("radio"),
+            value = Some("number"),
+            content = Some(getChoiceLabel(e, particle)),
+            number = Some(number))
+          html.closeTag(2)
+        })
+
+        node.children.zipWithIndex.foreach {
+          case (n, index) => {
+            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instNos)), classes = List(ClassInvisible))
+            doNode(n, instNos)
+            html.closeTag
+          }
+        }
+
+        html.closeTag
+      }
+      html.closeTag
+
+      addMaxOccursScriptlet(e, instances)
+
+    }
+
+    private def doNode(node: NodeSimpleType, instances: Instances) {
+      val e = node.element
+      val typ = node.typ
+
+      nonRepeatingSimpleType(e, instances)
+      val t = Some(typ)
+      val number = elementNumber(e)
+      for (instanceNo <- repeats(e)) {
+        val instNos = instances add instanceNo
+        repeatingEnclosing(e, instNos)
+        itemTitle(e)
+        itemBefore(e)
+        html.div(classes = List(ClassItemNumber), content = Some(number)).closeTag
+          .label(forInputName = getItemName(number, instNos),
+            classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
+          .div(classes = List(ClassItemInput))
+
+        simpleType(node, instNos)
+
+        html
+          .closeTag(3)
+      }
+      addMaxOccursScriptlet(e, instances)
+    }
+
+    private def doNode(node: NodeBaseType, instances: Instances) {
+      val e = node.element
+      val typ = node.typ
+      nonRepeatingSimpleType(e, instances)
+      val t = None
+      val number = elementNumber(e)
+      for (instanceNo <- repeats(e)) {
+        val instNos = instances add instanceNo
+        repeatingEnclosing(e, instNos)
+        itemTitle(e)
+        itemBefore(e)
+        html.div(classes = List(ClassItemNumber), content = Some(number)).closeTag
+          .label(forInputName = getItemName(number, instNos),
+            classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
+          .div(classes = List(ClassItemInput))
+        simpleType(node, instNos)
+        html
+          .closeTag(2)
+      }
+      html.closeTag
+      addMaxOccursScriptlet(e, instances)
+    }
+
+    private def doNodes(nodes: MutableList[Node], instances: Instances) {
+      nodes.foreach(doNode(_, instances))
+    }
+
+    private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
+      {
+        val number = elementNumber(node)
+        val js = JS()
+          .line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
+          .line("    //now add sequence children for each instanceNo")
+
+        for (instanceNo <- repeats(node)) {
+          val instNos = instances add instanceNo
+          node.children.foreach { n =>
+            js.line("    if (idVisible('%s'))", getRepeatingEnclosingId(number, instNos))
+            js.line("    xml += %s();", xmlFunctionName(n, instNos))
+            addXmlExtractScriptlet(n, instNos)
+          }
+        }
+        js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
+        js.line("    return xml;")
+
+        addXmlExtractScriptlet(node, js.toString, instances);
+      }
+    }
+
+    private def addXmlExtractScriptlet(node: NodeChoice, instances: Instances) {
+
+      val js = JS()
+        .line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
+        .line("    //now optionally add selected child if any")
+      for (instanceNo <- repeats(node)) {
+        val instNos = instances add instanceNo
+        js.line("    var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(node, instNos))
+
+        node.children.zipWithIndex.foreach {
+          case (n, index) =>
+            js.line("    if (checked == \"%s\")", getChoiceItemId(node, index + 1, instNos))
+              .line("    xml += %s();", xmlFunctionName(n, instNos))
+            addXmlExtractScriptlet(n, instNos)
+        }
+        js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
+          .line("    return xml;")
+        addXmlExtractScriptlet(node, js.toString(), instances);
+      }
+    }
+
+    private def addXmlExtractScriptlet(node: NodeSimpleType, instances: Instances) {
+      addXmlExtractScriptletForSimpleOrBase(node, instances)
+    }
+
+    private def addXmlExtractScriptlet(node: NodeBaseType, instances: Instances) {
+      addXmlExtractScriptletForSimpleOrBase(node, instances)
+    }
+
+    private def addXmlExtractScriptletForSimpleOrBase(node: NodeBasic, instances: Instances) {
+      val number = elementNumber(node)
+      val js = JS().line("  var xml='';")
+      for (instanceNo <- repeats(node)) {
+        val instNos = instances add instanceNo
+        js.line("  if (idVisible('%s'))", getRepeatingEnclosingId(number, instNos))
+        val valueById =
+          if (isRadio(node.element)) "encodeHTML($('input[name=" + getItemName(number, instNos) + "]:radio:checked').val())"
+          else valById(getItemId(node, instNos))
+        js.line("    xml += %s%s;", spaces(instNos), xml(node, transformToXmlValue(node, valueById)))
+      }
+      js.line("   return xml;")
+      addXmlExtractScriptlet(node, js.toString, instances);
+    }
+
+    private def transformToXmlValue(node: NodeBasic, value: String): String =
+      node match {
+        case n: NodeSimpleType => transformToXmlValue(restriction(n), value)
+        case n: NodeBaseType => transformToXmlValue(restriction(n), value)
+      }
+
+    private def transformToXmlValue(r: Restriction, value: String): String = {
+      val qn = toQN(r)
+      qn match {
+        case QN(xs, XsdDate) => "toXmlDate(" + value + ")"
+        case QN(xs, XsdDateTime) => "toXmlDateTime(" + value + ")"
+        case QN(xs, XsdTime) => "toXmlTime(" + value + ")"
+        case QN(xs, XsdBoolean) => "toBoolean(" + value + ")"
+        case _ => value
+      }
+    }
+
+    private def xmlFunctionName(node: Node, instances: Instances) = {
+      val number = elementNumber(node.element)
+      "getXml" + number + "instance" + instances
+    }
+
+    private def addXmlExtractScriptlet(node: Node, functionBody: String, instances: Instances) {
+      val functionName = xmlFunctionName(node, instances)
+      addScript(
+        JS().line("  //extract xml from element <%s>", node.element.name.getOrElse("?"))
+          .line("  function %s() {", functionName)
+          .line(functionBody)
+          .line("  }")
+          .line)
+    }
+
+    private def refById(id: String) = "$(\"#" + id + "\")"
+    private def valById(id: String) = "encodedValueById(\"" + id + "\")"
+    private def namespace(node: Node) =
+      if (elementNumber(node.element).equals("1"))
+        " xmlns=\"" + targetNamespace + "\""
+      else
+        ""
+    private def xmlStart(node: Node) =
+      "'<" + node.element.name.getOrElse("?") + namespace(node) + ">'"
+
+    private def xmlEnd(node: Node) =
+      "'</" + node.element.name.getOrElse("?") + ">'"
+
+    private def xml(node: Node, value: String) =
+      xmlStart(node) + Plus + value + Plus + xmlEnd(node)
+
+    private def spaces(instances: Instances) =
+      if (instances.size == 0) "'\\n' + "
+      else "'\\n' + spaces(" + ((instances.size - 1) * 2) + ") + "
+
+    override def toString = text
 
     private def addScript(s: String) {
       script.append(s)
       script.append("\n")
     }
 
-    def text =
-      header +
-        html.toString() + footer
-
-    private def header = {
-      val s = new StringBuilder
-      s.append(
-        """
-<html>
-<head>
-<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
-<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
-<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
-<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
-<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
-<script type="text/javascript">
-function openTag(name) {
-	return "<" + name + ">";
-}
-          
-function openTagWithNs(name, namespace) {
-    return "<" + name + " xmlns=\"""" + targetNamespace + """\">";
-}
-
-function closeTag(name) {
-	return "</" + name + ">";
-}
-
-function getStartAt(previousItems, items) {
-	if (previousItems == null) return 0;
-
-	var startAt = 0;
-
-        for (var i=0; i<Math.min(previousItems.length,items.length); i++) {
-    		  if (!(items[i]==previousItems[i])) 
-    			  return startAt;
-    		  else 
-    			  startAt = i+1;
-    	}
-	return startAt;
-}
-
-function closePreviousItems(previousItems,startAt,s) {
-     if (previousItems!=null) {
-          for (var i=previousItems.length-2;i>=startAt;i--) {
-              s = s + "\n" + spaces(i*2) + closeTag(previousItems[i]);
-          }
-      }
-      return s;
-}
-
-function spaces(n) {
-    var s = "";
-    for (var i=0;i<n;i++)
-      s = s + " ";
-    return s;
-}
-
-function cloneAndReplaceIds(element, suffix){
-  var clone = element.clone();
-  clone.find("*[id]").andSelf().each(function() { 
-    var previousId = $(this).attr("id");
-    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
-    $(this).attr("id", newId); 
-  });
-  return clone;
-}
-    
-var repeatCount = 10000;
-
-$(function() {
-  $('input').filter('.datepickerclass').datepicker();
-  $('input').filter('.datepickerclass').datepicker( "option", "dateFormat","dd/mm/yy");
-  $('input').filter('.datetimepickerclass').datetimepicker();
-  $('input').filter('.timepickerclass').timepicker({});
-
-  function callMethod(methodName, argument) {
-    var method = eval('(' + methodName + ')');
-    return method(argument);
-  }
-
-  $('#pre-submit').click( function () {
-    var s = "";
-    var previousItems = null;
-    $('*[number]').each( function(index) {
-      var thisId = this.id
-      var elem = $('#' + thisId)
-      // will do validations here
-      //if elem visible then do the validation for that element
-      if (elem.is(":visible")) 
-        elem.change();
-    });
-    var count = $('.item-error').filter(":visible").length
-    if (count>0) {
-      $('#validation-errors').show();
-      return;
-    }
-    else 
-      $('#validation-errors').hide();
-    $('div[enabled="true"]').each( function(index) { 
-      var inputId = this.id.replace("path-","");
-      var value = $('#'+ inputId).val()
-     
-      var items = $(this).text().split('|');
-      var startAt = getStartAt(previousItems, items);
-      
-      s = closePreviousItems(previousItems, startAt,s);
-      
-      //handle closing multiple repeated elements see https://github.com/davidmoten/xsd-forms/issues/1
-      if (items.length>1 && startAt==items.length) {
-          var tag;
-          s = s + spaces((startAt-1)*2);
-          tag = openTag(items[items.length-1]);
-          s = s + "\n" + spaces(i*2) + tag;
-      }
-      
-      for (var i=startAt; i<items.length; i++) {
-          var tag;
-          if (i==0)
-            tag = openTagWithNs(items[i],"ns");
-          else
-            tag = openTag(items[i]);
-    	  s = s + "\n" + spaces(i*2) + tag;
-      }
-      s = s + value 
-      s = s + closeTag(items[items.length-1]);
-      previousItems = items;
-    });
-    s = closePreviousItems(previousItems, 0,s);
-    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
-    s = "<pre>" + s + "</pre>";
-    $('#submit-comments').html(s);
-  });
-""" + script + """
-  $("#form").submit(function () { return false; }); // so it won't submit
-""" + extraScript.mkString + """
-    });
-</script>
-<script type="text/javascript" src="js/xsd-forms-override.js"></script>
-</head>
-<body>
-<div class="form">
-<form method="POST" action="form.html" name="form">
-""")
-      s.toString
-      //TODO action form parameter should be a constructor parameter for HtmlVisitor
-    }
-
-    private def footer =
-      """
-  <!--<input id="submit" class="submit" type="submit"></input>-->
-      <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
-  <div id="pre-submit" class="pre-submit">Submit</div>
-    		<p><div id="submit-comments"></div></p>
-</form>
-</div>
-</body>
-</html>"""
-
-    private case class SequenceEntry(
-      element: Element, number: String,
-      usesFieldset: Boolean) extends StackEntry
-    private case class ChoiceEntry(
-      element: Element, number: String) extends StackEntry
-    private case class ChoiceItemEntry(
-      element: Element, p: ParticleOption, number: String) extends StackEntry
-
-    private def currentNumber = number + ""
-
-    override def startSequence(e: Element) {
-      path.push(e.name.get)
-
-      val number = nextNumber
-      val legend = getAnnotation(e, "legend")
-      val usesFieldset = legend.isDefined
-
-      stack.push(SequenceEntry(e, number, usesFieldset))
-
-      val label = getAnnotation(e, "label").mkString
-
-      html
-        .div(classes = List("sequence"))
-      repeatingTitle(e, number, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
-      repeatingEnclosing(e, number)
-      addMaxOccurs(e, number)
-      html.div(classes = List("sequence-label"), content = Some(label))
-        .closeTag
-        .div(id = Some(idPrefix + "sequence-" + number),
-          classes = List("sequence-content"))
-      if (usesFieldset)
-        html.fieldset(legend = legend, classes = List("fieldset"), id = Some(idPrefix + "fieldset-" + number))
-    }
-
-    override def endSequence {
-      stack.pop match {
-        case e: SequenceEntry => {
-          html.closeTag
-          if (e.usesFieldset)
-            html.closeTag
-          html
-            .closeTag
-            .closeTag
-        }
-        case _ => unexpected
-      }
-      path.pop
-    }
-
-    private def getChoiceItemName(number: String) = idPrefix + "item-input-" + number
-    private def getChoiceItemId(number: String, index: Int) = getItemId(number) + choiceIndexDelimiter + index
-
-    override def startChoice(e: Element, choice: Choice) {
-      path.push(e.name.get)
-      val choiceInline = displayChoiceInline(choice)
-
-      val number = nextNumber
-      stack.push(ChoiceEntry(e, number))
-
-      html.div(id = Some(getItemEnclosingId(number)), classes = List("choice"))
-      repeatingTitle(e, number, e.minOccurs.intValue() == 0 || e.maxOccurs != "1")
-      repeatingEnclosing(e, number)
-      addMaxOccurs(e, number)
-      val particles = choice.group.particleOption3.map(_.value)
-      addChoiceHideOnStart(particles, number)
-      addChoiceShowHideScriptOnSelection(particles, number)
-
-      html.div(
-        classes = List("choice-label"),
-        content = Some(getAnnotation(choice.group, "label").mkString))
-        .closeTag
-
-      val forEachParticle = particles.zipWithIndex.foreach _
-
-      forEachParticle(x => {
-        val particle = x._1
-        val index = x._2 + 1
-        html.div(
-          id = Some(idPrefix + "div-choice-item-" + number + choiceIndexDelimiter + index),
-          classes = List("div-choice-item"))
-        html.input(
-          id = Some(getChoiceItemId(number, index)),
-          name = getChoiceItemName(number),
-          classes = List("choice-item"),
-          typ = Some("radio"),
-          value = Some("number"),
-          content = Some(getChoiceLabel(e, particle)),
-          number = Some(number))
-        html.closeTag
-        html.closeTag
-      })
-
+    private def addScript(js: JS) {
+      addScript(js.toString)
     }
 
     private def displayChoiceInline(choice: Choice) =
-      "inline" == getAnnotation(choice.group, "choice").mkString
+      "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
 
-    private def choiceIndexDelimiter = "-"
-
-    private def addChoiceHideOnStart(
-      particles: Seq[ParticleOption], number: String) {
+    private def addChoiceHideOnStartScriptlet(
+      particles: Seq[ParticleOption], number: String, instances: Instances) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
       forEachParticle(x => {
         val index = x._2 + 1
-        addScriptWithMargin("""
-|$("#""" + idPrefix + """choice-content-""" + number + choiceIndexDelimiter + index + """").hide();""")
+        addScript(
+          JS().line("  $('#%s').hide();", choiceContentId(idPrefix, number, index, instances)))
       })
     }
 
-    private def addChoiceShowHideScriptOnSelection(
-      particles: Seq[ParticleOption], number: String) {
+    private def addChoiceShowHideOnSelectionScriptlet(
+      particles: Seq[ParticleOption], number: String, instances: Instances) {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
-      addScriptWithMargin(
-        """
-|var choiceChange""" + number + """ = function addChoiceChange""" + number + """(suffix) {
-|  $(":input[@name='""" + getChoiceItemName(number) + """" + suffix + "']").change(function() {
-|    var checked = $(':input[name=""" + getChoiceItemName(number) + """' + suffix + ']:checked').attr("id");""")
+      val choiceChangeFunction = "choiceChange" + number + "instance" + instances;
+
+      val js = JS()
+      js.line("  var %s = function addChoiceChange%sinstance%s() {", choiceChangeFunction, number, instances)
+        .line("    $(':input[@name=%s]').change(function() {", getChoiceItemName(number, instances))
+        .line("      var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(number, instances))
 
       forEachParticle(x => {
         val index = x._2 + 1
-        val choiceContentId =
-          idPrefix + """choice-content-""" + number + choiceIndexDelimiter + index
-        addScriptWithMargin(
-          """
-|    if (checked == """" + getChoiceItemId(number, index) + """" + suffix) {
-|      $("#""" + choiceContentId + """" + suffix).show();
-|      $("#""" + choiceContentId + """" + suffix).find('.item-path').attr('enabled','true');
-|    }
-|    else {
-|      $("#""" + choiceContentId + """" + suffix).hide();
-|      $("#""" + choiceContentId + """" + suffix).find('.item-path').attr('enabled','false');
-|    }""")
+        val ccId =
+          choiceContentId(idPrefix, number, index, instances)
+        js.line("      if (checked == '%s') {", getChoiceItemId(number, index, instances))
+          .line("        $('#%s').show();", ccId)
+          .line("        $('#%s').find('.item-path').attr('enabled','true');", ccId)
+          .line("      }")
+          .line("      else {")
+          .line("        $('#%s').hide();", ccId)
+          .line("        $('#%s').find('.item-path').attr('enabled','false');", ccId)
+          .line("      }")
+
       })
-      addScriptWithMargin(
-        """
-|  })
-|}
-|
-|choiceChange""" + number + """("");""")
+      js.line("    });")
+        .line("  }")
+        .line
+        .line("  %s();", choiceChangeFunction)
 
-    }
+      addScript(js)
 
-    override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
-      val number =
-        stack.head match {
-          case ChoiceEntry(_, id) => id
-          case _ => unexpected
-        }
-      stack.push(ChoiceItemEntry(e, p, number))
-
-      html.div(id = Some(idPrefix + "choice-content-" + number + choiceIndexDelimiter + index), classes = List("invisible"))
     }
 
     private def getChoiceLabel(e: Element, p: ParticleOption): String = {
       val labels =
         p match {
           case x: Element => {
-            getAnnotation(x, "choiceLabel") ++ getAnnotation(x, "label") ++ Some(getLabel(x, None))
+            getAnnotation(x, Annotation.ChoiceLabel) ++ getAnnotation(x, Annotation.Label) ++ Some(getLabel(x, None))
           }
           case _ => unexpected
         }
       labels.head
     }
 
-    private def getLabel(e: Element, p: ParticleOption): String =
-      p match {
-        case x: Element => getLabel(x, None)
-        case _ => getLabel(e, None)
-      }
-
-    override def endChoiceItem {
-      stack.pop
-      html.closeTag
-    }
-
-    override def endChoice {
-      path.pop
-      stack.pop match {
-        case e: ChoiceEntry =>
-          html
-            .closeTag
-            .closeTag
-        case _ => unexpected
-      }
-    }
-
     private class MyRestriction(qName: QName)
       extends Restriction(None, SimpleRestrictionModelSequence(), None, Some(qName), Map())
 
     private def getVisibility(e: Element) =
-      getAnnotation(e, "visible") match {
-        case Some("false") => Some("invisible")
+      getAnnotation(e, Annotation.Visible) match {
+        case Some("false") => Some(ClassInvisible)
         case _ => None
       }
 
-    private def repeatingTitle(e: Element, number: String, hasButton: Boolean) {
+    private def nonRepeatingTitle(e: ElementWrapper, hasButton: Boolean, instances: Instances) {
+      //there's only one of these so use instanceNo = 1
+      val number = elementNumber(e)
       html.div(
-        classes = List("repeating-title"),
-        content = getAnnotation(e, "repeatingTitle")).closeTag
+        classes = List(ClassNonRepeatingTitle),
+        content = getAnnotation(e, Annotation.NonRepeatingTitle)).closeTag
       if (hasButton)
         html.div(
-          id = Some(getRepeatButtonId(number)),
-          classes = List("repeat-button", "white", "small"),
-          content = Some(getAnnotation(e, "repeatLabel").getOrElse("+"))).closeTag
+          id = Some(getRepeatButtonId(number, instances)),
+          classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
+          content = Some(getAnnotation(e, Annotation.RepeatLabel).getOrElse("+"))).closeTag
     }
 
-    private def getRepeatButtonId(number: String) =
-      idPrefix + "repeat-button-" + number
-
-    private def getRepeatingEnclosingId(number: String) =
-      idPrefix + "repeating-enclosing-" + number
-
-    private def repeatingEnclosing(e: Element, number: String) {
+    private def repeatingEnclosing(e: ElementWrapper, instances: Instances) {
+      val number = elementNumber(e)
+      val id = getRepeatingEnclosingId(number, instances)
       html.div(
-        id = Some(getRepeatingEnclosingId(number)),
-        classes = List("repeating-enclosing"))
+        id = Some(id),
+        classes = List(ClassRepeatingEnclosing))
+      if (instances.last != 1 || e.minOccurs == 0)
+        addScript(JS().line("  $('#%s').hide();", id))
     }
 
-    private def addItemHtmlOpening(e: Element, number: String, typ: Option[SimpleType]) {
+    private def nonRepeatingSimpleType(e: ElementWrapper, instances: Instances) {
+      val number = elementNumber(e)
       html
         .div(
-          classes = List("item-enclosing") ++ getVisibility(e),
-          id = Some(getItemEnclosingId(number)))
-      repeatingTitle(e, number, e.maxOccurs != "0" && e.maxOccurs != "1")
-      repeatingEnclosing(e, number)
-      getAnnotation(e, "title") match {
-        case Some(x) => html.div(classes = List("item-title"), content = Some(x)).closeTag
-        case _ =>
-      }
-      getAnnotation(e, "before") match {
-        case Some(x) => html.div(classes = List("item-before"), content = Some(x)).closeTag
-        case _ =>
-      }
-      html.div(classes = List("item-number"), content = Some(number)).closeTag
-        .label(forInputName = getItemName(number),
-          classes = List("item-label"), content = Some(getLabel(e, typ))).closeTag
-        .div(classes = List("item-input"))
+          classes = List(ClassItemEnclosing) ++ getVisibility(e),
+          id = Some(getItemEnclosingId(number, instances add 1)))
+      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instances)
     }
 
-    override def simpleType(e: Element, typ: SimpleType) {
-      path.push(e.name.get)
-      val number = nextNumber
-
-      addItemHtmlOpening(e, number, Some(typ))
-      typ.simpleDerivationOption3.value match {
-        case x: Restriction => simpleType(e, x, number)
-        case _ => unexpected
+    private def itemTitle(e: Element) {
+      getAnnotation(e, Annotation.Title) match {
+        case Some(x) => html.div(classes = List(ClassItemTitle), content = Some(x)).closeTag
+        case _ =>
       }
-      html
-        .closeTag
-        .closeTag
-        .closeTag
-      path.pop
+    }
+
+    private def itemBefore(e: Element) {
+      getAnnotation(e, Annotation.Before) match {
+        case Some(x) => html.div(classes = List(ClassItemBefore), content = Some(x)).closeTag
+        case _ =>
+      }
+    }
+
+    private def elementNumber(node: Node): String = elementNumber(node.element)
+
+    private def elementNumber(e: ElementWrapper): String = {
+      val n = elementNumbers.get(e);
+      if (n.isDefined)
+        n.get
+      else {
+        val newNumber = nextNumber
+        elementNumbers(e) = newNumber
+        newNumber
+      }
     }
 
     private def getTextType(e: Element) =
-      getAnnotation(e, "text")
+      getAnnotation(e, Annotation.Text)
 
-    private def nextNumber: String = {
-      number += 1
-      number + ""
-    }
+    private def simpleType(node: NodeBasic, instances: Instances) {
+      val e = node.element
 
-    override def baseType(e: Element, typ: BaseType) {
-      path.push(e.name.get)
-      val number = nextNumber
-      addItemHtmlOpening(e, number, None)
-      simpleType(e, new MyRestriction(typ.qName), number + "")
-      html
-        .closeTag
-        .closeTag
-        .closeTag
-      path.pop
-    }
+      val r = restriction(node)
 
-    case class QN(namespace: String, localPart: String)
+      val qn = toQN(r)
 
-    implicit def toQN(qName: QName) =
-      QN(qName.getNamespaceURI(), qName.getLocalPart())
-
-    private def getItemId(number: String) = idPrefix + "item-" + number
-
-    private def getItemEnclosingId(number: String) =
-      idPrefix + "item-enclosing-" + number
-
-    private def getItemErrorId(number: String) =
-      idPrefix + "item-error-" + number
-
-    private def getPathId(number: String) = idPrefix + "item-path-" + number
-
-    private def simpleType(e: Element, r: Restriction, number: String) {
-      val qn = toQN(r.base.get)
-
-      addInput(e, qn, r, number)
-
-      addMaxOccurs(e, number)
+      addInput(e, qn, r, instances)
 
       addDescription(e)
 
-      addError(e, getItemErrorId(number))
+      addPath(e, instances)
 
-      addPath(number)
+      addError(e, instances)
 
       addHelp(e)
 
       addAfter(e)
 
       val statements = List(
-        createDeclarationScriptlet(e, qn, number),
-        createMandatoryTestScriptlet(e, r),
-        createPatternsTestScriptlet(getPatterns(r)),
+        createDeclarationScriptlet(e, qn, instances),
+        createMandatoryTestScriptlet(node),
+        createPatternsTestScriptlet(getPatterns(node)),
+        createEnumerationTestScriptlet(node, instances),
         createBasePatternTestScriptlet(qn),
         createFacetTestScriptlet(r),
         createLengthTestScriptlet(r),
         createCanExcludeScriptlet(e),
-        createClosingScriptlet(e, qn, number))
+        createClosingScriptlet(e, qn, instances))
 
       statements
-        .map(stripMargin(_))
+        .map(insertMargin(_))
         .foreach(x => if (x.length > 0) addScript(x))
 
     }
 
-    private def getItemName(number: String) =
-      idPrefix + "item-input-" + number;
+    private def addInput(e: ElementWrapper, qn: QN, r: Restriction, instances: Instances) {
 
-    private def addInput(e: Element, qn: QN, r: Restriction, number: String) {
-
-      val itemId = getItemId(number)
+      val number = elementNumber(e)
 
       if (isEnumeration(r))
-        addEnumeration(e, r, number)
+        addEnumeration(e, r, instances)
       else
-        addTextField(e, r, itemId, number, getExtraClasses(qn))
+        addTextField(e, r, getExtraClasses(qn), instances)
 
-      addWidthScript(e, itemId)
+      addWidthScript(e, instances)
 
-      addCssScript(e, itemId)
+      addCssScript(e, instances)
     }
 
     private def getExtraClasses(qn: QN) = qn match {
-      case QN(xs, "date") => "datepickerclass "
-      case QN(xs, "datetime") => "datetimepickerclass "
-      case QN(xs, "time") => "timepickerclass "
+      case QN(xs, XsdDate) => ClassDatePicker + " "
+      case QN(xs, XsdDateTime) => ClassDateTimePicker + " "
+      case QN(xs, XsdTime) => ClassTimePicker + " "
       case _ => ""
     }
 
     private def addTextField(
-      e: Element, r: Restriction, itemId: String,
-      number: String, extraClasses: String) {
+      e: ElementWrapper, r: Restriction,
+      extraClasses: String, instances: Instances) {
+      val number = elementNumber(e)
       val inputType = getInputType(r)
+      val itemId = getItemId(number, instances)
       getTextType(e) match {
         case Some("textarea") =>
           html.textarea(
             id = Some(itemId),
-            name = getItemName(number),
-            classes = List(extraClasses, "item-input-textarea"),
+            name = getItemName(number, instances),
+            classes = List(extraClasses, ClassItemInputTextarea),
             content = Some(e.default.mkString),
             number = Some(number))
             .closeTag
@@ -723,28 +962,45 @@ $(function() {
             case Some("true") => Some(true)
             case _ => None
           }
+          val v = defaultValue(e.default, r)
           html.input(
             id = Some(itemId),
-            name = getItemName(number),
-            classes = List(extraClasses, "item-input-text"),
+            name = getItemName(number, instances),
+            classes = List(extraClasses, ClassItemInputText),
             typ = Some(inputType),
             checked = checked,
-            value = e.default,
+            value = v,
             number = Some(number))
             .closeTag
       }
     }
 
-    private def addWidthScript(e: Element, itemId: String) {
-      getAnnotation(e, "width") match {
+    private def defaultValue(value: Option[String], r: Restriction): Option[String] = {
+      value match {
+        case Some(v) => {
+          toQN(r) match {
+            // drop the seconds off the time so js timepicker is happy
+            case QN(xs, XsdTime) => Some(v.substring(0, 5))
+            case QN(xs, XsdDateTime) => Some(v.substring(0, 16))
+            case _ => value
+          }
+        }
+        case None => value
+      }
+    }
+
+    private def addWidthScript(e: ElementWrapper, instances: Instances) {
+      val itemId = getItemId(e, instances)
+      getAnnotation(e, Annotation.Width) match {
         case Some(x) =>
-          addScriptWithMargin("|  $('#" + itemId + "').width('" + x + "');")
+          addScript(JS().line("  $('#%s').width('%s');", itemId, x))
         case None =>
       }
     }
 
-    private def addCssScript(e: Element, itemId: String) {
-      getAnnotation(e, "css") match {
+    private def addCssScript(e: ElementWrapper, instances: Instances) {
+      val itemId = getItemId(e, instances)
+      getAnnotation(e, Annotation.Css) match {
         case Some(x) => {
           val items = x.split(';')
             .foreach(
@@ -752,8 +1008,7 @@ $(function() {
                 val pair = y.split(':')
                 if (pair.size != 2)
                   unexpected("css properties incorrect syntax\n" + pair)
-                addScriptWithMargin(
-                  "|  $('#" + itemId + "').css('" + pair(0) + "','" + pair(1) + "');")
+                addScript(JS().line("  $('#%s').css('%s','%s');", itemId, pair(0), pair(1)))
               })
         }
         case None =>
@@ -763,32 +1018,29 @@ $(function() {
     private def isEnumeration(r: Restriction) =
       !getEnumeration(r).isEmpty
 
-    private def addEnumeration(e: Element, r: Restriction, number: String) {
+    private def addEnumeration(e: ElementWrapper, r: Restriction, instances: Instances) {
+      val number = elementNumber(e)
       val en = getEnumeration(r)
-      val isRadio = getAnnotation(e, "selector") match {
-        case Some("radio") => true
-        case _ => false
-      }
 
-      val initializeBlank = getAnnotation(e, "addBlank") match {
+      val initializeBlank = getAnnotation(e, Annotation.AddBlank) match {
         case Some("true") => true
         case _ => false
       }
-      enumeration(en, number, isRadio, initializeBlank)
+      enumeration(en, number, isRadio(e), initializeBlank, instances)
     }
 
-    private def getEnumeration(typ: SimpleType): Seq[(String, NoFixedFacet)] =
-      typ.simpleDerivationOption3.value match {
-        case x: Restriction =>
-          getEnumeration(x)
-        case _ => unexpected
+    private def isRadio(e: ElementWrapper) =
+      //TODO add check is enumeration as well  
+      getAnnotation(e, Annotation.Selector) match {
+        case Some("radio") => true
+        case _ => false
       }
 
     private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
         _.value match {
           case y: NoFixedFacet => {
-            val label = getAnnotation(y, "label") match {
+            val label = getAnnotation(y, Annotation.Label) match {
               case Some(x) => x
               case None => y.valueAttribute
             }
@@ -798,41 +1050,42 @@ $(function() {
         }).flatten
 
     private def enumeration(en: Seq[(String, NoFixedFacet)],
-      number: String, isRadio: Boolean, initializeBlank: Boolean) {
+      number: String, isRadio: Boolean, initializeBlank: Boolean, instances: Instances) {
       if (isRadio) {
         en.zipWithIndex.foreach(x => {
           html.input(
-            id = Some(idPrefix + "item-" + number + "-" + x._2),
-            name = getItemName(number),
-            classes = List("select"),
+            id = Some(getItemId(number, x._2, instances)),
+            name = getItemName(number, instances),
+            classes = List(ClassSelect),
             typ = Some("radio"),
-            value = Some(x._1._1),
+            value = Some(x._1._2.valueAttribute),
             content = Some(x._1._1),
             number = Some(number)).closeTag
         })
       } else {
         html.select(
-          id = Some(idPrefix + "item-" + number),
-          name = getItemName(number),
-          classes = List("select"),
+          id = Some(getItemId(number, instances)),
+          name = getItemName(number, instances),
+          classes = List(ClassSelect),
           number = Some(number))
         if (initializeBlank)
           html.option(content = Some("Select one..."), value = "").closeTag
         en.foreach { x =>
           html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
-          getAnnotation(x._2, "makeVisible") match {
+          getAnnotation(x._2, Annotation.MakeVisible) match {
             case Some(y: String) => {
               val refersTo = number.toInt + y.toInt
-              addScriptWithMargin("""
-|  $("#""" + idPrefix + """item-""" + number + """").change( function() {
-|    var v = $("#""" + idPrefix + """item-""" + number + """");
-|    var refersTo = $("#""" + getItemEnclosingId(refersTo + "") + """") 
-|    if ("""" + x._2.valueAttribute + """" == v.val()) 
-|      refersTo.show();
-|    else
-|      refersTo.hide();
-|  })
-""")
+              val js = JS()
+                .line("  $('#%s').change( function() {", getItemId(number, instances))
+                .line("    var v = $('#%s');", getItemId(number, instances))
+                .line("    var refersTo = $('#%s');", getItemEnclosingId(refersTo + "", instances))
+                .line("    if ('%s' == v.val())", x._2.valueAttribute)
+                .line("      refersTo.show();")
+                .line("    else")
+                .line("      refersTo.hide();")
+                .line("  })")
+                .line
+              addScript(js)
             }
             case _ =>
           }
@@ -842,78 +1095,78 @@ $(function() {
     }
 
     private def addDescription(e: Element) {
-      getAnnotation(e, "description") match {
+      getAnnotation(e, Annotation.Description) match {
         case Some(x) =>
           html.div(
-            classes = List("item-description"),
+            classes = List(ClassItemDescription),
             content = Some(x))
             .closeTag
         case None =>
       }
     }
 
-    private def addError(e: Element, itemErrorId: String) {
+    private def addError(e: ElementWrapper, instances: Instances) {
+      val itemErrorId = getItemErrorId(elementNumber(e), instances)
       html.div(
         id = Some(itemErrorId),
-        classes = List("item-error"),
-        content = Some(getAnnotation(e, "validation").getOrElse("Invalid")))
+        classes = List(ClassItemError),
+        content = Some(getAnnotation(e, Annotation.Validation).getOrElse("Invalid")))
         .closeTag
 
     }
 
-    private def addPath(number: String) {
+    private def addPath(e: ElementWrapper, instances: Instances) {
       html.div(
         classes = List("item-path"),
-        id = Some(getPathId(number)),
+        id = Some(getPathId(elementNumber(e), instances)),
         enabledAttr = Some("true"),
-        content = Some(path.reverse.mkString("|")))
+        content = Some(""))
         .closeTag
     }
 
     private def addHelp(e: Element) {
-      getAnnotation(e, "help") match {
+      getAnnotation(e, Annotation.Help) match {
         case Some(x) =>
-          html.div(classes = List("item-help"), content = Some(x)).closeTag
+          html.div(classes = List(ClassItemHelp), content = Some(x)).closeTag
         case None =>
       }
     }
 
     private def addAfter(e: Element) {
-      getAnnotation(e, "after") match {
+      getAnnotation(e, Annotation.After) match {
         case Some(x) =>
-          html.div(classes = List("item-after"), content = Some(x)).closeTag
+          html.div(classes = List(ClassItemAfter), content = Some(x)).closeTag
         case None =>
       }
     }
 
     private def getBasePattern(qn: QN) = {
       qn match {
-        case QN(xs, "decimal") => Some("\\d+(\\.\\d*)?")
-        case QN(xs, "integer") => Some("\\d+")
+        case QN(xs, XsdDecimal) => Some("\\d+(\\.\\d*)?")
+        case QN(xs, XsdInteger) => Some("\\d+")
         case _ => None
       }
     }
 
-    private def createDeclarationScriptlet(e: Element, qn: QN, number: String) = {
-      val itemId = getItemId(number)
-      """
-|// """ + e.name.get + """
-|var validate""" + number + """ = function() {
-|  return validate""" + number + """WithSuffix("");  
-|}
-|
-|var validate""" + number + """WithSuffix = function (suffix) {
-|  var ok = true;
-|  var v = $("#""" + itemId + """" + suffix);
-|  var pathDiv = $("#""" + getPathId(number) + """");"""
+    private def createDeclarationScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
+      val number = elementNumber(e)
+      val itemId = getItemId(number, instances)
+      JS()
+        .line("// %s", e.name.get)
+        .line("var validate%sinstance%s = function () {", number, instances)
+        .line("  var ok = true;")
+        .line("  var v = $('#%s');", itemId)
+        .line("  var pathDiv = $('#%s');", getPathId(number, instances))
+        .toString
     }
 
-    private def createMandatoryTestScriptlet(e: Element, r: Restriction) = {
-      if (isMandatory(e, r))
-        """
-|  // mandatory test
-|  if ((v.val() == null) || (v.val().length==0))
-|    ok=false;"""
+    private def createMandatoryTestScriptlet(node: NodeBasic) = {
+      if (isMandatory(node.element, restriction(node)))
+        JS()
+          .line("  // mandatory test")
+          .line("  if ((v.val() == null) || (v.val().length==0))")
+          .line("    ok=false;")
+          .toString
       else ""
     }
 
@@ -939,10 +1192,10 @@ $(function() {
     private def createCanExcludeScriptlet(e: Element) =
       if (e.minOccurs > 0) ""
       else {
-        """
-|  // minOccurs=0, disable if blank
-|  var includeInXml  = !((v.val() == null) || (v.val().length==0));
-|  pathDiv.attr('enabled','' + includeInXml);"""
+        JS().line("  // minOccurs=0, disable if blank")
+          .line("  var includeInXml  = !((v.val() == null) || (v.val().length==0));")
+          .line("  pathDiv.attr('enabled','' + includeInXml);")
+          .toString
       }
 
     private def createFacetTestScriptlet(r: Restriction) = {
@@ -966,61 +1219,73 @@ $(function() {
 
     private def createPatternsTestScriptlet(patterns: Seq[String]) =
       if (patterns.size > 0)
-        """|    var patternMatched =false;
-""" +
-          patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString("\n") + """
-|  if (!(patternMatched))
-|    ok = false;"""
+        JS().line("  var patternMatched =false;")
+          .line(patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString("\n"))
+          .line("  if (!(patternMatched))")
+          .line("    ok = false;")
+          .toString
       else ""
+
+    private def createEnumerationTestScriptlet(node: NodeBasic, instances: Instances) = {
+      val js = JS()
+      if (isEnumeration(restriction(node))) {
+        js.line("  //enumeration test")
+        if (isRadio(node.element))
+          js.line("  var radioInput=$('input:radio[name=%s]');", getItemName(elementNumber(node), instances))
+            .line("  if (! radioInput.is(':checked')) ok = false;")
+        else
+          js.line("  if ($.trim(v.val()).length ==0) ok = false;")
+      }
+      js.toString
+    }
 
     private def createPatternScriptlet(x: (String, Int)) =
-      """|
-|  // pattern test
-|  var regex""" + x._2 + """ = /^""" + x._1 + """$/ ;
-|  if (regex""" + x._2 + """.test(v.val())) 
-|    patternMatched = true;"""
+      JS().line("  // pattern test")
+        .line("  var regex%s = /^%s$/ ;", x._2.toString, x._1)
+        .line("  if (regex%s.test(v.val()))", x._2.toString)
+        .line("    patternMatched = true;")
+        .toString
 
     private def createBasePatternTestScriptlet(qn: QN) = {
+      val js = JS()
       val basePattern = getBasePattern(qn)
       if (basePattern.size > 0)
-        """    	  
-|  // base pattern test
-|  var regex = /^""" + basePattern.head + """$/ ;
-|  if (!(regex.test(v.val()))) 
-|    ok = false;"""
-      else ""
+        js.line("  // base pattern test")
+          .line("  var regex = /^%s$/ ;", basePattern.head)
+          .line("  if (!(regex.test(v.val())))")
+          .line("    ok = false;")
+      js.toString
     }
 
-    private def createClosingScriptlet(e: Element, qn: QN, number: String) = {
-      val onChange = "change("
-      val changeMethod = qn match {
-        case QN(xs, "date") => onChange
-        case QN(xs, "datetime") => onChange
-        case QN(xs, "time") => onChange
-        case _ => onChange
-      };
-      """
-|  return ok;
-|}
-|      
-|$("#""" + getItemId(number) + """").""" + changeMethod + """ function() {
-|  var ok = validate""" + number + """();
-|  var error= $("#""" + getItemErrorId(number) + """");
-|  if (!(ok)) 
-|    error.show();
-|  else 
-|    error.hide();
-|})
-""" + (if (e.minOccurs == 0 && e.default.isEmpty)
-        """
-|//disable item-path due to minOccurs=0 and default is empty  
-|$("#""" + getPathId(number) + """").attr('enabled','false');"""
-      else "")
+    private def changeReference(e: ElementWrapper, instances: Instances) =
+      if (isRadio(e))
+        "input:radio[name=" + getItemName(elementNumber(e), instances) + "]"
+      else
+        "#" + getItemId(elementNumber(e), instances)
+
+    private def createClosingScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
+      val number = elementNumber(e)
+      val changeMethod = "change("
+      val js = JS()
+        .line("  return ok;")
+        .line("}")
+        .line
+        .line("$('%s').change( function() {", changeReference(e, instances))
+        .line("  var ok = validate%sinstance%s();", number, instances)
+        .line("  var error= $('#%s');", getItemErrorId(number, instances))
+        .line("  if (!(ok)) ")
+        .line("    error.show();")
+        .line("  else")
+        .line("    error.hide();")
+        .line("});")
+        .line
+      if (e.minOccurs == 0 && e.default.isEmpty)
+        js.line("//disable item-path due to minOccurs=0 and default is empty")
+          .line("$('#%s').attr('enabled','false');", getPathId(number, instances))
+      js.toString
     }
 
-    private def addScriptWithMargin(s: String) = addScript(stripMargin(s))
-
-    private def getPatterns(r: Restriction) =
+    private def getPatterns(r: Restriction): Seq[String] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
         f match {
           case DataRecord(xs, Some("pattern"), x: Pattern) => Some(x.valueAttribute)
@@ -1028,86 +1293,70 @@ $(function() {
         }
       })
 
+    private def getPatterns(node: NodeBasic): Seq[String] =
+      {
+        val r = restriction(node)
+
+        val explicitPatterns = getPatterns(r)
+
+        val qn = toQN(r)
+
+        //calculate implicit patterns for dates, times, and datetimes
+        val implicitPatterns =
+          qn match {
+            case QN(xs, XsdDate) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
+            //TODO why spaces on end of time?
+            case QN(xs, XsdTime) => Some("\\d\\d:\\d\\d *")
+            case QN(xs, XsdDateTime) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
+            case _ => None
+          }
+
+        explicitPatterns ++ implicitPatterns
+      }
+
     private def getInputType(r: Restriction) = {
-      val qn = toQN(r.base.get)
+      val qn = toQN(r)
       qn match {
-        case QN(xs, "boolean") => "checkbox"
+        case QN(xs, XsdBoolean) => "checkbox"
         case _ => "text"
       }
     }
 
-    private def stripMargin(s: String) =
+    private def insertMargin(s: String) =
       s.stripMargin.replaceAll("\n", "\n" + margin)
 
-    private def isMultiple(e: Element) =
-      (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
+    private def isMultiple(node: Node): Boolean =
+      isMultiple(node.element)
 
-    private def addMaxOccurs(e: Element, number: String) {
+    private def isMultiple(e: ElementWrapper): Boolean =
+      return (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
+    private def repeatingEnclosingIds(e: ElementWrapper, instances: Instances) =
+      repeats(e).map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
+
+    private def addMaxOccursScriptlet(e: ElementWrapper, instances: Instances) {
+      val number = elementNumber(e)
       if (isMultiple(e)) {
-        val repeatButtonId = getRepeatButtonId(number)
-        val enclosingId = idPrefix + "repeating-enclosing-" + number
+        val repeatButtonId = getRepeatButtonId(number, instances)
+        val js = JS()
+          .line("  $('#%s').click( function() {", repeatButtonId)
+          .line("    // loop through all repeats until find first nonInvisible repeat and make it visible")
+          .line("    var elem;")
+          .line(
+            repeatingEnclosingIds(e, instances)
+              .map(id => { "    elem = $('#" + id + "');\n    if (!elemVisible(elem))\n      { elem.show(); return; }" })
+              .mkString(""))
+          .line("  })")
+          .line
 
-        addScriptWithMargin("""
-
-|            
-|//make a hidden copy of the enclosing item
-|var enclosing""" + number + """ = $("#""" + enclosingId + """").clone();
-|""" + (if (e.minOccurs == 0) """$("#""" + enclosingId + """").hide();""" else "") + """ 
-|var lastRepeat""" + number + """="""" + enclosingId + """";
-|$("#""" + repeatButtonId + """").click(function() {
-|  var clone = enclosing""" + number + """.clone();
-|  clone.insertAfter("#"+lastRepeat""" + number + """);
-|  var map = {};
-|  clone.find('*').andSelf().each( function(index) {  
-|    var id = $(this).attr("id");
-|    if (typeof id === "undefined") 
-|      return;
-|    if (id.match(/^.*-\d+$/)) {
-|      //extract the number
-|      //extract the number from a choice id pattern first
-|      var number = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
-|      //if not found then extract from a standard id pattern
-|      if (number == id)
-|        number = id.replace(/^.*-(\d+)$/,"$1");
-|      if (map[number] == null) {
-|        repeatCount++;
-|        map[number]=repeatCount;
-|      }
-|      var suffix = "-" + map[number];
-|      var newId = id + suffix;
-|      $(this).attr("id",newId);
-|      //TODO fix up label for attribute (points to name attribute of input element)
-|      if (id.match(/^""" + idPrefix + """item(-\d+)?-\d+$/)) {
-|        var input = $('#'+newId);  
-|        var numberFromId = id.replace(/^.*-(\d+)(-\d+)$/,"$1");
-|        if (numberFromId == id)
-|          numberFromId = id.replace(/^.*-(\d+)$/,"$1");
-|         
-|        input.attr("name", """" + idPrefix + """item-input-" + numberFromId + "-" + map[numberFromId]);
-|        input.change( function() {
-|          console.log("changed " + newId);
-|          var ok = callMethod("validate" + numberFromId +"WithSuffix",suffix);
-|          var error= $("#""" + idPrefix + """item-error-" + numberFromId  + "-" + map[numberFromId]);
-|          if (!(ok)) 
-|            error.show();
-|          else 
-|            error.hide();
-|        })
-|      }
-|    }
-|  })
-|  var nextId = clone.attr("id");
-|  lastRepeat""" + number + """=nextId;
-|})
-        """)
+        addScript(js)
       }
     }
 
-    private def getAnnotation(e: Annotatedable, key: String): Option[String] =
+    private def getAnnotation(e: Annotatedable, key: XsdFormsAnnotation): Option[String] =
       e.annotation match {
         case Some(x) =>
-          x.attributes.get("@{" + appInfoSchema + "}" + key) match {
+          x.attributes.get("@{" + AppInfoSchema + "}" + key.name) match {
             case Some(y) => Some(y.value.toString)
             case None => None
           }
@@ -1117,7 +1366,7 @@ $(function() {
     private def getLabel(e: Element, typ: Option[SimpleType]) =
       {
         val name = getLabelFromName(e)
-        val label = getAnnotation(e, "label") match {
+        val label = getAnnotation(e, Annotation.Label) match {
           case Some(x) => x
           case _ => name
         }
@@ -1159,18 +1408,254 @@ $(function() {
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
 
+    private def restriction(node: NodeBasic): Restriction =
+      node match {
+        case n: NodeSimpleType => restriction(n)
+        case n: NodeBaseType => restriction(n)
+      }
+
+    private def restriction(node: NodeSimpleType) =
+      node.typ.simpleDerivationOption3.value match {
+        case x: Restriction => x
+        case _ => Util.unexpected
+      }
+
+    private def restriction(node: NodeBaseType) =
+      new MyRestriction(node.typ.qName)
+
+    private def numInstances(e: ElementWrapper): Int =
+      if (isMultiple(e)) NumInstancesForMultiple
+      else 1
+
+    private def repeats(node: Node): Range = repeats(node.element)
+
+    private def repeats(e: ElementWrapper): Range = 1 to numInstances(e)
+
+    private def choiceContentId(idPrefix: String, number: String, index: Int, instances: Instances) =
+      idPrefix + "choice-content-" + number + InstanceDelimiter + instances + ChoiceIndexDelimiter + index
+    private def getRepeatButtonId(number: String, instances: Instances) =
+      TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instances)
+    private def getRepeatingEnclosingId(element: ElementWrapper, instances: Instances): String =
+      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instances)
+    private def getRepeatingEnclosingId(number: String, instances: Instances) =
+      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instances)
+    private def getChoiceItemName(node: Node, instances: Instances): String =
+      getChoiceItemName(elementNumber(node.element), instances)
+    private def getChoiceItemName(number: String, instances: Instances): String =
+      TreeToHtmlConverter.getChoiceItemName(idPrefix, number, instances)
+    private def getChoiceItemId(node: Node, index: Int, instances: Instances): String =
+      getChoiceItemId(elementNumber(node.element), index, instances)
+    private def getChoiceItemId(number: String, index: Int, instances: Instances): String =
+      TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instances)
+    private def getItemId(node: Node, instances: Instances): String =
+      getItemId(elementNumber(node.element), instances)
+    private def getItemId(element: ElementWrapper, instances: Instances): String =
+      getItemId(elementNumber(element), instances)
+    private def getItemId(number: String, instances: Instances): String =
+      TreeToHtmlConverter.getItemId(idPrefix, number, instances)
+    private def getItemId(number: String, enumeration: Integer, instances: Instances): String =
+      getItemId(number, instances) + "-" + enumeration
+    private def getItemName(number: String, instances: Instances) =
+      idPrefix + "item-input-" + number + InstanceDelimiter + instances;
+    private def getItemEnclosingId(number: String, instances: Instances) =
+      idPrefix + "item-enclosing-" + number + InstanceDelimiter + instances
+    private def getItemErrorId(number: String, instances: Instances) =
+      TreeToHtmlConverter.getItemErrorId(idPrefix, number, instances)
+    private def getPathId(number: String, instances: Instances) =
+      idPrefix + "item-path-" + number + InstanceDelimiter + instances
+
+    private def nextNumber: String = {
+      number += 1
+      number + ""
+    }
+
+    private case class QN(namespace: String, localPart: String)
+
+    private def toQN(r: Restriction): QN = toQN(r.base.get)
+
+    private implicit def toQN(qName: QName): QN =
+      QN(qName.getNamespaceURI(), qName.getLocalPart())
+
+    def text =
+      header +
+        html.toString() + footer
+
+    private def header = {
+      val s = new StringBuilder
+      s.append(
+        """
+<html>
+<head>
+<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
+<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript">
+
+function encodeHTML(s) {
+    if (typeof(s) != "undefined")
+	    return s.replace(/&/g, '&amp;')
+	               .replace(/</g, '&lt;')
+	               .replace(/>/g, '&gt;')
+	               .replace(/"/g, '&quot;');
+     else 
+          return s; 
+}
+          
+function testEncodeHTML() {
+   console.log(encodeHTML('<>'));
+   test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
+}
+          
+function test(condition, message) {
+  if (!condition) alert(message);
+}
+          
+          
+function encodedValueById(id) {
+    return encodeHTML($("#"+id).val());
+}
+
+function spaces(n) {
+    var s = "";
+    for (var i=0;i<n;i++)
+      s = s + " ";
+    return s;
+}
+
+function cloneAndReplaceIds(element, suffix){
+  var clone = element.clone();
+  clone.find("*[id]").andSelf().each(function() { 
+    var previousId = $(this).attr("id");
+    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
+    $(this).attr("id", newId); 
+  });
+  return clone;
+}
+    
+function idVisible(id) {
+    return elemVisible($("#"+id));
+}
+    
+function elemVisible(elem) {
+    return elem.is(":visible");    
+}
+          
+function toXmlDate(s) {
+  return s;
+}
+          
+function toXmlDateTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toXmlTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toBoolean(s) {
+  if (s == "on" || s == "true")
+    return "true";
+  else 
+    return "false";
+}
+          
+$(function() {
+  //run js unit tests        
+  testEncodeHTML();
+  
+  //setup date and time pickers
+  $('input').filter('.datepickerclass').datepicker();
+  //now a workaround because datepicker does not use the initial value with the required format but expects mm/dd/yyyy
+  $('input').filter('.datepickerclass').each(function() {
+    var elem = $(this);
+    var val = elem.attr('value');
+    elem.datepicker( "option", "dateFormat","yy-mm-dd");
+    if (typeof(val) != 'undefined') {
+      console.log("val="+val);
+      elem.datepicker('setDate',val);
+    }
+  });
+  $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm',separator: 'T'});
+  $('input').filter('.timepickerclass').timepicker({});
+
+  function callMethod(methodName, argument) {
+    var method = eval('(' + methodName + ')');
+    return method(argument);
+  }
+
+  $('#pre-submit').click( function () {
+    var previousItems = null;
+    $('*[number]').each( function(index) {
+      var thisId = this.id
+      var elem = $('#' + thisId)
+      // will do validations here
+      //if elem visible then do the validation for that element
+      if (elemVisible(elem)) 
+        elem.change();
+    });
+    $('input:radio').each( function (index) {
+      console.log("radio.id="+ this.id);
+      var elem = $('#' + this.id)
+      if (elemVisible(elem))
+        elem.change();
+    });
+    var count = $('.item-error').filter(":visible").length
+    if (count>0) {
+      $('#validation-errors').show();
+      return;
+    }
+    else 
+      $('#validation-errors').hide();
+    var s = getXml1instance();
+    s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + s;
+    s = s.replace(/&/g,"&amp;");
+    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s = "<pre>" + s + "</pre>";
+          
+    $('#submit-comments').html(s);
+  });
+""" + script + """
+  $("#form").submit(function () { return false; }); // so it won't submit
+""" + extraScript.mkString + """
+    });
+</script>
+<script type="text/javascript" src="js/xsd-forms-override.js"></script>
+</head>
+<body>
+<div class="form">
+<form method="POST" action="form.html" name="form">
+""")
+      s.toString
+      //TODO action form parameter should be a constructor parameter for HtmlVisitor
+    }
+
+    private def footer =
+      """
+  <!--<input id="submit" class="submit" type="submit"></input>-->
+      <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="pre-submit" class="pre-submit">Submit</div>
+    		<p><div id="submit-comments"></div></p>
+</form>
+</div>
+</body>
+</html>"""
+
   }
 
   /**
    * **************************************************************
    *
-   *   Traversor
+   *   SchemaTraversor
    *
    *
    * **************************************************************
    */
 
-  class Traversor(s: Schema, rootElement: String, visitor: Visitor) {
+  class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) {
     import Util._
     import XsdUtil._
 
@@ -1198,7 +1683,7 @@ $(function() {
         ++ (topLevelSimpleTypes.map(x => (qn(targetNs, x.name.get), x)))).toMap;
 
     private val baseTypes =
-      Set("decimal", "string", "integer", "date", "dateTime", "time", "boolean")
+      Set(XsdDecimal, XsdString, XsdInteger, XsdDate, XsdDateTime, XsdTime, XsdBoolean)
         .map(qn(_))
 
     private def getType(q: QName): AnyRef = {
@@ -1221,13 +1706,19 @@ $(function() {
     /**
      * Visits the element definition tree.
      */
-    def process {
+    def traverse {
+      val element =
+        if (rootElement.isDefined)
 
-      val element = topLevelElements.find(
-        _.name match {
-          case Some(y) => y equals rootElement
-          case None => false
-        }).getOrElse(unexpected("did not find element " + rootElement))
+          topLevelElements.find(
+            _.name match {
+              case Some(y) => y equals rootElement.get
+              case None => false
+            }).getOrElse(unexpected("did not find element " + rootElement.get))
+        else if (topLevelElements.length == 0)
+          unexpected("no top level elements specified in schema!")
+        else
+          topLevelElements(0)
 
       process(element)
 
@@ -1332,11 +1823,25 @@ $(function() {
    * **************************************************************
    */
 
-  /**
-   * @author dave
-   *
-   */
+  private object Html {
+    val Legend = "legend"
+    val Div = "div"
+    val Select = "select"
+    val Option = "option"
+    val Label = "label"
+    val Fieldset = "fieldset"
+    val Textarea = "textarea"
+    val Input = "input"
+    val Id = "id"
+    val Class = "class"
+    val Value = "value"
+    val Enabled = "enabled"
+    val Checked = "checked"
+    val Name = "name"
+  }
+
   private class Html {
+    import Html._
     private case class HtmlElement(name: String, hasContent: Boolean)
     private val stack = new scala.collection.mutable.Stack[HtmlElement]
     private var s = new StringBuffer
@@ -1355,25 +1860,25 @@ $(function() {
     def div(id: Option[String] = None,
       classes: List[String] = List(), enabledAttr: Option[String] = None,
       content: Option[String] = None) =
-      element(name = "div", id = id, classes = classes, enabledAttr = enabledAttr,
+      element(name = Div, id = id, classes = classes, enabledAttr = enabledAttr,
         content = content)
 
     def select(id: Option[String] = None, name: String,
       classes: List[String] = List(), content: Option[String] = None, number: Option[String] = None) =
-      element(name = "select", id = id, classes = classes, nameAttr = Some(name), numberAttr = number,
+      element(name = Select, id = id, classes = classes, nameAttr = Some(name), numberAttr = number,
         content = content)
 
     def option(id: Option[String] = None,
       classes: List[String] = List(),
       value: String,
       content: Option[String] = None) =
-      element(name = "option", id = id, classes = classes,
+      element(name = Html.Option, id = id, classes = classes,
         content = content, value = Some(value))
 
     def label(forInputName: String, id: Option[String] = None,
       classes: List[String] = List(), content: Option[String] = None) =
       element(
-        name = "label",
+        name = Label,
         id = id,
         forAttr = Some(forInputName),
         classes = classes,
@@ -1383,9 +1888,9 @@ $(function() {
       legend: Option[String] = None,
       classes: List[String] = List(),
       id: Option[String]) = {
-      element(name = "fieldset", classes = classes, id = id)
+      element(name = Fieldset, classes = classes, id = id)
       legend match {
-        case Some(x) => element(name = "legend", content = Some(x)).closeTag
+        case Some(x) => element(name = Legend, content = Some(x)).closeTag
         case None =>
       }
     }
@@ -1396,7 +1901,7 @@ $(function() {
       value: Option[String] = None,
       name: String, number: Option[String] = None,
       closed: Boolean = false) =
-      element(name = "textarea",
+      element(name = Textarea,
         id = id,
         classes = classes,
         content = content,
@@ -1411,7 +1916,7 @@ $(function() {
       checked: Option[Boolean] = None,
       number: Option[String] = None,
       typ: Option[String]) =
-      element(name = "input", id = id, classes = classes, checked = checked,
+      element(name = Input, id = id, classes = classes, checked = checked,
         content = content, value = value, nameAttr = Some(name), typ = typ, numberAttr = number)
 
     private def classNames(classes: List[String]) =
@@ -1432,14 +1937,14 @@ $(function() {
       numberAttr: Option[String] = None,
       typ: Option[String] = None): Html = {
       val attributes =
-        id.map(("id", _)) ++
-          classNames(classes).map(("class" -> _)) ++
-          value.map(("value", _)) ++
-          nameAttr.map(("name", _)) ++
-          enabledAttr.map(("enabled", _)) ++
+        id.map((Id, _)) ++
+          classNames(classes).map((Class -> _)) ++
+          value.map((Value, _)) ++
+          nameAttr.map((Name, _)) ++
+          enabledAttr.map((Enabled, _)) ++
           forAttr.map(("for", _)) ++
           typ.map(("type", _)) ++
-          checked.map(x => ("checked", x.toString)) ++
+          checked.map(x => (Checked, x.toString)) ++
           numberAttr.map(("number", _))
       elementBase(name, attributes.toMap, content)
       this
@@ -1456,7 +1961,8 @@ $(function() {
       this
     }
 
-    def closeTag = {
+    def closeTag: Html = {
+      if (stack.isEmpty) throw new RuntimeException("closeTag called on empty html stack!")
       val element = stack.head
       if (!element.hasContent) {
         indent
@@ -1466,7 +1972,14 @@ $(function() {
       this
     }
 
+    def closeTag(n: Int): Html = {
+      for (i <- 1 to n)
+        closeTag
+      this
+    }
+
     override def toString = s.toString()
 
   }
 }
+
