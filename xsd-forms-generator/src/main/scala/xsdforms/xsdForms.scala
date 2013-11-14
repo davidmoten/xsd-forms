@@ -346,7 +346,6 @@ package xsdforms {
     import java.util.zip._
     import org.apache.commons.io._
 
-    
     def generateZip(
       schema: InputStream,
       zip: OutputStream,

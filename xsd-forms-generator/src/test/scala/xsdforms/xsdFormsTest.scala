@@ -647,7 +647,7 @@ package xsdforms {
     import org.junit.Assert._
 
     @Test
-    def test() {
+    def testJS() {
       val js = JS()
         .line("function %s(doc,%s) {", "logit", "name")
         .line("  console.log(doc);")
@@ -669,7 +669,7 @@ function logit(doc,name) {
     import scala.collection.JavaConversions._
 
     @Test
-    def test() {
+    def testGenerateZip() {
       val out = new File("target/out.zip")
       new FileOutputStream(out)
       Generator.generateZip(getClass.getResourceAsStream("/demo.xsd"), new FileOutputStream(out))
@@ -680,6 +680,8 @@ function logit(doc,name) {
       assertTrue(names.contains("form.html"))
       assertTrue(names.contains("css/"))
       assertTrue(names.contains("js/"))
+      
+      Option.empty
     }
 
   }
