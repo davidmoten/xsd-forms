@@ -65,7 +65,7 @@ Getting Started
 ### Technical overview
 The use case is
 
-* Given an xml schema, generate html, javascript and css files that will capture input, perform validation and prepare an xml representation of the form detail compliant with the schema. *
+* *Given an xml schema, generate html, javascript and css files that will capture input, perform validation and prepare an xml representation of the form detail compliant with the schema.*
 
 ### Building from source 
 You need maven 3 installed and subversion binaries.
