@@ -43,7 +43,7 @@ What xsd features are supported?
 ----------------------------------
 These xsd features are supported:
 
-  * elements only, not attributes
+  * elements only, *not* attributes
   * sequence, choice
   * maxOccurs >= 1 on elements or anonymous complex types
   * restrictions by regex pattern, enumerations, ranges on numerics, maxLength, minLength, length
