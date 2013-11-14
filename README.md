@@ -39,6 +39,27 @@ Probably not! Xsd-forms only supports a subset of xsd features. It was enough wo
   * translate the xml using some standard parser (xpath expressions etc)
   * generate classes from both schemas and write code to translate using the generated classes. This method gives you compile-time indications as the schemas change through time (and isn't change inevitable!). *This is my preferred option*.
 
+What xsd features are supported?
+----------------------------------
+These xsd features are supported:
+
+  * elements only, not attributes
+  * sequence, choice
+  * maxOccurs >= 1 on elements or anonymous complex types
+  * restrictions by regex pattern, enumerations, ranges on numerics, maxLength, minLength, length
+  * base simple types: string, boolean, date, datetime, time, integer, decimal
+  * no explicit support for populating form fields (say from xml). xsd defaults will be honoured. JQuery overrides can be used to do custom initialization.
+
+Bearing in mind the above restrictions, these features are supported:
+
+  * top level elements 
+  * top level complex types
+  * top level simple types
+  * anonymous complex types
+  * anonymous complex content
+  * anonymous simple types
+
+
 How do I generate a form?
 ---------------------------------
 
@@ -121,21 +142,6 @@ Then go to http://localhost:8080/
 
 Scope
 --------------
-The initial proposal is to only support certain xsd features including:
-
-  * elements only, not attributes
-  * top level elements 
-  * top level complex types
-  * top level simple types
-  * anonymous complex types
-  * anonymous complex content
-  * anonymous simple types
-  * sequence, choice
-  * maxOccurs >= 1 on elements or anonymous complex types
-  * restrictions by regex pattern, enumerations, ranges on numerics, maxLength, minLength, length
-  * base simple types: string, boolean, date, datetime, time, integer, decimal
-  * no explicit support for populating form fields (say from xml). xsd defaults will be honoured. JQuery overrides can be used to do custom initialization.
-
 The generated form should
   * perform all schema defined validation (e.g. regex pattern checks etc) 
   * notify validation failures in a _good practice_ way
@@ -146,7 +152,7 @@ The generated form should
   * follow _good practice_ presentation standards
   * facilitate tweaking of presentation using css override on every element
   * support small screen/large screen
-  * support common mobile platforms
+  * support common mobile platforms (*later!*)
 
 ## Status of features
 Category|Feature|UI|XML gen
