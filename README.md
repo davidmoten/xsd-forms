@@ -33,7 +33,7 @@ Note that the examples are not fully working and are still in development. The e
 
 I've already got a schema, can I generate a form from it?
 --------------------------------------------------------------
-Probably not! Xsd-forms only supports a subset of xsd features. It was enough work for me to get this far, believe me! Supported features are documented in another section below. Your options are:
+Probably not! *xsd-forms* only supports a subset of xsd features. It was enough work for me to get this far, believe me! Supported features are documented in another section below. Your options are:
 
   * use an XSLT to translate xml to match your schema
   * translate the xml using some standard parser (xpath expressions etc)
