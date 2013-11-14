@@ -29,7 +29,7 @@ The features of javascript libraries like [http://jquery.com](JQuery) mean that 
 [Australian Census 2011](http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/main/webapp/census.html)|[schema](http://code.google.com/p/xsd-forms/source/browse/xsd-forms/trunk/xsd-forms-generator/src/test/resources/australian-census-2011.xsd)|Based on the 2011 Australian Census form ([pdf](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Main%20Features802011))
 
 
-Note that the examples are not fully working and are still in development. The examples  look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is partially working (click Submit on a form). 
+Note that the examples are not fully working and are still in development. The examples look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is partially working (click Submit on a form). 
 
 I've already got a schema, can I generate a form from it?
 --------------------------------------------------------------
@@ -41,17 +41,23 @@ Probably not! Xsd-forms only supports a subset of xsd features. It was enough wo
 
 How do I generate a form?
 ---------------------------------
-There will be options for that. 
 
-  * direct call to java/scala library
-  * maven plugin (java developer)
-  * ant script (java developer)
+  * direct call to java/scala library (Generator.generate and Generator.generateZip)
+  * maven plugin (jvm developer)
+  * ant script (jvm developer)
   * web service (other)
 
 A web service (Rest/SOAP) is available now on cloudbees at http://xsd-forms-generator.xuml-tools.cloudbees.net/. At this service you can 
 
   * Submit a schema document to the service and receive a zip archive in return of the generated files.
   * Submit a schema document and view the generated form 
+
+What do I need to do after I have designed a schema?
+-----------------------------------------------------
+
+The default generated form just displays the captured xml on the page under the submit button. You will likely want to post the generated xml to a web server or perhaps email the xml to an address. To do that just set *extraScript* to the script below to override the submit behaviour:
+
+    TODO 
 
 Getting Started
 ----------------
