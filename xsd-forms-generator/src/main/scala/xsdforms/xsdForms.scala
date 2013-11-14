@@ -386,6 +386,28 @@ package xsdforms {
 
       println("generated")
     }
+    
+    def generateHtml(schema: InputStream,
+      html: OutputStream,
+      idPrefix: String = "a-",
+      rootElement: Option[String] = None,
+      extraScript: Option[String] = None) {
+
+      import scala.xml._
+
+      val schemaXb = scalaxb.fromXML[Schema](
+        XML.load(schema))
+
+      val ns = schemaXb.targetNamespace.get.toString
+
+      val visitor = new TreeCreatingVisitor()
+
+      new SchemaTraversor(schemaXb, rootElement, visitor).traverse
+      println("tree:\n" + visitor)
+
+      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
+      html write text.getBytes
+    }
   }
 
   /**

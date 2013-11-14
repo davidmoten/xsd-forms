@@ -21,11 +21,18 @@ public class GeneratorServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String schema = req.getParameter("schema");
 		InputStream schemaIn = new ByteArrayInputStream(schema.getBytes());
-		resp.setContentType("application/zip");
-		resp.setHeader("Content-Disposition", "attachment; filename=site.zip");
+		String idPrefix = "a-";
 		Option<String> rootElement = Option.empty();
 		Option<String> extraScript = Option.empty();
-		Generator.generateZip(schemaIn, resp.getOutputStream(),"a-", rootElement, extraScript);
+		String action = req.getParameter("action");
+		if ("zip".equals(action)) {
+			resp.setContentType("application/zip");
+			resp.setHeader("Content-Disposition", "attachment; filename=site.zip");
+			Generator.generateZip(schemaIn, resp.getOutputStream(),idPrefix, rootElement, extraScript);
+		} else {
+			resp.setContentType("text/html");
+			Generator.generateHtml(schemaIn, resp.getOutputStream(),idPrefix,rootElement, extraScript);
+		}
 	}
 	
 	
