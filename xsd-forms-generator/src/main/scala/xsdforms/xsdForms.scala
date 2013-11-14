@@ -365,7 +365,6 @@ package xsdforms {
       println("tree:\n" + visitor)
 
       val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
-      out.write(text.getBytes)
 
       val zipIn = new ZipInputStream(Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
       val zipOut = new ZipOutputStream(out)
@@ -374,12 +373,17 @@ package xsdforms {
       iterator.foreach { zipEntry =>
         {
           val bytes = IOUtils.toByteArray(zipIn)
-          zipOut putNextEntry zipEntry
+          zipOut putNextEntry new ZipEntry(zipEntry.getName)
           zipOut write bytes
         }
       }
-
+      
       zipIn.close
+      
+      val zipEntry = new ZipEntry("form.html")
+      zipOut putNextEntry zipEntry
+      zipOut write text.getBytes
+      zipOut.close
 
       println("generated")
     }

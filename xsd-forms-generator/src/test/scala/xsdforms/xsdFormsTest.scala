@@ -177,7 +177,7 @@ package xsdforms {
     private def testOnWebDriver(driver: WebDriver) {
       println("testing web driver " + driver.getClass().getSimpleName())
       driver.get(uri)
-      
+
       //TODO enable this
       //      testDateDefaultSet(driver, 11) 
       testMakeVisible(driver, 24)
@@ -643,13 +643,13 @@ package xsdforms {
 
   @Test
   class JSTest {
-    
+
     import org.junit.Assert._
 
     @Test
     def test() {
       val js = JS()
-        .line("function %s(doc,%s) {","logit","name")
+        .line("function %s(doc,%s) {", "logit", "name")
         .line("  console.log(doc);")
         .line("}")
       println(js)
@@ -659,6 +659,22 @@ function logit(doc,name) {
 }"""
       assertEquals(expected, js.toString)
     }
+  }
+
+  @Test
+  class GeneratorTest {
+    import java.io._
+    import org.junit.Assert._
+
+    @Test
+    def test() {
+      val out = new File("target/out.zip")
+      val os = new FileOutputStream(out)
+      Generator.generateZip("c-", getClass.getResourceAsStream("/demo.xsd"), Some("main"), os, None)
+      os.close
+      assertTrue(out.exists)
+    }
+
   }
 
 }
