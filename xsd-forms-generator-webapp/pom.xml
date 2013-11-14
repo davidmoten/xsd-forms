@@ -39,6 +39,10 @@
 					<stopPort>${jetty.stop.port}</stopPort>
 					<webAppConfig>
 						<contextPath>/</contextPath>
+						<resourceBases>
+			                <resourceBase>src/main/webapp</resourceBase>
+            			    <resourceBase>${project.build.directory}/${project.artifactId}-${project.version}</resourceBase>
+            			</resourceBases>
 					</webAppConfig>
 				</configuration>
 			</plugin>
