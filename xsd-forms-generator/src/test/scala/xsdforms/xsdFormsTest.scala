@@ -665,14 +665,21 @@ function logit(doc,name) {
   class GeneratorTest {
     import java.io._
     import org.junit.Assert._
+    import java.util.zip._
+    import scala.collection.JavaConversions._
 
     @Test
     def test() {
       val out = new File("target/out.zip")
-      val os = new FileOutputStream(out)
-      Generator.generateZip("c-", getClass.getResourceAsStream("/demo.xsd"), Some("main"), os, None)
-      os.close
+      new FileOutputStream(out)
+      Generator.generateZip("c-", getClass.getResourceAsStream("/demo.xsd"), Some("main"), new FileOutputStream(out), None)
       assertTrue(out.exists)
+      val zipFile = new ZipFile(out)
+      val names = enumerationAsScalaIterator(zipFile.entries()).map(_.getName).toSet
+      
+      assertTrue(names.contains("form.html"))
+      assertTrue(names.contains("css/"))
+      assertTrue(names.contains("js/"))
     }
 
   }
