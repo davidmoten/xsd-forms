@@ -1,15 +1,15 @@
 <xs:schema targetNamespace="http://org.moten.david/example2"
-	xmlns="http://org.moten.david/example2" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:i="http://moten.david.org/xsd-forms">
-	<xs:annotation i:numberItems="true" />
+     xmlns="http://org.moten.david/example2" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns:i="http://moten.david.org/xsd-forms">
+     <xs:annotation i:numberItems="true" />
 
-	<xs:element name="main" type="four-digits" >
-	   <xs:annotation i:label="Expects four digits"/>
-	</xs:element>
+     <xs:element name="main" type="four-digits" >
+        <xs:annotation i:label="Expects four digits"/>
+     </xs:element>
 
-	<xs:simpleType name="four-digits">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="[0-9]{4}" />
-		</xs:restriction>
-	</xs:simpleType>
+     <xs:simpleType name="four-digits">
+          <xs:restriction base="xs:string">
+               <xs:pattern value="[0-9]{4}" />
+          </xs:restriction>
+     </xs:simpleType>
 </xs:schema>

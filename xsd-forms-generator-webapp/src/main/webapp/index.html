@@ -1,24 +1,23 @@
 <html>
-
 <body>
 <h4>Xsd-forms Generator</h4>
 <form name="generate" action="generate" method="post">
 Schema:<br/>
-<textarea name="schema" style="width:100%; height:75%">
+<textarea name="schema" style="width:100%; height:75%;font-size:10px;">
 &lt;xs:schema targetNamespace="http://org.moten.david/example"
-	xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:i="http://moten.david.org/xsd-forms"&gt;
-	&lt;xs:annotation i:numberItems="true" /&gt;
-	&lt;xs:element name="person" type="person"&gt;
-		&lt;xs:annotation i:label="Personal details" /&gt;
-	&lt;/xs:element&gt;
-	&lt;xs:complexType name="person"&gt;
-		&lt;xs:sequence&gt;
-			&lt;xs:element name="name" type="xs:string" maxOccurs="unbounded"&gt;
-				&lt;xs:annotation i:label="Full name" /&gt;
-			&lt;/xs:element&gt;
-		&lt;/xs:sequence&gt;
-	&lt;/xs:complexType&gt;
+     xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+     xmlns:i="http://moten.david.org/xsd-forms"&gt;
+     &lt;xs:annotation i:numberItems="true" /&gt;
+     &lt;xs:element name="person" type="person"&gt;
+          &lt;xs:annotation i:label="Personal details" /&gt;
+     &lt;/xs:element&gt;
+     &lt;xs:complexType name="person"&gt;
+          &lt;xs:sequence&gt;
+               &lt;xs:element name="name" type="xs:string" maxOccurs="unbounded"&gt;
+                    &lt;xs:annotation i:label="Full name" /&gt;
+               &lt;/xs:element&gt;
+          &lt;/xs:sequence&gt;
+     &lt;/xs:complexType&gt;
 &lt;/xs:schema&gt;
 </textarea><br/>
 <input type="radio" name="action" value="zip">zip</input>

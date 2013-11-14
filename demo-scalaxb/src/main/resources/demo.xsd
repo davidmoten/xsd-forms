@@ -1,470 +1,470 @@
 <xs:schema targetNamespace="http://org.moten.david/xsd-forms/demo"
-	xmlns="http://org.moten.david/xsd-forms/demo" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:i="http://moten.david.org/xsd-forms"  elementFormDefault="qualified">
-	
-	<xs:annotation i:numberItems="true" />
+    xmlns="http://org.moten.david/xsd-forms/demo" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:i="http://moten.david.org/xsd-forms"  elementFormDefault="qualified">
+    
+    <xs:annotation i:numberItems="true" />
 
-	<xs:element name="main" type="main" />
+    <xs:element name="main" type="main" />
 
-	<xs:complexType name="main">
-		<xs:sequence>
-			<xs:element name="text-element" type="xs:string">
-				<xs:annotation i:title="Demonstration of xsd-forms features"
-					i:before="This page demonstrates the main features of generated forms using xsd-forms. The schema used to generate this form is demo.xsd.">
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="text-element-with-default" type="xs:string"
-				default="default" />
-			<xs:element name="long-text" type="xs:string">
-				<xs:annotation i:text="textarea" />
-			</xs:element>
-			<xs:element name="long-text-with-default" type="xs:string"
-				default="default">
-				<xs:annotation i:text="textarea" />
-			</xs:element>
-			<xs:element name="decimal-element" type="xs:decimal">
-				<xs:annotation i:title="Numbers" />
-			</xs:element>
-			<xs:element name="decimal-element-with-default" type="xs:decimal"
-				default="10.0435" />
-			<xs:element name="integer-element" type="xs:integer" />
-			<xs:element name="integer-element-with-default" type="xs:integer"
-				default="123" />
-			<xs:element name="date-element" type="xs:date">
-				<xs:annotation i:title="Dates and times" />
-			</xs:element>
-			<xs:element name="date-element-with-default2" type="xs:date"
-				default="1973-06-12" />
-			<xs:element name="time-element" type="xs:time" />
-			<xs:element name="time-element-with-default" type="xs:time"
-				default="21:55:00" />
-			<xs:element name="datetime-element" type="xs:dateTime">
-				<xs:annotation i:label="datetime element TODO" />
-			</xs:element>
-			<xs:element name="datetime-element-with-default" type="xs:dateTime"
-				default="2002-05-30T09:30:00">
-				<xs:annotation i:label="Datetime element with default TODO" />
-			</xs:element>
-			<xs:element name="boolean-element" type="xs:boolean">
-				<xs:annotation i:title="Booleans" />
-			</xs:element>
-			<xs:element name="boolean-element-with-default" type="xs:boolean"
-				default="true" />
-			<xs:element name="string-enumeration" type="string-enumeration">
-				<xs:annotation i:title="Enumerations" />
-			</xs:element>
-			<xs:element name="string-enumeration-unselected" type="string-enumeration">
-				<xs:annotation i:addBlank="true" />
-			</xs:element>
-			<xs:element name="string-enumeration-with-labels" type="string-enumeration-with-labels" />
-			<xs:element name="decimal-enumeration" type="decimal-enumeration">
-				<xs:annotation i:label="Decimal enumeration" />
-			</xs:element>
-			<xs:element name="integer-enumeration" type="integer-enumeration" />
-			<xs:element name="string-enumeration-radio" type="string-enumeration-with-labels">
-				<xs:annotation i:selector="radio" />
-			</xs:element>
-			<xs:element name="make-visible-example" type="make-visible-enumeration">
-				<xs:annotation i:title="Make visible example"
-					i:before="When Option B is selected then the next (makeVisible=1) input element will be made visible so that Further Details for Option B can be captured. The Further Details element should have i:visible=false annotation." />
-			</xs:element>
-			<xs:element name="further-details-for-option-b" type="xs:string">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-			<xs:element name="label-override" type="xs:string">
-				<xs:annotation i:label="Label overriden"
-					i:title="Labels, before, after, title, description" />
-			</xs:element>
-			<xs:element name="with-all" type="string-pattern">
-				<xs:annotation i:title="'title' message" i:before="'before' message"
-					i:description="description of the field here" i:after="'after' message"
-					i:label="With all comments"
-					i:validation="Invalid format, must start with a,b or c and be followed by 3 digits." />
-			</xs:element>
-			<xs:element name="css-override" type="xs:string">
-				<xs:annotation i:text="textarea"
-					i:css="color:white;height:12em;width:12em;background:orange"
-					i:title="CSS override of input elements" />
-			</xs:element>
-			<xs:element name="string-pattern" type="string-pattern">
-				<xs:annotation i:description="a,b, or c followed by 3 digits"
-					i:title="Patterns validation" />
-			</xs:element>
-			<xs:element name="string-pattern-validation-msg" type="string-pattern">
-				<xs:annotation i:description="a,b, or c followed by 3 digits"
-					i:validation="Invalid format, must start with a,b or c and be followed by 3 digits." />
-			</xs:element>
-			<xs:element name="string-multiple-pattern">
-				<xs:annotation i:description="AB or CD (multiple patterns is logical OR)"
-					i:validation="Invalid format, must be AB or CD." i:title="Multiple pattern validation"
-					i:label="String multiple pattern" />
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:pattern value="AB" />
-						<xs:pattern value="CD" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="string-min-length-validation">
-				<xs:annotation i:description="minimum 3 characters"
-					i:validation="Invalid format, must have a minimum of 3 characters."
-					i:title="Min length validation" />
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:minLength value="3" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="integer-min-length-validation">
-				<xs:annotation i:description="minimum 3 digits"
-					i:validation="Invalid format, must have a minimum of 3 digits." />
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:minInclusive value="100" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="decimal-min-length-validation">
-				<xs:annotation i:description="minimum 3 characters"
-					i:validation="Invalid format, must have a minimum of 3 characters." />
-				<xs:simpleType>
-					<xs:restriction base="xs:decimal">
-						<xs:fractionDigits value="2" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+    <xs:complexType name="main">
+        <xs:sequence>
+            <xs:element name="text-element" type="xs:string">
+                <xs:annotation i:title="Demonstration of xsd-forms features"
+                    i:before="This page demonstrates the main features of generated forms using xsd-forms. The schema used to generate this form is demo.xsd.">
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="text-element-with-default" type="xs:string"
+                default="default" />
+            <xs:element name="long-text" type="xs:string">
+                <xs:annotation i:text="textarea" />
+            </xs:element>
+            <xs:element name="long-text-with-default" type="xs:string"
+                default="default">
+                <xs:annotation i:text="textarea" />
+            </xs:element>
+            <xs:element name="decimal-element" type="xs:decimal">
+                <xs:annotation i:title="Numbers" />
+            </xs:element>
+            <xs:element name="decimal-element-with-default" type="xs:decimal"
+                default="10.0435" />
+            <xs:element name="integer-element" type="xs:integer" />
+            <xs:element name="integer-element-with-default" type="xs:integer"
+                default="123" />
+            <xs:element name="date-element" type="xs:date">
+                <xs:annotation i:title="Dates and times" />
+            </xs:element>
+            <xs:element name="date-element-with-default2" type="xs:date"
+                default="1973-06-12" />
+            <xs:element name="time-element" type="xs:time" />
+            <xs:element name="time-element-with-default" type="xs:time"
+                default="21:55:00" />
+            <xs:element name="datetime-element" type="xs:dateTime">
+                <xs:annotation i:label="datetime element TODO" />
+            </xs:element>
+            <xs:element name="datetime-element-with-default" type="xs:dateTime"
+                default="2002-05-30T09:30:00">
+                <xs:annotation i:label="Datetime element with default TODO" />
+            </xs:element>
+            <xs:element name="boolean-element" type="xs:boolean">
+                <xs:annotation i:title="Booleans" />
+            </xs:element>
+            <xs:element name="boolean-element-with-default" type="xs:boolean"
+                default="true" />
+            <xs:element name="string-enumeration" type="string-enumeration">
+                <xs:annotation i:title="Enumerations" />
+            </xs:element>
+            <xs:element name="string-enumeration-unselected" type="string-enumeration">
+                <xs:annotation i:addBlank="true" />
+            </xs:element>
+            <xs:element name="string-enumeration-with-labels" type="string-enumeration-with-labels" />
+            <xs:element name="decimal-enumeration" type="decimal-enumeration">
+                <xs:annotation i:label="Decimal enumeration" />
+            </xs:element>
+            <xs:element name="integer-enumeration" type="integer-enumeration" />
+            <xs:element name="string-enumeration-radio" type="string-enumeration-with-labels">
+                <xs:annotation i:selector="radio" />
+            </xs:element>
+            <xs:element name="make-visible-example" type="make-visible-enumeration">
+                <xs:annotation i:title="Make visible example"
+                    i:before="When Option B is selected then the next (makeVisible=1) input element will be made visible so that Further Details for Option B can be captured. The Further Details element should have i:visible=false annotation." />
+            </xs:element>
+            <xs:element name="further-details-for-option-b" type="xs:string">
+                <xs:annotation i:visible="false" />
+            </xs:element>
+            <xs:element name="label-override" type="xs:string">
+                <xs:annotation i:label="Label overriden"
+                    i:title="Labels, before, after, title, description" />
+            </xs:element>
+            <xs:element name="with-all" type="string-pattern">
+                <xs:annotation i:title="'title' message" i:before="'before' message"
+                    i:description="description of the field here" i:after="'after' message"
+                    i:label="With all comments"
+                    i:validation="Invalid format, must start with a,b or c and be followed by 3 digits." />
+            </xs:element>
+            <xs:element name="css-override" type="xs:string">
+                <xs:annotation i:text="textarea"
+                    i:css="color:white;height:12em;width:12em;background:orange"
+                    i:title="CSS override of input elements" />
+            </xs:element>
+            <xs:element name="string-pattern" type="string-pattern">
+                <xs:annotation i:description="a,b, or c followed by 3 digits"
+                    i:title="Patterns validation" />
+            </xs:element>
+            <xs:element name="string-pattern-validation-msg" type="string-pattern">
+                <xs:annotation i:description="a,b, or c followed by 3 digits"
+                    i:validation="Invalid format, must start with a,b or c and be followed by 3 digits." />
+            </xs:element>
+            <xs:element name="string-multiple-pattern">
+                <xs:annotation i:description="AB or CD (multiple patterns is logical OR)"
+                    i:validation="Invalid format, must be AB or CD." i:title="Multiple pattern validation"
+                    i:label="String multiple pattern" />
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="AB" />
+                        <xs:pattern value="CD" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="string-min-length-validation">
+                <xs:annotation i:description="minimum 3 characters"
+                    i:validation="Invalid format, must have a minimum of 3 characters."
+                    i:title="Min length validation" />
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="3" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="integer-min-length-validation">
+                <xs:annotation i:description="minimum 3 digits"
+                    i:validation="Invalid format, must have a minimum of 3 digits." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="100" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="decimal-min-length-validation">
+                <xs:annotation i:description="minimum 3 characters"
+                    i:validation="Invalid format, must have a minimum of 3 characters." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:fractionDigits value="2" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 
-			<xs:element name="string-max-length-validation">
-				<xs:annotation i:description="maximum 4 characters"
-					i:validation="Invalid format, must have a maximum of 4 characters."
-					i:title="Max length validation" />
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:maxLength value="4" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="integer-max-length-validation">
-				<xs:annotation i:description="maximum 4 digits"
-					i:validation="Invalid format, must have a maximum of 4 digits." />
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:maxInclusive value="9999" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="decimal-max-length-validation">
-				<xs:annotation i:description="maximum 4 characters"
-					i:validation="Invalid format, must have a maximum of 4 characters." />
-				<xs:simpleType>
-					<xs:restriction base="xs:decimal">
-						<xs:fractionDigits value="2" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-
-
-
-			<xs:element name="string-length-validation">
-				<xs:annotation i:description="exactly 4 characters"
-					i:validation="Invalid format, must have exactly 4 characters."
-					i:title="Length validation" />
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:length value="4" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="integer-length-validation">
-				<xs:annotation i:description="exactly 4 digits"
-					i:validation="Invalid format, must have exactly 4 digits." />
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:minInclusive value="1000" />
-						<xs:maxInclusive value="9999"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="decimal-length-validation">
-				<xs:annotation i:description="exactly 4 characters"
-					i:validation="Invalid format, must be a decimal value with exactly 4 characters." />
-				<xs:simpleType>
-					<xs:restriction base="xs:decimal">
-						<xs:minInclusive value="0" />
-						<xs:maxInclusive value="9999"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+            <xs:element name="string-max-length-validation">
+                <xs:annotation i:description="maximum 4 characters"
+                    i:validation="Invalid format, must have a maximum of 4 characters."
+                    i:title="Max length validation" />
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="4" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="integer-max-length-validation">
+                <xs:annotation i:description="maximum 4 digits"
+                    i:validation="Invalid format, must have a maximum of 4 digits." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:maxInclusive value="9999" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="decimal-max-length-validation">
+                <xs:annotation i:description="maximum 4 characters"
+                    i:validation="Invalid format, must have a maximum of 4 characters." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:fractionDigits value="2" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 
 
 
-			<xs:element name="integer-min-inclusive-validation">
-				<xs:annotation i:description="5 or more"
-					i:validation="Invalid format, must be greater than or equal to 5."
-					i:title="Min inclusive validation" />
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:minInclusive value="5" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="decimal-min-inclusive-validation">
-				<xs:annotation i:description="5 or more"
-					i:validation="Invalid format, must be greater than or equal to 5." />
-				<xs:simpleType>
-					<xs:restriction base="xs:decimal">
-						<xs:minInclusive value="5" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="integer-max-inclusive-validation">
-				<xs:annotation i:description="maximum value of 10"
-					i:validation="Invalid format, must less than or equal to 10."
-					i:title="Max inclusive validation" />
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:maxInclusive value="10" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-
-			<xs:element name="decimal-max-inclusive-validation">
-				<xs:annotation i:description="maximum value of 10"
-					i:validation="Invalid format, must less than or equal to 10." />
-				<xs:simpleType>
-					<xs:restriction base="xs:decimal">
-						<xs:maxInclusive value="10" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="integer-min-exclusive-validation">
-				<xs:annotation i:description="greater than 5"
-					i:validation="Invalid format, must be greater than 5." i:title="Min exclusive validation" />
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:minExclusive value="5" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-
-			<xs:element name="decimal-min-exclusive-validation">
-				<xs:annotation i:description="greater than 5"
-					i:validation="Invalid format, must be greater than 5." />
-				<xs:simpleType>
-					<xs:restriction base="xs:decimal">
-						<xs:minExclusive value="5" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-
-			<xs:element name="integer-max-exclusive-validation">
-				<xs:annotation i:description="less than 10"
-					i:validation="Invalid format, must be an integer less than 10."
-					i:title="Max exclusive validation" />
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:maxExclusive value="10" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-
-			<xs:element name="decimal-max-exclusive-validation">
-				<xs:annotation i:description="less than 10"
-					i:validation="Invalid format, must be less than 10." />
-				<xs:simpleType>
-					<xs:restriction base="xs:decimal">
-						<xs:maxExclusive value="10" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+            <xs:element name="string-length-validation">
+                <xs:annotation i:description="exactly 4 characters"
+                    i:validation="Invalid format, must have exactly 4 characters."
+                    i:title="Length validation" />
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="4" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="integer-length-validation">
+                <xs:annotation i:description="exactly 4 digits"
+                    i:validation="Invalid format, must have exactly 4 digits." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1000" />
+                        <xs:maxInclusive value="9999"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="decimal-length-validation">
+                <xs:annotation i:description="exactly 4 characters"
+                    i:validation="Invalid format, must be a decimal value with exactly 4 characters." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="0" />
+                        <xs:maxInclusive value="9999"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 
 
-			<xs:element name="anonymous-choice-displayed-after">
-				<xs:complexType>
-					<xs:choice>
-						<xs:annotation i:label="Anonymous choice, displayed after" />
-						<xs:element name="choice-1" type="xs:string">
-							<xs:annotation i:label="" i:choiceLabel="Choice 1" />
-						</xs:element>
-						<xs:element name="choice-2" type="xs:date">
-							<xs:annotation i:label="" i:choiceLabel="Choice 2" />
-						</xs:element>
-					</xs:choice>
-				</xs:complexType>
-			</xs:element>
 
-			<xs:element name="max-occurs-example-1" type="xs:decimal"
-				maxOccurs="unbounded">
-				<xs:annotation i:nonRepeatingTitle="Repeatable item"
-					i:label="Number" />
-			</xs:element>
+            <xs:element name="integer-min-inclusive-validation">
+                <xs:annotation i:description="5 or more"
+                    i:validation="Invalid format, must be greater than or equal to 5."
+                    i:title="Min inclusive validation" />
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="5" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="decimal-min-inclusive-validation">
+                <xs:annotation i:description="5 or more"
+                    i:validation="Invalid format, must be greater than or equal to 5." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="5" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="integer-max-inclusive-validation">
+                <xs:annotation i:description="maximum value of 10"
+                    i:validation="Invalid format, must less than or equal to 10."
+                    i:title="Max inclusive validation" />
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:maxInclusive value="10" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 
-			<xs:element name="max-occurs-example-2" type="xs:decimal" minOccurs="0"
-				maxOccurs="unbounded">
-				<xs:annotation i:nonRepeatingTitle="Repeatable item minOccurs=0"
-					i:label="Number" />
-			</xs:element>
+            <xs:element name="decimal-max-inclusive-validation">
+                <xs:annotation i:description="maximum value of 10"
+                    i:validation="Invalid format, must less than or equal to 10." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:maxInclusive value="10" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="integer-min-exclusive-validation">
+                <xs:annotation i:description="greater than 5"
+                    i:validation="Invalid format, must be greater than 5." i:title="Min exclusive validation" />
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minExclusive value="5" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 
-			<xs:element name="max-occurs-example-3" type="xs:string"
-				maxOccurs="unbounded">
-				<xs:annotation i:nonRepeatingTitle="Repeatable item with button label"
-					i:label="String" i:repeatLabel="Another" />
-			</xs:element>
+            <xs:element name="decimal-min-exclusive-validation">
+                <xs:annotation i:description="greater than 5"
+                    i:validation="Invalid format, must be greater than 5." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:minExclusive value="5" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 
-			<xs:element name="max-occurs-example-4" maxOccurs="unbounded">
-				<xs:annotation i:nonRepeatingTitle="Repeatable complex type" />
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="A" type="xs:string" />
-						<xs:element name="B" type="xs:string" />
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
+            <xs:element name="integer-max-exclusive-validation">
+                <xs:annotation i:description="less than 10"
+                    i:validation="Invalid format, must be an integer less than 10."
+                    i:title="Max exclusive validation" />
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:maxExclusive value="10" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 
-			<xs:element name="max-occurs-example-5" maxOccurs="unbounded">
-				<xs:annotation i:nonRepeatingTitle="Repeatable choice" />
-				<xs:complexType>
-					<xs:choice>
-						<xs:element name="A" type="xs:string" />
-						<xs:element name="B" type="xs:string" />
-					</xs:choice>
-				</xs:complexType>
-			</xs:element>
-
-
-			<xs:element name="max-occurs-example-6" maxOccurs="unbounded">
-				<xs:annotation i:nonRepeatingTitle="Repeatable complex type with title" i:label="Two items" />
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="A" type="xs:string" />
-						<xs:element name="B" type="xs:string" />
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-
-			<xs:element name="optional" type="xs:string" minOccurs="0">
-				<xs:annotation i:title="Optional elements" i:label="Optional string"
-					i:before="Setting minOccurs=0 on an element means that if the entry is left blank at submit then the xml element will be excluded from the final xml." />
-			</xs:element>
-
-			<xs:element name="anonymous-simple-type">
-				<xs:annotation i:label="Up to four digits" i:title="Anonymous simple type" />
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:pattern value="[0-9]{0,4}" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-
-			<xs:element name="named-complex-type" type="named-complex-type">
-				<xs:annotation i:label="Named complex type" i:title="Complex types" />
-			</xs:element>
-
-			<xs:element name="anonymous-complex-type">
-				<xs:annotation i:label="Anonymous complex type" />
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="string-field" type="xs:string">
-							<xs:annotation i:label="Value" />
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-
-			<xs:element name="anonymous-complex-type-with-repeat">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="string-field" type="xs:string"
-							maxOccurs="unbounded">
-							<xs:annotation i:label="Anon complex type with repeat" />
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-
-			<xs:element name="named-complex-type-with-repeat" type="sequence-example"
-				maxOccurs="unbounded">
-				<xs:annotation i:label="Named complex type with repeat TODO" />
-			</xs:element>
-
-			<xs:element name="fieldset-example" type="sequence-example">
-				<xs:annotation i:legend="Fieldset example" />
-			</xs:element>
+            <xs:element name="decimal-max-exclusive-validation">
+                <xs:annotation i:description="less than 10"
+                    i:validation="Invalid format, must be less than 10." />
+                <xs:simpleType>
+                    <xs:restriction base="xs:decimal">
+                        <xs:maxExclusive value="10" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
 
 
-		</xs:sequence>
-	</xs:complexType>
+            <xs:element name="anonymous-choice-displayed-after">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:annotation i:label="Anonymous choice, displayed after" />
+                        <xs:element name="choice-1" type="xs:string">
+                            <xs:annotation i:label="" i:choiceLabel="Choice 1" />
+                        </xs:element>
+                        <xs:element name="choice-2" type="xs:date">
+                            <xs:annotation i:label="" i:choiceLabel="Choice 2" />
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
 
-	<xs:simpleType name="string-enumeration">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="option-1" />
-			<xs:enumeration value="option-2" />
-		</xs:restriction>
-	</xs:simpleType>
+            <xs:element name="max-occurs-example-1" type="xs:decimal"
+                maxOccurs="unbounded">
+                <xs:annotation i:nonRepeatingTitle="Repeatable item"
+                    i:label="Number" />
+            </xs:element>
 
-	<xs:simpleType name="string-enumeration-with-labels">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="A">
-				<xs:annotation i:label="Option A" />
-			</xs:enumeration>
-			<xs:enumeration value="B">
-				<xs:annotation i:label="Option B" />
-			</xs:enumeration>
-		</xs:restriction>
-	</xs:simpleType>
+            <xs:element name="max-occurs-example-2" type="xs:decimal" minOccurs="0"
+                maxOccurs="unbounded">
+                <xs:annotation i:nonRepeatingTitle="Repeatable item minOccurs=0"
+                    i:label="Number" />
+            </xs:element>
 
-	<xs:simpleType name="decimal-enumeration">
-		<xs:restriction base="xs:decimal">
-			<xs:enumeration value="1.5">
-				<xs:annotation i:label="One Point Five" />
-			</xs:enumeration>
-			<xs:enumeration value="2.0">
-				<xs:annotation i:label="Two Point Zero" />
-			</xs:enumeration>
-		</xs:restriction>
-	</xs:simpleType>
+            <xs:element name="max-occurs-example-3" type="xs:string"
+                maxOccurs="unbounded">
+                <xs:annotation i:nonRepeatingTitle="Repeatable item with button label"
+                    i:label="String" i:repeatLabel="Another" />
+            </xs:element>
 
-	<xs:simpleType name="integer-enumeration">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="1" />
-			<xs:enumeration value="2" />
-		</xs:restriction>
-	</xs:simpleType>
+            <xs:element name="max-occurs-example-4" maxOccurs="unbounded">
+                <xs:annotation i:nonRepeatingTitle="Repeatable complex type" />
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="A" type="xs:string" />
+                        <xs:element name="B" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
 
-	<xs:simpleType name="make-visible-enumeration">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="A">
-				<xs:annotation i:label="Option A" />
-			</xs:enumeration>
-			<xs:enumeration value="B">
-				<xs:annotation i:label="Option B" i:makeVisible="1" />
-			</xs:enumeration>
-		</xs:restriction>
-	</xs:simpleType>
+            <xs:element name="max-occurs-example-5" maxOccurs="unbounded">
+                <xs:annotation i:nonRepeatingTitle="Repeatable choice" />
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="A" type="xs:string" />
+                        <xs:element name="B" type="xs:string" />
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
 
-	<xs:simpleType name="string-pattern">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="(a|b|c)[0-9]{3}" />
-		</xs:restriction>
-	</xs:simpleType>
 
-	<xs:complexType name="named-complex-type">
-		<xs:sequence>
-			<xs:element name="first" type="xs:string" />
-			<xs:element name="second" type="xs:string" />
-			<xs:element name="nested" type="sequence-example">
-				<xs:annotation i:label="Nested named complex type" />
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+            <xs:element name="max-occurs-example-6" maxOccurs="unbounded">
+                <xs:annotation i:nonRepeatingTitle="Repeatable complex type with title" i:label="Two items" />
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="A" type="xs:string" />
+                        <xs:element name="B" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
 
-	<xs:complexType name="sequence-example">
-		<xs:sequence>
-			<xs:element name="A" type="xs:string" />
-			<xs:element name="B" type="xs:string" />
-			<xs:element name="C" type="xs:boolean" />
-			<xs:element name="option" type="string-enumeration" />
-		</xs:sequence>
-	</xs:complexType>
+            <xs:element name="optional" type="xs:string" minOccurs="0">
+                <xs:annotation i:title="Optional elements" i:label="Optional string"
+                    i:before="Setting minOccurs=0 on an element means that if the entry is left blank at submit then the xml element will be excluded from the final xml." />
+            </xs:element>
+
+            <xs:element name="anonymous-simple-type">
+                <xs:annotation i:label="Up to four digits" i:title="Anonymous simple type" />
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="[0-9]{0,4}" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="named-complex-type" type="named-complex-type">
+                <xs:annotation i:label="Named complex type" i:title="Complex types" />
+            </xs:element>
+
+            <xs:element name="anonymous-complex-type">
+                <xs:annotation i:label="Anonymous complex type" />
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="string-field" type="xs:string">
+                            <xs:annotation i:label="Value" />
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="anonymous-complex-type-with-repeat">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="string-field" type="xs:string"
+                            maxOccurs="unbounded">
+                            <xs:annotation i:label="Anon complex type with repeat" />
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="named-complex-type-with-repeat" type="sequence-example"
+                maxOccurs="unbounded">
+                <xs:annotation i:label="Named complex type with repeat TODO" />
+            </xs:element>
+
+            <xs:element name="fieldset-example" type="sequence-example">
+                <xs:annotation i:legend="Fieldset example" />
+            </xs:element>
+
+
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="string-enumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="option-1" />
+            <xs:enumeration value="option-2" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string-enumeration-with-labels">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="A">
+                <xs:annotation i:label="Option A" />
+            </xs:enumeration>
+            <xs:enumeration value="B">
+                <xs:annotation i:label="Option B" />
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="decimal-enumeration">
+        <xs:restriction base="xs:decimal">
+            <xs:enumeration value="1.5">
+                <xs:annotation i:label="One Point Five" />
+            </xs:enumeration>
+            <xs:enumeration value="2.0">
+                <xs:annotation i:label="Two Point Zero" />
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="integer-enumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1" />
+            <xs:enumeration value="2" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="make-visible-enumeration">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="A">
+                <xs:annotation i:label="Option A" />
+            </xs:enumeration>
+            <xs:enumeration value="B">
+                <xs:annotation i:label="Option B" i:makeVisible="1" />
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="string-pattern">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="(a|b|c)[0-9]{3}" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="named-complex-type">
+        <xs:sequence>
+            <xs:element name="first" type="xs:string" />
+            <xs:element name="second" type="xs:string" />
+            <xs:element name="nested" type="sequence-example">
+                <xs:annotation i:label="Nested named complex type" />
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="sequence-example">
+        <xs:sequence>
+            <xs:element name="A" type="xs:string" />
+            <xs:element name="B" type="xs:string" />
+            <xs:element name="C" type="xs:boolean" />
+            <xs:element name="option" type="string-enumeration" />
+        </xs:sequence>
+    </xs:complexType>
 
 </xs:schema>
