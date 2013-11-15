@@ -35,16 +35,18 @@ The features of javascript libraries like [http://jquery.com](JQuery) mean that 
 
 Note that the examples are not fully working and are still in development. The examples look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is partially working (click Submit on a form). 
 
-I've already got a schema, can I generate a form from it?
---------------------------------------------------------------
+FAQ
+-------------------
+
+###I've already got a schema, can I generate a form from it?
+
 Probably not! *xsd-forms* only supports a subset of xsd features. It was enough work for me to get this far, believe me! Supported features are documented in another section below. Your options are:
 
   * use an XSLT to translate xml to match your schema
   * translate the xml using some standard parser (xpath expressions etc)
   * generate classes from both schemas and write code to translate using the generated classes. This method gives you compile-time indications as the schemas change through time (and isn't change inevitable!). *This is my preferred option*.
 
-What xsd features are supported?
-----------------------------------
+###What xsd features are supported?
 These xsd features are supported:
 
   * elements only, *not* attributes
@@ -64,8 +66,7 @@ Bearing in mind the above restrictions, these features are supported:
   * anonymous simple types
 
 
-How do I generate a form?
----------------------------------
+###How do I generate a form?
 
   * direct call to java/scala library (Generator.generate and Generator.generateZip)
   * maven plugin (jvm developer) (*in development*)
@@ -76,8 +77,7 @@ A web service is available at http://xsd-forms-generator.xuml-tools.cloudbees.ne
   * Submit a schema document to the service and receive a zip archive in return of the generated files.
   * Submit a schema document and view the generated form 
 
-What do I need to do after I have designed a schema?
------------------------------------------------------
+###What do I need to do after I have designed a schema?
 
 The default generated form just displays the captured xml on the page under the submit button. You will likely want to post the generated xml to a web server or perhaps email the xml to an address. To do that just set *extraScript* to the script below to override the submit behaviour:
 
@@ -86,8 +86,8 @@ The default generated form just displays the captured xml on the page under the 
       alert(xml);
     } 
 
-How do I override the appearance/behaviour of the generated form?
-------------------------------------------------------------------
+###How do I override the appearance/behaviour of the generated form?
+
 Easy, just use javascript (jquery) in the *extraScript*. For instance, building on the above example:
 
 ```
@@ -105,12 +105,12 @@ $('#item-6-instance-1_1_1').css("background", "aqua");
 $('#item-6-instance-1_1_1').val("bingo");
 ```
 
-How do I pre-populate a form?
-------------------------------------------------------
+###How do I pre-populate a form?
+
 Schema default values will be set but if you want to for instance restore a form so a user can edit it then you need to write the necessary javascript as in the above examples. Using javascript/jquery you can call web services or extract parameters from the current url to populate the form.
 
-Can I use the same schema for multiple different forms?
-----------------------------------------------------------
+###Can I use the same schema for multiple different forms?
+
 Yes. Just choose a different root element for each form.
 
 Building 
