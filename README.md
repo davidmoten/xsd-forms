@@ -170,14 +170,14 @@ where /opt/chromedriver is the directory containing the chromedriver executable.
     cd xsd-forms-generator
     mvn jetty:run
 
-Then go to http://localhost:8080/demo-form.html.
+Then go to [http://localhost:8080/demo-form.html](http://localhost:8080/demo-form.html).
 
 ### Run the generator
 
     cd xsd-forms-generator-webapp
     mvn package jetty:run
 
-Then go to http://localhost:8080/
+Then go to [http://localhost:8080/](http://localhost:8080/)
 
 ### Development plan
   * use jquery to insert clones of div blocks to model maxOccurs > 1
