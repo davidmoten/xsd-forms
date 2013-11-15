@@ -304,7 +304,8 @@ Schema:<br/>
 
 &lt;/xs:schema&gt;
 </textarea><br/>
-Root element: (leave empty if there is only one):&nbsp;<input type="text" name="rootElement" value=""></br>
+Root element (leave empty if there is only one):&nbsp;<input type="text" name="rootElement" value=""><br/>
+Id prefix (optional): &nbsp; <input type="text" name="idPrefix" value=""><br/>
 Extra script: 
 <textarea name="extraScript" style="width:100%; height:20%;font-size:80%;">
 // this script will be included in the jquery on-load block
@@ -313,6 +314,10 @@ Extra script:
 processXml = function(xml) {
   alert(xml);
 };
+
+//override the appearance of first input box
+$('#item-6-instance-1_1_1').css("background", "aqua");
+
 </textarea>
 <input type="radio" name="action" value="zip">zip</input>
 <input type="radio" name="action" value="view" checked="checked">view</input><br/>

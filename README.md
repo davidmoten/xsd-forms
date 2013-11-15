@@ -86,6 +86,26 @@ The default generated form just displays the captured xml on the page under the 
       alert(xml);
     } 
 
+How do I override the appearance/behaviour of the generated form?
+------------------------------------------------------------------
+Easy, just use javascript (jquery) in the *extraScript*. For instance, building on the above example:
+
+'''
+// this script will be included in the jquery on-load block
+
+//override the processXml function
+processXml = function(xml) {
+  alert(xml);
+};
+
+//override the appearance of first input box
+
+$('#item-6-instance-1_1_1').css("background", "aqua");
+
+//override the default value of first input box
+$('#item-6-instance-1_1_1').val("bingo");
+'''
+
 Can I use the same schema for multiple different forms?
 ----------------------------------------------------------
 Yes. Just choose a different root element for each form.
