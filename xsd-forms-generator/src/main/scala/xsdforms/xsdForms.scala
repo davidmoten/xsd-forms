@@ -1617,9 +1617,6 @@ $(function() {
   function getXml() {
     var s = getXml1instance();
     s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + s;
-    s = s.replace(/&/g,"&amp;");
-    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
-    s = "<pre>" + s + "</pre>";
     return s;
   }
 
@@ -1631,7 +1628,10 @@ $(function() {
   });
           
   var processXml = function(xml) {
-    $('#submit-comments').html(xml);
+    var s = s.replace(/&/g,"&amp;");
+    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s = "<pre>" + s + "</pre>";
+    $('#submit-comments').html(s);
   }
           
 """ + script + """
