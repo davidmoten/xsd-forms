@@ -76,7 +76,7 @@ A [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) is availab
 
 #### Generate using java/scala:
 
-Add the following maven dependency to your pom.xml:
+Add the following maven dependency to your pom.xml (you will need to have built the project from source so that the dependency is available in your local repository):
 ```
 <dependency>
   <groupId>org.moten.david</groupId>
