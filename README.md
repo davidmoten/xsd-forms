@@ -105,6 +105,10 @@ $('#item-6-instance-1_1_1').css("background", "aqua");
 $('#item-6-instance-1_1_1').val("bingo");
 ```
 
+How do I pre-populate a form?
+------------------------------------------------------
+Schema default values will be set but if you want to for instance restore a form so a user can edit it then you need to write the necessary javascript as in the above examples. Using javascript/jquery you can call web services or extract parameters from the current url to populate the form.
+
 Can I use the same schema for multiple different forms?
 ----------------------------------------------------------
 Yes. Just choose a different root element for each form.
