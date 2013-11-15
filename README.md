@@ -74,7 +74,7 @@ Bearing in mind the above restrictions, these features are supported:
 
 A web service is available at http://xsd-forms-generator.xuml-tools.cloudbees.net/. At this service you can 
 
-  * Submit a schema document to the service and receive a zip archive in return of the generated files.
+  * Submit a schema document to the service and receive a zip archive of the generated site.
   * Submit a schema document and view the generated form 
 
 ###What do I need to do after I have designed a schema?
