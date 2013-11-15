@@ -16,11 +16,18 @@ package xsdforms {
    * **************************************************************
    */
 
+  /**
+   * Utility methods.
+   *
+   */
   object Util {
     def unexpected(s: String) = throw new RuntimeException(s)
     def unexpected() = throw new RuntimeException()
   }
 
+  /**
+   * Utility methods and constants for XML Schemas (XSD).
+   */
   object XsdUtil {
     val Xsd = "http://www.w3.org/2001/XMLSchema"
     val AppInfoSchema = "http://moten.david.org/xsd-forms"
@@ -386,7 +393,7 @@ package xsdforms {
 
       println("generated")
     }
-    
+
     def generateHtml(schema: InputStream,
       html: OutputStream,
       idPrefix: String = "a-",
