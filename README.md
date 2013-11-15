@@ -68,14 +68,32 @@ Bearing in mind the above restrictions, these features are supported:
 
 ###How do I generate a form?
 
-  * direct call to java/scala library (Generator.generate and Generator.generateZip)
-  * maven plugin (jvm developer) (*in development*)
-  * [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/)
-
-A web service is available at http://xsd-forms-generator.xuml-tools.cloudbees.net/. At this service you can 
+#### Generate using web service 
+A [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) is available. At this service you can 
 
   * Submit a schema document to the service and receive a zip archive of the generated site.
   * Submit a schema document and view the generated form 
+
+#### Generate using java/scala:
+
+Add the following maven dependency to your pom.xml:
+```
+<dependency>
+  <groupId>${project.parent.groupId}</groupId>
+  <artifactId>xsd-forms-generator</artifactId>
+  <version>${project.parent.version}</version>
+</dependency>
+```
+
+and call
+
+    xsdForms.generateZip(..) 
+or 
+    xsdForms.generateHtml(...)
+
+#### Generate using maven plugin
+
+In development.
 
 ###What do I need to do after I have designed a schema?
 
