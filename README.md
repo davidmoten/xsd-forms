@@ -99,7 +99,6 @@ processXml = function(xml) {
 };
 
 //override the appearance of first input box
-
 $('#item-6-instance-1_1_1').css("background", "aqua");
 
 //override the default value of first input box
