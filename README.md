@@ -186,7 +186,7 @@ The generated form should
   * follow _good practice_ presentation standards
   * facilitate tweaking of presentation using css override on every element
   * support small screen/large screen
-  * support common mobile platforms (*later!*)
+  * support common mobile platforms
 
 ##Schema annotations
 TODO
