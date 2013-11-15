@@ -3,7 +3,7 @@
 <h4>Xsd-forms Generator</h4>
 <form name="generate" action="generate" method="post">
 Schema:<br/>
-<textarea name="schema" style="width:100%; height:75%;font-size:10px;">
+<textarea name="schema" style="width:100%; height:75%;font-size:80%;">
 &lt;xs:schema targetNamespace="http://org.moten.david/example2"
   xmlns="http://org.moten.david/example2" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:i="http://moten.david.org/xsd-forms"&gt;
@@ -304,6 +304,11 @@ Schema:<br/>
 
 &lt;/xs:schema&gt;
 </textarea><br/>
+Root element: (leave empty if there is only one):&nbsp;<input type="text" name="rootElement" value=""></br>
+Extra script: 
+<textarea name="extraScript" style="width:100%; height:20%;font-size:80%;">
+// this script will be included in the jquery on-load block
+console.log("hi there from xsd-forms");</textarea>
 <input type="radio" name="action" value="zip">zip</input>
 <input type="radio" name="action" value="view" checked="checked">view</input><br/>
 <input name="submit" type="submit" value="Submit">

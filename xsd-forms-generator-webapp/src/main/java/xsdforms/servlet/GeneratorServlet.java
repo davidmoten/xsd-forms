@@ -21,9 +21,12 @@ public class GeneratorServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String schema = req.getParameter("schema");
 		InputStream schemaIn = new ByteArrayInputStream(schema.getBytes());
-		String idPrefix = "a-";
-		Option<String> rootElement = Option.empty();
-		Option<String> extraScript = Option.empty();
+		String idPrefix = req.getParameter("idPrefix");
+		String rootElementParam = blankToNull(req.getParameter("rootElement"));
+		Option<String> rootElement = Option.apply(rootElementParam);
+		String extraScriptParameter = blankToNull(req.getParameter("extraScript"));
+		Option<String> extraScript = Option.apply(extraScriptParameter);
+		
 		String action = req.getParameter("action");
 		if ("zip".equals(action)) {
 			resp.setContentType("application/zip");
@@ -35,6 +38,9 @@ public class GeneratorServlet extends HttpServlet {
 		}
 	}
 	
-	
+	private static String blankToNull(String s) {
+		if (s!=null && s.trim().length()==0) return null;
+		else return s;
+	}
 
 }
