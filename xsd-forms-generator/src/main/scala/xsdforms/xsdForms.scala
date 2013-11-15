@@ -1586,8 +1586,8 @@ $(function() {
     var method = eval('(' + methodName + ')');
     return method(argument);
   }
-
-  $('#pre-submit').click( function () {
+          
+  function validate() {
     var previousItems = null;
     $('*[number]').each( function(index) {
       var thisId = this.id
@@ -1606,18 +1606,34 @@ $(function() {
     var count = $('.item-error').filter(":visible").length
     if (count>0) {
       $('#validation-errors').show();
-      return;
+      return false;
     }
-    else 
+    else { 
       $('#validation-errors').hide();
+      return true;
+    }
+  }
+          
+  function getXml() {
     var s = getXml1instance();
     s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + s;
     s = s.replace(/&/g,"&amp;");
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
-          
-    $('#submit-comments').html(s);
+    return s;
+  }
+
+  $('#pre-submit').click( function () {
+    if (validate()) {
+      var xml = getXml();
+      processXml(xml);
+    }
   });
+          
+  function processXml(xml) {
+    $('#submit-comments').html(xml);
+  }
+          
 """ + script + """
   $("#form").submit(function () { return false; }); // so it won't submit
 """ + extraScript.mkString + """
