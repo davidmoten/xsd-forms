@@ -77,7 +77,10 @@ What do I need to do after I have designed a schema?
 
 The default generated form just displays the captured xml on the page under the submit button. You will likely want to post the generated xml to a web server or perhaps email the xml to an address. To do that just set *extraScript* to the script below to override the submit behaviour:
 
-    TODO 
+    //for example, display the xml in an alert box
+    processXml = function (xml) {
+      alert(xml);
+    } 
 
 Getting Started
 ----------------
