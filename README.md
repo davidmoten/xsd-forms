@@ -33,7 +33,7 @@ The features of javascript libraries like [http://jquery.com](JQuery) mean that 
 [Australian Census 2011](http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/main/webapp/census.html)|[schema](http://code.google.com/p/xsd-forms/source/browse/xsd-forms/trunk/xsd-forms-generator/src/test/resources/australian-census-2011.xsd)|Based on the 2011 Australian Census form ([pdf](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Main%20Features802011))
 
 
-Note that the examples are not fully working and are still in development. The examples look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is partially working (click Submit on a form). 
+Note that the examples are not fully working and are still in development. The examples look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is working (click Submit on a form). 
 
 FAQ
 -------------------
