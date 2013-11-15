@@ -14,19 +14,22 @@ import xsdforms.Generator;
 
 public class GeneratorServlet extends HttpServlet {
 
+	private static final long serialVersionUID = -1329200353122439077L;
+	private static final String PARAMETER_EXTRA_SCRIPT = "extraScript";
+	private static final String PARAMETER_ROOT_ELEMENT = "rootElement";
+	private static final String PARAMETER_ID_PREFIX = "idPrefix";
 	private static final String ACTION_ZIP = "zip";
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String schema = req.getParameter("schema");
 		InputStream schemaIn = new ByteArrayInputStream(schema.getBytes());
-		String idPrefix = nullToBlank(req.getParameter("idPrefix"));
-		String rootElementParam = blankToNull(req.getParameter("rootElement"));
+		String idPrefix = nullToBlank(req.getParameter(PARAMETER_ID_PREFIX));
+		String rootElementParam = blankToNull(req.getParameter(PARAMETER_ROOT_ELEMENT));
 		Option<String> rootElement = Option.apply(rootElementParam);
 		String extraScriptParameter = blankToNull(req
-				.getParameter("extraScript"));
+				.getParameter(PARAMETER_EXTRA_SCRIPT));
 		Option<String> extraScript = Option.apply(extraScriptParameter);
 
 		String action = req.getParameter("action");
