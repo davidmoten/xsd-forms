@@ -79,7 +79,7 @@ A [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) is availab
 Add the following maven dependency to your pom.xml:
 ```
 <dependency>
-  <groupId>${project.parent.groupId}</groupId>
+  <groupId>org.moten.david</groupId>
   <artifactId>xsd-forms-generator</artifactId>
   <version>${project.parent.version}</version>
 </dependency>
