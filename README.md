@@ -82,8 +82,8 @@ The default generated form just displays the captured xml on the page under the 
       alert(xml);
     } 
 
-Getting Started
-----------------
+Building 
+---------------------
 
 ### Technical overview
 The use case is
