@@ -13,6 +13,7 @@ Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xsd-forms_site/site
 
 Design
 -----------------
+<img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/diagram01.png"/>
 
 **Primary Use Case**
   * A developer needs to create a web form. 
@@ -22,8 +23,6 @@ Design
 As the submitted xml is compliant with a schema, the xml can be unmarshalled by a tool (see [jaxb](http://www.oracle.com/technetwork/articles/javase/index-140168.html), [scalaxb](http://scalaxb.org), [xsd.exe](http://msdn.microsoft.com/en-us/library/x6c1kb0s.aspx) into schema generated objects. Consequently any change in the schema will be reflected by compilation errors in the processing code if a statically typed language is used (such as Java, Scala, C#, etc.).
 
 The features of javascript libraries like [http://jquery.com](JQuery) mean that generating an html/javascript form that on submit posts xml that is compliant with the schema is a viable approach. The resultant css/html/javascript can be plugged in to any web server and presentation aspects can be overriden using annotations on the schema, css overrides and custom jquery script (the ability to separate script from structure is a nice feature of jquery in this instance).
-
-<img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/diagram01.png"/>
 
 *Examples:*
 
