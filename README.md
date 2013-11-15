@@ -188,29 +188,8 @@ The generated form should
   * support small screen/large screen
   * support common mobile platforms (*later!*)
 
-## Status of features
-Category|Feature|UI|XML gen
---------|-------|--------|--------
-Types|Simple base types (string, decimal, integer, date, datetime, time, boolean)|&#10004;| 
-     |Named simple types|&#10004;| 
-     |Named complex types|&#10004;| 
-     |Anonmyous complex types|&#10004;| 
-Restriction|base=string|&#10004;| 
-     |other bases|&#10004;| 
-     |minLength|&#10004;| 
-     |maxLength|&#10004;| 
-     |regex pattern|&#10004;| 
-     |OR on multiple regex pattern|&#10004;| 
-Element|minOccurs=0,1|&#10004;| 
-     |minOccurs>1| | 
-     |maxOccurs=1,unbounded|&#10004;| 
-     |maxOccurs>1|&#10004;| 
-Structure|Sequence|&#10004;| 
-     |Choice|&#10004;| 
-     |All| | 
-
 ##Schema annotations
-
+TODO
 
 ## Current work
 A major redesign is occurring now. The plan is this:
