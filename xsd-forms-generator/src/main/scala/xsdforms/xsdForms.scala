@@ -1630,7 +1630,7 @@ $(function() {
     }
   });
           
-  function processXml(xml) {
+  var processXml = function(xml) {
     $('#submit-comments').html(xml);
   }
           
