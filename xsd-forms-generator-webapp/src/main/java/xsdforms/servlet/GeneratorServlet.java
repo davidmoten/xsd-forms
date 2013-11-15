@@ -14,6 +14,7 @@ import xsdforms.Generator;
 
 public class GeneratorServlet extends HttpServlet {
 
+	private static final String ACTION_ZIP = "zip";
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -21,12 +22,7 @@ public class GeneratorServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String schema = req.getParameter("schema");
 		InputStream schemaIn = new ByteArrayInputStream(schema.getBytes());
-		String idPrefixParam = blankToNull(req.getParameter("idPrefix"));
-		final String idPrefix;
-		if (idPrefixParam == null)
-			idPrefix = "";
-		else
-			idPrefix = idPrefixParam;
+		String idPrefix = nullToBlank(req.getParameter("idPrefix"));
 		String rootElementParam = blankToNull(req.getParameter("rootElement"));
 		Option<String> rootElement = Option.apply(rootElementParam);
 		String extraScriptParameter = blankToNull(req
@@ -34,7 +30,7 @@ public class GeneratorServlet extends HttpServlet {
 		Option<String> extraScript = Option.apply(extraScriptParameter);
 
 		String action = req.getParameter("action");
-		if ("zip".equals(action)) {
+		if (ACTION_ZIP.equals(action)) {
 			resp.setContentType("application/zip");
 			resp.setHeader("Content-Disposition",
 					"attachment; filename=site.zip");
@@ -50,6 +46,13 @@ public class GeneratorServlet extends HttpServlet {
 	private static String blankToNull(String s) {
 		if (s != null && s.trim().length() == 0)
 			return null;
+		else
+			return s;
+	}
+
+	private static String nullToBlank(String s) {
+		if (s == null)
+			return "";
 		else
 			return s;
 	}
