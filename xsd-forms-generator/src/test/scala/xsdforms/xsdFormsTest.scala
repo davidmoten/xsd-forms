@@ -126,6 +126,16 @@ package xsdforms {
       generateDemoForm(file)
       FileUtils.copyFileToDirectory(file, new File("target/demo"));
     }
+    
+     @Test
+    def generateTheAnnotationsDemoForm {
+      println("generating the annotations demo form")
+      generate(
+        idPrefix = "b-",
+        schemaInputStream = TstUtil.getClass().getResourceAsStream("/annotations-demo.xsd"),
+        rootElement = "person",
+        outputFile = new File("target/generated-webapp/annotations-demo-form.html"))
+    }
 
   }
 
