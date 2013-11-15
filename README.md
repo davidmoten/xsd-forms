@@ -7,6 +7,10 @@ Xml schemas contain nearly everything we need for many web forms except for pres
 
 *Status:* pre-alpha. Alpha release planned for December 2013 (excuse delay, very busy on other projects!). UI elements mostly done, a major rewrite was merged to master on 15 Nov 2013 to use an abstract syntax tree and to handle element repetition in a simplistic way. Lots of bits and pieces to chase down but many simple forms will be correctly generated now (try it and see).
 
+Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
+
+Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xsd-forms_site/site/). 
+
 Design
 -----------------
 
@@ -81,6 +85,10 @@ The default generated form just displays the captured xml on the page under the 
     processXml = function (xml) {
       alert(xml);
     } 
+
+Can I use the same schema for multiple different forms?
+----------------------------------------------------------
+Yes. Just choose a different root element for each form.
 
 Building 
 ---------------------
