@@ -295,21 +295,59 @@ package xsdforms {
   object Annotation {
     //TODO document each of the annotations in scaladoc
     val Label = XsdFormsAnnotation("label")
+
+    /**
+     * If choice=inline then choice is inline with radio selector.
+     */
     val Choice = XsdFormsAnnotation("choice")
     val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
+
+    /**
+     * If legend is set then is used as label for a fieldset block.
+     */
     val Legend = XsdFormsAnnotation("legend")
     val RepeatLabel = XsdFormsAnnotation("repeatLabel")
     val RemoveLabel = XsdFormsAnnotation("removeLabel")
     val Title = XsdFormsAnnotation("title")
     val Before = XsdFormsAnnotation("before")
     val After = XsdFormsAnnotation("after")
+
+    /**
+     * if text=textarea then html textarea used as input. Otherwise normal
+     * short text input used.
+     */
     val Text = XsdFormsAnnotation("text")
+
+    /**
+     * Specific css for width to be applied to the input element.
+     */
     val Width = XsdFormsAnnotation("width")
+
+    /**
+     * If selector=radio then radio control used for choice instead
+     * of drop down.
+     */
     val Selector = XsdFormsAnnotation("selector")
+
+    /**
+     * If addBlank=true and an enumeration is being displayed (in a
+     * drop-down) then a blank option will be added to the drop-down
+     *  representing no selection.
+     */
     val AddBlank = XsdFormsAnnotation("addBlank")
     val Css = XsdFormsAnnotation("css")
+
+    /**
+     * Validation message to be displayed if the input is assessed
+     *  as invalid.
+     */
     val Validation = XsdFormsAnnotation("validation")
+
+    /**
+     * Help to display as tooltip if user clicks/hovers input.
+     */
     val Help = XsdFormsAnnotation("help")
+
     val MakeVisible = XsdFormsAnnotation("makeVisible")
     val NonRepeatingTitle = XsdFormsAnnotation("nonRepeatingTitle")
     val Description = XsdFormsAnnotation("description")
