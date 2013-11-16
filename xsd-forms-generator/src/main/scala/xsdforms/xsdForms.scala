@@ -508,10 +508,12 @@ package xsdforms {
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
+
         html
           .div(classes = List(ClassSequenceLabel), content = Some(label)).closeTag
           .div(id = Some(idPrefix + "sequence-" + number + InstanceDelimiter + instanceNo),
             classes = List(ClassSequenceContent))
+        addRemoveButton(e, instNos)
         if (usesFieldset)
           html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
 
@@ -539,6 +541,7 @@ package xsdforms {
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
+        addRemoveButton(e, instNos)
         val particles = choice.group.particleOption3.map(_.value)
         addChoiceHideOnStartScriptlet(particles, number, instNos)
         addChoiceShowHideOnSelectionScriptlet(particles, number, instNos)
@@ -547,6 +550,7 @@ package xsdforms {
           classes = List(ClassChoiceLabel),
           content = Some(getAnnotation(choice.group, Annotation.Label).mkString))
           .closeTag
+        addRemoveButton(e, instNos)
 
         val forEachParticle = particles.zipWithIndex.foreach _
 
@@ -1041,14 +1045,14 @@ package xsdforms {
             classes = List(ClassRemoveButton, ClassWhite, ClassSmall),
             content = Some(getAnnotation(e, Annotation.RemoveLabel).getOrElse("-")))
           .closeTag
-          
-       val repeatingEncId = getRepeatingEnclosingId(e, instances)
-       val js = JS()
-       	.line("  $('#%s').click(function() {",removeButtonId)
-       	.line("    $('#%s').hide();",repeatingEncId)
-       	.line("  });")
-       	.line
-       addScript(js) 	
+
+      val repeatingEncId = getRepeatingEnclosingId(e, instances)
+      val js = JS()
+        .line("  $('#%s').click(function() {", removeButtonId)
+        .line("    $('#%s').hide();", repeatingEncId)
+        .line("  });")
+        .line
+      addScript(js)
     }
 
     private def isEnumeration(r: Restriction) =

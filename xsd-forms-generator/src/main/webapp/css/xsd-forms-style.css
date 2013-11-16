@@ -28,6 +28,7 @@ body {
 }
 
 .item-title {
+    clear:left;
 	font-weight:bold;
 	margin-top:10px;
 	margin-left:10px;
@@ -233,7 +234,9 @@ body {
 }
 
 .remove-button {
-    float:left;
+    display: inline-block;
+	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+	display: inline;
 	vertical-align: baseline;
 	margin: 5px 20% 10px 50px;
 	outline: none;
