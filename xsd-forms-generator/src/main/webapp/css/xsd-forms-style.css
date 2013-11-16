@@ -208,6 +208,7 @@ body {
 	/* display: inline-block; */
 	/* zoom: 1; */ /* zoom and *display = ie7 hack for display:inline-block */
 	/* display: inline; */
+	clear:left;
 	float:left;
 	vertical-align: baseline;
 	margin: 5px 20% 10px 0px;
@@ -234,9 +235,7 @@ body {
 }
 
 .remove-button {
-    display: inline-block;
-	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
-	display: inline;
+    clear:left;
 	vertical-align: baseline;
 	margin: 5px 20% 10px 50px;
 	outline: none;
