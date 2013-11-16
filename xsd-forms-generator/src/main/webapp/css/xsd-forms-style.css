@@ -233,10 +233,7 @@ body {
 }
 
 .remove-button {
-	/* display: inline-block; */
-	/* zoom: 1; */ /* zoom and *display = ie7 hack for display:inline-block */
-	/* display: inline; */
-	float:left;
+    float:left;
 	vertical-align: baseline;
 	margin: 5px 20% 10px 10px;
 	outline: none;

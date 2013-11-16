@@ -446,7 +446,7 @@ package xsdforms {
     private sealed trait StackEntry
     private val html = new Html
 
-    private val NumInstancesForMultiple = 3
+    private val NumInstancesForMultiple = 5
 
     import scala.collection.mutable.HashMap
     private val elementNumbers = new HashMap[ElementWrapper, String]()
@@ -1037,7 +1037,7 @@ package xsdforms {
       if (canRemove)
         html
           .div(
-            id = Some(getRepeatButtonId(number, instances)),
+            id = Some(getRemoveButtonId(number, instances)),
             classes = List(ClassRemoveButton, ClassWhite, ClassSmall),
             content = Some(getAnnotation(e, Annotation.RemoveLabel).getOrElse("-")))
           .closeTag

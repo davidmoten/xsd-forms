@@ -16,7 +16,7 @@
           i:after="'after' might be used for some informative remarks about the topic and appears after the validation message"
           i:description="'description' goes here to describe the input format for example"
           i:validation="'validation' is the message to indicate an invalid response'"
-          i:repeatLabel="'repeatLabel'" i:removeLabel="'removeLabel'" />
+          i:repeatLabel="'repeatLabel' click to repeat question" i:removeLabel="'removeLabel' click to remove repeat" />
       </xs:element>
     </xs:sequence>
   </xs:complexType>
