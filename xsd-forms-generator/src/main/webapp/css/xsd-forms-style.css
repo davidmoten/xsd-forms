@@ -209,7 +209,7 @@ body {
 	/* display: inline; */
 	float:left;
 	vertical-align: baseline;
-	margin: 5px 20% 10px 10px;
+	margin: 5px 20% 10px 0px;
 	outline: none;
 	cursor: pointer;
 	text-align: center;
@@ -235,7 +235,7 @@ body {
 .remove-button {
     float:left;
 	vertical-align: baseline;
-	margin: 5px 20% 10px 10px;
+	margin: 5px 20% 10px 50px;
 	outline: none;
 	cursor: pointer;
 	text-align: center;
