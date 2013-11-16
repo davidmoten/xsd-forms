@@ -34,6 +34,7 @@ body {
 }
 
 .item-before {
+	clear:left;
 	margin-top:10px;
 	margin-left:15px;
 	padding-bottom:7px;
@@ -230,6 +231,36 @@ body {
 	position: relative;
 	top: 1px;
 }
+
+.remove-button {
+	/* display: inline-block; */
+	/* zoom: 1; */ /* zoom and *display = ie7 hack for display:inline-block */
+	/* display: inline; */
+	float:left;
+	vertical-align: baseline;
+	margin: 5px 20% 10px 10px;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font: 11px/100% Arial, Helvetica, sans-serif;
+	padding: .5em 2em .55em 2em; 
+	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.remove-button:hover {
+	text-decoration: none;
+}
+.remove-button:active {
+	position: relative;
+	top: 1px;
+}
+
 
 .item-add {
 	display: inline-block;

@@ -3,18 +3,20 @@
   xmlns:i="http://moten.david.org/xsd-forms">
   <xs:annotation i:numberItems="true" />
   <xs:element name="person" type="person">
-    <xs:annotation i:label="'label' for this complex element" />
+    <xs:annotation i:label="'label' for this complex element"
+      i:nonRepeatingTitle="'nonRepeatingTitle' used for maxOccurs>1 elements" />
   </xs:element>
-  
+
   <xs:complexType name="person">
     <xs:sequence>
       <xs:element name="name" type="name" maxOccurs="unbounded">
-        <xs:annotation i:label="'label' goes here"
+        <xs:annotation i:label="'label' goes here, defaults to element name"
           i:title="'title' for this question"
           i:before="'before' might be used for a descriptive preamble to a question"
-          i:after="'after' might be used for some informative remarks about the topic"
-          i:description="'description' goes here to describe something or other"
-          i:validation="'validation' is the message to indicate an invalid response'" />
+          i:after="'after' might be used for some informative remarks about the topic and appears after the validation message"
+          i:description="'description' goes here to describe the input format for example"
+          i:validation="'validation' is the message to indicate an invalid response'"
+          i:repeatLabel="'repeatLabel'" i:removeLabel="'removeLabel'" />
       </xs:element>
     </xs:sequence>
   </xs:complexType>

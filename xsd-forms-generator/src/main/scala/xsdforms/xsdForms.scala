@@ -248,6 +248,9 @@ package xsdforms {
     def getRepeatButtonId(idPrefix: String, number: String, instances: Instances) =
       idPrefix + "repeat-button-" + number + InstanceDelimiter + instances
 
+    def getRemoveButtonId(idPrefix: String, number: String, instances: Instances) =
+      idPrefix + "remove-button-" + number + InstanceDelimiter + instances
+
     def getRepeatingEnclosingId(idPrefix: String, number: String, instances: Instances): String =
       idPrefix + "repeating-enclosing-" + number + InstanceDelimiter + instances
 
@@ -271,6 +274,7 @@ package xsdforms {
     val ClassChoiceItem = "choice-item"
     val ClassNonRepeatingTitle = "non-repeating-title"
     val ClassRepeatButton = "repeat-button"
+    val ClassRemoveButton = "remove-button"
     val ClassRepeatingEnclosing = "repeating-enclosing"
     val ClassItemInputTextarea = "item-input-textarea"
     val ClassItemInputText = "item-input-text"
@@ -294,6 +298,7 @@ package xsdforms {
     val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
     val Legend = XsdFormsAnnotation("legend")
     val RepeatLabel = XsdFormsAnnotation("repeatLabel")
+    val RemoveLabel = XsdFormsAnnotation("removeLabel")
     val Title = XsdFormsAnnotation("title")
     val Before = XsdFormsAnnotation("before")
     val After = XsdFormsAnnotation("after")
@@ -518,7 +523,7 @@ package xsdforms {
         html closeTag 2
       }
       html closeTag
-      
+
       addMaxOccursScriptlet(e, instances)
     }
 
@@ -589,6 +594,7 @@ package xsdforms {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         itemTitle(e)
+        addRemoveButton(e, instNos)
         itemBefore(e)
         html.div(classes = List(ClassItemNumber), content = Some(number)).closeTag
           .label(forInputName = getItemName(number, instNos),
@@ -613,6 +619,7 @@ package xsdforms {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         itemTitle(e)
+        addRemoveButton(e, instNos)
         itemBefore(e)
         html.div(classes = List(ClassItemNumber), content = Some(number)).closeTag
           .label(forInputName = getItemName(number, instNos),
@@ -1020,6 +1027,28 @@ package xsdforms {
         }
         case None =>
       }
+    }
+
+    private def addRemoveButton(e: ElementWrapper, instances: Instances) {
+      val number = elementNumber(e)
+      val removeButtonId = getRemoveButtonId(number, instances)
+      val canRemove = (instances.last == 1 && e.minOccurs == "0") ||
+        (instances.last != 1 && e.maxOccurs != "1")
+      if (canRemove)
+        html
+          .div(
+            id = Some(getRepeatButtonId(number, instances)),
+            classes = List(ClassRemoveButton, ClassWhite, ClassSmall),
+            content = Some(getAnnotation(e, Annotation.RemoveLabel).getOrElse("-")))
+          .closeTag
+          
+       val repeatingEncId = getRepeatingEnclosingId(e, instances)
+       val js = JS()
+       	.line("  $('#%s').click(function() {",removeButtonId)
+       	.line("    $('#%s').hide();",repeatingEncId)
+       	.line("  });")
+       	.line
+       addScript(js) 	
     }
 
     private def isEnumeration(r: Restriction) =
@@ -1442,6 +1471,8 @@ package xsdforms {
       idPrefix + "choice-content-" + number + InstanceDelimiter + instances + ChoiceIndexDelimiter + index
     private def getRepeatButtonId(number: String, instances: Instances) =
       TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instances)
+    private def getRemoveButtonId(number: String, instances: Instances) =
+      TreeToHtmlConverter.getRemoveButtonId(idPrefix, number, instances)
     private def getRepeatingEnclosingId(element: ElementWrapper, instances: Instances): String =
       TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instances)
     private def getRepeatingEnclosingId(number: String, instances: Instances) =
