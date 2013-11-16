@@ -503,8 +503,8 @@ package xsdforms {
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
-        html.div(classes = List(ClassSequenceLabel), content = Some(label))
-          .closeTag
+        html
+          .div(classes = List(ClassSequenceLabel), content = Some(label)).closeTag
           .div(id = Some(idPrefix + "sequence-" + number + InstanceDelimiter + instanceNo),
             classes = List(ClassSequenceContent))
         if (usesFieldset)
@@ -513,13 +513,13 @@ package xsdforms {
         doNodes(node.children, instNos)
 
         if (usesFieldset)
-          html.closeTag
-        html.closeTag
-      }
-      html
-        .closeTag(2)
-      addMaxOccursScriptlet(e, instances)
+          html closeTag
 
+        html closeTag 2
+      }
+      html closeTag
+      
+      addMaxOccursScriptlet(e, instances)
     }
 
     private def doNode(node: NodeChoice, instances: Instances) {
@@ -597,9 +597,9 @@ package xsdforms {
 
         simpleType(node, instNos)
 
-        html
-          .closeTag(3)
+        html closeTag 2
       }
+      html closeTag;
       addMaxOccursScriptlet(e, instances)
     }
 
@@ -1483,16 +1483,15 @@ package xsdforms {
     private implicit def toQN(qName: QName): QN =
       QN(qName.getNamespaceURI(), qName.getLocalPart())
 
-    def template = io.Source.fromInputStream(getClass.getResourceAsStream("/template.html")).mkString  
-      
+    def template = io.Source.fromInputStream(getClass.getResourceAsStream("/template.html")).mkString
+
     def text =
       template
-      .replace("//GENERATED_SCRIPT",script.toString)
-      .replace("//EXTRA_SCRIPT",extraScript.mkString)
-      .replace("<!--GENERATED_HTML-->",html.toString)
+        .replace("//GENERATED_SCRIPT", script.toString)
+        .replace("//EXTRA_SCRIPT", extraScript.mkString)
+        .replace("<!--GENERATED_HTML-->", html.toString)
 
   }
-  
 
   /**
    * **************************************************************
@@ -1810,7 +1809,7 @@ package xsdforms {
     }
 
     def closeTag: Html = {
-      if (stack.isEmpty) throw new RuntimeException("closeTag called on empty html stack!")
+      if (stack.isEmpty) throw new RuntimeException("closeTag called on empty html stack! html so far=\n" + s.toString)
       val element = stack.head
       if (!element.hasContent) {
         indent
@@ -1826,7 +1825,7 @@ package xsdforms {
       this
     }
 
-    override def toString = s.toString()
+    override def toString = s.toString
 
   }
 }
