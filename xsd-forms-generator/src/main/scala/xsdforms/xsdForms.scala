@@ -348,10 +348,21 @@ package xsdforms {
      */
     val Help = XsdFormsAnnotation("help")
 
+    /**
+     * makeVisible=n, n integer, means that on selection of this choice the
+     * element with number n greater than the current element will be made visible.
+     */
     val MakeVisible = XsdFormsAnnotation("makeVisible")
     val NonRepeatingTitle = XsdFormsAnnotation("nonRepeatingTitle")
     val Description = XsdFormsAnnotation("description")
     val Visible = XsdFormsAnnotation("visible")
+
+    /**
+     * maxRepeats should be an integer value >0 for an element and is the
+     * maximum number of repeats generated in html of the element (all
+     * be them hidden).
+     */
+    val MaxRepeats = XsdFormsAnnotation("maxRepeats")
   }
 
   /**
@@ -1503,9 +1514,18 @@ package xsdforms {
     private def restriction(node: NodeBaseType) =
       new MyRestriction(node.typ.qName)
 
-    private def numInstances(e: ElementWrapper): Int =
-      if (isMultiple(e)) NumInstancesForMultiple
-      else 1
+    private def numInstances(e: ElementWrapper): Int = {
+
+      val n = if (e.maxOccurs == "unbounded")
+        NumInstancesForMultiple
+      else
+        e.maxOccurs.toInt
+
+      getAnnotation(e, Annotation.MaxRepeats) match {
+        case Some(m) => Math.min(n, m.toInt)
+        case _ => n
+      }
+    }
 
     private def repeats(node: Node): Range = repeats(node.element)
 
