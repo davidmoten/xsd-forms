@@ -73,6 +73,13 @@ A [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) is availab
   * Submit a schema document to the service and receive a zip archive of the generated site.
   * Submit a schema document and view the generated form 
 
+#### Generate using a local web service
+
+    cd xsd-forms-generator-webapp
+    mvn package jetty:run
+
+Then go to [http://localhost:8080](http://localhost:8080) and fill in the form.
+
 #### Generate using java/scala:
 
 Add the following maven dependency to your pom.xml (you will need to have built the project from source so that the dependency is available in your local repository):
