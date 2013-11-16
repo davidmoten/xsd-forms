@@ -194,12 +194,6 @@ body {
 	display: none;
 }
 
-.submit {
-	width:75%;
-	float:left;
-	margin-left:50px;	
-}
-
 .non-repeating-title {
 	font-weight: bold;
 	float:left;
@@ -243,8 +237,14 @@ body {
 	top: 1px;
 }
 
+.remove-button-container {
+    overflow:hidden;
+    width:100%;
+}
+
 .remove-button {
     clear:left;
+    float:left;
 	vertical-align: baseline;
 	margin: 5px 20% 10px 50px;
 	outline: none;
@@ -325,7 +325,7 @@ body {
 	top: 1px;
 }
 
-#pre-submit {
+#submit {
 	border: #999999 solid thin; 
 	width: 6em;
 	text-align: center;

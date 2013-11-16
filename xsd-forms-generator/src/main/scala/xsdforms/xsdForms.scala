@@ -275,6 +275,7 @@ package xsdforms {
     val ClassNonRepeatingTitle = "non-repeating-title"
     val ClassRepeatButton = "repeat-button"
     val ClassRemoveButton = "remove-button"
+    val ClassRemoveButtonContainer = "remove-button-container"
     val ClassRepeatingEnclosing = "repeating-enclosing"
     val ClassItemInputTextarea = "item-input-textarea"
     val ClassItemInputText = "item-input-text"
@@ -1039,10 +1040,12 @@ package xsdforms {
         (instances.last != 1 && e.maxOccurs != "1")
       if (canRemove)
         html
+          .div(classes = List(ClassRemoveButtonContainer))
           .div(
             id = Some(getRemoveButtonId(number, instances)),
             classes = List(ClassRemoveButton, ClassWhite, ClassSmall),
             content = Some(getAnnotation(e, Annotation.RemoveLabel).getOrElse("-")))
+          .closeTag
           .closeTag
 
       val repeatingEncId = getRepeatingEnclosingId(e, instances)
