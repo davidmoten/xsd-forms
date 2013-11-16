@@ -541,7 +541,6 @@ package xsdforms {
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
-        addRemoveButton(e, instNos)
         val particles = choice.group.particleOption3.map(_.value)
         addChoiceHideOnStartScriptlet(particles, number, instNos)
         addChoiceShowHideOnSelectionScriptlet(particles, number, instNos)

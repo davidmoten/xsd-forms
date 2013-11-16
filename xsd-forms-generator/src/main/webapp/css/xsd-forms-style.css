@@ -3,6 +3,10 @@ body {
 	font: normal 62.5% "Lucida Grande", Helvetica, Verdana, Arial;
 }
 
+.clear {
+    clear:left;
+}
+
 .form {
 	margin-left: 0px;
 	background-color: #F5F5F5 ;/*#EDFAD9;*/
@@ -136,6 +140,10 @@ body {
 	margin-bottom: 7 px;
 }
 
+.item-input {
+    
+}
+
 .item-input-text {
 	clear: left;
 	/*	border: #999999 solid thin;
@@ -201,7 +209,8 @@ body {
 }
 
 .repeating-enclosing {
-	clear:left;
+	overflow:hidden;
+	width:100%;
 }
 
 .repeat-button {
@@ -259,7 +268,6 @@ body {
 	position: relative;
 	top: 1px;
 }
-
 
 .item-add {
 	display: inline-block;

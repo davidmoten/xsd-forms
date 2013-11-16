@@ -539,10 +539,10 @@ package xsdforms {
     }
 
     private def testSubmission(driver: WebDriver) {
-      val preSubmit = driver.findElement(By.id("pre-submit"))
+      val submit = driver.findElement(By.id("submit"))
       val errors = driver.findElement(By.id("validation-errors"))
       assertFalse(errors.isDisplayed());
-      preSubmit.click
+      submit.click
       assertTrue(errors.isDisplayed());
       checkErrorDisplayed(driver, 10)
       checkErrorDisplayed(driver, 12)
@@ -581,8 +581,8 @@ package xsdforms {
       elem.click
       assertTrue(elem.isSelected())
 
-      preSubmit.click
-      preSubmit.click
+      submit.click
+      submit.click
       //TODO why twice to get chrome to work?
 
       println("xml=" + xml.getText)

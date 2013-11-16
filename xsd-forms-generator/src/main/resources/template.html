@@ -134,7 +134,7 @@ $(function() {
     return s;
   }
 
-  $('#pre-submit').click( function () {
+  $('#submit').click( function () {
     if (validate()) {
       var xml = getXml();
       processXml(xml);
@@ -163,12 +163,12 @@ $(function() {
 <form method="POST" action="form.html" name="form">
  
  <!--GENERATED_HTML-->
- 
-  <!--<input id="submit" class="submit" type="submit"></input>-->
-      <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
-  <div id="pre-submit" class="pre-submit">Submit</div>
-    		<p><div id="submit-comments"></div></p>
+
+  <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="submit" class="submit">Submit</div>
+  <p><div id="submit-comments"></div></p>
+
 </form>
 </div>
 </body>
-</html>"""
+</html>
