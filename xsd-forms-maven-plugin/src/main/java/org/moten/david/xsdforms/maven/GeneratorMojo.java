@@ -16,21 +16,21 @@ package org.moten.david.xsdforms.maven;
  * limitations under the License.
  */
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+
 /**
  * Goal which touches a timestamp file.
  *
- * @goal touch
+ * @goal generate
  * 
- * @phase process-sources
+ * @phase generate-sources
  */
-public class MyMojo
+public class GeneratorMojo
     extends AbstractMojo
 {
     /**
@@ -40,7 +40,8 @@ public class MyMojo
      */
     private File outputDirectory;
 
-    public void execute()
+    @Override
+	public void execute()
         throws MojoExecutionException
     {
         File f = outputDirectory;
