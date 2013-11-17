@@ -188,7 +188,7 @@ package xsdforms {
         case NodeBaseType(e, typ) => margin + "NodeBaseType=" + e.name.get
         case NodeSimpleType(e, typ) => margin + "NodeSimpleType=" + e.name.get
         case n: NodeGroup => margin + n.getClass.getSimpleName + "=\n" +
-          n.children.map(c => toString(c, margin + "  ")).mkString("\n")
+          n.children.map(c => toString(c, margin + "  ")).mkString("")
         case _ => unexpected
       }
     }
@@ -386,6 +386,11 @@ package xsdforms {
 
     def line(s: String, params: Object*): JS = {
       b append "\n"
+      b append String.format(s, params: _*)
+      this
+    }
+
+    def append(s: String, params: Object*): JS = {
       b append String.format(s, params: _*)
       this
     }
@@ -732,11 +737,12 @@ package xsdforms {
 
         for (instanceNo <- repeats(node)) {
           val instNos = instances add instanceNo
+          js.line("    if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
           node.children.foreach { n =>
-            js.line("    if (idVisible('%s'))", getRepeatingEnclosingId(number, instNos))
-            js.line("    xml += %s();", xmlFunctionName(n, instNos))
+            js.line("      xml += %s();", xmlFunctionName(n, instNos))
             addXmlExtractScriptlet(n, instNos)
           }
+          js.line("    }")
         }
         js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
         js.line("    return xml;")
@@ -845,7 +851,6 @@ package xsdforms {
 
     private def addScript(s: String) {
       script.append(s)
-      script.append("\n")
     }
 
     private def addScript(js: JS) {
@@ -1016,7 +1021,8 @@ package xsdforms {
 
       statements
         .map(insertMargin(_))
-        .foreach(x => if (x.length > 0) addScript(x))
+        .filter(_.length > 0)
+        .foreach(addScript(_))
 
     }
 
@@ -1208,7 +1214,6 @@ package xsdforms {
                 .line("    else")
                 .line("      refersTo.hide();")
                 .line("  })")
-                .line
               addScript(js)
             }
             case _ =>
@@ -1344,7 +1349,7 @@ package xsdforms {
     private def createPatternsTestScriptlet(patterns: Seq[String]) =
       if (patterns.size > 0)
         JS().line("  var patternMatched =false;")
-          .line(patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString("\n"))
+          .append(patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString(""))
           .line("  if (!(patternMatched))")
           .line("    ok = false;")
           .toString
@@ -1365,14 +1370,14 @@ package xsdforms {
 
     private def createPatternScriptlet(x: (String, Int)) =
       JS()
-        .line("  patternMatched |= matchesPattern(v,/^%s$/);",x._1)
+        .line("  patternMatched |= matchesPattern(v,/^%s$/);", x._1)
         .toString
 
     private def createBasePatternTestScriptlet(qn: QN) = {
       val js = JS()
       val basePattern = getBasePattern(qn)
       if (basePattern.size > 0)
-        js.line("  ok &= matchesPattern(v,/^%s$/);",basePattern.head)
+        js.line("  ok &= matchesPattern(v,/^%s$/);", basePattern.head)
       js.toString
     }
 
@@ -1391,7 +1396,7 @@ package xsdforms {
         .line
         .line("$('%s').change( function() {", changeReference(e, instances))
         .line("  var ok = validate%sinstance%s();", number, instances)
-        .line("  showError('%s',ok);",getItemErrorId(number, instances))
+        .line("  showError('%s',ok);", getItemErrorId(number, instances))
         .line("});")
         .line
       if (e.minOccurs == 0 && e.default.isEmpty)
@@ -1457,10 +1462,13 @@ package xsdforms {
           .line("  $('#%s').click( function() {", repeatButtonId)
           .line("    // loop through all repeats until find first nonInvisible repeat and make it visible")
           .line("    var elem;")
-          .line(
-            repeatingEnclosingIds(e, instances)
-              .map(id => { "    elem = $('#" + id + "');\n    if (!elemVisible(elem))\n      { elem.show(); return; }" })
-              .mkString(""))
+        repeatingEnclosingIds(e, instances)
+          .foreach(id => {
+            js.line("    elem = $('#%s');", id)
+              .line("    if (!elemVisible(elem))")
+              .line("      { elem.show(); return; }")
+          })
+        js
           .line("  })")
           .line
 
