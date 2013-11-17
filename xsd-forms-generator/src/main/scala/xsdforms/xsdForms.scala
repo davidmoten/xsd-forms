@@ -1364,20 +1364,15 @@ package xsdforms {
     }
 
     private def createPatternScriptlet(x: (String, Int)) =
-      JS().line("  // pattern test")
-        .line("  var regex%s = /^%s$/ ;", x._2.toString, x._1)
-        .line("  if (regex%s.test(v.val()))", x._2.toString)
-        .line("    patternMatched = true;")
+      JS()
+        .line("  patternMatched |= matchesPattern(v,/^%s$/);",x._1)
         .toString
 
     private def createBasePatternTestScriptlet(qn: QN) = {
       val js = JS()
       val basePattern = getBasePattern(qn)
       if (basePattern.size > 0)
-        js.line("  // base pattern test")
-          .line("  var regex = /^%s$/ ;", basePattern.head)
-          .line("  if (!(regex.test(v.val())))")
-          .line("    ok = false;")
+        js.line("  ok &= matchesPattern(v,/^%s$/);",basePattern.head)
       js.toString
     }
 
@@ -1396,11 +1391,7 @@ package xsdforms {
         .line
         .line("$('%s').change( function() {", changeReference(e, instances))
         .line("  var ok = validate%sinstance%s();", number, instances)
-        .line("  var error= $('#%s');", getItemErrorId(number, instances))
-        .line("  if (!(ok)) ")
-        .line("    error.show();")
-        .line("  else")
-        .line("    error.hide();")
+        .line("  showError('%s',ok);",getItemErrorId(number, instances))
         .line("});")
         .line
       if (e.minOccurs == 0 && e.default.isEmpty)
