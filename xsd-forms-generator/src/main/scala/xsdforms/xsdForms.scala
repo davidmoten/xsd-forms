@@ -415,19 +415,7 @@ package xsdforms {
       rootElement: Option[String] = None,
       extraScript: Option[String] = None) {
 
-      import scala.xml._
-
-      val schemaXb = scalaxb.fromXML[Schema](
-        XML.load(schema))
-
-      val ns = schemaXb.targetNamespace.get.toString
-
-      val visitor = new TreeCreatingVisitor()
-
-      new SchemaTraversor(schemaXb, rootElement, visitor).traverse
-      println("tree:\n" + visitor)
-
-      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
+      val text = generateHtmlAsString(schema, idPrefix, rootElement, extraScript)
 
       val zipIn = new ZipInputStream(Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
       val zipOut = new ZipOutputStream(zip)
@@ -449,11 +437,50 @@ package xsdforms {
       println("generated")
     }
 
+    def generateDirectory(
+      schema: InputStream,
+      directory: File,
+      idPrefix: String = "a-",
+      rootElement: Option[String] = None,
+      extraScript: Option[String] = None) {
+
+      val text = generateHtmlAsString(schema, idPrefix, rootElement, extraScript)
+
+      val zipIn = new ZipInputStream(Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
+
+      val iterator = Iterator.continually(zipIn.getNextEntry).takeWhile(_ != null)
+      iterator.foreach { zipEntry =>
+        val bytes = IOUtils.toByteArray(zipIn)
+        val file = new File(directory, zipEntry.getName)
+        file.getParentFile.mkdirs
+        val fos = new FileOutputStream(file)
+        fos write bytes
+        fos.close
+      }
+zipIn.close
+      
+      val file = new File(directory, "form.html")
+      file.getParentFile.mkdirs
+      val fos = new FileOutputStream(file)
+      fos write text.getBytes
+      fos.close
+      println("generated")
+    }
+
     def generateHtml(schema: InputStream,
       html: OutputStream,
       idPrefix: String = "a-",
       rootElement: Option[String] = None,
       extraScript: Option[String] = None) {
+
+      val text = generateHtmlAsString(schema, idPrefix, rootElement, extraScript)
+      html write text.getBytes
+    }
+
+    def generateHtmlAsString(schema: InputStream,
+      idPrefix: String = "a-",
+      rootElement: Option[String] = None,
+      extraScript: Option[String] = None): String = {
 
       import scala.xml._
 
@@ -467,9 +494,9 @@ package xsdforms {
       new SchemaTraversor(schemaXb, rootElement, visitor).traverse
       println("tree:\n" + visitor)
 
-      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
-      html write text.getBytes
+      new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
     }
+
   }
 
   /**

@@ -34,12 +34,14 @@ public class GeneratorMojo
     extends AbstractMojo
 {
     /**
-     * Location of the file.
-     * @parameter expression="${project.build.directory}"
-     * @required
+     * The directory to write the files to.
+     * @parameter expression="${project.build.directory}/xsd-forms"
+     * 
      */
     private File outputDirectory;
 
+    
+    
     @Override
 	public void execute()
         throws MojoExecutionException
