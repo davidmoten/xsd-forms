@@ -28,7 +28,6 @@ function test(condition, message) {
   if (!condition) alert(message);
 }
           
-          
 function encodedValueById(id) {
     return encodeHTML($("#"+id).val());
 }
@@ -141,9 +140,7 @@ $(function() {
   }
           
   function getXml() {
-    var s = getXml1instance();
-    s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + s;
-    return s;
+    return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +  getXml1instance();
   }
 
   $('#submit').click( function () {
