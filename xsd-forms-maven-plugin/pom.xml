@@ -10,6 +10,7 @@
   </parent>
   <artifactId>xsd-forms-maven-plugin</artifactId>
   <name>${project.artifactId}</name>
+  <packaging>maven-plugin</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>

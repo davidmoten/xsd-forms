@@ -50,7 +50,7 @@ public class GenerateMojo extends AbstractMojo {
 	 * The schema path (on classpath or as file)
 	 * 
 	 */
-	@Parameter
+	@Parameter(required=true)
 	private String schema;
 
 	/**
@@ -76,6 +76,8 @@ public class GenerateMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException {
+		
+		if (schema==null) throw new MojoExecutionException("schema must be specified");
 		//look first on classpath
 		InputStream schemaIn = getClass().getResourceAsStream(schema);
 		//then on file system
