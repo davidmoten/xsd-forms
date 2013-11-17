@@ -97,6 +97,9 @@ and call
 or 
 
     xsdForms.generateHtml(...)
+or
+
+    xsdForms.generateDirectory(...)
 
 #### Generate using maven plugin
 
