@@ -17,68 +17,75 @@ package org.moten.david.xsdforms.maven;
  */
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
+import scala.Option;
+import xsdforms.Generator;
+
 /**
- * Goal which touches a timestamp file.
- *
+ * Goal which generates form and dependent files.
+ * 
  * @goal generate
  * 
  * @phase generate-sources
  */
-public class GeneratorMojo
-    extends AbstractMojo
-{
-    /**
-     * The directory to write the files to.
-     * @parameter expression="${project.build.directory}/xsd-forms"
-     * 
-     */
-    private File outputDirectory;
+public class GeneratorMojo extends AbstractMojo {
+	/**
+	 * The directory to write the files to.
+	 * 
+	 * @parameter expression="${project.build.directory}/xsd-forms"
+	 * 
+	 */
+	private File outputDirectory;
 
-    
-    
-    @Override
-	public void execute()
-        throws MojoExecutionException
-    {
-        File f = outputDirectory;
+	/**
+	 * The schema path (on classpath or as file)
+	 * 
+	 * @parameter
+	 * 
+	 */
+	private String schema;
 
-        if ( !f.exists() )
-        {
-            f.mkdirs();
-        }
+	/**
+	 * The id prefix in generated html.
+	 * 
+	 * @parameter
+	 * 
+	 */
+	private String idPrefix;
 
-        File touch = new File( f, "touch.txt" );
+	/**
+	 * Top level element from schema to use as root level element in xml.
+	 * 
+	 * @parameter
+	 */
+	private String rootElement;
 
-        FileWriter w = null;
-        try
-        {
-            w = new FileWriter( touch );
+	/**
+	 * Extra script to include in jquery document body.
+	 * 
+	 * @parameter
+	 * 
+	 */
+	private String extraScript;
 
-            w.write( "touch.txt" );
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException( "Error creating file " + touch, e );
-        }
-        finally
-        {
-            if ( w != null )
-            {
-                try
-                {
-                    w.close();
-                }
-                catch ( IOException e )
-                {
-                    // ignore
-                }
-            }
-        }
-    }
+	@Override
+	public void execute() throws MojoExecutionException {
+		//look first on classpath
+		InputStream schemaIn = getClass().getResourceAsStream(schema);
+		//then on file system
+		if (schemaIn == null)
+			try {
+				schemaIn = new FileInputStream(schema);
+			} catch (FileNotFoundException e) {
+				throw new MojoExecutionException(e.getMessage(), e);
+			}
+		Generator.generateDirectory(schemaIn, outputDirectory, idPrefix,
+				Option.apply(rootElement), Option.apply(extraScript));
+	}
 }
