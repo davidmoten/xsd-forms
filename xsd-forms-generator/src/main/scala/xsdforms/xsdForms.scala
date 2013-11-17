@@ -417,12 +417,12 @@ package xsdforms {
 
       val zipOut = new ZipOutputStream(zip)
 
-      def action(bytes: Array[Byte], name: String) {
+      def action(bytes: Array[Byte], name: String, isDirectory: Boolean) {
         zipOut putNextEntry new ZipEntry(name)
         zipOut write bytes
       }
 
-      generateCore(schema, action, idPrefix, rootElement, extraScript)
+      copyJsCssAndGeneratedForm(schema, action, idPrefix, rootElement, extraScript)
 
       zipOut.close
     }
@@ -434,20 +434,26 @@ package xsdforms {
       rootElement: Option[String] = None,
       extraScript: Option[String] = None) {
 
-      def action(bytes: Array[Byte], name: String) {
-        val file = new File(directory, name)
-        file.getParentFile.mkdirs
-        val fos = new FileOutputStream(file)
-        fos write bytes
-        fos.close
+      def action(bytes: Array[Byte], name: String, isDirectory: Boolean) {
+        import org.apache.commons.io.FileUtils
+        val path = directory.getPath + File.separator + name
+        val file = new File(path)
+        new File(file.getParent).mkdirs
+        if (isDirectory)
+          file.mkdir
+        else {
+          val fos = new FileOutputStream(file)
+          fos write bytes
+          fos.close
+        }
       }
 
-      generateCore(schema, action, idPrefix, rootElement, extraScript)
+      copyJsCssAndGeneratedForm(schema, action, idPrefix, rootElement, extraScript)
     }
 
-    private def generateCore(
+    private def copyJsCssAndGeneratedForm(
       schema: InputStream,
-      action: (Array[Byte], String) => Unit,
+      action: (Array[Byte], String, Boolean) => Unit,
       idPrefix: String = "a-",
       rootElement: Option[String] = None,
       extraScript: Option[String] = None) {
@@ -459,12 +465,12 @@ package xsdforms {
       iterator.foreach { zipEntry =>
         val bytes = IOUtils.toByteArray(zipIn)
         val name = zipEntry.getName
-        action(bytes, name)
+        action(bytes, name, zipEntry.isDirectory)
       }
       zipIn.close
 
       val name = "form.html"
-      action(text.getBytes, name)
+      action(text.getBytes, name, false)
     }
 
     def generateHtml(schema: InputStream,

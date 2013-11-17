@@ -693,6 +693,14 @@ function logit(doc,name) {
       
       Option.empty
     }
+    @Test
+    def testGenerateDirectory() {
+      val out = new File("target/out.zip")
+      val directory = new File("target/testGenerateDirectory")
+      Generator.generateDirectory(getClass.getResourceAsStream("/demo.xsd"), directory)
+      assertTrue(directory.exists)
+      Option.empty
+    }
 
   }
 
