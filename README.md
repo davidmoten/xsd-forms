@@ -75,6 +75,12 @@ A [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) is availab
 
 #### Generate using a local web service
 
+You need to have built everything once only:
+
+    mvn clean install
+
+Then 
+
     cd xsd-forms-generator-webapp
     mvn package jetty:run
 
