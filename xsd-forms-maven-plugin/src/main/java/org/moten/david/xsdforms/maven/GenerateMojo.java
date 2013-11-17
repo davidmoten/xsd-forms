@@ -23,6 +23,8 @@ import java.io.InputStream;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 import scala.Option;
 import xsdforms.Generator;
@@ -34,44 +36,42 @@ import xsdforms.Generator;
  * 
  * @phase generate-sources
  */
-public class GeneratorMojo extends AbstractMojo {
+@Mojo(name="generate")
+public class GenerateMojo extends AbstractMojo {
 	/**
 	 * The directory to write the files to.
 	 * 
-	 * @parameter expression="${project.build.directory}/xsd-forms"
-	 * 
 	 */
+	@Parameter(defaultValue="target/xsd-forms")
 	private File outputDirectory;
+	
 
 	/**
 	 * The schema path (on classpath or as file)
 	 * 
-	 * @parameter
-	 * 
 	 */
+	@Parameter
 	private String schema;
 
 	/**
 	 * The id prefix in generated html.
 	 * 
-	 * @parameter
-	 * 
 	 */
+	@Parameter
 	private String idPrefix;
 
 	/**
 	 * Top level element from schema to use as root level element in xml.
 	 * 
-	 * @parameter
 	 */
+	@Parameter
 	private String rootElement;
 
 	/**
 	 * Extra script to include in jquery document body.
 	 * 
-	 * @parameter
-	 * 
 	 */
+	@Parameter
 	private String extraScript;
 
 	@Override
