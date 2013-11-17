@@ -415,26 +415,16 @@ package xsdforms {
       rootElement: Option[String] = None,
       extraScript: Option[String] = None) {
 
-      val text = generateHtmlAsString(schema, idPrefix, rootElement, extraScript)
-
-      val zipIn = new ZipInputStream(Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
       val zipOut = new ZipOutputStream(zip)
 
-      val iterator = Iterator.continually(zipIn.getNextEntry).takeWhile(_ != null)
-      iterator.foreach { zipEntry =>
-        val bytes = IOUtils.toByteArray(zipIn)
-        zipOut putNextEntry new ZipEntry(zipEntry.getName)
+      def action(bytes: Array[Byte], name: String) {
+        zipOut putNextEntry new ZipEntry(name)
         zipOut write bytes
       }
 
-      zipIn.close
+      generateCore(schema, action, idPrefix, rootElement, extraScript)
 
-      val zipEntry = new ZipEntry("form.html")
-      zipOut putNextEntry zipEntry
-      zipOut write text.getBytes
       zipOut.close
-
-      println("generated")
     }
 
     def generateDirectory(
@@ -444,6 +434,23 @@ package xsdforms {
       rootElement: Option[String] = None,
       extraScript: Option[String] = None) {
 
+      def action(bytes: Array[Byte], name: String) {
+        val file = new File(directory, name)
+        file.getParentFile.mkdirs
+        val fos = new FileOutputStream(file)
+        fos write bytes
+        fos.close
+      }
+
+      generateCore(schema, action, idPrefix, rootElement, extraScript)
+    }
+
+    private def generateCore(
+      schema: InputStream,
+      action: (Array[Byte], String) => Unit,
+      idPrefix: String = "a-",
+      rootElement: Option[String] = None,
+      extraScript: Option[String] = None) {
       val text = generateHtmlAsString(schema, idPrefix, rootElement, extraScript)
 
       val zipIn = new ZipInputStream(Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
@@ -451,20 +458,13 @@ package xsdforms {
       val iterator = Iterator.continually(zipIn.getNextEntry).takeWhile(_ != null)
       iterator.foreach { zipEntry =>
         val bytes = IOUtils.toByteArray(zipIn)
-        val file = new File(directory, zipEntry.getName)
-        file.getParentFile.mkdirs
-        val fos = new FileOutputStream(file)
-        fos write bytes
-        fos.close
+        val name = zipEntry.getName
+        action(bytes, name)
       }
-zipIn.close
-      
-      val file = new File(directory, "form.html")
-      file.getParentFile.mkdirs
-      val fos = new FileOutputStream(file)
-      fos write text.getBytes
-      fos.close
-      println("generated")
+      zipIn.close
+
+      val name = "form.html"
+      action(text.getBytes, name)
     }
 
     def generateHtml(schema: InputStream,
