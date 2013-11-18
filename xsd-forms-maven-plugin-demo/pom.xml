@@ -22,9 +22,17 @@
 						<version>${project.parent.version}</version>
 					</dependency>
 				</dependencies>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-resources</phase>
+					</execution>
+				</executions>
 				<configuration>
-					<schema>/demo.xsd</schema>
-				</configuration>
+						<schema>/demo.xsd</schema>
+					</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
