@@ -33,7 +33,7 @@ Note that the examples are not fully working and are still in development. The e
 FAQ
 -------------------
 
-###I've already got a schema, can I generate a form from it?
+### I've already got a schema, can I generate a form from it?
 
 Probably not! *xsd-forms* only supports a subset of xsd features. It was enough work for me to get this far, believe me! Supported features are documented in another section below. Your options are:
 
@@ -41,7 +41,7 @@ Probably not! *xsd-forms* only supports a subset of xsd features. It was enough 
   * translate the xml using some standard parser (xpath expressions etc)
   * generate classes from both schemas and write code to translate using the generated classes. This method gives you compile-time indications as the schemas change through time (and isn't change inevitable!). *This is my preferred option*.
 
-###What xsd features are supported?
+### What xsd features are supported?
 These xsd features are supported:
 
   * elements only, *not* attributes
@@ -61,9 +61,12 @@ Bearing in mind the above restrictions, these features are supported:
   * anonymous simple types
 
 
-###How do I generate a form?
+### How do I generate a form?
 
-##How do I annotate my schema?
+#### How do I annotate my schema?
+
+Look at some examples: , simple.xsd, census.xsd, demo.xsd (TODO add links)
+
 See api documentation for the Annotations object at the top of the file [xsdForms.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/xsdforms/xsdForms.scala).
 
 #### Generate using web service 
