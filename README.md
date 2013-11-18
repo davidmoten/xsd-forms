@@ -1,8 +1,5 @@
 xsd-forms
 =========
-
-Moved from http://code.google.com/p/xsd-forms/
-
 Xml schemas contain nearly everything we need for many web forms except for presentation information. Instead of seeking full separation of presentation from the data model (the xml schema) there are significant advantages in [annotating the xsd itself](https://github.com/davidmoten/xsd-forms/blob/master/demo-scalaxb/src/main/resources/demo.xsd) according to a [special schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-scalaxb/src/main/xsd/xsd-forms.xsd) to indicate presentation details. For one, refactoring is much easier without specialized IDE tooling that can read both our xsd and our presentation format. 
 
 *Status:* pre-alpha. Alpha release planned for December 2013 (excuse delay, very busy on other projects!). UI elements mostly done, a major rewrite was merged to master on 15 Nov 2013 to use an abstract syntax tree and to handle element repetition in a simplistic way. Lots of bits and pieces to chase down but many simple forms will be correctly generated now (try it and see).
@@ -28,9 +25,8 @@ The features of javascript libraries like [http://jquery.com](JQuery) mean that 
 
 *Generated Form* | *Annotated schema* | *Comment* 
 ---------------- | ------------------ | ---------
-[Demo form](http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/main/webapp/demo.html)|[schema](http://code.google.com/p/xsd-forms/source/browse/xsd-forms/trunk/demo-scalaxb/src/main/resources/demo.xsd)|Feature showcase
-[Australian Census 2011](http://xsd-forms.googlecode.com/svn/xsd-forms/trunk/xsd-forms-generator/src/main/webapp/census.html)|[schema](http://code.google.com/p/xsd-forms/source/browse/xsd-forms/trunk/xsd-forms-generator/src/test/resources/australian-census-2011.xsd)|Based on the 2011 Australian Census form ([pdf](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Main%20Features802011))
-
+[Demo form](http://htmlpreview.github.io/?https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/webapp/demo.html)|[schema](https://github.com/davidmoten/xsd-forms/blob/master/demo-scalaxb/src/main/resources/demo.xsd)|Feature showcase
+[Australian Census 2011](http://htmlpreview.github.io/?https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/webapp/census.html)|[schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/australian-census-2011.xsd)|Based on the 2011 Australian Census form ([pdf](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Main%20Features802011))
 
 Note that the examples are not fully working and are still in development. The examples look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is working (click Submit on a form). 
 
