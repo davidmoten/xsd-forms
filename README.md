@@ -65,7 +65,7 @@ Bearing in mind the above restrictions, these features are supported:
 
 #### How do I annotate my schema?
 
-Every element in your schema optionally can have a contained <xs:annotation/> element. Place attributes on that element from the xsd-forms schema like below:
+Every element in your schema optionally can have a contained &lt;xs:annotation/&gt; element. Place attributes on that element from the xsd-forms schema like below:
 
 [annotations-demo.xsd](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/annotations-demo.xsd) ---> [form](http://htmlpreview.github.io/?https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/main/webapp/annotations-demo.html)
 
