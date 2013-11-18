@@ -65,11 +65,11 @@ Bearing in mind the above restrictions, these features are supported:
 
 #### How do I annotate my schema?
 
-Look at some examples:  simple.xsd, census.xsd, demo.xsd (TODO add links)
+Every element in your schema optionally can have a contained <xs:annotation/> element. Place attributes on that element from the xsd-forms schema like below:
 
-[annotations-demo.xsd](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/annotations-demo.xsd) | [form](http://htmlpreview.github.io/?https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/main/webapp/annotations-demo.html)
+[annotations-demo.xsd](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/annotations-demo.xsd) ---> [form](http://htmlpreview.github.io/?https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/main/webapp/annotations-demo.html)
 
-See api documentation for the Annotations object at the top of the file [xsdForms.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/xsdforms/xsdForms.scala).
+For a full list of annotations and their meanings see the top of the file [xsdForms.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/xsdforms/xsdForms.scala).
 
 #### Generate using web service 
 A [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) is available. At this service you can 
