@@ -40,7 +40,7 @@ public class GenerateMojo extends AbstractMojo {
 	 * The directory to write the files to.
 	 * 
 	 */
-	@Parameter(property="generate.output.directory" ,defaultValue = "target/xsd-forms")
+	@Parameter(property="generate.output.directory" ,defaultValue = "${project.build.directory}/generated-resources")
 	private File outputDirectory;
 
 	/**
