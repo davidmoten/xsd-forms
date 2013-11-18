@@ -593,7 +593,7 @@ package xsdforms {
 
       html
         .div(classes = List(ClassSequence))
-      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instances)
+      nonRepeatingTitle(e, e.minOccurs.intValue == 0 || e.maxOccurs != "1", instances)
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
@@ -626,7 +626,7 @@ package xsdforms {
       val number = elementNumber(e)
 
       html.div(id = Some(getItemEnclosingId(number, instances add 1)), classes = List(ClassChoice))
-      nonRepeatingTitle(e, e.minOccurs.intValue() == 0 || e.maxOccurs != "1", instances)
+      nonRepeatingTitle(e, e.minOccurs.intValue == 0 || e.maxOccurs != "1", instances)
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
@@ -947,7 +947,7 @@ package xsdforms {
       html.div(
         id = Some(id),
         classes = List(ClassRepeatingEnclosing))
-      if (instances.last != 1 || e.minOccurs == 0)
+      if (instances.last != 1 || e.minOccurs.intValue == 0)
         addScript(JS().line("  $('#%s').hide();", id))
     }
 
@@ -1125,7 +1125,7 @@ package xsdforms {
     private def addRemoveButton(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       val removeButtonId = getRemoveButtonId(number, instances)
-      val canRemove = (instances.last == 1 && e.minOccurs == "0") ||
+      val canRemove = (instances.last == 1 && e.minOccurs.intValue == 0) ||
         (instances.last != 1 && e.maxOccurs != "1")
       if (canRemove)
         html
@@ -1320,7 +1320,7 @@ package xsdforms {
     }
 
     private def createCanExcludeScriptlet(e: Element) =
-      if (e.minOccurs > 0) ""
+      if (e.minOccurs.intValue > 0) ""
       else {
         JS().line("  // minOccurs=0, disable if blank")
           .line("  var includeInXml  = !((v.val() == null) || (v.val().length==0));")
@@ -1400,7 +1400,7 @@ package xsdforms {
         .line("  showError('%s',ok);", getItemErrorId(number, instances))
         .line("});")
         .line
-      if (e.minOccurs == 0 && e.default.isEmpty)
+      if (e.minOccurs.intValue == 0 && e.default.isEmpty)
         js.line("//disable item-path due to minOccurs=0 and default is empty")
           .line("$('#%s').attr('enabled','false');", getPathId(number, instances))
       js.toString
@@ -1527,7 +1527,7 @@ package xsdforms {
     private def isMandatory(e: Element, r: Restriction): Boolean = {
       val patterns = getPatterns(r)
       getInputType(r) == "text" &&
-        e.minOccurs.intValue() == 1 &&
+        e.minOccurs.intValue == 1 &&
         patterns.size > 0 &&
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
     }
