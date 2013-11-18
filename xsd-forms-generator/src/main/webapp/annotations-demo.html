@@ -1,0 +1,314 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
+<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript">
+
+function encodeHTML(s) {
+    if (typeof(s) != "undefined")
+	    return s.replace(/&/g, '&amp;')
+	               .replace(/</g, '&lt;')
+	               .replace(/>/g, '&gt;')
+	               .replace(/"/g, '&quot;');
+     else 
+          return s; 
+}
+          
+function testEncodeHTML() {
+   console.log(encodeHTML('<>'));
+   test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
+}
+          
+function test(condition, message) {
+  if (!condition) alert(message);
+}
+          
+function encodedValueById(id) {
+    return encodeHTML($("#"+id).val());
+}
+
+function spaces(n) {
+    var s = "";
+    for (var i=0;i<n;i++)
+      s = s + " ";
+    return s;
+}
+
+function cloneAndReplaceIds(element, suffix){
+  var clone = element.clone();
+  clone.find("*[id]").andSelf().each(function() { 
+    var previousId = $(this).attr("id");
+    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
+    $(this).attr("id", newId); 
+  });
+  return clone;
+}
+    
+function idVisible(id) {
+    return elemVisible($("#"+id));
+}
+    
+function elemVisible(elem) {
+    return elem.is(":visible");    
+}
+          
+function toXmlDate(s) {
+  return s;
+}
+          
+function toXmlDateTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toXmlTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toBoolean(s) {
+  if (s == "on" || s == "true")
+    return "true";
+  else 
+    return "false";
+}
+          
+$(function() {
+  //run js unit tests        
+  testEncodeHTML();
+  
+  //setup date and time pickers
+  $('input').filter('.datepickerclass').datepicker();
+  //now a workaround because datepicker does not use the initial value with the required format but expects mm/dd/yyyy
+  $('input').filter('.datepickerclass').each(function() {
+    var elem = $(this);
+    var val = elem.attr('value');
+    elem.datepicker( "option", "dateFormat","yy-mm-dd");
+    if (typeof(val) != 'undefined') {
+      console.log("val="+val);
+      elem.datepicker('setDate',val);
+    }
+  });
+  $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm',separator: 'T'});
+  $('input').filter('.timepickerclass').timepicker({});
+
+  function callMethod(methodName, argument) {
+    var method = eval('(' + methodName + ')');
+    return method(argument);
+  }
+  
+  function matchesPattern(elem,regex) {
+    return regex.test(elem.val());
+  }
+  
+  function showError(id,ok) {
+    var error = $("#"+id);
+    if (ok)
+      error.hide();
+    else 
+      error.show();
+  }
+          
+  function validate() {
+    var previousItems = null;
+    $('*[number]').each( function(index) {
+      var thisId = this.id
+      var elem = $('#' + thisId)
+      // will do validations here
+      //if elem visible then do the validation for that element
+      if (elemVisible(elem)) 
+        elem.change();
+    });
+    $('input:radio').each( function (index) {
+      console.log("radio.id="+ this.id);
+      var elem = $('#' + this.id)
+      if (elemVisible(elem))
+        elem.change();
+    });
+    var count = $('.item-error').filter(":visible").length
+    if (count>0) {
+      $('#validation-errors').show();
+      return false;
+    }
+    else { 
+      $('#validation-errors').hide();
+      return true;
+    }
+  }
+          
+  function getXml() {
+    return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +  getXml1instance();
+  }
+
+  $('#submit').click( function () {
+    if (validate()) {
+      var xml = getXml();
+      processXml(xml);
+    }
+  });
+          
+  var processXml = function(xml) {
+    var s = xml.replace(/&/g,"&amp;");
+    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s = "<pre>" + s + "</pre>";
+    $('#submit-comments').html(s);
+  }
+          
+  
+  $('#b-remove-button-1-instance-1').click(function() {
+    $('#b-repeating-enclosing-1-instance-1').hide();
+  });
+
+  $('#b-remove-button-2-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-2-instance-1_1').hide();
+  });
+
+  // name
+  var validate2instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-2-instance-1_1');
+    var pathDiv = $('#b-item-path-2-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^[a-zA-Z][a-zA-Z]*$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-2-instance-1_1').change( function() {
+    var ok = validate2instance1_1();
+    showError('b-item-error-2-instance-1_1',ok);
+  });
+  
+  $('#b-repeating-enclosing-2-instance-1_2').hide();
+  $('#b-remove-button-2-instance-1_2').click(function() {
+    $('#b-repeating-enclosing-2-instance-1_2').hide();
+  });
+
+  // name
+  var validate2instance1_2 = function () {
+    var ok = true;
+    var v = $('#b-item-2-instance-1_2');
+    var pathDiv = $('#b-item-path-2-instance-1_2');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^[a-zA-Z][a-zA-Z]*$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-2-instance-1_2').change( function() {
+    var ok = validate2instance1_2();
+    showError('b-item-error-2-instance-1_2',ok);
+  });
+  
+  $('#b-repeat-button-2-instance-1').click( function() {
+    // loop through all repeats until find first nonInvisible repeat and make it visible
+    var elem;
+    elem = $('#b-repeating-enclosing-2-instance-1_1');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#b-repeating-enclosing-2-instance-1_2');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+  })
+
+  //extract xml from element <name>
+  function getXml2instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-2-instance-1_1'))
+    xml += '\n' + spaces(2) + '<name>' + encodedValueById("b-item-2-instance-1_1") + '</name>';
+  if (idVisible('b-repeating-enclosing-2-instance-1_2'))
+    xml += '\n' + spaces(2) + '<name>' + encodedValueById("b-item-2-instance-1_2") + '</name>';
+   return xml;
+  }
+
+  //extract xml from element <person>
+  function getXml1instance() {
+
+    var xml = '\n' + spaces(0) + '<person xmlns="http://org.moten.david/example">';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-1-instance-1')) {
+      xml += getXml2instance1();
+    }
+    xml += '\n' + spaces(0) + '</person>';
+    return xml;
+  }
+
+  
+  $("#form").submit(function () { return false; }); // so it won't submit
+  
+  
+  
+});
+</script>
+<script type="text/javascript" src="js/xsd-forms-override.js"></script>
+</head>
+<body>
+<div class="form">
+<form method="POST" action="form.html" name="form">
+ 
+ 
+  <div class="sequence">
+    <div class="non-repeating-title">'nonRepeatingTitle' used for maxOccurs>1 elements</div>
+    <div id="b-repeating-enclosing-1-instance-1" class="repeating-enclosing">
+      <div class="sequence-label">'label' for this complex element</div>
+      <div id="b-sequence-1-instance-1" class="sequence-content">
+        <div id="b-item-enclosing-2-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeat-button-2-instance-1" class="repeat-button white small">'repeatLabel' click to repeat question</div>
+          <div id="b-repeating-enclosing-2-instance-1_1" class="repeating-enclosing">
+            <div class="item-title">'title' for this question</div>
+            <div class="item-before">'before' might be used for a descriptive preamble to a question</div>
+            <div class="item-number">2</div>
+            <label class="item-label" for="b-item-input-2-instance-1_1">'label' goes here, defaults to element name<em>*</em></label>
+            <div class="item-input">
+              <input number="2" name="b-item-input-2-instance-1_1" id="b-item-2-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">'description' goes here to describe the input format for example</div>
+              <div id="b-item-path-2-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-2-instance-1_1" class="item-error">'validation' is the message to indicate an invalid response'</div>
+              <div class="item-after">'after' might be used for some informative remarks about the topic and appears after the validation message</div>
+            </div>
+          </div>
+          <div id="b-repeating-enclosing-2-instance-1_2" class="repeating-enclosing">
+            <div class="item-title">'title' for this question</div>
+            <div class="remove-button-container">
+              <div id="b-remove-button-2-instance-1_2" class="remove-button white small">'removeLabel' click to remove repeat</div>
+            </div>
+            <div class="item-before">'before' might be used for a descriptive preamble to a question</div>
+            <div class="item-number">2</div>
+            <label class="item-label" for="b-item-input-2-instance-1_2">'label' goes here, defaults to element name<em>*</em></label>
+            <div class="item-input">
+              <input number="2" name="b-item-input-2-instance-1_2" id="b-item-2-instance-1_2" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">'description' goes here to describe the input format for example</div>
+              <div id="b-item-path-2-instance-1_2" class="item-path" enabled="true"></div>
+              <div id="b-item-error-2-instance-1_2" class="item-error">'validation' is the message to indicate an invalid response'</div>
+              <div class="item-after">'after' might be used for some informative remarks about the topic and appears after the validation message</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="submit" class="submit">Submit</div>
+  <p><div id="submit-comments"></div></p>
+
+</form>
+</div>
+</body>
+</html>

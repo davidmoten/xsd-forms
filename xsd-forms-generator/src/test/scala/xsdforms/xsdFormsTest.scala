@@ -134,7 +134,7 @@ package xsdforms {
         idPrefix = "b-",
         schemaInputStream = TstUtil.getClass().getResourceAsStream("/annotations-demo.xsd"),
         rootElement = "person",
-        outputFile = new File("target/generated-webapp/annotations-demo-form.html"))
+        outputFile = new File("target/generated-webapp/annotations-demo.html"))
     }
 
   }

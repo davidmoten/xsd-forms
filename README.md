@@ -65,7 +65,7 @@ Bearing in mind the above restrictions, these features are supported:
 
 #### How do I annotate my schema?
 
-Look at some examples: , simple.xsd, census.xsd, demo.xsd (TODO add links)
+Look at some examples: [annotations-demo.xsd](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/annotations-demo.xsd), simple.xsd, census.xsd, demo.xsd (TODO add links)
 
 See api documentation for the Annotations object at the top of the file [xsdForms.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/xsdforms/xsdForms.scala).
 
