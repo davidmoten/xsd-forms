@@ -153,6 +153,20 @@ Schema default values will be set but if you want to for instance restore a form
 
 Yes. Just choose a different root element for each form.
 
+Scope
+--------------
+The generated form should
+  * perform all schema defined validation (e.g. regex pattern checks etc) 
+  * notify validation failures in a _good practice_ way
+  * build schema compliant xml from the input fields
+  * not allow submission until all validation passes
+  * offer ui options for handling xs:choice
+  * offer ui options for handling xs:enumeration
+  * follow _good practice_ presentation standards
+  * facilitate tweaking of presentation using css override on every element
+  * support small screen/large screen
+  * support common mobile platforms
+
 Building 
 ---------------------
 
@@ -213,18 +227,4 @@ Then go to [http://localhost:8080/](http://localhost:8080/)
   * unit tests of form generation
   * unit tests of form behaviour (selenium?) including xml schema compliance
   * use templating instead of coding divs directly in scala?
-
-Scope
---------------
-The generated form should
-  * perform all schema defined validation (e.g. regex pattern checks etc) 
-  * notify validation failures in a _good practice_ way
-  * build schema compliant xml from the input fields
-  * not allow submission until all validation passes
-  * offer ui options for handling xs:choice
-  * offer ui options for handling xs:enumeration
-  * follow _good practice_ presentation standards
-  * facilitate tweaking of presentation using css override on every element
-  * support small screen/large screen
-  * support common mobile platforms
 
