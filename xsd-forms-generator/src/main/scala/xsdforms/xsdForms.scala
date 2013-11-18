@@ -583,6 +583,8 @@ package xsdforms {
       }
     }
 
+    private def hasButton(e:Element) =  e.maxOccurs !="1"
+    
     private def doNode(node: NodeSequence, instances: Instances) {
       val e = node.element
       val number = elementNumber(node)
@@ -593,7 +595,7 @@ package xsdforms {
 
       html
         .div(classes = List(ClassSequence))
-      nonRepeatingTitle(e, e.minOccurs.intValue == 0 || e.maxOccurs != "1", instances)
+      nonRepeatingTitle(e, instances)
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
@@ -626,7 +628,7 @@ package xsdforms {
       val number = elementNumber(e)
 
       html.div(id = Some(getItemEnclosingId(number, instances add 1)), classes = List(ClassChoice))
-      nonRepeatingTitle(e, e.minOccurs.intValue == 0 || e.maxOccurs != "1", instances)
+      nonRepeatingTitle(e,instances)
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
@@ -928,13 +930,13 @@ package xsdforms {
         case _ => None
       }
 
-    private def nonRepeatingTitle(e: ElementWrapper, hasButton: Boolean, instances: Instances) {
+    private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
       //there's only one of these so use instanceNo = 1
       val number = elementNumber(e)
       html.div(
         classes = List(ClassNonRepeatingTitle),
         content = getAnnotation(e, Annotation.NonRepeatingTitle)).closeTag
-      if (hasButton)
+      if (hasButton(e))
         html.div(
           id = Some(getRepeatButtonId(number, instances)),
           classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
@@ -947,7 +949,7 @@ package xsdforms {
       html.div(
         id = Some(id),
         classes = List(ClassRepeatingEnclosing))
-      if (instances.last != 1 || e.minOccurs.intValue == 0)
+      if (instances.last != 1)
         addScript(JS().line("  $('#%s').hide();", id))
     }
 
@@ -957,7 +959,7 @@ package xsdforms {
         .div(
           classes = List(ClassItemEnclosing) ++ getVisibility(e),
           id = Some(getItemEnclosingId(number, instances add 1)))
-      nonRepeatingTitle(e, e.maxOccurs != "0" && e.maxOccurs != "1", instances)
+      nonRepeatingTitle(e, instances)
     }
 
     private def itemTitle(e: Element) {
@@ -1125,7 +1127,7 @@ package xsdforms {
     private def addRemoveButton(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       val removeButtonId = getRemoveButtonId(number, instances)
-      val canRemove = (instances.last == 1 && e.minOccurs.intValue == 0) ||
+      val canRemove = 
         (instances.last != 1 && e.maxOccurs != "1")
       if (canRemove)
         html
