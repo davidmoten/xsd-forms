@@ -115,7 +115,7 @@ or
 
 #### Generate using maven plugin
 
-The project includes a [demonstration](https://github.com/davidmoten/xsd-forms/tree/master/xsd-forms-maven-plugin-demo) using *xsd-forms-maven-plugin*.
+Here is a [demonstration](https://github.com/davidmoten/xsd-forms/tree/master/xsd-forms-maven-plugin-demo) using *xsd-forms-maven-plugin*.
 
 ###What do I need to do after I have designed a schema?
 
