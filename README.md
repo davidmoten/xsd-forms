@@ -63,6 +63,9 @@ Bearing in mind the above restrictions, these features are supported:
 
 ###How do I generate a form?
 
+##How do I annotate my schema?
+See api documentation for the Annotations object at the top of the file [xsdForms.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/xsdforms/xsdForms.scala).
+
 #### Generate using web service 
 A [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) is available. At this service you can 
 
@@ -217,8 +220,4 @@ The generated form should
   * facilitate tweaking of presentation using css override on every element
   * support small screen/large screen
   * support common mobile platforms
-
-##Schema annotations
-See api documentation for the Annotations object at the top of the file [xsdForms.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/xsdforms/xsdForms.scala).
-
 
