@@ -23,6 +23,7 @@ import java.io.InputStream;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
@@ -32,55 +33,51 @@ import xsdforms.Generator;
 /**
  * Goal which generates form and dependent files.
  * 
- * @goal generate
- * 
- * @phase generate-sources
  */
-@Mojo(name="generate")
+@Mojo(name = "generate",defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class GenerateMojo extends AbstractMojo {
 	/**
 	 * The directory to write the files to.
 	 * 
 	 */
-	@Parameter(defaultValue="target/xsd-forms")
+	@Parameter(property="generate.output.directory" ,defaultValue = "target/xsd-forms")
 	private File outputDirectory;
-	
 
 	/**
 	 * The schema path (on classpath or as file)
 	 * 
 	 */
-	@Parameter(required=true)
+	@Parameter(property="generate.schema",required = true)
 	private String schema;
 
 	/**
 	 * The id prefix in generated html.
 	 * 
 	 */
-	@Parameter
+	@Parameter(property="generate.id.prefix")
 	private String idPrefix;
 
 	/**
 	 * Top level element from schema to use as root level element in xml.
 	 * 
 	 */
-	@Parameter
+	@Parameter(property="generate.root.element")
 	private String rootElement;
 
 	/**
 	 * Extra script to include in jquery document body.
-	 * 
 	 */
-	@Parameter
+	@Parameter(property="generate.extra.script")
 	private String extraScript;
 
 	@Override
 	public void execute() throws MojoExecutionException {
-		
-		if (schema==null) throw new MojoExecutionException("schema must be specified");
-		//look first on classpath
+
+		if (schema == null)
+			throw new MojoExecutionException("schema must be specified");
+		// look first on classpath
 		InputStream schemaIn = getClass().getResourceAsStream(schema);
-		//then on file system
+		// then on file system
 		if (schemaIn == null)
 			try {
 				schemaIn = new FileInputStream(schema);
