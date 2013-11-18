@@ -1,4 +1,3 @@
-
 <html>
 <head>
 <link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
@@ -28,7 +27,6 @@ function testEncodeHTML() {
 function test(condition, message) {
   if (!condition) alert(message);
 }
-          
           
 function encodedValueById(id) {
     return encodeHTML($("#"+id).val());
@@ -101,8 +99,20 @@ $(function() {
     var method = eval('(' + methodName + ')');
     return method(argument);
   }
-
-  $('#pre-submit').click( function () {
+  
+  function matchesPattern(elem,regex) {
+    return regex.test(elem.val());
+  }
+  
+  function showError(id,ok) {
+    var error = $("#"+id);
+    if (ok)
+      error.hide();
+    else 
+      error.show();
+  }
+          
+  function validate() {
     var previousItems = null;
     $('*[number]').each( function(index) {
       var thisId = this.id
@@ -121,17 +131,39 @@ $(function() {
     var count = $('.item-error').filter(":visible").length
     if (count>0) {
       $('#validation-errors').show();
-      return;
+      return false;
     }
-    else 
+    else { 
       $('#validation-errors').hide();
-    var s = getXml1instance();
-    s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + s;
-    s = s.replace(/&/g,"&amp;");
+      return true;
+    }
+  }
+          
+  function getXml() {
+    return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +  getXml1instance();
+  }
+
+  $('#submit').click( function () {
+    if (validate()) {
+      var xml = getXml();
+      processXml(xml);
+    }
+  });
+          
+  var processXml = function(xml) {
+    var s = xml.replace(/&/g,"&amp;");
     s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = "<pre>" + s + "</pre>";
-          
     $('#submit-comments').html(s);
+  }
+          
+  
+  $('#a-remove-button-1-instance-1').click(function() {
+    $('#a-repeating-enclosing-1-instance-1').hide();
+  });
+
+  $('#a-remove-button-2-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-2-instance-1_1').hide();
   });
 
   // name
@@ -139,74 +171,105 @@ $(function() {
     var ok = true;
     var v = $('#a-item-2-instance-1_1');
     var pathDiv = $('#a-item-path-2-instance-1_1');
-
     return ok;
   }
   
   $('#a-item-2-instance-1_1').change( function() {
     var ok = validate2instance1_1();
-    var error= $('#a-item-error-2-instance-1_1');
-    if (!(ok)) 
-      error.show();
-    else
-      error.hide();
+    showError('a-item-error-2-instance-1_1',ok);
   });
   
-
   $('#a-repeating-enclosing-2-instance-1_2').hide();
+  $('#a-remove-button-2-instance-1_2').click(function() {
+    $('#a-repeating-enclosing-2-instance-1_2').hide();
+  });
 
   // name
   var validate2instance1_2 = function () {
     var ok = true;
     var v = $('#a-item-2-instance-1_2');
     var pathDiv = $('#a-item-path-2-instance-1_2');
-
     return ok;
   }
   
   $('#a-item-2-instance-1_2').change( function() {
     var ok = validate2instance1_2();
-    var error= $('#a-item-error-2-instance-1_2');
-    if (!(ok)) 
-      error.show();
-    else
-      error.hide();
+    showError('a-item-error-2-instance-1_2',ok);
   });
   
-
   $('#a-repeating-enclosing-2-instance-1_3').hide();
+  $('#a-remove-button-2-instance-1_3').click(function() {
+    $('#a-repeating-enclosing-2-instance-1_3').hide();
+  });
 
   // name
   var validate2instance1_3 = function () {
     var ok = true;
     var v = $('#a-item-2-instance-1_3');
     var pathDiv = $('#a-item-path-2-instance-1_3');
-
     return ok;
   }
   
   $('#a-item-2-instance-1_3').change( function() {
     var ok = validate2instance1_3();
-    var error= $('#a-item-error-2-instance-1_3');
-    if (!(ok)) 
-      error.show();
-    else
-      error.hide();
+    showError('a-item-error-2-instance-1_3',ok);
   });
   
+  $('#a-repeating-enclosing-2-instance-1_4').hide();
+  $('#a-remove-button-2-instance-1_4').click(function() {
+    $('#a-repeating-enclosing-2-instance-1_4').hide();
+  });
 
+  // name
+  var validate2instance1_4 = function () {
+    var ok = true;
+    var v = $('#a-item-2-instance-1_4');
+    var pathDiv = $('#a-item-path-2-instance-1_4');
+    return ok;
+  }
+  
+  $('#a-item-2-instance-1_4').change( function() {
+    var ok = validate2instance1_4();
+    showError('a-item-error-2-instance-1_4',ok);
+  });
+  
+  $('#a-repeating-enclosing-2-instance-1_5').hide();
+  $('#a-remove-button-2-instance-1_5').click(function() {
+    $('#a-repeating-enclosing-2-instance-1_5').hide();
+  });
+
+  // name
+  var validate2instance1_5 = function () {
+    var ok = true;
+    var v = $('#a-item-2-instance-1_5');
+    var pathDiv = $('#a-item-path-2-instance-1_5');
+    return ok;
+  }
+  
+  $('#a-item-2-instance-1_5').change( function() {
+    var ok = validate2instance1_5();
+    showError('a-item-error-2-instance-1_5',ok);
+  });
+  
   $('#a-repeat-button-2-instance-1').click( function() {
     // loop through all repeats until find first nonInvisible repeat and make it visible
     var elem;
     elem = $('#a-repeating-enclosing-2-instance-1_1');
     if (!elemVisible(elem))
-      { elem.show(); return; }    elem = $('#a-repeating-enclosing-2-instance-1_2');
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-2-instance-1_2');
     if (!elemVisible(elem))
-      { elem.show(); return; }    elem = $('#a-repeating-enclosing-2-instance-1_3');
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-2-instance-1_3');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-2-instance-1_4');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-2-instance-1_5');
     if (!elemVisible(elem))
       { elem.show(); return; }
   })
-
 
   //extract xml from element <name>
   function getXml2instance1() {
@@ -218,32 +281,39 @@ $(function() {
     xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_2") + '</name>';
   if (idVisible('a-repeating-enclosing-2-instance-1_3'))
     xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_3") + '</name>';
+  if (idVisible('a-repeating-enclosing-2-instance-1_4'))
+    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_4") + '</name>';
+  if (idVisible('a-repeating-enclosing-2-instance-1_5'))
+    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_5") + '</name>';
    return xml;
   }
-
 
   //extract xml from element <person>
   function getXml1instance() {
 
     var xml = '\n' + spaces(0) + '<person xmlns="http://org.moten.david/example">';
     //now add sequence children for each instanceNo
-    if (idVisible('a-repeating-enclosing-1-instance-1'))
-    xml += getXml2instance1();
+    if (idVisible('a-repeating-enclosing-1-instance-1')) {
+      xml += getXml2instance1();
+    }
     xml += '\n' + spaces(0) + '</person>';
     return xml;
   }
 
-
+  
   $("#form").submit(function () { return false; }); // so it won't submit
-
-    });
+  
+  
+  
+});
 </script>
 <script type="text/javascript" src="js/xsd-forms-override.js"></script>
 </head>
 <body>
 <div class="form">
 <form method="POST" action="form.html" name="form">
-
+ 
+ 
   <div class="sequence">
     <div class="non-repeating-title">
     </div>
@@ -265,6 +335,9 @@ $(function() {
             </div>
           </div>
           <div id="a-repeating-enclosing-2-instance-1_2" class="repeating-enclosing">
+            <div class="remove-button-container">
+              <div id="a-remove-button-2-instance-1_2" class="remove-button white small">-</div>
+            </div>
             <div class="item-number">2</div>
             <label class="item-label" for="a-item-input-2-instance-1_2">Full name</label>
             <div class="item-input">
@@ -275,6 +348,9 @@ $(function() {
             </div>
           </div>
           <div id="a-repeating-enclosing-2-instance-1_3" class="repeating-enclosing">
+            <div class="remove-button-container">
+              <div id="a-remove-button-2-instance-1_3" class="remove-button white small">-</div>
+            </div>
             <div class="item-number">2</div>
             <label class="item-label" for="a-item-input-2-instance-1_3">Full name</label>
             <div class="item-input">
@@ -284,14 +360,41 @@ $(function() {
               <div id="a-item-error-2-instance-1_3" class="item-error">Invalid</div>
             </div>
           </div>
+          <div id="a-repeating-enclosing-2-instance-1_4" class="repeating-enclosing">
+            <div class="remove-button-container">
+              <div id="a-remove-button-2-instance-1_4" class="remove-button white small">-</div>
+            </div>
+            <div class="item-number">2</div>
+            <label class="item-label" for="a-item-input-2-instance-1_4">Full name</label>
+            <div class="item-input">
+              <input number="2" name="a-item-input-2-instance-1_4" id="a-item-2-instance-1_4" class=" item-input-text" type="text">
+              </input>
+              <div id="a-item-path-2-instance-1_4" class="item-path" enabled="true"></div>
+              <div id="a-item-error-2-instance-1_4" class="item-error">Invalid</div>
+            </div>
+          </div>
+          <div id="a-repeating-enclosing-2-instance-1_5" class="repeating-enclosing">
+            <div class="remove-button-container">
+              <div id="a-remove-button-2-instance-1_5" class="remove-button white small">-</div>
+            </div>
+            <div class="item-number">2</div>
+            <label class="item-label" for="a-item-input-2-instance-1_5">Full name</label>
+            <div class="item-input">
+              <input number="2" name="a-item-input-2-instance-1_5" id="a-item-2-instance-1_5" class=" item-input-text" type="text">
+              </input>
+              <div id="a-item-path-2-instance-1_5" class="item-path" enabled="true"></div>
+              <div id="a-item-error-2-instance-1_5" class="item-error">Invalid</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <!--<input id="submit" class="submit" type="submit"></input>-->
-      <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
-  <div id="pre-submit" class="pre-submit">Submit</div>
-    		<p><div id="submit-comments"></div></p>
+
+  <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="submit" class="submit">Submit</div>
+  <p><div id="submit-comments"></div></p>
+
 </form>
 </div>
 </body>
