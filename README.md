@@ -2,6 +2,8 @@ xsd-forms
 =========
 Xml schemas contain nearly everything we need for many web forms except for presentation information. Instead of seeking full separation of presentation from the data model (the xml schema) there are significant advantages in [annotating the xsd itself](https://github.com/davidmoten/xsd-forms/blob/master/demo-scalaxb/src/main/resources/demo.xsd) according to a [special schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-scalaxb/src/main/xsd/xsd-forms.xsd) to indicate presentation details. For one, refactoring is much easier without specialized IDE tooling that can read both our xsd and our presentation format. 
 
+This project is largely written in Scala with a small amount of java. 
+
 *Status:* pre-alpha. Alpha release planned for December 2013 (excuse delay, very busy on other projects!). UI elements mostly done, a major rewrite was merged to master on 15 Nov 2013 to use an abstract syntax tree and to handle element repetition in a simplistic way. Lots of bits and pieces to chase down but many simple forms will be correctly generated now (try it and see).
 
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
