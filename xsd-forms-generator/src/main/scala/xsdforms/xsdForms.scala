@@ -583,7 +583,7 @@ package xsdforms {
       }
     }
 
-    private def hasButton(e: Element) = e.maxOccurs != "1"
+    private def hasButton(e: Element) = e.maxOccurs != "1" && e.minOccurs.toString != e.maxOccurs
 
     private def doNode(node: NodeSequence, instances: Instances) {
       val e = node.element
@@ -976,7 +976,7 @@ package xsdforms {
       html.div(
         id = Some(id),
         classes = List(ClassRepeatingEnclosing))
-      if (instances.last != 1)
+      if (e.minOccurs.intValue == 0 || instances.last > e.minOccurs.intValue)
         addScript(JS().line("  $('#%s').hide();", id))
     }
 

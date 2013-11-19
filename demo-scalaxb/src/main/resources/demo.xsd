@@ -396,6 +396,7 @@
         <xs:annotation i:legend="Fieldset example" />
       </xs:element>
 
+	  <xs:element name="minoccurs-greater-than-one" type="xs:string" minOccurs="3" maxOccurs="3"/>
 
     </xs:sequence>
   </xs:complexType>
