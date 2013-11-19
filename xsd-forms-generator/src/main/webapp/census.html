@@ -166,6 +166,7 @@ $(function() {
     $('#b-repeating-enclosing-2-instance-1_1').hide();
   });
 
+  $('#b-repeating-enclosing-3-instance-1_1_1').hide();
   $('#b-remove-button-3-instance-1_1_1').click(function() {
     $('#b-repeating-enclosing-3-instance-1_1_1').hide();
   });
@@ -176,9 +177,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-3-instance-1_1_1');
     var pathDiv = $('#b-item-path-3-instance-1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -189,6 +190,7 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-3-instance-1_1_1').attr('enabled','false');
+  $('#b-repeating-enclosing-4-instance-1_1_1').hide();
   $('#b-remove-button-4-instance-1_1_1').click(function() {
     $('#b-repeating-enclosing-4-instance-1_1_1').hide();
   });
@@ -199,9 +201,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-4-instance-1_1_1');
     var pathDiv = $('#b-item-path-4-instance-1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -212,6 +214,7 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-4-instance-1_1_1').attr('enabled','false');
+  $('#b-repeating-enclosing-5-instance-1_1_1').hide();
   $('#b-remove-button-5-instance-1_1_1').click(function() {
     $('#b-repeating-enclosing-5-instance-1_1_1').hide();
   });
@@ -222,9 +225,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-5-instance-1_1_1');
     var pathDiv = $('#b-item-path-5-instance-1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -300,6 +303,7 @@ $(function() {
     showError('b-item-error-8-instance-1_1_1',ok);
   });
   
+  $('#b-repeating-enclosing-9-instance-1_1_1').hide();
   $('#b-remove-button-9-instance-1_1_1').click(function() {
     $('#b-repeating-enclosing-9-instance-1_1_1').hide();
   });
@@ -310,9 +314,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-9-instance-1_1_1');
     var pathDiv = $('#b-item-path-9-instance-1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -555,6 +559,7 @@ $(function() {
     $('#b-repeating-enclosing-21-instance-1_1_1').hide();
   });
 
+  $('#b-repeating-enclosing-22-instance-1_1_1_1').hide();
   $('#b-remove-button-22-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-22-instance-1_1_1_1').hide();
   });
@@ -565,9 +570,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-22-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-22-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -578,6 +583,7 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-22-instance-1_1_1_1').attr('enabled','false');
+  $('#b-repeating-enclosing-23-instance-1_1_1_1').hide();
   $('#b-remove-button-23-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-23-instance-1_1_1_1').hide();
   });
@@ -588,9 +594,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-23-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-23-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -601,6 +607,7 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-23-instance-1_1_1_1').attr('enabled','false');
+  $('#b-repeating-enclosing-24-instance-1_1_1_1').hide();
   $('#b-remove-button-24-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-24-instance-1_1_1_1').hide();
   });
@@ -611,9 +618,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-24-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-24-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -689,6 +696,7 @@ $(function() {
     showError('b-item-error-27-instance-1_1_1_1',ok);
   });
   
+  $('#b-repeating-enclosing-28-instance-1_1_1_1').hide();
   $('#b-remove-button-28-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-28-instance-1_1_1_1').hide();
   });
@@ -699,9 +707,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-28-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-28-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -792,6 +800,7 @@ $(function() {
     $('#b-repeating-enclosing-32-instance-1_1_1').hide();
   });
 
+  $('#b-repeating-enclosing-33-instance-1_1_1_1').hide();
   $('#b-remove-button-33-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-33-instance-1_1_1_1').hide();
   });
@@ -802,9 +811,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-33-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-33-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -815,6 +824,7 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-33-instance-1_1_1_1').attr('enabled','false');
+  $('#b-repeating-enclosing-34-instance-1_1_1_1').hide();
   $('#b-remove-button-34-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-34-instance-1_1_1_1').hide();
   });
@@ -825,9 +835,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-34-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-34-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -838,6 +848,7 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-34-instance-1_1_1_1').attr('enabled','false');
+  $('#b-repeating-enclosing-35-instance-1_1_1_1').hide();
   $('#b-remove-button-35-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-35-instance-1_1_1_1').hide();
   });
@@ -848,9 +859,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-35-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-35-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -926,6 +937,7 @@ $(function() {
     showError('b-item-error-38-instance-1_1_1_1',ok);
   });
   
+  $('#b-repeating-enclosing-39-instance-1_1_1_1').hide();
   $('#b-remove-button-39-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-39-instance-1_1_1_1').hide();
   });
@@ -936,9 +948,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-39-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-39-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -1029,6 +1041,7 @@ $(function() {
     $('#b-repeating-enclosing-43-instance-1_1_1').hide();
   });
 
+  $('#b-repeating-enclosing-44-instance-1_1_1_1').hide();
   $('#b-remove-button-44-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-44-instance-1_1_1_1').hide();
   });
@@ -1039,9 +1052,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-44-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-44-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -1052,6 +1065,7 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-44-instance-1_1_1_1').attr('enabled','false');
+  $('#b-repeating-enclosing-45-instance-1_1_1_1').hide();
   $('#b-remove-button-45-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-45-instance-1_1_1_1').hide();
   });
@@ -1062,9 +1076,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-45-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-45-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -1075,6 +1089,7 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-45-instance-1_1_1_1').attr('enabled','false');
+  $('#b-repeating-enclosing-46-instance-1_1_1_1').hide();
   $('#b-remove-button-46-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-46-instance-1_1_1_1').hide();
   });
@@ -1085,9 +1100,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-46-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-46-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -1163,6 +1178,7 @@ $(function() {
     showError('b-item-error-49-instance-1_1_1_1',ok);
   });
   
+  $('#b-repeating-enclosing-50-instance-1_1_1_1').hide();
   $('#b-remove-button-50-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-50-instance-1_1_1_1').hide();
   });
@@ -1173,9 +1189,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-50-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-50-instance-1_1_1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -1426,8 +1442,11 @@ $(function() {
   function getXml3instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-3-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<apartment-flat-unit-number>' + encodedValueById("b-item-3-instance-1_1_1") + '</apartment-flat-unit-number>';
+  if (idVisible('b-repeating-enclosing-3-instance-1_1_1')) {
+    var v = encodedValueById("b-item-3-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<apartment-flat-unit-number>' + v + '</apartment-flat-unit-number>';
+  }
    return xml;
   }
 
@@ -1435,8 +1454,11 @@ $(function() {
   function getXml4instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-4-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<street-number>' + encodedValueById("b-item-4-instance-1_1_1") + '</street-number>';
+  if (idVisible('b-repeating-enclosing-4-instance-1_1_1')) {
+    var v = encodedValueById("b-item-4-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<street-number>' + v + '</street-number>';
+  }
    return xml;
   }
 
@@ -1444,8 +1466,11 @@ $(function() {
   function getXml5instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-5-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<street-name>' + encodedValueById("b-item-5-instance-1_1_1") + '</street-name>';
+  if (idVisible('b-repeating-enclosing-5-instance-1_1_1')) {
+    var v = encodedValueById("b-item-5-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<street-name>' + v + '</street-name>';
+  }
    return xml;
   }
 
@@ -1453,8 +1478,10 @@ $(function() {
   function getXml6instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-6-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<suburb-locality>' + encodedValueById("b-item-6-instance-1_1_1") + '</suburb-locality>';
+  if (idVisible('b-repeating-enclosing-6-instance-1_1_1')) {
+    var v = encodedValueById("b-item-6-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<suburb-locality>' + v + '</suburb-locality>';
+  }
    return xml;
   }
 
@@ -1462,8 +1489,10 @@ $(function() {
   function getXml7instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-7-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<state>' + encodedValueById("b-item-7-instance-1_1_1") + '</state>';
+  if (idVisible('b-repeating-enclosing-7-instance-1_1_1')) {
+    var v = encodedValueById("b-item-7-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<state>' + v + '</state>';
+  }
    return xml;
   }
 
@@ -1471,8 +1500,10 @@ $(function() {
   function getXml8instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-8-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<postcode>' + encodedValueById("b-item-8-instance-1_1_1") + '</postcode>';
+  if (idVisible('b-repeating-enclosing-8-instance-1_1_1')) {
+    var v = encodedValueById("b-item-8-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<postcode>' + v + '</postcode>';
+  }
    return xml;
   }
 
@@ -1480,8 +1511,11 @@ $(function() {
   function getXml9instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-9-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<property-building-name>' + encodedValueById("b-item-9-instance-1_1_1") + '</property-building-name>';
+  if (idVisible('b-repeating-enclosing-9-instance-1_1_1')) {
+    var v = encodedValueById("b-item-9-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<property-building-name>' + v + '</property-building-name>';
+  }
    return xml;
   }
 
@@ -1507,8 +1541,10 @@ $(function() {
   function getXml11instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-11-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<first-name>' + encodedValueById("b-item-11-instance-1_1_1") + '</first-name>';
+  if (idVisible('b-repeating-enclosing-11-instance-1_1_1')) {
+    var v = encodedValueById("b-item-11-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<first-name>' + v + '</first-name>';
+  }
    return xml;
   }
 
@@ -1516,8 +1552,10 @@ $(function() {
   function getXml12instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-12-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<last-name>' + encodedValueById("b-item-12-instance-1_1_1") + '</last-name>';
+  if (idVisible('b-repeating-enclosing-12-instance-1_1_1')) {
+    var v = encodedValueById("b-item-12-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<last-name>' + v + '</last-name>';
+  }
    return xml;
   }
 
@@ -1538,8 +1576,10 @@ $(function() {
   function getXml13instance1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-13-instance-1_1'))
-    xml += '\n' + spaces(2) + '<gender>' + encodedValueById("b-item-13-instance-1_1") + '</gender>';
+  if (idVisible('b-repeating-enclosing-13-instance-1_1')) {
+    var v = encodedValueById("b-item-13-instance-1_1");
+    xml += '\n' + spaces(2) + '<gender>' + v + '</gender>';
+  }
    return xml;
   }
 
@@ -1547,8 +1587,10 @@ $(function() {
   function getXml15instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-15-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<date-of-birth>' + toXmlDate(encodedValueById("b-item-15-instance-1_1_1")) + '</date-of-birth>';
+  if (idVisible('b-repeating-enclosing-15-instance-1_1_1')) {
+    var v = encodedValueById("b-item-15-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<date-of-birth>' + toXmlDate(v) + '</date-of-birth>';
+  }
    return xml;
   }
 
@@ -1556,8 +1598,10 @@ $(function() {
   function getXml16instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-16-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<age-last-birthday>' + encodedValueById("b-item-16-instance-1_1_1") + '</age-last-birthday>';
+  if (idVisible('b-repeating-enclosing-16-instance-1_1_1')) {
+    var v = encodedValueById("b-item-16-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<age-last-birthday>' + v + '</age-last-birthday>';
+  }
    return xml;
   }
 
@@ -1579,8 +1623,10 @@ $(function() {
   function getXml17instance1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-17-instance-1_1'))
-    xml += '\n' + spaces(2) + '<marital-status>' + encodedValueById("b-item-17-instance-1_1") + '</marital-status>';
+  if (idVisible('b-repeating-enclosing-17-instance-1_1')) {
+    var v = encodedValueById("b-item-17-instance-1_1");
+    xml += '\n' + spaces(2) + '<marital-status>' + v + '</marital-status>';
+  }
    return xml;
   }
 
@@ -1588,8 +1634,10 @@ $(function() {
   function getXml18instance1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-18-instance-1_1'))
-    xml += '\n' + spaces(2) + '<indigenous-origin>' + encodedValueById("b-item-18-instance-1_1") + '</indigenous-origin>';
+  if (idVisible('b-repeating-enclosing-18-instance-1_1')) {
+    var v = encodedValueById("b-item-18-instance-1_1");
+    xml += '\n' + spaces(2) + '<indigenous-origin>' + v + '</indigenous-origin>';
+  }
    return xml;
   }
 
@@ -1597,8 +1645,10 @@ $(function() {
   function getXml20instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-20-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<residential-same-as-dwelling-address>' + toBoolean(encodedValueById("b-item-20-instance-1_1_1")) + '</residential-same-as-dwelling-address>';
+  if (idVisible('b-repeating-enclosing-20-instance-1_1_1')) {
+    var v = encodedValueById("b-item-20-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<residential-same-as-dwelling-address>' + toBoolean(v) + '</residential-same-as-dwelling-address>';
+  }
    return xml;
   }
 
@@ -1606,8 +1656,11 @@ $(function() {
   function getXml22instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-22-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<apartment-flat-unit-number>' + encodedValueById("b-item-22-instance-1_1_1_1") + '</apartment-flat-unit-number>';
+  if (idVisible('b-repeating-enclosing-22-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-22-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<apartment-flat-unit-number>' + v + '</apartment-flat-unit-number>';
+  }
    return xml;
   }
 
@@ -1615,8 +1668,11 @@ $(function() {
   function getXml23instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-23-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<street-number>' + encodedValueById("b-item-23-instance-1_1_1_1") + '</street-number>';
+  if (idVisible('b-repeating-enclosing-23-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-23-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-number>' + v + '</street-number>';
+  }
    return xml;
   }
 
@@ -1624,8 +1680,11 @@ $(function() {
   function getXml24instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-24-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<street-name>' + encodedValueById("b-item-24-instance-1_1_1_1") + '</street-name>';
+  if (idVisible('b-repeating-enclosing-24-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-24-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-name>' + v + '</street-name>';
+  }
    return xml;
   }
 
@@ -1633,8 +1692,10 @@ $(function() {
   function getXml25instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-25-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<suburb-locality>' + encodedValueById("b-item-25-instance-1_1_1_1") + '</suburb-locality>';
+  if (idVisible('b-repeating-enclosing-25-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-25-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<suburb-locality>' + v + '</suburb-locality>';
+  }
    return xml;
   }
 
@@ -1642,8 +1703,10 @@ $(function() {
   function getXml26instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-26-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<state>' + encodedValueById("b-item-26-instance-1_1_1_1") + '</state>';
+  if (idVisible('b-repeating-enclosing-26-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-26-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<state>' + v + '</state>';
+  }
    return xml;
   }
 
@@ -1651,8 +1714,10 @@ $(function() {
   function getXml27instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-27-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<postcode>' + encodedValueById("b-item-27-instance-1_1_1_1") + '</postcode>';
+  if (idVisible('b-repeating-enclosing-27-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-27-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<postcode>' + v + '</postcode>';
+  }
    return xml;
   }
 
@@ -1660,8 +1725,11 @@ $(function() {
   function getXml28instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-28-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<property-building-name>' + encodedValueById("b-item-28-instance-1_1_1_1") + '</property-building-name>';
+  if (idVisible('b-repeating-enclosing-28-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-28-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<property-building-name>' + v + '</property-building-name>';
+  }
    return xml;
   }
 
@@ -1687,8 +1755,10 @@ $(function() {
   function getXml29instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-29-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<other-country>' + toBoolean(encodedValueById("b-item-29-instance-1_1_1")) + '</other-country>';
+  if (idVisible('b-repeating-enclosing-29-instance-1_1_1')) {
+    var v = encodedValueById("b-item-29-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<other-country>' + toBoolean(v) + '</other-country>';
+  }
    return xml;
   }
 
@@ -1712,8 +1782,10 @@ $(function() {
   function getXml31instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-31-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<residential-same-as-current>' + toBoolean(encodedValueById("b-item-31-instance-1_1_1")) + '</residential-same-as-current>';
+  if (idVisible('b-repeating-enclosing-31-instance-1_1_1')) {
+    var v = encodedValueById("b-item-31-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<residential-same-as-current>' + toBoolean(v) + '</residential-same-as-current>';
+  }
    return xml;
   }
 
@@ -1721,8 +1793,11 @@ $(function() {
   function getXml33instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-33-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<apartment-flat-unit-number>' + encodedValueById("b-item-33-instance-1_1_1_1") + '</apartment-flat-unit-number>';
+  if (idVisible('b-repeating-enclosing-33-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-33-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<apartment-flat-unit-number>' + v + '</apartment-flat-unit-number>';
+  }
    return xml;
   }
 
@@ -1730,8 +1805,11 @@ $(function() {
   function getXml34instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-34-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<street-number>' + encodedValueById("b-item-34-instance-1_1_1_1") + '</street-number>';
+  if (idVisible('b-repeating-enclosing-34-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-34-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-number>' + v + '</street-number>';
+  }
    return xml;
   }
 
@@ -1739,8 +1817,11 @@ $(function() {
   function getXml35instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-35-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<street-name>' + encodedValueById("b-item-35-instance-1_1_1_1") + '</street-name>';
+  if (idVisible('b-repeating-enclosing-35-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-35-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-name>' + v + '</street-name>';
+  }
    return xml;
   }
 
@@ -1748,8 +1829,10 @@ $(function() {
   function getXml36instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-36-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<suburb-locality>' + encodedValueById("b-item-36-instance-1_1_1_1") + '</suburb-locality>';
+  if (idVisible('b-repeating-enclosing-36-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-36-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<suburb-locality>' + v + '</suburb-locality>';
+  }
    return xml;
   }
 
@@ -1757,8 +1840,10 @@ $(function() {
   function getXml37instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-37-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<state>' + encodedValueById("b-item-37-instance-1_1_1_1") + '</state>';
+  if (idVisible('b-repeating-enclosing-37-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-37-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<state>' + v + '</state>';
+  }
    return xml;
   }
 
@@ -1766,8 +1851,10 @@ $(function() {
   function getXml38instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-38-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<postcode>' + encodedValueById("b-item-38-instance-1_1_1_1") + '</postcode>';
+  if (idVisible('b-repeating-enclosing-38-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-38-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<postcode>' + v + '</postcode>';
+  }
    return xml;
   }
 
@@ -1775,8 +1862,11 @@ $(function() {
   function getXml39instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-39-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<property-building-name>' + encodedValueById("b-item-39-instance-1_1_1_1") + '</property-building-name>';
+  if (idVisible('b-repeating-enclosing-39-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-39-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<property-building-name>' + v + '</property-building-name>';
+  }
    return xml;
   }
 
@@ -1802,8 +1892,10 @@ $(function() {
   function getXml40instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-40-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<other-country>' + toBoolean(encodedValueById("b-item-40-instance-1_1_1")) + '</other-country>';
+  if (idVisible('b-repeating-enclosing-40-instance-1_1_1')) {
+    var v = encodedValueById("b-item-40-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<other-country>' + toBoolean(v) + '</other-country>';
+  }
    return xml;
   }
 
@@ -1827,8 +1919,10 @@ $(function() {
   function getXml42instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-42-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<residential-same-as-current>' + toBoolean(encodedValueById("b-item-42-instance-1_1_1")) + '</residential-same-as-current>';
+  if (idVisible('b-repeating-enclosing-42-instance-1_1_1')) {
+    var v = encodedValueById("b-item-42-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<residential-same-as-current>' + toBoolean(v) + '</residential-same-as-current>';
+  }
    return xml;
   }
 
@@ -1836,8 +1930,11 @@ $(function() {
   function getXml44instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-44-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<apartment-flat-unit-number>' + encodedValueById("b-item-44-instance-1_1_1_1") + '</apartment-flat-unit-number>';
+  if (idVisible('b-repeating-enclosing-44-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-44-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<apartment-flat-unit-number>' + v + '</apartment-flat-unit-number>';
+  }
    return xml;
   }
 
@@ -1845,8 +1942,11 @@ $(function() {
   function getXml45instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-45-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<street-number>' + encodedValueById("b-item-45-instance-1_1_1_1") + '</street-number>';
+  if (idVisible('b-repeating-enclosing-45-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-45-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-number>' + v + '</street-number>';
+  }
    return xml;
   }
 
@@ -1854,8 +1954,11 @@ $(function() {
   function getXml46instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-46-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<street-name>' + encodedValueById("b-item-46-instance-1_1_1_1") + '</street-name>';
+  if (idVisible('b-repeating-enclosing-46-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-46-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-name>' + v + '</street-name>';
+  }
    return xml;
   }
 
@@ -1863,8 +1966,10 @@ $(function() {
   function getXml47instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-47-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<suburb-locality>' + encodedValueById("b-item-47-instance-1_1_1_1") + '</suburb-locality>';
+  if (idVisible('b-repeating-enclosing-47-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-47-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<suburb-locality>' + v + '</suburb-locality>';
+  }
    return xml;
   }
 
@@ -1872,8 +1977,10 @@ $(function() {
   function getXml48instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-48-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<state>' + encodedValueById("b-item-48-instance-1_1_1_1") + '</state>';
+  if (idVisible('b-repeating-enclosing-48-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-48-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<state>' + v + '</state>';
+  }
    return xml;
   }
 
@@ -1881,8 +1988,10 @@ $(function() {
   function getXml49instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-49-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<postcode>' + encodedValueById("b-item-49-instance-1_1_1_1") + '</postcode>';
+  if (idVisible('b-repeating-enclosing-49-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-49-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<postcode>' + v + '</postcode>';
+  }
    return xml;
   }
 
@@ -1890,8 +1999,11 @@ $(function() {
   function getXml50instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-50-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<property-building-name>' + encodedValueById("b-item-50-instance-1_1_1_1") + '</property-building-name>';
+  if (idVisible('b-repeating-enclosing-50-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-50-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<property-building-name>' + v + '</property-building-name>';
+  }
    return xml;
   }
 
@@ -1917,8 +2029,10 @@ $(function() {
   function getXml51instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-51-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<other-country>' + toBoolean(encodedValueById("b-item-51-instance-1_1_1")) + '</other-country>';
+  if (idVisible('b-repeating-enclosing-51-instance-1_1_1')) {
+    var v = encodedValueById("b-item-51-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<other-country>' + toBoolean(v) + '</other-country>';
+  }
    return xml;
   }
 
@@ -1942,8 +2056,10 @@ $(function() {
   function getXml52instance1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-52-instance-1_1'))
-    xml += '\n' + spaces(2) + '<citizen>' + toBoolean(encodedValueById("b-item-52-instance-1_1")) + '</citizen>';
+  if (idVisible('b-repeating-enclosing-52-instance-1_1')) {
+    var v = encodedValueById("b-item-52-instance-1_1");
+    xml += '\n' + spaces(2) + '<citizen>' + toBoolean(v) + '</citizen>';
+  }
    return xml;
   }
 
@@ -1951,8 +2067,10 @@ $(function() {
   function getXml54instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-54-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<australia>' + toBoolean(encodedValueById("b-item-54-instance-1_1_1")) + '</australia>';
+  if (idVisible('b-repeating-enclosing-54-instance-1_1_1')) {
+    var v = encodedValueById("b-item-54-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<australia>' + toBoolean(v) + '</australia>';
+  }
    return xml;
   }
 
@@ -1960,8 +2078,10 @@ $(function() {
   function getXml56instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-56-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<country>' + encodedValueById("b-item-56-instance-1_1_1_1") + '</country>';
+  if (idVisible('b-repeating-enclosing-56-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-56-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<country>' + v + '</country>';
+  }
    return xml;
   }
 
@@ -1969,8 +2089,10 @@ $(function() {
   function getXml57instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-57-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<other-country>' + encodedValueById("b-item-57-instance-1_1_1_1") + '</other-country>';
+  if (idVisible('b-repeating-enclosing-57-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-57-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<other-country>' + v + '</other-country>';
+  }
    return xml;
   }
 
@@ -1978,8 +2100,10 @@ $(function() {
   function getXml58instance1_1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-58-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<year-of-arrival>' + encodedValueById("b-item-58-instance-1_1_1_1") + '</year-of-arrival>';
+  if (idVisible('b-repeating-enclosing-58-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-58-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<year-of-arrival>' + v + '</year-of-arrival>';
+  }
    return xml;
   }
 
@@ -2015,8 +2139,10 @@ $(function() {
   function getXml59instance1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-59-instance-1_1'))
-    xml += '\n' + spaces(2) + '<father-place-of-birth>' + encodedValueById("b-item-59-instance-1_1") + '</father-place-of-birth>';
+  if (idVisible('b-repeating-enclosing-59-instance-1_1')) {
+    var v = encodedValueById("b-item-59-instance-1_1");
+    xml += '\n' + spaces(2) + '<father-place-of-birth>' + v + '</father-place-of-birth>';
+  }
    return xml;
   }
 
@@ -2024,8 +2150,10 @@ $(function() {
   function getXml60instance1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-60-instance-1_1'))
-    xml += '\n' + spaces(2) + '<mother-place-of-birth>' + encodedValueById("b-item-60-instance-1_1") + '</mother-place-of-birth>';
+  if (idVisible('b-repeating-enclosing-60-instance-1_1')) {
+    var v = encodedValueById("b-item-60-instance-1_1");
+    xml += '\n' + spaces(2) + '<mother-place-of-birth>' + v + '</mother-place-of-birth>';
+  }
    return xml;
   }
 
@@ -2033,8 +2161,10 @@ $(function() {
   function getXml62instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-62-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<language-at-home>' + encodedValueById("b-item-62-instance-1_1_1") + '</language-at-home>';
+  if (idVisible('b-repeating-enclosing-62-instance-1_1_1')) {
+    var v = encodedValueById("b-item-62-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<language-at-home>' + v + '</language-at-home>';
+  }
    return xml;
   }
 
@@ -2042,8 +2172,10 @@ $(function() {
   function getXml63instance1_1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-63-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<language-at-home-other>' + encodedValueById("b-item-63-instance-1_1_1") + '</language-at-home-other>';
+  if (idVisible('b-repeating-enclosing-63-instance-1_1_1')) {
+    var v = encodedValueById("b-item-63-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<language-at-home-other>' + v + '</language-at-home-other>';
+  }
    return xml;
   }
 

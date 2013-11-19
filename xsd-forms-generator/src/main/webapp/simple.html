@@ -275,16 +275,26 @@ $(function() {
   function getXml2instance1() {
 
   var xml='';
-  if (idVisible('a-repeating-enclosing-2-instance-1_1'))
-    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_1") + '</name>';
-  if (idVisible('a-repeating-enclosing-2-instance-1_2'))
-    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_2") + '</name>';
-  if (idVisible('a-repeating-enclosing-2-instance-1_3'))
-    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_3") + '</name>';
-  if (idVisible('a-repeating-enclosing-2-instance-1_4'))
-    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_4") + '</name>';
-  if (idVisible('a-repeating-enclosing-2-instance-1_5'))
-    xml += '\n' + spaces(2) + '<name>' + encodedValueById("a-item-2-instance-1_5") + '</name>';
+  if (idVisible('a-repeating-enclosing-2-instance-1_1')) {
+    var v = encodedValueById("a-item-2-instance-1_1");
+    xml += '\n' + spaces(2) + '<name>' + v + '</name>';
+  }
+  if (idVisible('a-repeating-enclosing-2-instance-1_2')) {
+    var v = encodedValueById("a-item-2-instance-1_2");
+    xml += '\n' + spaces(2) + '<name>' + v + '</name>';
+  }
+  if (idVisible('a-repeating-enclosing-2-instance-1_3')) {
+    var v = encodedValueById("a-item-2-instance-1_3");
+    xml += '\n' + spaces(2) + '<name>' + v + '</name>';
+  }
+  if (idVisible('a-repeating-enclosing-2-instance-1_4')) {
+    var v = encodedValueById("a-item-2-instance-1_4");
+    xml += '\n' + spaces(2) + '<name>' + v + '</name>';
+  }
+  if (idVisible('a-repeating-enclosing-2-instance-1_5')) {
+    var v = encodedValueById("a-item-2-instance-1_5");
+    xml += '\n' + spaces(2) + '<name>' + v + '</name>';
+  }
    return xml;
   }
 

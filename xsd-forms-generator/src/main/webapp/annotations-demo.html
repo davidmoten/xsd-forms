@@ -226,10 +226,14 @@ $(function() {
   function getXml2instance1() {
 
   var xml='';
-  if (idVisible('b-repeating-enclosing-2-instance-1_1'))
-    xml += '\n' + spaces(2) + '<name>' + encodedValueById("b-item-2-instance-1_1") + '</name>';
-  if (idVisible('b-repeating-enclosing-2-instance-1_2'))
-    xml += '\n' + spaces(2) + '<name>' + encodedValueById("b-item-2-instance-1_2") + '</name>';
+  if (idVisible('b-repeating-enclosing-2-instance-1_1')) {
+    var v = encodedValueById("b-item-2-instance-1_1");
+    xml += '\n' + spaces(2) + '<name>' + v + '</name>';
+  }
+  if (idVisible('b-repeating-enclosing-2-instance-1_2')) {
+    var v = encodedValueById("b-item-2-instance-1_2");
+    xml += '\n' + spaces(2) + '<name>' + v + '</name>';
+  }
    return xml;
   }
 

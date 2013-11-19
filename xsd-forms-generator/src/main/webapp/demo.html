@@ -1292,6 +1292,7 @@ $(function() {
       { elem.show(); return; }
   })
 
+  $('#c-repeating-enclosing-53-instance-1_1').hide();
   $('#c-remove-button-53-instance-1_1').click(function() {
     $('#c-repeating-enclosing-53-instance-1_1').hide();
   });
@@ -1302,9 +1303,9 @@ $(function() {
     var v = $('#c-item-53-instance-1_1');
     var pathDiv = $('#c-item-path-53-instance-1_1');
     ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -1326,9 +1327,9 @@ $(function() {
     var v = $('#c-item-53-instance-1_2');
     var pathDiv = $('#c-item-path-53-instance-1_2');
     ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -1350,9 +1351,9 @@ $(function() {
     var v = $('#c-item-53-instance-1_3');
     var pathDiv = $('#c-item-path-53-instance-1_3');
     ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -1374,9 +1375,9 @@ $(function() {
     var v = $('#c-item-53-instance-1_4');
     var pathDiv = $('#c-item-path-53-instance-1_4');
     ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -1398,9 +1399,9 @@ $(function() {
     var v = $('#c-item-53-instance-1_5');
     var pathDiv = $('#c-item-path-53-instance-1_5');
     ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -2307,6 +2308,7 @@ $(function() {
       { elem.show(); return; }
   })
 
+  $('#c-repeating-enclosing-64-instance-1_1').hide();
   $('#c-remove-button-64-instance-1_1').click(function() {
     $('#c-repeating-enclosing-64-instance-1_1').hide();
   });
@@ -2316,9 +2318,9 @@ $(function() {
     var ok = true;
     var v = $('#c-item-64-instance-1_1');
     var pathDiv = $('#c-item-path-64-instance-1_1');
-    // minOccurs=0, disable if blank
-    var includeInXml  = !((v.val() == null) || (v.val().length==0));
-    pathDiv.attr('enabled','' + includeInXml);
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
     return ok;
   }
   
@@ -3064,12 +3066,79 @@ $(function() {
     showError('c-item-error-87-instance-1_1_1',ok);
   });
   
+  $('#c-remove-button-88-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-88-instance-1_1').hide();
+  });
+
+  // minoccurs-greater-than-one
+  var validate88instance1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-88-instance-1_1');
+    var pathDiv = $('#c-item-path-88-instance-1_1');
+    return ok;
+  }
+  
+  $('#c-item-88-instance-1_1').change( function() {
+    var ok = validate88instance1_1();
+    showError('c-item-error-88-instance-1_1',ok);
+  });
+  
+  $('#c-remove-button-88-instance-1_2').click(function() {
+    $('#c-repeating-enclosing-88-instance-1_2').hide();
+  });
+
+  // minoccurs-greater-than-one
+  var validate88instance1_2 = function () {
+    var ok = true;
+    var v = $('#c-item-88-instance-1_2');
+    var pathDiv = $('#c-item-path-88-instance-1_2');
+    return ok;
+  }
+  
+  $('#c-item-88-instance-1_2').change( function() {
+    var ok = validate88instance1_2();
+    showError('c-item-error-88-instance-1_2',ok);
+  });
+  
+  $('#c-remove-button-88-instance-1_3').click(function() {
+    $('#c-repeating-enclosing-88-instance-1_3').hide();
+  });
+
+  // minoccurs-greater-than-one
+  var validate88instance1_3 = function () {
+    var ok = true;
+    var v = $('#c-item-88-instance-1_3');
+    var pathDiv = $('#c-item-path-88-instance-1_3');
+    return ok;
+  }
+  
+  $('#c-item-88-instance-1_3').change( function() {
+    var ok = validate88instance1_3();
+    showError('c-item-error-88-instance-1_3',ok);
+  });
+  
+  $('#c-repeat-button-88-instance-1').click( function() {
+    // loop through all repeats until find first nonInvisible repeat and make it visible
+    var elem;
+    elem = $('#c-repeating-enclosing-88-instance-1_1');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#c-repeating-enclosing-88-instance-1_2');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#c-repeating-enclosing-88-instance-1_3');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+  })
+
   //extract xml from element <text-element>
   function getXml2instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-2-instance-1_1'))
-    xml += '\n' + spaces(2) + '<text-element>' + encodedValueById("c-item-2-instance-1_1") + '</text-element>';
+  if (idVisible('c-repeating-enclosing-2-instance-1_1')) {
+    var v = encodedValueById("c-item-2-instance-1_1");
+    xml += '\n' + spaces(2) + '<text-element>' + v + '</text-element>';
+  }
    return xml;
   }
 
@@ -3077,8 +3146,10 @@ $(function() {
   function getXml3instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-3-instance-1_1'))
-    xml += '\n' + spaces(2) + '<text-element-with-default>' + encodedValueById("c-item-3-instance-1_1") + '</text-element-with-default>';
+  if (idVisible('c-repeating-enclosing-3-instance-1_1')) {
+    var v = encodedValueById("c-item-3-instance-1_1");
+    xml += '\n' + spaces(2) + '<text-element-with-default>' + v + '</text-element-with-default>';
+  }
    return xml;
   }
 
@@ -3086,8 +3157,10 @@ $(function() {
   function getXml4instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-4-instance-1_1'))
-    xml += '\n' + spaces(2) + '<long-text>' + encodedValueById("c-item-4-instance-1_1") + '</long-text>';
+  if (idVisible('c-repeating-enclosing-4-instance-1_1')) {
+    var v = encodedValueById("c-item-4-instance-1_1");
+    xml += '\n' + spaces(2) + '<long-text>' + v + '</long-text>';
+  }
    return xml;
   }
 
@@ -3095,8 +3168,10 @@ $(function() {
   function getXml5instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-5-instance-1_1'))
-    xml += '\n' + spaces(2) + '<long-text-with-default>' + encodedValueById("c-item-5-instance-1_1") + '</long-text-with-default>';
+  if (idVisible('c-repeating-enclosing-5-instance-1_1')) {
+    var v = encodedValueById("c-item-5-instance-1_1");
+    xml += '\n' + spaces(2) + '<long-text-with-default>' + v + '</long-text-with-default>';
+  }
    return xml;
   }
 
@@ -3104,8 +3179,10 @@ $(function() {
   function getXml6instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-6-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-element>' + encodedValueById("c-item-6-instance-1_1") + '</decimal-element>';
+  if (idVisible('c-repeating-enclosing-6-instance-1_1')) {
+    var v = encodedValueById("c-item-6-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-element>' + v + '</decimal-element>';
+  }
    return xml;
   }
 
@@ -3113,8 +3190,10 @@ $(function() {
   function getXml7instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-7-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-element-with-default>' + encodedValueById("c-item-7-instance-1_1") + '</decimal-element-with-default>';
+  if (idVisible('c-repeating-enclosing-7-instance-1_1')) {
+    var v = encodedValueById("c-item-7-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-element-with-default>' + v + '</decimal-element-with-default>';
+  }
    return xml;
   }
 
@@ -3122,8 +3201,10 @@ $(function() {
   function getXml8instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-8-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-element>' + encodedValueById("c-item-8-instance-1_1") + '</integer-element>';
+  if (idVisible('c-repeating-enclosing-8-instance-1_1')) {
+    var v = encodedValueById("c-item-8-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-element>' + v + '</integer-element>';
+  }
    return xml;
   }
 
@@ -3131,8 +3212,10 @@ $(function() {
   function getXml9instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-9-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-element-with-default>' + encodedValueById("c-item-9-instance-1_1") + '</integer-element-with-default>';
+  if (idVisible('c-repeating-enclosing-9-instance-1_1')) {
+    var v = encodedValueById("c-item-9-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-element-with-default>' + v + '</integer-element-with-default>';
+  }
    return xml;
   }
 
@@ -3140,8 +3223,10 @@ $(function() {
   function getXml10instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-10-instance-1_1'))
-    xml += '\n' + spaces(2) + '<date-element>' + toXmlDate(encodedValueById("c-item-10-instance-1_1")) + '</date-element>';
+  if (idVisible('c-repeating-enclosing-10-instance-1_1')) {
+    var v = encodedValueById("c-item-10-instance-1_1");
+    xml += '\n' + spaces(2) + '<date-element>' + toXmlDate(v) + '</date-element>';
+  }
    return xml;
   }
 
@@ -3149,8 +3234,10 @@ $(function() {
   function getXml11instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-11-instance-1_1'))
-    xml += '\n' + spaces(2) + '<date-element-with-default2>' + toXmlDate(encodedValueById("c-item-11-instance-1_1")) + '</date-element-with-default2>';
+  if (idVisible('c-repeating-enclosing-11-instance-1_1')) {
+    var v = encodedValueById("c-item-11-instance-1_1");
+    xml += '\n' + spaces(2) + '<date-element-with-default2>' + toXmlDate(v) + '</date-element-with-default2>';
+  }
    return xml;
   }
 
@@ -3158,8 +3245,10 @@ $(function() {
   function getXml12instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-12-instance-1_1'))
-    xml += '\n' + spaces(2) + '<time-element>' + toXmlTime(encodedValueById("c-item-12-instance-1_1")) + '</time-element>';
+  if (idVisible('c-repeating-enclosing-12-instance-1_1')) {
+    var v = encodedValueById("c-item-12-instance-1_1");
+    xml += '\n' + spaces(2) + '<time-element>' + toXmlTime(v) + '</time-element>';
+  }
    return xml;
   }
 
@@ -3167,8 +3256,10 @@ $(function() {
   function getXml13instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-13-instance-1_1'))
-    xml += '\n' + spaces(2) + '<time-element-with-default>' + toXmlTime(encodedValueById("c-item-13-instance-1_1")) + '</time-element-with-default>';
+  if (idVisible('c-repeating-enclosing-13-instance-1_1')) {
+    var v = encodedValueById("c-item-13-instance-1_1");
+    xml += '\n' + spaces(2) + '<time-element-with-default>' + toXmlTime(v) + '</time-element-with-default>';
+  }
    return xml;
   }
 
@@ -3176,8 +3267,10 @@ $(function() {
   function getXml14instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-14-instance-1_1'))
-    xml += '\n' + spaces(2) + '<datetime-element>' + toXmlDateTime(encodedValueById("c-item-14-instance-1_1")) + '</datetime-element>';
+  if (idVisible('c-repeating-enclosing-14-instance-1_1')) {
+    var v = encodedValueById("c-item-14-instance-1_1");
+    xml += '\n' + spaces(2) + '<datetime-element>' + toXmlDateTime(v) + '</datetime-element>';
+  }
    return xml;
   }
 
@@ -3185,8 +3278,10 @@ $(function() {
   function getXml15instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-15-instance-1_1'))
-    xml += '\n' + spaces(2) + '<datetime-element-with-default>' + toXmlDateTime(encodedValueById("c-item-15-instance-1_1")) + '</datetime-element-with-default>';
+  if (idVisible('c-repeating-enclosing-15-instance-1_1')) {
+    var v = encodedValueById("c-item-15-instance-1_1");
+    xml += '\n' + spaces(2) + '<datetime-element-with-default>' + toXmlDateTime(v) + '</datetime-element-with-default>';
+  }
    return xml;
   }
 
@@ -3194,8 +3289,10 @@ $(function() {
   function getXml16instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-16-instance-1_1'))
-    xml += '\n' + spaces(2) + '<boolean-element>' + toBoolean(encodedValueById("c-item-16-instance-1_1")) + '</boolean-element>';
+  if (idVisible('c-repeating-enclosing-16-instance-1_1')) {
+    var v = encodedValueById("c-item-16-instance-1_1");
+    xml += '\n' + spaces(2) + '<boolean-element>' + toBoolean(v) + '</boolean-element>';
+  }
    return xml;
   }
 
@@ -3203,8 +3300,10 @@ $(function() {
   function getXml17instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-17-instance-1_1'))
-    xml += '\n' + spaces(2) + '<boolean-element-with-default>' + toBoolean(encodedValueById("c-item-17-instance-1_1")) + '</boolean-element-with-default>';
+  if (idVisible('c-repeating-enclosing-17-instance-1_1')) {
+    var v = encodedValueById("c-item-17-instance-1_1");
+    xml += '\n' + spaces(2) + '<boolean-element-with-default>' + toBoolean(v) + '</boolean-element-with-default>';
+  }
    return xml;
   }
 
@@ -3212,8 +3311,10 @@ $(function() {
   function getXml18instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-18-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-enumeration>' + encodedValueById("c-item-18-instance-1_1") + '</string-enumeration>';
+  if (idVisible('c-repeating-enclosing-18-instance-1_1')) {
+    var v = encodedValueById("c-item-18-instance-1_1");
+    xml += '\n' + spaces(2) + '<string-enumeration>' + v + '</string-enumeration>';
+  }
    return xml;
   }
 
@@ -3221,8 +3322,10 @@ $(function() {
   function getXml19instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-19-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-enumeration-unselected>' + encodedValueById("c-item-19-instance-1_1") + '</string-enumeration-unselected>';
+  if (idVisible('c-repeating-enclosing-19-instance-1_1')) {
+    var v = encodedValueById("c-item-19-instance-1_1");
+    xml += '\n' + spaces(2) + '<string-enumeration-unselected>' + v + '</string-enumeration-unselected>';
+  }
    return xml;
   }
 
@@ -3230,8 +3333,10 @@ $(function() {
   function getXml20instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-20-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-enumeration-with-labels>' + encodedValueById("c-item-20-instance-1_1") + '</string-enumeration-with-labels>';
+  if (idVisible('c-repeating-enclosing-20-instance-1_1')) {
+    var v = encodedValueById("c-item-20-instance-1_1");
+    xml += '\n' + spaces(2) + '<string-enumeration-with-labels>' + v + '</string-enumeration-with-labels>';
+  }
    return xml;
   }
 
@@ -3239,8 +3344,10 @@ $(function() {
   function getXml21instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-21-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-enumeration>' + encodedValueById("c-item-21-instance-1_1") + '</decimal-enumeration>';
+  if (idVisible('c-repeating-enclosing-21-instance-1_1')) {
+    var v = encodedValueById("c-item-21-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-enumeration>' + v + '</decimal-enumeration>';
+  }
    return xml;
   }
 
@@ -3248,8 +3355,10 @@ $(function() {
   function getXml22instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-22-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-enumeration>' + encodedValueById("c-item-22-instance-1_1") + '</integer-enumeration>';
+  if (idVisible('c-repeating-enclosing-22-instance-1_1')) {
+    var v = encodedValueById("c-item-22-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-enumeration>' + v + '</integer-enumeration>';
+  }
    return xml;
   }
 
@@ -3257,8 +3366,10 @@ $(function() {
   function getXml23instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-23-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-enumeration-radio>' + encodeHTML($('input[name=c-item-input-23-instance-1_1]:radio:checked').val()) + '</string-enumeration-radio>';
+  if (idVisible('c-repeating-enclosing-23-instance-1_1')) {
+    var v = encodeHTML($('input[name=c-item-input-23-instance-1_1]:radio:checked').val());
+    xml += '\n' + spaces(2) + '<string-enumeration-radio>' + v + '</string-enumeration-radio>';
+  }
    return xml;
   }
 
@@ -3266,8 +3377,10 @@ $(function() {
   function getXml24instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-24-instance-1_1'))
-    xml += '\n' + spaces(2) + '<make-visible-example>' + encodedValueById("c-item-24-instance-1_1") + '</make-visible-example>';
+  if (idVisible('c-repeating-enclosing-24-instance-1_1')) {
+    var v = encodedValueById("c-item-24-instance-1_1");
+    xml += '\n' + spaces(2) + '<make-visible-example>' + v + '</make-visible-example>';
+  }
    return xml;
   }
 
@@ -3275,8 +3388,10 @@ $(function() {
   function getXml25instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-25-instance-1_1'))
-    xml += '\n' + spaces(2) + '<further-details-for-option-b>' + encodedValueById("c-item-25-instance-1_1") + '</further-details-for-option-b>';
+  if (idVisible('c-repeating-enclosing-25-instance-1_1')) {
+    var v = encodedValueById("c-item-25-instance-1_1");
+    xml += '\n' + spaces(2) + '<further-details-for-option-b>' + v + '</further-details-for-option-b>';
+  }
    return xml;
   }
 
@@ -3284,8 +3399,10 @@ $(function() {
   function getXml26instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-26-instance-1_1'))
-    xml += '\n' + spaces(2) + '<label-override>' + encodedValueById("c-item-26-instance-1_1") + '</label-override>';
+  if (idVisible('c-repeating-enclosing-26-instance-1_1')) {
+    var v = encodedValueById("c-item-26-instance-1_1");
+    xml += '\n' + spaces(2) + '<label-override>' + v + '</label-override>';
+  }
    return xml;
   }
 
@@ -3293,8 +3410,10 @@ $(function() {
   function getXml27instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-27-instance-1_1'))
-    xml += '\n' + spaces(2) + '<with-all>' + encodedValueById("c-item-27-instance-1_1") + '</with-all>';
+  if (idVisible('c-repeating-enclosing-27-instance-1_1')) {
+    var v = encodedValueById("c-item-27-instance-1_1");
+    xml += '\n' + spaces(2) + '<with-all>' + v + '</with-all>';
+  }
    return xml;
   }
 
@@ -3302,8 +3421,10 @@ $(function() {
   function getXml28instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-28-instance-1_1'))
-    xml += '\n' + spaces(2) + '<css-override>' + encodedValueById("c-item-28-instance-1_1") + '</css-override>';
+  if (idVisible('c-repeating-enclosing-28-instance-1_1')) {
+    var v = encodedValueById("c-item-28-instance-1_1");
+    xml += '\n' + spaces(2) + '<css-override>' + v + '</css-override>';
+  }
    return xml;
   }
 
@@ -3311,8 +3432,10 @@ $(function() {
   function getXml29instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-29-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-pattern>' + encodedValueById("c-item-29-instance-1_1") + '</string-pattern>';
+  if (idVisible('c-repeating-enclosing-29-instance-1_1')) {
+    var v = encodedValueById("c-item-29-instance-1_1");
+    xml += '\n' + spaces(2) + '<string-pattern>' + v + '</string-pattern>';
+  }
    return xml;
   }
 
@@ -3320,8 +3443,10 @@ $(function() {
   function getXml30instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-30-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-pattern-validation-msg>' + encodedValueById("c-item-30-instance-1_1") + '</string-pattern-validation-msg>';
+  if (idVisible('c-repeating-enclosing-30-instance-1_1')) {
+    var v = encodedValueById("c-item-30-instance-1_1");
+    xml += '\n' + spaces(2) + '<string-pattern-validation-msg>' + v + '</string-pattern-validation-msg>';
+  }
    return xml;
   }
 
@@ -3329,8 +3454,10 @@ $(function() {
   function getXml31instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-31-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-multiple-pattern>' + encodedValueById("c-item-31-instance-1_1") + '</string-multiple-pattern>';
+  if (idVisible('c-repeating-enclosing-31-instance-1_1')) {
+    var v = encodedValueById("c-item-31-instance-1_1");
+    xml += '\n' + spaces(2) + '<string-multiple-pattern>' + v + '</string-multiple-pattern>';
+  }
    return xml;
   }
 
@@ -3338,8 +3465,10 @@ $(function() {
   function getXml32instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-32-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-min-length-validation>' + encodedValueById("c-item-32-instance-1_1") + '</string-min-length-validation>';
+  if (idVisible('c-repeating-enclosing-32-instance-1_1')) {
+    var v = encodedValueById("c-item-32-instance-1_1");
+    xml += '\n' + spaces(2) + '<string-min-length-validation>' + v + '</string-min-length-validation>';
+  }
    return xml;
   }
 
@@ -3347,8 +3476,10 @@ $(function() {
   function getXml33instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-33-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-min-length-validation>' + encodedValueById("c-item-33-instance-1_1") + '</integer-min-length-validation>';
+  if (idVisible('c-repeating-enclosing-33-instance-1_1')) {
+    var v = encodedValueById("c-item-33-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-min-length-validation>' + v + '</integer-min-length-validation>';
+  }
    return xml;
   }
 
@@ -3356,8 +3487,10 @@ $(function() {
   function getXml34instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-34-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-min-length-validation>' + encodedValueById("c-item-34-instance-1_1") + '</decimal-min-length-validation>';
+  if (idVisible('c-repeating-enclosing-34-instance-1_1')) {
+    var v = encodedValueById("c-item-34-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-min-length-validation>' + v + '</decimal-min-length-validation>';
+  }
    return xml;
   }
 
@@ -3365,8 +3498,10 @@ $(function() {
   function getXml35instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-35-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-max-length-validation>' + encodedValueById("c-item-35-instance-1_1") + '</string-max-length-validation>';
+  if (idVisible('c-repeating-enclosing-35-instance-1_1')) {
+    var v = encodedValueById("c-item-35-instance-1_1");
+    xml += '\n' + spaces(2) + '<string-max-length-validation>' + v + '</string-max-length-validation>';
+  }
    return xml;
   }
 
@@ -3374,8 +3509,10 @@ $(function() {
   function getXml36instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-36-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-max-length-validation>' + encodedValueById("c-item-36-instance-1_1") + '</integer-max-length-validation>';
+  if (idVisible('c-repeating-enclosing-36-instance-1_1')) {
+    var v = encodedValueById("c-item-36-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-max-length-validation>' + v + '</integer-max-length-validation>';
+  }
    return xml;
   }
 
@@ -3383,8 +3520,10 @@ $(function() {
   function getXml37instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-37-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-max-length-validation>' + encodedValueById("c-item-37-instance-1_1") + '</decimal-max-length-validation>';
+  if (idVisible('c-repeating-enclosing-37-instance-1_1')) {
+    var v = encodedValueById("c-item-37-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-max-length-validation>' + v + '</decimal-max-length-validation>';
+  }
    return xml;
   }
 
@@ -3392,8 +3531,10 @@ $(function() {
   function getXml38instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-38-instance-1_1'))
-    xml += '\n' + spaces(2) + '<string-length-validation>' + encodedValueById("c-item-38-instance-1_1") + '</string-length-validation>';
+  if (idVisible('c-repeating-enclosing-38-instance-1_1')) {
+    var v = encodedValueById("c-item-38-instance-1_1");
+    xml += '\n' + spaces(2) + '<string-length-validation>' + v + '</string-length-validation>';
+  }
    return xml;
   }
 
@@ -3401,8 +3542,10 @@ $(function() {
   function getXml39instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-39-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-length-validation>' + encodedValueById("c-item-39-instance-1_1") + '</integer-length-validation>';
+  if (idVisible('c-repeating-enclosing-39-instance-1_1')) {
+    var v = encodedValueById("c-item-39-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-length-validation>' + v + '</integer-length-validation>';
+  }
    return xml;
   }
 
@@ -3410,8 +3553,10 @@ $(function() {
   function getXml40instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-40-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-length-validation>' + encodedValueById("c-item-40-instance-1_1") + '</decimal-length-validation>';
+  if (idVisible('c-repeating-enclosing-40-instance-1_1')) {
+    var v = encodedValueById("c-item-40-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-length-validation>' + v + '</decimal-length-validation>';
+  }
    return xml;
   }
 
@@ -3419,8 +3564,10 @@ $(function() {
   function getXml41instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-41-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-min-inclusive-validation>' + encodedValueById("c-item-41-instance-1_1") + '</integer-min-inclusive-validation>';
+  if (idVisible('c-repeating-enclosing-41-instance-1_1')) {
+    var v = encodedValueById("c-item-41-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-min-inclusive-validation>' + v + '</integer-min-inclusive-validation>';
+  }
    return xml;
   }
 
@@ -3428,8 +3575,10 @@ $(function() {
   function getXml42instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-42-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-min-inclusive-validation>' + encodedValueById("c-item-42-instance-1_1") + '</decimal-min-inclusive-validation>';
+  if (idVisible('c-repeating-enclosing-42-instance-1_1')) {
+    var v = encodedValueById("c-item-42-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-min-inclusive-validation>' + v + '</decimal-min-inclusive-validation>';
+  }
    return xml;
   }
 
@@ -3437,8 +3586,10 @@ $(function() {
   function getXml43instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-43-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-max-inclusive-validation>' + encodedValueById("c-item-43-instance-1_1") + '</integer-max-inclusive-validation>';
+  if (idVisible('c-repeating-enclosing-43-instance-1_1')) {
+    var v = encodedValueById("c-item-43-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-max-inclusive-validation>' + v + '</integer-max-inclusive-validation>';
+  }
    return xml;
   }
 
@@ -3446,8 +3597,10 @@ $(function() {
   function getXml44instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-44-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-max-inclusive-validation>' + encodedValueById("c-item-44-instance-1_1") + '</decimal-max-inclusive-validation>';
+  if (idVisible('c-repeating-enclosing-44-instance-1_1')) {
+    var v = encodedValueById("c-item-44-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-max-inclusive-validation>' + v + '</decimal-max-inclusive-validation>';
+  }
    return xml;
   }
 
@@ -3455,8 +3608,10 @@ $(function() {
   function getXml45instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-45-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-min-exclusive-validation>' + encodedValueById("c-item-45-instance-1_1") + '</integer-min-exclusive-validation>';
+  if (idVisible('c-repeating-enclosing-45-instance-1_1')) {
+    var v = encodedValueById("c-item-45-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-min-exclusive-validation>' + v + '</integer-min-exclusive-validation>';
+  }
    return xml;
   }
 
@@ -3464,8 +3619,10 @@ $(function() {
   function getXml46instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-46-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-min-exclusive-validation>' + encodedValueById("c-item-46-instance-1_1") + '</decimal-min-exclusive-validation>';
+  if (idVisible('c-repeating-enclosing-46-instance-1_1')) {
+    var v = encodedValueById("c-item-46-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-min-exclusive-validation>' + v + '</decimal-min-exclusive-validation>';
+  }
    return xml;
   }
 
@@ -3473,8 +3630,10 @@ $(function() {
   function getXml47instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-47-instance-1_1'))
-    xml += '\n' + spaces(2) + '<integer-max-exclusive-validation>' + encodedValueById("c-item-47-instance-1_1") + '</integer-max-exclusive-validation>';
+  if (idVisible('c-repeating-enclosing-47-instance-1_1')) {
+    var v = encodedValueById("c-item-47-instance-1_1");
+    xml += '\n' + spaces(2) + '<integer-max-exclusive-validation>' + v + '</integer-max-exclusive-validation>';
+  }
    return xml;
   }
 
@@ -3482,8 +3641,10 @@ $(function() {
   function getXml48instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-48-instance-1_1'))
-    xml += '\n' + spaces(2) + '<decimal-max-exclusive-validation>' + encodedValueById("c-item-48-instance-1_1") + '</decimal-max-exclusive-validation>';
+  if (idVisible('c-repeating-enclosing-48-instance-1_1')) {
+    var v = encodedValueById("c-item-48-instance-1_1");
+    xml += '\n' + spaces(2) + '<decimal-max-exclusive-validation>' + v + '</decimal-max-exclusive-validation>';
+  }
    return xml;
   }
 
@@ -3491,8 +3652,10 @@ $(function() {
   function getXml50instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-50-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<choice-1>' + encodedValueById("c-item-50-instance-1_1_1") + '</choice-1>';
+  if (idVisible('c-repeating-enclosing-50-instance-1_1_1')) {
+    var v = encodedValueById("c-item-50-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<choice-1>' + v + '</choice-1>';
+  }
    return xml;
   }
 
@@ -3500,8 +3663,10 @@ $(function() {
   function getXml51instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-51-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<choice-2>' + toXmlDate(encodedValueById("c-item-51-instance-1_1_1")) + '</choice-2>';
+  if (idVisible('c-repeating-enclosing-51-instance-1_1_1')) {
+    var v = encodedValueById("c-item-51-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<choice-2>' + toXmlDate(v) + '</choice-2>';
+  }
    return xml;
   }
 
@@ -3523,16 +3688,26 @@ $(function() {
   function getXml52instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-52-instance-1_1'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + encodedValueById("c-item-52-instance-1_1") + '</max-occurs-example-1>';
-  if (idVisible('c-repeating-enclosing-52-instance-1_2'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + encodedValueById("c-item-52-instance-1_2") + '</max-occurs-example-1>';
-  if (idVisible('c-repeating-enclosing-52-instance-1_3'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + encodedValueById("c-item-52-instance-1_3") + '</max-occurs-example-1>';
-  if (idVisible('c-repeating-enclosing-52-instance-1_4'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + encodedValueById("c-item-52-instance-1_4") + '</max-occurs-example-1>';
-  if (idVisible('c-repeating-enclosing-52-instance-1_5'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + encodedValueById("c-item-52-instance-1_5") + '</max-occurs-example-1>';
+  if (idVisible('c-repeating-enclosing-52-instance-1_1')) {
+    var v = encodedValueById("c-item-52-instance-1_1");
+    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + v + '</max-occurs-example-1>';
+  }
+  if (idVisible('c-repeating-enclosing-52-instance-1_2')) {
+    var v = encodedValueById("c-item-52-instance-1_2");
+    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + v + '</max-occurs-example-1>';
+  }
+  if (idVisible('c-repeating-enclosing-52-instance-1_3')) {
+    var v = encodedValueById("c-item-52-instance-1_3");
+    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + v + '</max-occurs-example-1>';
+  }
+  if (idVisible('c-repeating-enclosing-52-instance-1_4')) {
+    var v = encodedValueById("c-item-52-instance-1_4");
+    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + v + '</max-occurs-example-1>';
+  }
+  if (idVisible('c-repeating-enclosing-52-instance-1_5')) {
+    var v = encodedValueById("c-item-52-instance-1_5");
+    xml += '\n' + spaces(2) + '<max-occurs-example-1>' + v + '</max-occurs-example-1>';
+  }
    return xml;
   }
 
@@ -3540,16 +3715,31 @@ $(function() {
   function getXml53instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-53-instance-1_1'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-2>' + encodedValueById("c-item-53-instance-1_1") + '</max-occurs-example-2>';
-  if (idVisible('c-repeating-enclosing-53-instance-1_2'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-2>' + encodedValueById("c-item-53-instance-1_2") + '</max-occurs-example-2>';
-  if (idVisible('c-repeating-enclosing-53-instance-1_3'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-2>' + encodedValueById("c-item-53-instance-1_3") + '</max-occurs-example-2>';
-  if (idVisible('c-repeating-enclosing-53-instance-1_4'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-2>' + encodedValueById("c-item-53-instance-1_4") + '</max-occurs-example-2>';
-  if (idVisible('c-repeating-enclosing-53-instance-1_5'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-2>' + encodedValueById("c-item-53-instance-1_5") + '</max-occurs-example-2>';
+  if (idVisible('c-repeating-enclosing-53-instance-1_1')) {
+    var v = encodedValueById("c-item-53-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<max-occurs-example-2>' + v + '</max-occurs-example-2>';
+  }
+  if (idVisible('c-repeating-enclosing-53-instance-1_2')) {
+    var v = encodedValueById("c-item-53-instance-1_2");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<max-occurs-example-2>' + v + '</max-occurs-example-2>';
+  }
+  if (idVisible('c-repeating-enclosing-53-instance-1_3')) {
+    var v = encodedValueById("c-item-53-instance-1_3");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<max-occurs-example-2>' + v + '</max-occurs-example-2>';
+  }
+  if (idVisible('c-repeating-enclosing-53-instance-1_4')) {
+    var v = encodedValueById("c-item-53-instance-1_4");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<max-occurs-example-2>' + v + '</max-occurs-example-2>';
+  }
+  if (idVisible('c-repeating-enclosing-53-instance-1_5')) {
+    var v = encodedValueById("c-item-53-instance-1_5");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<max-occurs-example-2>' + v + '</max-occurs-example-2>';
+  }
    return xml;
   }
 
@@ -3557,16 +3747,26 @@ $(function() {
   function getXml54instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-54-instance-1_1'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + encodedValueById("c-item-54-instance-1_1") + '</max-occurs-example-3>';
-  if (idVisible('c-repeating-enclosing-54-instance-1_2'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + encodedValueById("c-item-54-instance-1_2") + '</max-occurs-example-3>';
-  if (idVisible('c-repeating-enclosing-54-instance-1_3'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + encodedValueById("c-item-54-instance-1_3") + '</max-occurs-example-3>';
-  if (idVisible('c-repeating-enclosing-54-instance-1_4'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + encodedValueById("c-item-54-instance-1_4") + '</max-occurs-example-3>';
-  if (idVisible('c-repeating-enclosing-54-instance-1_5'))
-    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + encodedValueById("c-item-54-instance-1_5") + '</max-occurs-example-3>';
+  if (idVisible('c-repeating-enclosing-54-instance-1_1')) {
+    var v = encodedValueById("c-item-54-instance-1_1");
+    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + v + '</max-occurs-example-3>';
+  }
+  if (idVisible('c-repeating-enclosing-54-instance-1_2')) {
+    var v = encodedValueById("c-item-54-instance-1_2");
+    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + v + '</max-occurs-example-3>';
+  }
+  if (idVisible('c-repeating-enclosing-54-instance-1_3')) {
+    var v = encodedValueById("c-item-54-instance-1_3");
+    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + v + '</max-occurs-example-3>';
+  }
+  if (idVisible('c-repeating-enclosing-54-instance-1_4')) {
+    var v = encodedValueById("c-item-54-instance-1_4");
+    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + v + '</max-occurs-example-3>';
+  }
+  if (idVisible('c-repeating-enclosing-54-instance-1_5')) {
+    var v = encodedValueById("c-item-54-instance-1_5");
+    xml += '\n' + spaces(2) + '<max-occurs-example-3>' + v + '</max-occurs-example-3>';
+  }
    return xml;
   }
 
@@ -3574,8 +3774,10 @@ $(function() {
   function getXml56instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-56-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-56-instance-1_1_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-56-instance-1_1_1')) {
+    var v = encodedValueById("c-item-56-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3583,8 +3785,10 @@ $(function() {
   function getXml57instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-57-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-57-instance-1_1_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-57-instance-1_1_1')) {
+    var v = encodedValueById("c-item-57-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3592,8 +3796,10 @@ $(function() {
   function getXml56instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-56-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-56-instance-1_2_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-56-instance-1_2_1')) {
+    var v = encodedValueById("c-item-56-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3601,8 +3807,10 @@ $(function() {
   function getXml57instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-57-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-57-instance-1_2_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-57-instance-1_2_1')) {
+    var v = encodedValueById("c-item-57-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3610,8 +3818,10 @@ $(function() {
   function getXml56instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-56-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-56-instance-1_3_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-56-instance-1_3_1')) {
+    var v = encodedValueById("c-item-56-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3619,8 +3829,10 @@ $(function() {
   function getXml57instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-57-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-57-instance-1_3_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-57-instance-1_3_1')) {
+    var v = encodedValueById("c-item-57-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3628,8 +3840,10 @@ $(function() {
   function getXml56instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-56-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-56-instance-1_4_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-56-instance-1_4_1')) {
+    var v = encodedValueById("c-item-56-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3637,8 +3851,10 @@ $(function() {
   function getXml57instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-57-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-57-instance-1_4_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-57-instance-1_4_1')) {
+    var v = encodedValueById("c-item-57-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3646,8 +3862,10 @@ $(function() {
   function getXml56instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-56-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-56-instance-1_5_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-56-instance-1_5_1')) {
+    var v = encodedValueById("c-item-56-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3655,8 +3873,10 @@ $(function() {
   function getXml57instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-57-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-57-instance-1_5_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-57-instance-1_5_1')) {
+    var v = encodedValueById("c-item-57-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3693,8 +3913,10 @@ $(function() {
   function getXml59instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-59-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-59-instance-1_1_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-59-instance-1_1_1')) {
+    var v = encodedValueById("c-item-59-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3702,8 +3924,10 @@ $(function() {
   function getXml60instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-60-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-60-instance-1_1_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-60-instance-1_1_1')) {
+    var v = encodedValueById("c-item-60-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3725,8 +3949,10 @@ $(function() {
   function getXml59instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-59-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-59-instance-1_2_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-59-instance-1_2_1')) {
+    var v = encodedValueById("c-item-59-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3734,8 +3960,10 @@ $(function() {
   function getXml60instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-60-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-60-instance-1_2_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-60-instance-1_2_1')) {
+    var v = encodedValueById("c-item-60-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3764,8 +3992,10 @@ $(function() {
   function getXml59instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-59-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-59-instance-1_3_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-59-instance-1_3_1')) {
+    var v = encodedValueById("c-item-59-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3773,8 +4003,10 @@ $(function() {
   function getXml60instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-60-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-60-instance-1_3_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-60-instance-1_3_1')) {
+    var v = encodedValueById("c-item-60-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3810,8 +4042,10 @@ $(function() {
   function getXml59instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-59-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-59-instance-1_4_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-59-instance-1_4_1')) {
+    var v = encodedValueById("c-item-59-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3819,8 +4053,10 @@ $(function() {
   function getXml60instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-60-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-60-instance-1_4_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-60-instance-1_4_1')) {
+    var v = encodedValueById("c-item-60-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3863,8 +4099,10 @@ $(function() {
   function getXml59instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-59-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-59-instance-1_5_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-59-instance-1_5_1')) {
+    var v = encodedValueById("c-item-59-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3872,8 +4110,10 @@ $(function() {
   function getXml60instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-60-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-60-instance-1_5_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-60-instance-1_5_1')) {
+    var v = encodedValueById("c-item-60-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3923,8 +4163,10 @@ $(function() {
   function getXml62instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-62-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-62-instance-1_1_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-62-instance-1_1_1')) {
+    var v = encodedValueById("c-item-62-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3932,8 +4174,10 @@ $(function() {
   function getXml63instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-63-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-63-instance-1_1_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-63-instance-1_1_1')) {
+    var v = encodedValueById("c-item-63-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3941,8 +4185,10 @@ $(function() {
   function getXml62instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-62-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-62-instance-1_2_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-62-instance-1_2_1')) {
+    var v = encodedValueById("c-item-62-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3950,8 +4196,10 @@ $(function() {
   function getXml63instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-63-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-63-instance-1_2_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-63-instance-1_2_1')) {
+    var v = encodedValueById("c-item-63-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3959,8 +4207,10 @@ $(function() {
   function getXml62instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-62-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-62-instance-1_3_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-62-instance-1_3_1')) {
+    var v = encodedValueById("c-item-62-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3968,8 +4218,10 @@ $(function() {
   function getXml63instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-63-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-63-instance-1_3_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-63-instance-1_3_1')) {
+    var v = encodedValueById("c-item-63-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3977,8 +4229,10 @@ $(function() {
   function getXml62instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-62-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-62-instance-1_4_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-62-instance-1_4_1')) {
+    var v = encodedValueById("c-item-62-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -3986,8 +4240,10 @@ $(function() {
   function getXml63instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-63-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-63-instance-1_4_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-63-instance-1_4_1')) {
+    var v = encodedValueById("c-item-63-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -3995,8 +4251,10 @@ $(function() {
   function getXml62instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-62-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-62-instance-1_5_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-62-instance-1_5_1')) {
+    var v = encodedValueById("c-item-62-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -4004,8 +4262,10 @@ $(function() {
   function getXml63instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-63-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-63-instance-1_5_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-63-instance-1_5_1')) {
+    var v = encodedValueById("c-item-63-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -4042,8 +4302,11 @@ $(function() {
   function getXml64instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-64-instance-1_1'))
-    xml += '\n' + spaces(2) + '<optional>' + encodedValueById("c-item-64-instance-1_1") + '</optional>';
+  if (idVisible('c-repeating-enclosing-64-instance-1_1')) {
+    var v = encodedValueById("c-item-64-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<optional>' + v + '</optional>';
+  }
    return xml;
   }
 
@@ -4051,8 +4314,10 @@ $(function() {
   function getXml65instance1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-65-instance-1_1'))
-    xml += '\n' + spaces(2) + '<anonymous-simple-type>' + encodedValueById("c-item-65-instance-1_1") + '</anonymous-simple-type>';
+  if (idVisible('c-repeating-enclosing-65-instance-1_1')) {
+    var v = encodedValueById("c-item-65-instance-1_1");
+    xml += '\n' + spaces(2) + '<anonymous-simple-type>' + v + '</anonymous-simple-type>';
+  }
    return xml;
   }
 
@@ -4060,8 +4325,10 @@ $(function() {
   function getXml67instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-67-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<first>' + encodedValueById("c-item-67-instance-1_1_1") + '</first>';
+  if (idVisible('c-repeating-enclosing-67-instance-1_1_1')) {
+    var v = encodedValueById("c-item-67-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<first>' + v + '</first>';
+  }
    return xml;
   }
 
@@ -4069,8 +4336,10 @@ $(function() {
   function getXml68instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-68-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<second>' + encodedValueById("c-item-68-instance-1_1_1") + '</second>';
+  if (idVisible('c-repeating-enclosing-68-instance-1_1_1')) {
+    var v = encodedValueById("c-item-68-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<second>' + v + '</second>';
+  }
    return xml;
   }
 
@@ -4078,8 +4347,10 @@ $(function() {
   function getXml70instance1_1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-70-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<A>' + encodedValueById("c-item-70-instance-1_1_1_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-70-instance-1_1_1_1')) {
+    var v = encodedValueById("c-item-70-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -4087,8 +4358,10 @@ $(function() {
   function getXml71instance1_1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-71-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<B>' + encodedValueById("c-item-71-instance-1_1_1_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-71-instance-1_1_1_1')) {
+    var v = encodedValueById("c-item-71-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -4096,8 +4369,10 @@ $(function() {
   function getXml72instance1_1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-72-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<C>' + toBoolean(encodedValueById("c-item-72-instance-1_1_1_1")) + '</C>';
+  if (idVisible('c-repeating-enclosing-72-instance-1_1_1_1')) {
+    var v = encodedValueById("c-item-72-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<C>' + toBoolean(v) + '</C>';
+  }
    return xml;
   }
 
@@ -4105,8 +4380,10 @@ $(function() {
   function getXml73instance1_1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-73-instance-1_1_1_1'))
-    xml += '\n' + spaces(6) + '<option>' + encodedValueById("c-item-73-instance-1_1_1_1") + '</option>';
+  if (idVisible('c-repeating-enclosing-73-instance-1_1_1_1')) {
+    var v = encodedValueById("c-item-73-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<option>' + v + '</option>';
+  }
    return xml;
   }
 
@@ -4143,8 +4420,10 @@ $(function() {
   function getXml75instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-75-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<string-field>' + encodedValueById("c-item-75-instance-1_1_1") + '</string-field>';
+  if (idVisible('c-repeating-enclosing-75-instance-1_1_1')) {
+    var v = encodedValueById("c-item-75-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<string-field>' + v + '</string-field>';
+  }
    return xml;
   }
 
@@ -4164,16 +4443,26 @@ $(function() {
   function getXml77instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-77-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<string-field>' + encodedValueById("c-item-77-instance-1_1_1") + '</string-field>';
-  if (idVisible('c-repeating-enclosing-77-instance-1_1_2'))
-    xml += '\n' + spaces(4) + '<string-field>' + encodedValueById("c-item-77-instance-1_1_2") + '</string-field>';
-  if (idVisible('c-repeating-enclosing-77-instance-1_1_3'))
-    xml += '\n' + spaces(4) + '<string-field>' + encodedValueById("c-item-77-instance-1_1_3") + '</string-field>';
-  if (idVisible('c-repeating-enclosing-77-instance-1_1_4'))
-    xml += '\n' + spaces(4) + '<string-field>' + encodedValueById("c-item-77-instance-1_1_4") + '</string-field>';
-  if (idVisible('c-repeating-enclosing-77-instance-1_1_5'))
-    xml += '\n' + spaces(4) + '<string-field>' + encodedValueById("c-item-77-instance-1_1_5") + '</string-field>';
+  if (idVisible('c-repeating-enclosing-77-instance-1_1_1')) {
+    var v = encodedValueById("c-item-77-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<string-field>' + v + '</string-field>';
+  }
+  if (idVisible('c-repeating-enclosing-77-instance-1_1_2')) {
+    var v = encodedValueById("c-item-77-instance-1_1_2");
+    xml += '\n' + spaces(4) + '<string-field>' + v + '</string-field>';
+  }
+  if (idVisible('c-repeating-enclosing-77-instance-1_1_3')) {
+    var v = encodedValueById("c-item-77-instance-1_1_3");
+    xml += '\n' + spaces(4) + '<string-field>' + v + '</string-field>';
+  }
+  if (idVisible('c-repeating-enclosing-77-instance-1_1_4')) {
+    var v = encodedValueById("c-item-77-instance-1_1_4");
+    xml += '\n' + spaces(4) + '<string-field>' + v + '</string-field>';
+  }
+  if (idVisible('c-repeating-enclosing-77-instance-1_1_5')) {
+    var v = encodedValueById("c-item-77-instance-1_1_5");
+    xml += '\n' + spaces(4) + '<string-field>' + v + '</string-field>';
+  }
    return xml;
   }
 
@@ -4193,8 +4482,10 @@ $(function() {
   function getXml79instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-79-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-79-instance-1_1_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-79-instance-1_1_1')) {
+    var v = encodedValueById("c-item-79-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -4202,8 +4493,10 @@ $(function() {
   function getXml80instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-80-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-80-instance-1_1_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-80-instance-1_1_1')) {
+    var v = encodedValueById("c-item-80-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -4211,8 +4504,10 @@ $(function() {
   function getXml81instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-81-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<C>' + toBoolean(encodedValueById("c-item-81-instance-1_1_1")) + '</C>';
+  if (idVisible('c-repeating-enclosing-81-instance-1_1_1')) {
+    var v = encodedValueById("c-item-81-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<C>' + toBoolean(v) + '</C>';
+  }
    return xml;
   }
 
@@ -4220,8 +4515,10 @@ $(function() {
   function getXml82instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-82-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<option>' + encodedValueById("c-item-82-instance-1_1_1") + '</option>';
+  if (idVisible('c-repeating-enclosing-82-instance-1_1_1')) {
+    var v = encodedValueById("c-item-82-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<option>' + v + '</option>';
+  }
    return xml;
   }
 
@@ -4229,8 +4526,10 @@ $(function() {
   function getXml79instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-79-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-79-instance-1_2_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-79-instance-1_2_1')) {
+    var v = encodedValueById("c-item-79-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -4238,8 +4537,10 @@ $(function() {
   function getXml80instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-80-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-80-instance-1_2_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-80-instance-1_2_1')) {
+    var v = encodedValueById("c-item-80-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -4247,8 +4548,10 @@ $(function() {
   function getXml81instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-81-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<C>' + toBoolean(encodedValueById("c-item-81-instance-1_2_1")) + '</C>';
+  if (idVisible('c-repeating-enclosing-81-instance-1_2_1')) {
+    var v = encodedValueById("c-item-81-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<C>' + toBoolean(v) + '</C>';
+  }
    return xml;
   }
 
@@ -4256,8 +4559,10 @@ $(function() {
   function getXml82instance1_2() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-82-instance-1_2_1'))
-    xml += '\n' + spaces(4) + '<option>' + encodedValueById("c-item-82-instance-1_2_1") + '</option>';
+  if (idVisible('c-repeating-enclosing-82-instance-1_2_1')) {
+    var v = encodedValueById("c-item-82-instance-1_2_1");
+    xml += '\n' + spaces(4) + '<option>' + v + '</option>';
+  }
    return xml;
   }
 
@@ -4265,8 +4570,10 @@ $(function() {
   function getXml79instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-79-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-79-instance-1_3_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-79-instance-1_3_1')) {
+    var v = encodedValueById("c-item-79-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -4274,8 +4581,10 @@ $(function() {
   function getXml80instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-80-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-80-instance-1_3_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-80-instance-1_3_1')) {
+    var v = encodedValueById("c-item-80-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -4283,8 +4592,10 @@ $(function() {
   function getXml81instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-81-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<C>' + toBoolean(encodedValueById("c-item-81-instance-1_3_1")) + '</C>';
+  if (idVisible('c-repeating-enclosing-81-instance-1_3_1')) {
+    var v = encodedValueById("c-item-81-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<C>' + toBoolean(v) + '</C>';
+  }
    return xml;
   }
 
@@ -4292,8 +4603,10 @@ $(function() {
   function getXml82instance1_3() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-82-instance-1_3_1'))
-    xml += '\n' + spaces(4) + '<option>' + encodedValueById("c-item-82-instance-1_3_1") + '</option>';
+  if (idVisible('c-repeating-enclosing-82-instance-1_3_1')) {
+    var v = encodedValueById("c-item-82-instance-1_3_1");
+    xml += '\n' + spaces(4) + '<option>' + v + '</option>';
+  }
    return xml;
   }
 
@@ -4301,8 +4614,10 @@ $(function() {
   function getXml79instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-79-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-79-instance-1_4_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-79-instance-1_4_1')) {
+    var v = encodedValueById("c-item-79-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -4310,8 +4625,10 @@ $(function() {
   function getXml80instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-80-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-80-instance-1_4_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-80-instance-1_4_1')) {
+    var v = encodedValueById("c-item-80-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -4319,8 +4636,10 @@ $(function() {
   function getXml81instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-81-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<C>' + toBoolean(encodedValueById("c-item-81-instance-1_4_1")) + '</C>';
+  if (idVisible('c-repeating-enclosing-81-instance-1_4_1')) {
+    var v = encodedValueById("c-item-81-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<C>' + toBoolean(v) + '</C>';
+  }
    return xml;
   }
 
@@ -4328,8 +4647,10 @@ $(function() {
   function getXml82instance1_4() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-82-instance-1_4_1'))
-    xml += '\n' + spaces(4) + '<option>' + encodedValueById("c-item-82-instance-1_4_1") + '</option>';
+  if (idVisible('c-repeating-enclosing-82-instance-1_4_1')) {
+    var v = encodedValueById("c-item-82-instance-1_4_1");
+    xml += '\n' + spaces(4) + '<option>' + v + '</option>';
+  }
    return xml;
   }
 
@@ -4337,8 +4658,10 @@ $(function() {
   function getXml79instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-79-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-79-instance-1_5_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-79-instance-1_5_1')) {
+    var v = encodedValueById("c-item-79-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -4346,8 +4669,10 @@ $(function() {
   function getXml80instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-80-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-80-instance-1_5_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-80-instance-1_5_1')) {
+    var v = encodedValueById("c-item-80-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -4355,8 +4680,10 @@ $(function() {
   function getXml81instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-81-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<C>' + toBoolean(encodedValueById("c-item-81-instance-1_5_1")) + '</C>';
+  if (idVisible('c-repeating-enclosing-81-instance-1_5_1')) {
+    var v = encodedValueById("c-item-81-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<C>' + toBoolean(v) + '</C>';
+  }
    return xml;
   }
 
@@ -4364,8 +4691,10 @@ $(function() {
   function getXml82instance1_5() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-82-instance-1_5_1'))
-    xml += '\n' + spaces(4) + '<option>' + encodedValueById("c-item-82-instance-1_5_1") + '</option>';
+  if (idVisible('c-repeating-enclosing-82-instance-1_5_1')) {
+    var v = encodedValueById("c-item-82-instance-1_5_1");
+    xml += '\n' + spaces(4) + '<option>' + v + '</option>';
+  }
    return xml;
   }
 
@@ -4412,8 +4741,10 @@ $(function() {
   function getXml84instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-84-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<A>' + encodedValueById("c-item-84-instance-1_1_1") + '</A>';
+  if (idVisible('c-repeating-enclosing-84-instance-1_1_1')) {
+    var v = encodedValueById("c-item-84-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<A>' + v + '</A>';
+  }
    return xml;
   }
 
@@ -4421,8 +4752,10 @@ $(function() {
   function getXml85instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-85-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<B>' + encodedValueById("c-item-85-instance-1_1_1") + '</B>';
+  if (idVisible('c-repeating-enclosing-85-instance-1_1_1')) {
+    var v = encodedValueById("c-item-85-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<B>' + v + '</B>';
+  }
    return xml;
   }
 
@@ -4430,8 +4763,10 @@ $(function() {
   function getXml86instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-86-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<C>' + toBoolean(encodedValueById("c-item-86-instance-1_1_1")) + '</C>';
+  if (idVisible('c-repeating-enclosing-86-instance-1_1_1')) {
+    var v = encodedValueById("c-item-86-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<C>' + toBoolean(v) + '</C>';
+  }
    return xml;
   }
 
@@ -4439,8 +4774,10 @@ $(function() {
   function getXml87instance1_1() {
 
   var xml='';
-  if (idVisible('c-repeating-enclosing-87-instance-1_1_1'))
-    xml += '\n' + spaces(4) + '<option>' + encodedValueById("c-item-87-instance-1_1_1") + '</option>';
+  if (idVisible('c-repeating-enclosing-87-instance-1_1_1')) {
+    var v = encodedValueById("c-item-87-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<option>' + v + '</option>';
+  }
    return xml;
   }
 
@@ -4457,6 +4794,25 @@ $(function() {
     }
     xml += '\n' + spaces(2) + '</fieldset-example>';
     return xml;
+  }
+
+  //extract xml from element <minoccurs-greater-than-one>
+  function getXml88instance1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-88-instance-1_1')) {
+    var v = encodedValueById("c-item-88-instance-1_1");
+    xml += '\n' + spaces(2) + '<minoccurs-greater-than-one>' + v + '</minoccurs-greater-than-one>';
+  }
+  if (idVisible('c-repeating-enclosing-88-instance-1_2')) {
+    var v = encodedValueById("c-item-88-instance-1_2");
+    xml += '\n' + spaces(2) + '<minoccurs-greater-than-one>' + v + '</minoccurs-greater-than-one>';
+  }
+  if (idVisible('c-repeating-enclosing-88-instance-1_3')) {
+    var v = encodedValueById("c-item-88-instance-1_3");
+    xml += '\n' + spaces(2) + '<minoccurs-greater-than-one>' + v + '</minoccurs-greater-than-one>';
+  }
+   return xml;
   }
 
   //extract xml from element <main>
@@ -4526,6 +4882,7 @@ $(function() {
       xml += getXml76instance1();
       xml += getXml78instance1();
       xml += getXml83instance1();
+      xml += getXml88instance1();
     }
     xml += '\n' + spaces(0) + '</main>';
     return xml;
@@ -6721,6 +7078,43 @@ $(function() {
                   </div>
                 </div>
               </fieldset>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-88-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-88-instance-1_1" class="repeating-enclosing">
+            <div class="item-before">No buttons visible for addition/removal because minOccurs=maxOccurs=3</div>
+            <div class="item-number">88</div>
+            <label class="item-label" for="c-item-input-88-instance-1_1">Minoccurs Greater Than One</label>
+            <div class="item-input">
+              <input number="88" name="c-item-input-88-instance-1_1" id="c-item-88-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-path-88-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="c-item-error-88-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+          <div id="c-repeating-enclosing-88-instance-1_2" class="repeating-enclosing">
+            <div class="item-before">No buttons visible for addition/removal because minOccurs=maxOccurs=3</div>
+            <div class="item-number">88</div>
+            <label class="item-label" for="c-item-input-88-instance-1_2">Minoccurs Greater Than One</label>
+            <div class="item-input">
+              <input number="88" name="c-item-input-88-instance-1_2" id="c-item-88-instance-1_2" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-path-88-instance-1_2" class="item-path" enabled="true"></div>
+              <div id="c-item-error-88-instance-1_2" class="item-error">Invalid</div>
+            </div>
+          </div>
+          <div id="c-repeating-enclosing-88-instance-1_3" class="repeating-enclosing">
+            <div class="item-before">No buttons visible for addition/removal because minOccurs=maxOccurs=3</div>
+            <div class="item-number">88</div>
+            <label class="item-label" for="c-item-input-88-instance-1_3">Minoccurs Greater Than One</label>
+            <div class="item-input">
+              <input number="88" name="c-item-input-88-instance-1_3" id="c-item-88-instance-1_3" class=" item-input-text" type="text">
+              </input>
+              <div id="c-item-path-88-instance-1_3" class="item-path" enabled="true"></div>
+              <div id="c-item-error-88-instance-1_3" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
