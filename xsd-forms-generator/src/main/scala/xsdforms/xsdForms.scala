@@ -804,7 +804,7 @@ package xsdforms {
         val extraIndent =
           if (node.element.minOccurs.intValue == 0) {
             js
-              .line("    if ($.trim(v).length>0)")
+              .line("    if (v.length>0)")
             "  "
           } else ""
         js.line("    %sxml += %s%s;", extraIndent, spaces(instNos), xml(node, transformToXmlValue(node, "v")))
@@ -1351,9 +1351,10 @@ package xsdforms {
     private def createCanExcludeScriptlet(e: Element) =
       if (e.minOccurs.intValue > 0) ""
       else {
-        JS().line("  // minOccurs=0, disable if blank")
-          .line("  var includeInXml  = !((v.val() == null) || (v.val().length==0));")
-          .line("  pathDiv.attr('enabled','' + includeInXml);")
+        JS()
+          .line("  // minOccurs=0, ok if blank")
+          .line("  var isBlank  = (v.val() == null) || (v.val().length==0);")
+          .line("  if (isBlank) ok = true;")
           .toString
       }
 
