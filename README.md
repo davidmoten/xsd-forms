@@ -115,6 +115,18 @@ or
 
 #### Generate using maven plugin
 
+```
+<plugin>
+  <groupId>${project.parent.groupId}</groupId>
+  <artifactId>xsd-forms-maven-plugin</artifactId>
+  <version>${project.parent.version}</version>
+  <configuration>
+    <!-- schema location can be on classpath or file system. Classpath is checked first -->
+    <schema>/demo.xsd</schema>
+  </configuration>
+</plugin>
+```
+
 Here is a [demonstration](https://github.com/davidmoten/xsd-forms/tree/master/xsd-forms-maven-plugin-demo) using *xsd-forms-maven-plugin*.
 
 ###What do I need to do after I have designed a schema?
