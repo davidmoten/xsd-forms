@@ -94,4 +94,7 @@
     <C>true</C>
     <option>option-1</option>
   </fieldset-example>
+  <minoccurs-greater-than-one></minoccurs-greater-than-one>
+  <minoccurs-greater-than-one></minoccurs-greater-than-one>
+  <minoccurs-greater-than-one></minoccurs-greater-than-one>
 </main>

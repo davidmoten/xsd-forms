@@ -396,7 +396,9 @@
         <xs:annotation i:legend="Fieldset example" />
       </xs:element>
 
-	  <xs:element name="minoccurs-greater-than-one" type="xs:string" minOccurs="3" maxOccurs="3"/>
+	  <xs:element name="minoccurs-greater-than-one" type="xs:string" minOccurs="3" maxOccurs="3">
+        <xs:annotation i:before="No buttons visible for addition/removal because minOccurs=maxOccurs=3" />
+      </xs:element>
 
     </xs:sequence>
   </xs:complexType>

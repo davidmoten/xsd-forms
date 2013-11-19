@@ -1155,7 +1155,7 @@ package xsdforms {
       val number = elementNumber(e)
       val removeButtonId = getRemoveButtonId(number, instances)
       val canRemove =
-        (instances.last != 1 && e.maxOccurs != "1")
+        (instances.last != 1 && e.maxOccurs != e.minOccurs.toString)
       if (canRemove)
         html
           .div(classes = List(ClassRemoveButtonContainer))
