@@ -583,8 +583,8 @@ package xsdforms {
       }
     }
 
-    private def hasButton(e:Element) =  e.maxOccurs !="1"
-    
+    private def hasButton(e: Element) = e.maxOccurs != "1"
+
     private def doNode(node: NodeSequence, instances: Instances) {
       val e = node.element
       val number = elementNumber(node)
@@ -596,6 +596,8 @@ package xsdforms {
       html
         .div(classes = List(ClassSequence))
       nonRepeatingTitle(e, instances)
+      minOccursZeroCheckbox(e, instances)
+      repeatButton(e, instances)
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
@@ -628,7 +630,9 @@ package xsdforms {
       val number = elementNumber(e)
 
       html.div(id = Some(getItemEnclosingId(number, instances add 1)), classes = List(ClassChoice))
-      nonRepeatingTitle(e,instances)
+      nonRepeatingTitle(e, instances)
+      minOccursZeroCheckbox(e, instances)
+      repeatButton(e, instances)
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
@@ -682,6 +686,7 @@ package xsdforms {
       val typ = node.typ
 
       nonRepeatingSimpleType(e, instances)
+      repeatButton(e, instances)
       val t = Some(typ)
       val number = elementNumber(e)
       for (instanceNo <- repeats(e)) {
@@ -707,6 +712,7 @@ package xsdforms {
       val e = node.element
       val typ = node.typ
       nonRepeatingSimpleType(e, instances)
+      repeatButton(e, instances)
       val t = None
       val number = elementNumber(e)
       for (instanceNo <- repeats(e)) {
@@ -860,6 +866,10 @@ package xsdforms {
       addScript(js.toString)
     }
 
+    private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
+
+    }
+
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
 
@@ -933,9 +943,15 @@ package xsdforms {
     private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
       //there's only one of these so use instanceNo = 1
       val number = elementNumber(e)
-      html.div(
-        classes = List(ClassNonRepeatingTitle),
-        content = getAnnotation(e, Annotation.NonRepeatingTitle)).closeTag
+      html
+        .div(
+          classes = List(ClassNonRepeatingTitle),
+          content = getAnnotation(e, Annotation.NonRepeatingTitle))
+        .closeTag
+    }
+
+    private def repeatButton(e: ElementWrapper, instances: Instances) {
+      val number = elementNumber(e)
       if (hasButton(e))
         html.div(
           id = Some(getRepeatButtonId(number, instances)),
@@ -1127,7 +1143,7 @@ package xsdforms {
     private def addRemoveButton(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       val removeButtonId = getRemoveButtonId(number, instances)
-      val canRemove = 
+      val canRemove =
         (instances.last != 1 && e.maxOccurs != "1")
       if (canRemove)
         html
