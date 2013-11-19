@@ -795,6 +795,8 @@ package xsdforms {
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
         js.line("  if (idVisible('%s'))", getRepeatingEnclosingId(number, instNos))
+        
+        //TODO minOccursZero check for trim(val()) length = 0 and leave out if minOccurs=0
         val valueById =
           if (isRadio(node.element)) "encodeHTML($('input[name=" + getItemName(number, instNos) + "]:radio:checked').val())"
           else valById(getItemId(node, instNos))
