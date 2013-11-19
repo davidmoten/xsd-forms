@@ -794,13 +794,22 @@ package xsdforms {
       val js = JS().line("  var xml='';")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
-        js.line("  if (idVisible('%s'))", getRepeatingEnclosingId(number, instNos))
-        
-        //TODO minOccursZero check for trim(val()) length = 0 and leave out if minOccurs=0
-        val valueById =
-          if (isRadio(node.element)) "encodeHTML($('input[name=" + getItemName(number, instNos) + "]:radio:checked').val())"
-          else valById(getItemId(node, instNos))
-        js.line("    xml += %s%s;", spaces(instNos), xml(node, transformToXmlValue(node, valueById)))
+        js
+          .line("  if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
+        if (isRadio(node.element))
+          js.line("    var v = encodeHTML($('input[name=%s]:radio:checked').val());", getItemName(number, instNos))
+        else
+          js.line("    var v = %s;", valById(getItemId(node, instNos)))
+
+        val extraIndent =
+          if (node.element.minOccurs.intValue == 0) {
+            js
+              .line("    if ($.trim(v).length>0)")
+            "  "
+          } else ""
+        js.line("    %sxml += %s%s;", extraIndent, spaces(instNos), xml(node, transformToXmlValue(node, "v")))
+
+          .line("  }")
       }
       js.line("   return xml;")
       addXmlExtractScriptlet(node, js.toString, instances);
