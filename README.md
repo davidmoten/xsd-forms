@@ -48,7 +48,7 @@ These xsd features are supported:
 
   * elements only, *not* attributes
   * sequence, choice
-  * minOccurs=0, maxOccurs >= 1 on elements or anonymous complex types
+  * minOccurs, maxOccurs on elements or anonymous complex types
   * restrictions by regex pattern, enumerations, ranges on numerics, maxLength, minLength, length
   * base simple types: string, boolean, date, datetime, time, integer, decimal
   * no explicit support for populating form fields (say from xml). xsd defaults will be honoured. JQuery overrides can be used to do custom initialization.
