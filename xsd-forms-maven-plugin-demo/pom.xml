@@ -40,12 +40,15 @@
 					</execution>
 				</executions>
 				<configuration>
+					<!--  schema is required, classpath checked first then file system -->
 					<schema>/demo.xsd</schema>
-					<!--  these configuration items are optional -->
+					<!--  can leave idPrefix element out (default is 'a-') -->
 					<idPrefix>a-</idPrefix>
-					<!--  don't need root.element if only one top level element in schema -->
+					<!--  don't need rootElement if only one top level element in schema -->
 					<rootElement>main</rootElement>
+					<!--  classpath checked first then file system -->
 					<extraScript>src/main/js/extraScript.js</extraScript>
+					<!--  outputDirectory defaults to ${project.build.directory}/generated-resources -->
 					<outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
 				</configuration>
 			</plugin>
