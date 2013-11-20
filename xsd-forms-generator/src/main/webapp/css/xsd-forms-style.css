@@ -197,7 +197,7 @@ body {
 
 .non-repeating-title {
 	font-weight: bold;
-	float:left;
+	clear:left;
 	margin-left:10px;
 	padding-top:3px;
 	margin-top:5px;
@@ -385,4 +385,20 @@ em {
 	color:red;
 	font-size: 150%;
 }
+
+
+.min-occurs-zero {
+    float:left;
+}
+
+.min-occurs-zero-container {
+    overflow:hidden;
+    width: 100%;
+    margin-top: 0.5em;
+    margin-left: 1em;
+}
+
+.min-occurs-zero-label {
+     float:left;
+     margin-right:1em;   
 }

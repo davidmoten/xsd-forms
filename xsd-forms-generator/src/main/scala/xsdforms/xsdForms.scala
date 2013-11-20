@@ -23,6 +23,7 @@ package xsdforms {
      */
     val Legend = XsdFormsAnnotation("legend")
     val RepeatLabel = XsdFormsAnnotation("repeatLabel")
+    val MinOccursZeroLabel = XsdFormsAnnotation("minOccursZeroLabel")
     val RemoveLabel = XsdFormsAnnotation("removeLabel")
     val Title = XsdFormsAnnotation("title")
     val Before = XsdFormsAnnotation("before")
@@ -328,6 +329,12 @@ package xsdforms {
     def getRepeatingEnclosingId(idPrefix: String, number: String, instances: Instances): String =
       idPrefix + "repeating-enclosing-" + number + InstanceDelimiter + instances
 
+    def getMinOccursZeroId(idPrefix: String, number: String, instances: Instances): String =
+      idPrefix + "min-occurs-zero-" + number + InstanceDelimiter + instances
+
+    def getMinOccursZeroName(idPrefix: String, number: String, instances: Instances): String =
+      idPrefix + "min-occurs-zero-name" + number + InstanceDelimiter + instances
+
     val ClassInvisible = "invisible"
     val ClassSequence = "sequence"
     val ClassSequenceLabel = "sequence-label"
@@ -361,7 +368,9 @@ package xsdforms {
     val ClassTimePicker = "timepickerclass"
     val ClassDatePicker = "datepickerclass"
     val ClassDateTimePicker = "datetimepickerclass"
-
+    val ClassMinOccursZero = "min-occurs-zero"
+    val ClassMinOccursZeroContainer = "min-occurs-zero-container"
+    val ClassMinOccursZeroLabel = "min-occurs-zero-label"
   }
 
   case class XsdFormsAnnotation(name: String)
@@ -542,7 +551,7 @@ package xsdforms {
 
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
-    //traverse children before siblings
+    //traverse children left to right before siblings
     assignElementNumbers(tree)
 
     //process the abstract syntax tree
@@ -877,8 +886,28 @@ package xsdforms {
       addScript(js.toString)
     }
 
-    private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
+    private def isMinOccursZero(e: ElementWrapper) = e.minOccurs.intValue == 0
 
+    private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
+      val number = elementNumber(e)
+      if (isMinOccursZero(e)) {
+        html.div(classes = List(ClassMinOccursZeroContainer))
+        html
+          .div(
+            classes = List(ClassMinOccursZeroLabel),
+            content = Some(getAnnotation(e, Annotation.MinOccursZeroLabel).getOrElse("Click to enable")))
+          .closeTag
+        html.input(
+          id = Some(getMinOccursZeroId(number, instances)),
+          name = getMinOccursZeroName(number, instances),
+          classes = List(ClassMinOccursZero),
+          typ = Some("checkbox"),
+          checked = Some(false),
+          value = None,
+          number = Some(number))
+          .closeTag
+        html.closeTag
+      }
     }
 
     private def displayChoiceInline(choice: Choice) =
@@ -976,7 +1005,7 @@ package xsdforms {
       html.div(
         id = Some(id),
         classes = List(ClassRepeatingEnclosing))
-      if (e.minOccurs.intValue == 0 || instances.last > e.minOccurs.intValue)
+      if (e.minOccurs.intValue > 0 && instances.last > e.minOccurs.intValue)
         addScript(JS().line("  $('#%s').hide();", id))
     }
 
@@ -1596,6 +1625,10 @@ package xsdforms {
 
     private def choiceContentId(idPrefix: String, number: String, index: Int, instances: Instances) =
       idPrefix + "choice-content-" + number + InstanceDelimiter + instances + ChoiceIndexDelimiter + index
+    private def getMinOccursZeroId(number: String, instances: Instances) =
+      TreeToHtmlConverter.getMinOccursZeroId(idPrefix, number, instances)
+    private def getMinOccursZeroName(number: String, instances: Instances) =
+      TreeToHtmlConverter.getMinOccursZeroName(idPrefix, number, instances)
     private def getRepeatButtonId(number: String, instances: Instances) =
       TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instances)
     private def getRemoveButtonId(number: String, instances: Instances) =
