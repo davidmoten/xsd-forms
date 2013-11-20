@@ -34,7 +34,7 @@ import xsdforms.Generator;
  * Goal which generates form and dependent files.
  * 
  */
-@Mojo(name = "generate",defaultPhase = LifecyclePhase.GENERATE_RESOURCES,threadSafe=true)
+@Mojo(name = "generate",defaultPhase=LifecyclePhase.GENERATE_RESOURCES,threadSafe=true)
 public class GenerateMojo extends AbstractMojo {
 	/**
 	 * The directory to write the files to.

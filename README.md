@@ -120,6 +120,13 @@ or
   <groupId>${project.parent.groupId}</groupId>
   <artifactId>xsd-forms-maven-plugin</artifactId>
   <version>${project.parent.version}</version>
+  <executions>
+    <execution>
+	  <goals>
+		<goal>generate</goal>
+      </goals>
+    </execution>
+  </executions>
   <configuration>
     <!-- schema location can be on classpath or file system. Classpath is checked first -->
     <schema>/demo.xsd</schema>
