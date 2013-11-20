@@ -19,6 +19,7 @@ package org.moten.david.xsdforms.maven;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -26,6 +27,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.codehaus.plexus.util.IOUtil;
 
 import scala.Option;
 import xsdforms.Generator;
@@ -34,40 +36,40 @@ import xsdforms.Generator;
  * Goal which generates form and dependent files.
  * 
  */
-@Mojo(name = "generate",defaultPhase=LifecyclePhase.GENERATE_RESOURCES,threadSafe=true)
+@Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, threadSafe = true)
 public class GenerateMojo extends AbstractMojo {
 	/**
 	 * The directory to write the files to.
 	 * 
 	 */
-	@Parameter(property="generate.output.directory" ,defaultValue = "${project.build.directory}/generated-resources")
+	@Parameter(property = "xsdforms.output.directory", defaultValue = "${project.build.directory}/generated-resources")
 	private File outputDirectory;
 
 	/**
 	 * The schema path (on classpath or as file)
 	 * 
 	 */
-	@Parameter(property="generate.schema",required = true)
+	@Parameter(property = "xsdforms.schema", required = true)
 	private String schema;
 
 	/**
 	 * The id prefix in generated html.
 	 * 
 	 */
-	@Parameter(property="generate.id.prefix")
+	@Parameter(property = "xsdforms.id.prefix")
 	private String idPrefix;
 
 	/**
 	 * Top level element from schema to use as root level element in xml.
 	 * 
 	 */
-	@Parameter(property="generate.root.element")
+	@Parameter(property = "xsdforms.root.element")
 	private String rootElement;
 
 	/**
 	 * Extra script to include in jquery document body.
 	 */
-	@Parameter(property="generate.extra.script")
+	@Parameter(property = "xsdforms.extra.script")
 	private String extraScript;
 
 	@Override
@@ -76,15 +78,34 @@ public class GenerateMojo extends AbstractMojo {
 		if (schema == null)
 			throw new MojoExecutionException("schema must be specified");
 		// look first on classpath
-		InputStream schemaIn = getClass().getResourceAsStream(schema);
-		// then on file system
-		if (schemaIn == null)
+		InputStream schemaIn = getInputStreamFromClasspathOrFile(schema);
+
+		String extraJs = null;
+		if (extraScript != null) {
+			InputStream extraScriptIn = getInputStreamFromClasspathOrFile(extraScript);
 			try {
-				schemaIn = new FileInputStream(schema);
-			} catch (FileNotFoundException e) {
+				extraJs = IOUtil.toString(extraScriptIn);
+			} catch (IOException e) {
 				throw new MojoExecutionException(e.getMessage(), e);
 			}
+		}
+
 		Generator.generateDirectory(schemaIn, outputDirectory, idPrefix,
-				Option.apply(rootElement), Option.apply(extraScript));
+				Option.apply(rootElement), Option.apply(extraJs));
+	}
+
+	private static InputStream getInputStreamFromClasspathOrFile(String path)
+			throws MojoExecutionException {
+
+		InputStream in = GenerateMojo.class.getResourceAsStream(path);
+		// then on file system
+		if (in == null)
+			try {
+				in = new FileInputStream(path);
+			} catch (FileNotFoundException e) {
+				throw new MojoExecutionException(e.getMessage() + " path="
+						+ path, e);
+			}
+		return in;
 	}
 }

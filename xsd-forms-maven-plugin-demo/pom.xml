@@ -41,6 +41,12 @@
 				</executions>
 				<configuration>
 					<schema>/demo.xsd</schema>
+					<!--  these configuration items are optional -->
+					<idPrefix>a-</idPrefix>
+					<!--  don't need root.element if only one top level element in schema -->
+					<rootElement>main</rootElement>
+					<extraScript>src/main/js/extraScript.js</extraScript>
+					<outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
