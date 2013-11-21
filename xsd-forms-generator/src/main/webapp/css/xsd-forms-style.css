@@ -1,6 +1,7 @@
 body {
 	padding: 0 0px;
 	font: normal 62.5% "Lucida Grande", Helvetica, Verdana, Arial;
+	background-color: #F5F5F5 ;/*#EDFAD9;*/
 }
 
 .clear {
@@ -9,7 +10,6 @@ body {
 
 .form {
 	margin-left: 0px;
-	background-color: #F5F5F5 ;/*#EDFAD9;*/
 	max-width: 100%;
 }
 

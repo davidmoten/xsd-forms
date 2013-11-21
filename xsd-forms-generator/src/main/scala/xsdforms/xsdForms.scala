@@ -263,7 +263,7 @@ package xsdforms {
         case NodeBaseType(e, typ) => margin + "NodeBaseType=" + e.name.get
         case NodeSimpleType(e, typ) => margin + "NodeSimpleType=" + e.name.get
         case n: NodeGroup => margin + n.getClass.getSimpleName + "=\n" +
-          n.children.map(c => toString(c, margin + "  ")).mkString("")
+          n.children.map(c => toString(c, margin + "  ")).mkString("\n")
         case _ => unexpected
       }
     }
