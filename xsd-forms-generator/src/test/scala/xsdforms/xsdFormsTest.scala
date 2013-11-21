@@ -14,6 +14,7 @@ package xsdforms {
 
     val idPrefix = "c-"
 
+    
     def generate(
       idPrefix: String,
       schemaInputStream: InputStream,
@@ -21,26 +22,11 @@ package xsdforms {
       outputFile: File,
       extraScript: Option[String] = None) {
 
-      import scala.xml._
-
-      val schema = scalaxb.fromXML[Schema](
-        XML.load(schemaInputStream))
-
-      val ns = schema.targetNamespace.get.toString
-
-      val visitor = new TreeCreatingVisitor()
-
-      new SchemaTraversor(schema, Some(rootElement), visitor).traverse
-      println("tree:\n" + visitor)
-
-      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
+      //write results to a file
       outputFile.getParentFile().mkdirs
       val fos = new java.io.FileOutputStream(outputFile);
-      fos.write(text.getBytes)
+      Generator.generateHtml(schemaInputStream,fos, idPrefix, Some(rootElement), extraScript)
       fos.close
-
-      //println(visitor)
-      println("generated")
     }
 
     def generateDemoForm(file: File) {
@@ -63,10 +49,12 @@ package xsdforms {
   }
 
   @Test
-  class TraversorTest {
+  class GeneratorTest {
 
     import org.apache.commons.io._
     import TstUtil._
+    import java.io._
+    import org.junit.Assert._
 
     @Test
     def testSetupWebapp() {
@@ -137,10 +125,37 @@ package xsdforms {
         outputFile = new File("target/generated-webapp/annotations-demo.html"))
     }
 
+     @Test
+    def testGenerateZip() {
+      val out = new File("target/out.zip")
+      new FileOutputStream(out)
+      Generator.generateZip(getClass.getResourceAsStream("/demo.xsd"), new FileOutputStream(out))
+      assertTrue(out.exists)
+      
+      import java.util.zip._
+      val zipFile = new ZipFile(out)
+      import scala.collection.JavaConversions._
+      val names = enumerationAsScalaIterator(zipFile.entries()).map(_.getName).toSet
+
+      assertTrue(names.contains("form.html"))
+      assertTrue(names.contains("css/"))
+      assertTrue(names.contains("js/"))
+
+      Option.empty
+    }
+    @Test
+    def testGenerateDirectory() {
+      val out = new File("target/out.zip")
+      val directory = new File("target/testGenerateDirectory")
+      Generator.generateDirectory(getClass.getResourceAsStream("/demo.xsd"), directory)
+      assertTrue(directory.exists)
+      Option.empty
+    }
+    
   }
 
   @Test
-  class TraversorSeleniumTest {
+  class GeneratorSeleniumTest {
 
     import org.openqa.selenium.By
     import org.openqa.selenium.Keys
@@ -620,6 +635,8 @@ package xsdforms {
 
   @Test
   class TreeVisitorTest {
+    
+    import TstUtil._ 
     @Test
     def test() {
       generate(
@@ -629,32 +646,7 @@ package xsdforms {
         outputFile = new File("target/demo/demo-form-tree.html"))
     }
 
-    def generate(
-      idPrefix: String,
-      schemaInputStream: InputStream,
-      rootElement: String,
-      outputFile: File,
-      extraScript: Option[String] = None) {
-
-      import scala.xml._
-
-      val schema = scalaxb.fromXML[Schema](
-        XML.load(schemaInputStream))
-      val ns = schema.targetNamespace.get.toString
-      val visitor = new TreeCreatingVisitor()
-
-      new SchemaTraversor(schema, Some(rootElement), visitor).traverse
-      println("tree:\n" + visitor)
-
-      val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
-      println("generated")
-
-      //write results to a file
-      outputFile.getParentFile().mkdirs
-      val fos = new java.io.FileOutputStream(outputFile);
-      fos.write(text.getBytes)
-      fos.close
-    }
+    
   }
 
   @Test
@@ -675,39 +667,6 @@ function logit(doc,name) {
 }"""
       assertEquals(expected, js.toString)
     }
-  }
-
-  @Test
-  class GeneratorTest {
-    import java.io._
-    import org.junit.Assert._
-    import java.util.zip._
-    import scala.collection.JavaConversions._
-
-    @Test
-    def testGenerateZip() {
-      val out = new File("target/out.zip")
-      new FileOutputStream(out)
-      Generator.generateZip(getClass.getResourceAsStream("/demo.xsd"), new FileOutputStream(out))
-      assertTrue(out.exists)
-      val zipFile = new ZipFile(out)
-      val names = enumerationAsScalaIterator(zipFile.entries()).map(_.getName).toSet
-
-      assertTrue(names.contains("form.html"))
-      assertTrue(names.contains("css/"))
-      assertTrue(names.contains("js/"))
-
-      Option.empty
-    }
-    @Test
-    def testGenerateDirectory() {
-      val out = new File("target/out.zip")
-      val directory = new File("target/testGenerateDirectory")
-      Generator.generateDirectory(getClass.getResourceAsStream("/demo.xsd"), directory)
-      assertTrue(directory.exists)
-      Option.empty
-    }
-
   }
 
 }

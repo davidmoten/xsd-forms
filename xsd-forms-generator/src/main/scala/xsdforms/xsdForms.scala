@@ -310,8 +310,8 @@ package xsdforms {
 
     def getItemId(idPrefix: String, number: Int, instances: Instances) =
       idPrefix + "item-" + number + InstanceDelimiter + instances
-      
-    def getItemName(idPrefix: String , number: Int, instances: Instances) =
+
+    def getItemName(idPrefix: String, number: Int, instances: Instances) =
       idPrefix + "item-input-" + number + InstanceDelimiter + instances;
 
     def getItemErrorId(idPrefix: String, number: Int, instances: Instances) =
@@ -1051,9 +1051,9 @@ package xsdforms {
       }
     }
 
-    private def elementNumber(node: Node): Int= elementNumber(node.element)
+    private def elementNumber(node: Node): Int = elementNumber(node.element)
 
-    private def elementNumber(e: ElementWrapper): Int= {
+    private def elementNumber(e: ElementWrapper): Int = {
       val n = elementNumbers.get(e);
       if (n.isDefined)
         n.get
@@ -1683,7 +1683,7 @@ package xsdforms {
 
     private def nextNumber: Int = {
       number += 1
-      number 
+      number
     }
 
     private case class QN(namespace: String, localPart: String)
@@ -1903,17 +1903,6 @@ package xsdforms {
     private val stack = new scala.collection.mutable.Stack[HtmlElement]
     private var s = new StringBuffer
 
-    private def indent {
-      val indent = "  " * stack.size
-      append("\n")
-      append(indent)
-    }
-
-    private def append(str: String) = {
-      s.append(str)
-      this
-    }
-
     def div(id: Option[String] = None,
       classes: List[String] = List(), enabledAttr: Option[String] = None,
       content: Option[String] = None) =
@@ -2007,7 +1996,7 @@ package xsdforms {
       this
     }
 
-    def elementBase(name: String, attributes: Map[String, String],
+    private def elementBase(name: String, attributes: Map[String, String],
       content: Option[String]): Html = {
       stack.push(HtmlElement(name, content.isDefined))
       indent
@@ -2015,6 +2004,17 @@ package xsdforms {
         attributes.map(x => x._1 + "=\"" + x._2 + "\"").mkString(" ")
       append("<" + name + " "
         + attributesClause + ">" + content.mkString)
+      this
+    }
+
+    private def indent {
+      val indent = "  " * stack.size
+      append("\n")
+      append(indent)
+    }
+
+    private def append(str: String) = {
+      s.append(str)
       this
     }
 
