@@ -310,6 +310,9 @@ package xsdforms {
 
     def getItemId(idPrefix: String, number: String, instances: Instances) =
       idPrefix + "item-" + number + InstanceDelimiter + instances
+      
+    def getItemName(idPrefix: String , number: String, instances: Instances) =
+      idPrefix + "item-input-" + number + InstanceDelimiter + instances;
 
     def getItemErrorId(idPrefix: String, number: String, instances: Instances) =
       idPrefix + "item-error-" + number + InstanceDelimiter + instances
@@ -1670,7 +1673,7 @@ package xsdforms {
     private def getItemId(number: String, enumeration: Integer, instances: Instances): String =
       getItemId(number, instances) + "-" + enumeration
     private def getItemName(number: String, instances: Instances) =
-      idPrefix + "item-input-" + number + InstanceDelimiter + instances;
+      TreeToHtmlConverter.getItemName(idPrefix, number, instances)
     private def getItemEnclosingId(number: String, instances: Instances) =
       idPrefix + "item-enclosing-" + number + InstanceDelimiter + instances
     private def getItemErrorId(number: String, instances: Instances) =

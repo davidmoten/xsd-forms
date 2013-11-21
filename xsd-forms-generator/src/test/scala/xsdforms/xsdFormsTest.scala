@@ -191,8 +191,8 @@ package xsdforms {
       println("testing web driver " + driver.getClass().getSimpleName())
       driver.get(uri)
 
-      //TODO enable this
-      //      testDateDefaultSet(driver, 11) 
+      //TODO enable
+      //testDateDefaultSet(driver, 11)
       testMakeVisible(driver, 24)
       testPatternValidation(driver, 29)
       testMultiplePatternValidation(driver, 31)
@@ -231,8 +231,8 @@ package xsdforms {
       driver.findElement(By.id(getItemErrorId(idPrefix, itemNo.toString, instanceNos)))
 
     private def testDateDefaultSet(driver: WebDriver, itemNo: Int) {
-
-      val input = getInput(driver, itemNo)
+    	val name = getItemName(idPrefix,itemNo.toString, Instances(List(1, 1)))
+      val input = driver.findElement(By.name(name))
       assertEquals("1973-06-12", input.getText)
     }
 
