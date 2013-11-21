@@ -1,7 +1,7 @@
 xsd-forms
 =========
 
-You have a data model and you want to make a web form. This product does the menial ui creation and entry validation work for you and then allows you to customize it as you wish using css and jquery. 
+You have a data model and you want to make a web form. *xsd-forms* does the menial ui creation and entry validation work for you and then allows you to customize it as you wish using css and jquery.  The form it produces is 100% html and js without any server side dependency beyond how you process the submitted xml. The form is thus language agnostic in terms of your backend.
 
 This project is largely written in Scala with a small amount of Java. 
 
