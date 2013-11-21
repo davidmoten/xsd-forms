@@ -748,8 +748,12 @@ package xsdforms {
 
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
-        val number = elementNumber(node)
         val js = JS()
+        val number = elementNumber(node)
+        if (isMinOccursZero(node.element)) {
+          js.line("if (!$('#%s').is(':checked')) return '';", getMinOccursZeroId(number, instances))
+        }
+        js
           .line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
           .line("    //now add sequence children for each instanceNo")
 
@@ -907,6 +911,18 @@ package xsdforms {
           number = Some(number))
           .closeTag
         html.closeTag
+        val js = JS()
+          .line("$('#%s').change( function () {", getMinOccursZeroId(number, instances))
+        for (instanceNo <- repeats(e)) {
+          js
+            .line("  changeMinOccursZeroCheckbox($(this),$('#%s'));", getRepeatingEnclosingId(number, instances add instanceNo))
+        }
+
+        js.line("})")
+          .line
+          .line("$('#%s').change();", getMinOccursZeroId(number, instances))
+
+        addScript(js)
       }
     }
 

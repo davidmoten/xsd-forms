@@ -574,6 +574,7 @@ package xsdforms {
       setInput(driver, 39, "1234")
       setInput(driver, 40, "1234")
       setInput(driver, 51, "1901-11-30", Instances(List(1, 1, 1)))
+      
 
       val id = getChoiceItemId(idPrefix, "58", index = 1, Instances(List(1, 1)))
       println("58 id=" + id)
@@ -582,6 +583,8 @@ package xsdforms {
       elem.click
       assertTrue(elem.isSelected())
 
+      driver.findElement(By.id(TreeToHtmlConverter.getMinOccursZeroId(idPrefix, "89", Instances(List(1))))).click
+      
       submit.click
       submit.click
       //TODO why twice to get chrome to work?
