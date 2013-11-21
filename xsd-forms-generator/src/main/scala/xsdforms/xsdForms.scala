@@ -10,10 +10,17 @@ package xsdforms {
   object Annotation {
     //TODO document each of the annotations in scaladoc
 
+    /**
+     * Annotation 'label' is the label to be used for the element
+     * input field. Usually located just left of the input field
+     * associated with the element with this annotation.
+     */
     val Label = XsdFormsAnnotation("label")
 
     /**
-     * If choice=inline then choice is inline with radio selector.
+     * Annotation 'choice' If choice=inline then choice is inline
+     * with radio selector otherwise appears after the group of 
+     * radio selectors.
      */
     val Choice = XsdFormsAnnotation("choice")
     val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
