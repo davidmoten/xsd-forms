@@ -14,7 +14,6 @@ package xsdforms {
 
     val idPrefix = "c-"
 
-    
     def generate(
       idPrefix: String,
       schemaInputStream: InputStream,
@@ -25,7 +24,7 @@ package xsdforms {
       //write results to a file
       outputFile.getParentFile().mkdirs
       val fos = new java.io.FileOutputStream(outputFile);
-      Generator.generateHtml(schemaInputStream,fos, idPrefix, Some(rootElement), extraScript)
+      Generator.generateHtml(schemaInputStream, fos, idPrefix, Some(rootElement), extraScript)
       fos.close
     }
 
@@ -125,13 +124,13 @@ package xsdforms {
         outputFile = new File("target/generated-webapp/annotations-demo.html"))
     }
 
-     @Test
+    @Test
     def testGenerateZip() {
       val out = new File("target/out.zip")
       new FileOutputStream(out)
       Generator.generateZip(getClass.getResourceAsStream("/demo.xsd"), new FileOutputStream(out))
       assertTrue(out.exists)
-      
+
       import java.util.zip._
       val zipFile = new ZipFile(out)
       import scala.collection.JavaConversions._
@@ -151,7 +150,7 @@ package xsdforms {
       assertTrue(directory.exists)
       Option.empty
     }
-    
+
   }
 
   @Test
@@ -203,37 +202,43 @@ package xsdforms {
     }
 
     private def testOnWebDriver(driver: WebDriver) {
-      println("testing web driver " + driver.getClass().getSimpleName())
-      driver.get(uri)
+      try {
+        println("testing web driver " + driver.getClass().getSimpleName())
+        driver.get(uri)
 
-      //TODO enable
-      //testDateDefaultSet(driver, 11)
-      testMakeVisible(driver, 24)
-      testPatternValidation(driver, 29)
-      testMultiplePatternValidation(driver, 31)
-      testStringMinLength(driver, 32)
-      testStringMaxLength(driver, 35)
-      testIntegerMaxLength(driver, 36)
-      testDecimalMaxLength(driver, 37)
-      testStringLength(driver, 38)
-      testIntegerMinInclusive(driver, 41)
-      testDecimalMinInclusive(driver, 42)
-      testIntegerMaxInclusive(driver, 43)
-      testDecimalMaxInclusive(driver, 44)
-      testIntegerMinExclusive(driver, 45)
-      testDecimalMinExclusive(driver, 46)
-      testIntegerMaxExclusive(driver, 47)
-      testDecimalMaxExclusive(driver, 48)
-      testChoice(driver, 49)
-      testRepeat(driver, 52)
-      //TODO reenable
-      //testRepeatWhenMinOccursIsZero(driver, 53)
-      //TODO reenable 
-      //testChoiceRepeat(driver,58)
-      testSubmission(driver)
-      driver.close
-      val log = new File("chromedriver.log")
-      if (log.exists) log.delete();
+        //TODO enable
+        //testDateDefaultSet(driver, 11)
+        testMakeVisible(driver, 24)
+        testPatternValidation(driver, 29)
+        testMultiplePatternValidation(driver, 31)
+        testStringMinLength(driver, 32)
+        testStringMaxLength(driver, 35)
+        testIntegerMaxLength(driver, 36)
+        testDecimalMaxLength(driver, 37)
+        testStringLength(driver, 38)
+        testIntegerMinInclusive(driver, 41)
+        testDecimalMinInclusive(driver, 42)
+        testIntegerMaxInclusive(driver, 43)
+        testDecimalMaxInclusive(driver, 44)
+        testIntegerMinExclusive(driver, 45)
+        testDecimalMinExclusive(driver, 46)
+        testIntegerMaxExclusive(driver, 47)
+        testDecimalMaxExclusive(driver, 48)
+        testChoice(driver, 49)
+        testRepeat(driver, 52)
+        //TODO reenable
+        //testRepeatWhenMinOccursIsZero(driver, 53)
+        //TODO reenable 
+        //testChoiceRepeat(driver,58)
+        testSubmission(driver)
+        driver.close
+        val log = new File("chromedriver.log")
+        if (log.exists) log.delete();
+      } finally {
+        //now need to ensure that any driver executable (e.g. chromedriver)
+        //is stopped whether the tests fail or not.
+        driver.quit
+      }
     }
 
     private def getInput(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List(1, 1))) = {
@@ -246,7 +251,7 @@ package xsdforms {
       driver.findElement(By.id(getItemErrorId(idPrefix, itemNo, instanceNos)))
 
     private def testDateDefaultSet(driver: WebDriver, itemNo: Int) {
-    	val name = getItemName(idPrefix,itemNo, Instances(List(1, 1)))
+      val name = getItemName(idPrefix, itemNo, Instances(List(1, 1)))
       val input = driver.findElement(By.name(name))
       assertEquals("1973-06-12", input.getText)
     }
@@ -635,8 +640,8 @@ package xsdforms {
 
   @Test
   class TreeVisitorTest {
-    
-    import TstUtil._ 
+
+    import TstUtil._
     @Test
     def test() {
       generate(
@@ -646,7 +651,6 @@ package xsdforms {
         outputFile = new File("target/demo/demo-form-tree.html"))
     }
 
-    
   }
 
   @Test
