@@ -126,8 +126,8 @@ package xsdforms {
       generateDemoForm(file)
       FileUtils.copyFileToDirectory(file, new File("target/demo"));
     }
-    
-     @Test
+
+    @Test
     def generateTheAnnotationsDemoForm {
       println("generating the annotations demo form")
       generate(
@@ -157,11 +157,12 @@ package xsdforms {
     import org.apache.commons.io._
     import TstUtil._
     import TreeToHtmlConverter._
+    import com.gargoylesoftware.htmlunit._
 
     private val uri = new File("target/demo/demo-form.html").toURI().toString()
     private val WebDriverChromeDriverKey = "webdriver.chrome.driver"
 
-    @Test
+    //@Test
     def testOnFirefox() {
       println("firefox test")
       setupDemoWebapp
@@ -181,7 +182,9 @@ package xsdforms {
     def testOnHtmlUnit() {
       println("HtmlUnit test")
       setupDemoWebapp
-      testOnWebDriver(new HtmlUnitDriver(true))
+      val driver = new HtmlUnitDriver(BrowserVersion.CHROME)
+      driver.setJavascriptEnabled(true)
+      testOnWebDriver(driver)
     }
 
     private def testOnWebDriver(driver: WebDriver) {
@@ -574,7 +577,6 @@ package xsdforms {
       setInput(driver, 39, "1234")
       setInput(driver, 40, "1234")
       setInput(driver, 51, "1901-11-30", Instances(List(1, 1, 1)))
-      
 
       val id = getChoiceItemId(idPrefix, "58", index = 1, Instances(List(1, 1)))
       println("58 id=" + id)
@@ -584,7 +586,7 @@ package xsdforms {
       assertTrue(elem.isSelected())
 
       driver.findElement(By.id(TreeToHtmlConverter.getMinOccursZeroId(idPrefix, "89", Instances(List(1))))).click
-      
+
       submit.click
       submit.click
       //TODO why twice to get chrome to work?
@@ -690,11 +692,11 @@ function logit(doc,name) {
       assertTrue(out.exists)
       val zipFile = new ZipFile(out)
       val names = enumerationAsScalaIterator(zipFile.entries()).map(_.getName).toSet
-      
+
       assertTrue(names.contains("form.html"))
       assertTrue(names.contains("css/"))
       assertTrue(names.contains("js/"))
-      
+
       Option.empty
     }
     @Test
