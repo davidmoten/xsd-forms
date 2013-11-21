@@ -82,6 +82,8 @@ You need to make a schema using only the elements and types that are supported b
 </xs:schema>
 ```
 
+Deploying this simple schema to the web service mentioned below give you [this form](http://xsd-forms-generator.xuml-tools.cloudbees.net/generate?schema=%3Cxs%3Aschema+targetNamespace%3D%22http%3A%2F%2Forg.moten.david%2Fexample%22%0D%0A++xmlns%3D%22http%3A%2F%2Forg.moten.david%2Fexample%22+xmlns%3Axs%3D%22http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%22%0D%0A++xmlns%3Ai%3D%22http%3A%2F%2Fmoten.david.org%2Fxsd-forms%22%3E%0D%0A++%3Cxs%3Aelement+name%3D%22name%22+type%3D%22xs%3Astring%22%3E%0D%0A++++%3Cxs%3Aannotation+i%3Alabel%3D%22Full+name%22+%2F%3E%0D%0A++%3C%2Fxs%3Aelement%3E%0D%0A%3C%2Fxs%3Aschema%3E&rootElement=&idPrefix=&extraScript=%0D%0A%2F%2Foverride+the+processXml+function%0D%0AprocessXml+%3D+function%28xml%29+%7B%0D%0A++alert%28xml%29%3B%0D%0A%7D%3B%0D%0A%0D%0A%0D%0A%0D%0A&action=view&submit=Submit).
+
 #### How do I annotate my schema?
 
 Every element in your schema optionally can have a contained &lt;xs:annotation/&gt; element. Place attributes on that element from the xsd-forms schema like below:

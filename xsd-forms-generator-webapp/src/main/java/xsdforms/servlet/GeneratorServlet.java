@@ -45,6 +45,14 @@ public class GeneratorServlet extends HttpServlet {
 					rootElement, extraScript);
 		}
 	}
+	
+	
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		doPost(req,resp);
+	}
 
 	private static String blankToNull(String s) {
 		if (s != null && s.trim().length() == 0)
