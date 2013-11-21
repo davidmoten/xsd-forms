@@ -70,6 +70,18 @@ Bearing in mind the above restrictions, these features are supported:
 
 ### How do I generate a form?
 
+You need to make a schema using only the elements and types that are supported by *xsd-forms*. You can generate the form without adding any annotations at that point and it will use element names and such as defaults. A starter schema looks like this:
+
+```
+<xs:schema targetNamespace="http://org.moten.david/example"
+  xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:i="http://moten.david.org/xsd-forms">
+  <xs:element name="name" type="xs:string">
+    <xs:annotation i:label="Full name" />
+  </xs:element>
+</xs:schema>
+```
+
 #### How do I annotate my schema?
 
 Every element in your schema optionally can have a contained &lt;xs:annotation/&gt; element. Place attributes on that element from the xsd-forms schema like below:
