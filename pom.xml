@@ -65,8 +65,6 @@
 				<module>xsd-scalaxb</module>
 				<module>demo-scalaxb</module>
 				<module>xsd-forms-generator</module>
-				<module>xsd-forms-maven-plugin</module>
-				<module>xsd-forms-maven-plugin-demo</module>
 			</modules>
 		</profile>
 	</profiles>
