@@ -100,6 +100,13 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${m3.site.version}</version>
+					<configuration>
+						<generateReports>true</generateReports>
+					</configuration>
+				</plugin>
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>

@@ -646,7 +646,6 @@ package xsdforms {
       println("tree:\n" + visitor)
 
       val text = new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
-      println(text)
       println("generated")
 
       //write results to a file

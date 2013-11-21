@@ -35,14 +35,41 @@
 		<coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
 	</properties>
 
-	<modules>
-		<module>xsd-scalaxb</module>
-		<module>demo-scalaxb</module>
-		<module>xsd-forms-generator</module>
-		<module>xsd-forms-generator-webapp</module>
-		<module>xsd-forms-maven-plugin</module>
-		<module>xsd-forms-maven-plugin-demo</module>
-	</modules>
+
+	<profiles>
+		<profile>
+			<id>siteNotSet</id>
+			<activation>
+				<property>
+					<name>!site</name>
+				</property>
+			</activation>
+			<modules>
+				<module>xsd-scalaxb</module>
+				<module>demo-scalaxb</module>
+				<module>xsd-forms-generator</module>
+				<module>xsd-forms-generator-webapp</module>
+				<module>xsd-forms-maven-plugin</module>
+				<module>xsd-forms-maven-plugin-demo</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>siteSetToTrue</id>
+			<activation>
+				<property>
+					<name>site</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<modules>
+				<module>xsd-scalaxb</module>
+				<module>demo-scalaxb</module>
+				<module>xsd-forms-generator</module>
+				<module>xsd-forms-maven-plugin</module>
+				<module>xsd-forms-maven-plugin-demo</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
