@@ -100,6 +100,18 @@ $(function() {
     return method(argument);
   }
   
+  function changeMinOccursZeroCheckbox(v,enclosing) {
+    console.log("minOccursZeroCheckbox val=" + v.val());
+    console.log("enclosing id="+ enclosing.attr('id'));
+    if (v.is(':checked')) {
+      enclosing.find(':input').prop('disabled',false);
+      enclosing.find('.min-occurs-zero').prop('checked',true) 
+    } else {
+      enclosing.find(':input').prop('disabled',true);
+      enclosing.find('.min-occurs-zero').prop('checked',false)      
+    }
+  }
+  
   function matchesPattern(elem,regex) {
     return regex.test(elem.val());
   }
@@ -166,7 +178,6 @@ $(function() {
     $('#b-repeating-enclosing-2-instance-1_1').hide();
   });
 
-  $('#b-repeating-enclosing-3-instance-1_1_1').hide();
   $('#b-remove-button-3-instance-1_1_1').click(function() {
     $('#b-repeating-enclosing-3-instance-1_1_1').hide();
   });
@@ -190,7 +201,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-3-instance-1_1_1').attr('enabled','false');
-  $('#b-repeating-enclosing-4-instance-1_1_1').hide();
   $('#b-remove-button-4-instance-1_1_1').click(function() {
     $('#b-repeating-enclosing-4-instance-1_1_1').hide();
   });
@@ -214,7 +224,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-4-instance-1_1_1').attr('enabled','false');
-  $('#b-repeating-enclosing-5-instance-1_1_1').hide();
   $('#b-remove-button-5-instance-1_1_1').click(function() {
     $('#b-repeating-enclosing-5-instance-1_1_1').hide();
   });
@@ -303,7 +312,6 @@ $(function() {
     showError('b-item-error-8-instance-1_1_1',ok);
   });
   
-  $('#b-repeating-enclosing-9-instance-1_1_1').hide();
   $('#b-remove-button-9-instance-1_1_1').click(function() {
     $('#b-repeating-enclosing-9-instance-1_1_1').hide();
   });
@@ -559,7 +567,6 @@ $(function() {
     $('#b-repeating-enclosing-21-instance-1_1_1').hide();
   });
 
-  $('#b-repeating-enclosing-22-instance-1_1_1_1').hide();
   $('#b-remove-button-22-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-22-instance-1_1_1_1').hide();
   });
@@ -583,7 +590,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-22-instance-1_1_1_1').attr('enabled','false');
-  $('#b-repeating-enclosing-23-instance-1_1_1_1').hide();
   $('#b-remove-button-23-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-23-instance-1_1_1_1').hide();
   });
@@ -607,7 +613,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-23-instance-1_1_1_1').attr('enabled','false');
-  $('#b-repeating-enclosing-24-instance-1_1_1_1').hide();
   $('#b-remove-button-24-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-24-instance-1_1_1_1').hide();
   });
@@ -696,7 +701,6 @@ $(function() {
     showError('b-item-error-27-instance-1_1_1_1',ok);
   });
   
-  $('#b-repeating-enclosing-28-instance-1_1_1_1').hide();
   $('#b-remove-button-28-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-28-instance-1_1_1_1').hide();
   });
@@ -800,7 +804,6 @@ $(function() {
     $('#b-repeating-enclosing-32-instance-1_1_1').hide();
   });
 
-  $('#b-repeating-enclosing-33-instance-1_1_1_1').hide();
   $('#b-remove-button-33-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-33-instance-1_1_1_1').hide();
   });
@@ -824,7 +827,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-33-instance-1_1_1_1').attr('enabled','false');
-  $('#b-repeating-enclosing-34-instance-1_1_1_1').hide();
   $('#b-remove-button-34-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-34-instance-1_1_1_1').hide();
   });
@@ -848,7 +850,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-34-instance-1_1_1_1').attr('enabled','false');
-  $('#b-repeating-enclosing-35-instance-1_1_1_1').hide();
   $('#b-remove-button-35-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-35-instance-1_1_1_1').hide();
   });
@@ -937,7 +938,6 @@ $(function() {
     showError('b-item-error-38-instance-1_1_1_1',ok);
   });
   
-  $('#b-repeating-enclosing-39-instance-1_1_1_1').hide();
   $('#b-remove-button-39-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-39-instance-1_1_1_1').hide();
   });
@@ -1041,7 +1041,6 @@ $(function() {
     $('#b-repeating-enclosing-43-instance-1_1_1').hide();
   });
 
-  $('#b-repeating-enclosing-44-instance-1_1_1_1').hide();
   $('#b-remove-button-44-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-44-instance-1_1_1_1').hide();
   });
@@ -1065,7 +1064,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-44-instance-1_1_1_1').attr('enabled','false');
-  $('#b-repeating-enclosing-45-instance-1_1_1_1').hide();
   $('#b-remove-button-45-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-45-instance-1_1_1_1').hide();
   });
@@ -1089,7 +1087,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#b-item-path-45-instance-1_1_1_1').attr('enabled','false');
-  $('#b-repeating-enclosing-46-instance-1_1_1_1').hide();
   $('#b-remove-button-46-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-46-instance-1_1_1_1').hide();
   });
@@ -1178,7 +1175,6 @@ $(function() {
     showError('b-item-error-49-instance-1_1_1_1',ok);
   });
   
-  $('#b-repeating-enclosing-50-instance-1_1_1_1').hide();
   $('#b-remove-button-50-instance-1_1_1_1').click(function() {
     $('#b-repeating-enclosing-50-instance-1_1_1_1').hide();
   });

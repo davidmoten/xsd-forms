@@ -100,6 +100,18 @@ $(function() {
     return method(argument);
   }
   
+  function changeMinOccursZeroCheckbox(v,enclosing) {
+    console.log("minOccursZeroCheckbox val=" + v.val());
+    console.log("enclosing id="+ enclosing.attr('id'));
+    if (v.is(':checked')) {
+      enclosing.find(':input').prop('disabled',false);
+      enclosing.find('.min-occurs-zero').prop('checked',true) 
+    } else {
+      enclosing.find(':input').prop('disabled',true);
+      enclosing.find('.min-occurs-zero').prop('checked',false)      
+    }
+  }
+  
   function matchesPattern(elem,regex) {
     return regex.test(elem.val());
   }
@@ -1292,7 +1304,6 @@ $(function() {
       { elem.show(); return; }
   })
 
-  $('#c-repeating-enclosing-53-instance-1_1').hide();
   $('#c-remove-button-53-instance-1_1').click(function() {
     $('#c-repeating-enclosing-53-instance-1_1').hide();
   });
@@ -1316,7 +1327,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#c-item-path-53-instance-1_1').attr('enabled','false');
-  $('#c-repeating-enclosing-53-instance-1_2').hide();
   $('#c-remove-button-53-instance-1_2').click(function() {
     $('#c-repeating-enclosing-53-instance-1_2').hide();
   });
@@ -1340,7 +1350,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#c-item-path-53-instance-1_2').attr('enabled','false');
-  $('#c-repeating-enclosing-53-instance-1_3').hide();
   $('#c-remove-button-53-instance-1_3').click(function() {
     $('#c-repeating-enclosing-53-instance-1_3').hide();
   });
@@ -1364,7 +1373,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#c-item-path-53-instance-1_3').attr('enabled','false');
-  $('#c-repeating-enclosing-53-instance-1_4').hide();
   $('#c-remove-button-53-instance-1_4').click(function() {
     $('#c-repeating-enclosing-53-instance-1_4').hide();
   });
@@ -1388,7 +1396,6 @@ $(function() {
   
   //disable item-path due to minOccurs=0 and default is empty
   $('#c-item-path-53-instance-1_4').attr('enabled','false');
-  $('#c-repeating-enclosing-53-instance-1_5').hide();
   $('#c-remove-button-53-instance-1_5').click(function() {
     $('#c-repeating-enclosing-53-instance-1_5').hide();
   });
@@ -2308,7 +2315,6 @@ $(function() {
       { elem.show(); return; }
   })
 
-  $('#c-repeating-enclosing-64-instance-1_1').hide();
   $('#c-remove-button-64-instance-1_1').click(function() {
     $('#c-repeating-enclosing-64-instance-1_1').hide();
   });
@@ -3131,6 +3137,123 @@ $(function() {
       { elem.show(); return; }
   })
 
+$('#c-min-occurs-zero-89-instance-1').change( function () {
+  changeMinOccursZeroCheckbox($(this),$('#c-repeating-enclosing-89-instance-1_1'));
+})
+
+$('#c-min-occurs-zero-89-instance-1').change();
+  $('#c-remove-button-89-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-89-instance-1_1').hide();
+  });
+
+  $('#c-remove-button-90-instance-1_1_1').click(function() {
+    $('#c-repeating-enclosing-90-instance-1_1_1').hide();
+  });
+
+  // first
+  var validate90instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-90-instance-1_1_1');
+    var pathDiv = $('#c-item-path-90-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#c-item-90-instance-1_1_1').change( function() {
+    var ok = validate90instance1_1_1();
+    showError('c-item-error-90-instance-1_1_1',ok);
+  });
+  
+  $('#c-remove-button-91-instance-1_1_1').click(function() {
+    $('#c-repeating-enclosing-91-instance-1_1_1').hide();
+  });
+
+  // second
+  var validate91instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-91-instance-1_1_1');
+    var pathDiv = $('#c-item-path-91-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#c-item-91-instance-1_1_1').change( function() {
+    var ok = validate91instance1_1_1();
+    showError('c-item-error-91-instance-1_1_1',ok);
+  });
+  
+  $('#c-remove-button-92-instance-1_1_1').click(function() {
+    $('#c-repeating-enclosing-92-instance-1_1_1').hide();
+  });
+
+  $('#c-remove-button-93-instance-1_1_1_1').click(function() {
+    $('#c-repeating-enclosing-93-instance-1_1_1_1').hide();
+  });
+
+  // A
+  var validate93instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-93-instance-1_1_1_1');
+    var pathDiv = $('#c-item-path-93-instance-1_1_1_1');
+    return ok;
+  }
+  
+  $('#c-item-93-instance-1_1_1_1').change( function() {
+    var ok = validate93instance1_1_1_1();
+    showError('c-item-error-93-instance-1_1_1_1',ok);
+  });
+  
+  $('#c-remove-button-94-instance-1_1_1_1').click(function() {
+    $('#c-repeating-enclosing-94-instance-1_1_1_1').hide();
+  });
+
+  // B
+  var validate94instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-94-instance-1_1_1_1');
+    var pathDiv = $('#c-item-path-94-instance-1_1_1_1');
+    return ok;
+  }
+  
+  $('#c-item-94-instance-1_1_1_1').change( function() {
+    var ok = validate94instance1_1_1_1();
+    showError('c-item-error-94-instance-1_1_1_1',ok);
+  });
+  
+  $('#c-remove-button-95-instance-1_1_1_1').click(function() {
+    $('#c-repeating-enclosing-95-instance-1_1_1_1').hide();
+  });
+
+  // C
+  var validate95instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-95-instance-1_1_1_1');
+    var pathDiv = $('#c-item-path-95-instance-1_1_1_1');
+    return ok;
+  }
+  
+  $('#c-item-95-instance-1_1_1_1').change( function() {
+    var ok = validate95instance1_1_1_1();
+    showError('c-item-error-95-instance-1_1_1_1',ok);
+  });
+  
+  $('#c-remove-button-96-instance-1_1_1_1').click(function() {
+    $('#c-repeating-enclosing-96-instance-1_1_1_1').hide();
+  });
+
+  // option
+  var validate96instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-96-instance-1_1_1_1');
+    var pathDiv = $('#c-item-path-96-instance-1_1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#c-item-96-instance-1_1_1_1').change( function() {
+    var ok = validate96instance1_1_1_1();
+    showError('c-item-error-96-instance-1_1_1_1',ok);
+  });
+  
   //extract xml from element <text-element>
   function getXml2instance1() {
 
@@ -4815,6 +4938,102 @@ $(function() {
    return xml;
   }
 
+  //extract xml from element <first>
+  function getXml90instance1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-90-instance-1_1_1')) {
+    var v = encodedValueById("c-item-90-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<first>' + v + '</first>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <second>
+  function getXml91instance1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-91-instance-1_1_1')) {
+    var v = encodedValueById("c-item-91-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<second>' + v + '</second>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <A>
+  function getXml93instance1_1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-93-instance-1_1_1_1')) {
+    var v = encodedValueById("c-item-93-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<A>' + v + '</A>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <B>
+  function getXml94instance1_1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-94-instance-1_1_1_1')) {
+    var v = encodedValueById("c-item-94-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<B>' + v + '</B>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <C>
+  function getXml95instance1_1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-95-instance-1_1_1_1')) {
+    var v = encodedValueById("c-item-95-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<C>' + toBoolean(v) + '</C>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <option>
+  function getXml96instance1_1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-96-instance-1_1_1_1')) {
+    var v = encodedValueById("c-item-96-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<option>' + v + '</option>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <nested>
+  function getXml92instance1_1() {
+
+    var xml = '\n' + spaces(4) + '<nested>';
+    //now add sequence children for each instanceNo
+    if (idVisible('c-repeating-enclosing-92-instance-1_1_1')) {
+      xml += getXml93instance1_1_1();
+      xml += getXml94instance1_1_1();
+      xml += getXml95instance1_1_1();
+      xml += getXml96instance1_1_1();
+    }
+    xml += '\n' + spaces(4) + '</nested>';
+    return xml;
+  }
+
+  //extract xml from element <min-occurs-zero-sequence>
+  function getXml89instance1() {
+
+if (!$('#c-min-occurs-zero-89-instance-1').is(':checked')) return '';
+    var xml = '\n' + spaces(2) + '<min-occurs-zero-sequence>';
+    //now add sequence children for each instanceNo
+    if (idVisible('c-repeating-enclosing-89-instance-1_1')) {
+      xml += getXml90instance1_1();
+      xml += getXml91instance1_1();
+      xml += getXml92instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</min-occurs-zero-sequence>';
+    return xml;
+  }
+
   //extract xml from element <main>
   function getXml1instance() {
 
@@ -4883,6 +5102,7 @@ $(function() {
       xml += getXml78instance1();
       xml += getXml83instance1();
       xml += getXml88instance1();
+      xml += getXml89instance1();
     }
     xml += '\n' + spaces(0) + '</main>';
     return xml;
@@ -7115,6 +7335,114 @@ $(function() {
               </input>
               <div id="c-item-path-88-instance-1_3" class="item-path" enabled="true"></div>
               <div id="c-item-error-88-instance-1_3" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="non-repeating-title">MinOccurs=0 for a sequence</div>
+          <div class="min-occurs-zero-container">
+            <div class="min-occurs-zero-label">Click to enable</div>
+            <input number="89" name="c-min-occurs-zero-name89-instance-1" checked="false" id="c-min-occurs-zero-89-instance-1" class="min-occurs-zero" type="checkbox">
+            </input>
+          </div>
+          <div id="c-repeating-enclosing-89-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="c-sequence-89-instance-1" class="sequence-content">
+              <div id="c-item-enclosing-90-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-90-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">90</div>
+                  <label class="item-label" for="c-item-input-90-instance-1_1_1">First</label>
+                  <div class="item-input">
+                    <input number="90" name="c-item-input-90-instance-1_1_1" id="c-item-90-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-path-90-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="c-item-error-90-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-91-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-91-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">91</div>
+                  <label class="item-label" for="c-item-input-91-instance-1_1_1">Second</label>
+                  <div class="item-input">
+                    <input number="91" name="c-item-input-91-instance-1_1_1" id="c-item-91-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="c-item-path-91-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="c-item-error-91-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div class="sequence">
+                <div class="non-repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-92-instance-1_1_1" class="repeating-enclosing">
+                  <div class="sequence-label">Nested named complex type</div>
+                  <div id="c-sequence-92-instance-1" class="sequence-content">
+                    <div id="c-item-enclosing-93-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="c-repeating-enclosing-93-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">93</div>
+                        <label class="item-label" for="c-item-input-93-instance-1_1_1_1">A</label>
+                        <div class="item-input">
+                          <input number="93" name="c-item-input-93-instance-1_1_1_1" id="c-item-93-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="c-item-path-93-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="c-item-error-93-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="c-item-enclosing-94-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="c-repeating-enclosing-94-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">94</div>
+                        <label class="item-label" for="c-item-input-94-instance-1_1_1_1">B</label>
+                        <div class="item-input">
+                          <input number="94" name="c-item-input-94-instance-1_1_1_1" id="c-item-94-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="c-item-path-94-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="c-item-error-94-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="c-item-enclosing-95-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="c-repeating-enclosing-95-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">95</div>
+                        <label class="item-label" for="c-item-input-95-instance-1_1_1_1">C<em>*</em></label>
+                        <div class="item-input">
+                          <input number="95" name="c-item-input-95-instance-1_1_1_1" id="c-item-95-instance-1_1_1_1" class=" item-input-text" type="checkbox">
+                          </input>
+                          <div id="c-item-path-95-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="c-item-error-95-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="c-item-enclosing-96-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="c-repeating-enclosing-96-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">96</div>
+                        <label class="item-label" for="c-item-input-96-instance-1_1_1_1">Option</label>
+                        <div class="item-input">
+                          <select id="c-item-96-instance-1_1_1_1" class="select" name="c-item-input-96-instance-1_1_1_1" number="96">
+                            <option value="option-1">option-1</option>
+                            <option value="option-2">option-2</option>
+                          </select>
+                          <div id="c-item-path-96-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="c-item-error-96-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
