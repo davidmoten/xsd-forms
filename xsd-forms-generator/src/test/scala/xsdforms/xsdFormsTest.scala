@@ -232,12 +232,13 @@ package xsdforms {
         //testChoiceRepeat(driver,58)
         testSubmission(driver)
         driver.close
-        val log = new File("chromedriver.log")
-        if (log.exists) log.delete();
-      } finally {
         //now need to ensure that any driver executable (e.g. chromedriver)
         //is stopped whether the tests fail or not.
         driver.quit
+        val log = new File("chromedriver.log")
+        if (log.exists) log.delete();
+      } finally {
+      // do nothing 
       }
     }
 

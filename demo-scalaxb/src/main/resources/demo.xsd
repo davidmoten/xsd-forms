@@ -407,8 +407,18 @@
         <xs:annotation i:nonRepeatingTitle="MinOccurs=0 for a sequence" />
       </xs:element>
 
+	  <xs:element name="datatype-int" type="xs:int" default="-123"/>
+	  <xs:element name="datatype-long" type="xs:long" default="-1234"/>
+	  <xs:element name="datatype-short" type="xs:short" default="12"/>
+	  <xs:element name="datatype-positive-integer" type="xs:positiveInteger" default="12345"/>
+	  <xs:element name="datatype-negative-integer" type="xs:negativeInteger" default="-12345"/>
+	  <xs:element name="datatype-non-negative-integer" type="xs:nonNegativeInteger" default="123456"/>
+	  <xs:element name="datatype-non-positive-integer" type="xs:nonPositiveInteger" default="0"/>
+
     </xs:sequence>
   </xs:complexType>
+
+  <!-- type definitions -->
 
   <xs:simpleType name="string-enumeration">
     <xs:restriction base="xs:string">

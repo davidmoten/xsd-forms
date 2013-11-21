@@ -19,7 +19,7 @@ package xsdforms {
 
     /**
      * Annotation 'choice' If choice=inline then choice is inline
-     * with radio selector otherwise appears after the group of 
+     * with radio selector otherwise appears after the group of
      * radio selectors.
      */
     val Choice = XsdFormsAnnotation("choice")
@@ -107,6 +107,8 @@ package xsdforms {
     def unexpected() = throw new RuntimeException()
   }
 
+  case class XsdDatatype(name: String, pattern: Option[String] = None)
+
   /**
    * Utility methods and constants for XML Schemas (XSD).
    */
@@ -115,13 +117,24 @@ package xsdforms {
     val AppInfoSchema = "http://moten.david.org/xsd-forms"
     def qn(namespaceUri: String, localPart: String) = new QName(namespaceUri, localPart)
     def qn(localPart: String): QName = new QName(Xsd, localPart)
-    val XsdDateTime = "dateTime"
-    val XsdDate = "date"
-    val XsdTime = "time"
-    val XsdInteger = "integer"
-    val XsdDecimal = "decimal"
-    val XsdBoolean = "boolean"
-    val XsdString = "string"
+    def qn(datatype: XsdDatatype): QName = qn(Xsd, datatype.name)
+
+    //TODO use enumeration
+    val XsdDateTime = XsdDatatype("dateTime")
+    val XsdDate = XsdDatatype("date")
+    val XsdTime = XsdDatatype("time")
+    val XsdInteger = XsdDatatype("integer", Some("\\d+"))
+    val XsdInt = XsdDatatype("int", Some("-?\\d+"))
+    val XsdLong = XsdDatatype("long", Some("-?\\d+"))
+    val XsdShort = XsdDatatype("short", Some("-?\\d+"))
+    val XsdPositiveInteger = XsdDatatype("positiveInteger", Some("[1-9]\\d*"))
+    val XsdNegativeInteger = XsdDatatype("negativeInteger", Some("-[1-9]\\d*"))
+    //TODO allow zero for non-positive integer (adjust regex)
+    val XsdNonPositiveInteger = XsdDatatype("nonPositiveInteger", Some("(-\\d+)|0"))
+    val XsdNonNegativeInteger = XsdDatatype("nonNegativeInteger", Some("\\d+"))
+    val XsdDecimal = XsdDatatype("decimal", Some("-?\\d+(\\.\\d*)?"))
+    val XsdBoolean = XsdDatatype("boolean")
+    val XsdString = XsdDatatype("string")
   }
 
   /**
@@ -847,10 +860,10 @@ package xsdforms {
     private def transformToXmlValue(r: Restriction, value: String): String = {
       val qn = toQN(r)
       qn match {
-        case QN(xs, XsdDate) => "toXmlDate(" + value + ")"
-        case QN(xs, XsdDateTime) => "toXmlDateTime(" + value + ")"
-        case QN(xs, XsdTime) => "toXmlTime(" + value + ")"
-        case QN(xs, XsdBoolean) => "toBoolean(" + value + ")"
+        case QN(xs, XsdDate.name) => "toXmlDate(" + value + ")"
+        case QN(xs, XsdDateTime.name) => "toXmlDateTime(" + value + ")"
+        case QN(xs, XsdTime.name) => "toXmlTime(" + value + ")"
+        case QN(xs, XsdBoolean.name) => "toBoolean(" + value + ")"
         case _ => value
       }
     }
@@ -1126,9 +1139,9 @@ package xsdforms {
     }
 
     private def getExtraClasses(qn: QN) = qn match {
-      case QN(xs, XsdDate) => ClassDatePicker + " "
-      case QN(xs, XsdDateTime) => ClassDateTimePicker + " "
-      case QN(xs, XsdTime) => ClassTimePicker + " "
+      case QN(xs, XsdDate.name) => ClassDatePicker + " "
+      case QN(xs, XsdDateTime.name) => ClassDateTimePicker + " "
+      case QN(xs, XsdTime.name) => ClassTimePicker + " "
       case _ => ""
     }
 
@@ -1171,8 +1184,8 @@ package xsdforms {
         case Some(v) => {
           toQN(r) match {
             // drop the seconds off the time so js timepicker is happy
-            case QN(xs, XsdTime) => Some(v.substring(0, 5))
-            case QN(xs, XsdDateTime) => Some(v.substring(0, 16))
+            case QN(xs, XsdTime.name) => Some(v.substring(0, 5))
+            case QN(xs, XsdDateTime.name) => Some(v.substring(0, 16))
             case _ => value
           }
         }
@@ -1355,9 +1368,17 @@ package xsdforms {
     }
 
     private def getBasePattern(qn: QN) = {
+
       qn match {
-        case QN(xs, XsdDecimal) => Some("\\d+(\\.\\d*)?")
-        case QN(xs, XsdInteger) => Some("\\d+")
+        case QN(xs, XsdDecimal.name) => XsdDecimal.pattern
+        case QN(xs, XsdInteger.name) => XsdInteger.pattern
+        case QN(xs, XsdInt.name) => XsdInt.pattern
+        case QN(xs, XsdLong.name) => XsdLong.pattern
+        case QN(xs, XsdShort.name) => XsdShort.pattern
+        case QN(xs, XsdPositiveInteger.name) => XsdPositiveInteger.pattern
+        case QN(xs, XsdNonPositiveInteger.name) => XsdNonPositiveInteger.pattern
+        case QN(xs, XsdNegativeInteger.name) => XsdNegativeInteger.pattern
+        case QN(xs, XsdNonNegativeInteger.name) => XsdNonNegativeInteger.pattern
         case _ => None
       }
     }
@@ -1462,8 +1483,10 @@ package xsdforms {
     private def createBasePatternTestScriptlet(qn: QN) = {
       val js = JS()
       val basePattern = getBasePattern(qn)
-      if (basePattern.size > 0)
-        js.line("  ok &= matchesPattern(v,/^%s$/);", basePattern.head)
+      basePattern match {
+        case Some(pattern) => js.line("  ok &= matchesPattern(v,/^%s$/);", pattern)
+        case _ => 
+      }
       js.toString
     }
 
@@ -1510,10 +1533,10 @@ package xsdforms {
         //calculate implicit patterns for dates, times, and datetimes
         val implicitPatterns =
           qn match {
-            case QN(xs, XsdDate) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
+            case QN(xs, XsdDate.name) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
             //TODO why spaces on end of time?
-            case QN(xs, XsdTime) => Some("\\d\\d:\\d\\d *")
-            case QN(xs, XsdDateTime) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
+            case QN(xs, XsdTime.name) => Some("\\d\\d:\\d\\d *")
+            case QN(xs, XsdDateTime.name) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
             case _ => None
           }
 
@@ -1523,7 +1546,7 @@ package xsdforms {
     private def getInputType(r: Restriction) = {
       val qn = toQN(r)
       qn match {
-        case QN(xs, XsdBoolean) => "checkbox"
+        case QN(xs, XsdBoolean.name) => "checkbox"
         case _ => "text"
       }
     }
@@ -1747,7 +1770,9 @@ package xsdforms {
         ++ (topLevelSimpleTypes.map(x => (qn(targetNs, x.name.get), x)))).toMap;
 
     private val baseTypes =
-      Set(XsdDecimal, XsdString, XsdInteger, XsdDate, XsdDateTime, XsdTime, XsdBoolean)
+      Set(XsdDecimal, XsdString, XsdInteger, XsdDate, XsdDateTime, XsdTime, 
+          XsdBoolean, XsdInt, XsdLong, XsdShort, XsdPositiveInteger, 
+          XsdNegativeInteger, XsdNonPositiveInteger, XsdNonNegativeInteger)
         .map(qn(_))
 
     private def getType(q: QName): AnyRef = {

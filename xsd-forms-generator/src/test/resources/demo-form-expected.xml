@@ -97,4 +97,11 @@
   <minoccurs-greater-than-one></minoccurs-greater-than-one>
   <minoccurs-greater-than-one></minoccurs-greater-than-one>
   <minoccurs-greater-than-one></minoccurs-greater-than-one>
+  <datatype-int>-123</datatype-int>
+  <datatype-long>-1234</datatype-long>
+  <datatype-short>12</datatype-short>
+  <datatype-positive-integer>12345</datatype-positive-integer>
+  <datatype-negative-integer>-12345</datatype-negative-integer>
+  <datatype-non-negative-integer>123456</datatype-non-negative-integer>
+  <datatype-non-positive-integer>0</datatype-non-positive-integer>
 </main>
