@@ -135,6 +135,8 @@ package xsdforms {
     val XsdDecimal = XsdDatatype("decimal", Some("-?\\d+(\\.\\d*)?"))
     val XsdBoolean = XsdDatatype("boolean")
     val XsdString = XsdDatatype("string")
+    val XsdDouble = XsdDatatype("double", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
+    val XsdFloat = XsdDatatype("float", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
   }
 
   /**
@@ -1379,6 +1381,8 @@ package xsdforms {
         case QN(xs, XsdNonPositiveInteger.name) => XsdNonPositiveInteger.pattern
         case QN(xs, XsdNegativeInteger.name) => XsdNegativeInteger.pattern
         case QN(xs, XsdNonNegativeInteger.name) => XsdNonNegativeInteger.pattern
+        case QN(xs, XsdDouble.name) => XsdDouble.pattern
+        case QN(xs, XsdFloat.name) => XsdFloat.pattern
         case _ => None
       }
     }
@@ -1485,7 +1489,7 @@ package xsdforms {
       val basePattern = getBasePattern(qn)
       basePattern match {
         case Some(pattern) => js.line("  ok &= matchesPattern(v,/^%s$/);", pattern)
-        case _ => 
+        case _ =>
       }
       js.toString
     }
@@ -1770,9 +1774,10 @@ package xsdforms {
         ++ (topLevelSimpleTypes.map(x => (qn(targetNs, x.name.get), x)))).toMap;
 
     private val baseTypes =
-      Set(XsdDecimal, XsdString, XsdInteger, XsdDate, XsdDateTime, XsdTime, 
-          XsdBoolean, XsdInt, XsdLong, XsdShort, XsdPositiveInteger, 
-          XsdNegativeInteger, XsdNonPositiveInteger, XsdNonNegativeInteger)
+      Set(XsdDecimal, XsdString, XsdInteger, XsdDate, XsdDateTime, XsdTime,
+        XsdBoolean, XsdInt, XsdLong, XsdShort, XsdPositiveInteger,
+        XsdNegativeInteger, XsdNonPositiveInteger, XsdNonNegativeInteger,
+        XsdDouble, XsdFloat)
         .map(qn(_))
 
     private def getType(q: QName): AnyRef = {
