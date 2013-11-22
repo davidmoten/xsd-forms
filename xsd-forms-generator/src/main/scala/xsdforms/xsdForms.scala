@@ -163,8 +163,6 @@ package xsdforms {
     def endChoice
     def simpleType(e: Element, typ: SimpleType)
     def baseType(e: Element, typ: BaseType)
-    def startExtension(e: Element, base: QName)
-    def stopExtension
   }
 
   //every element is either a sequence, choice or simpleType
@@ -195,7 +193,6 @@ package xsdforms {
   }
 
   // immutable would be preferrable but should be safe because not changed after tree created
-  case class NodeExtension(element:ElementWrapper,base:Node, child:Node) extends Node
   case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
   trait NodeBasic extends Node
@@ -277,16 +274,6 @@ package xsdforms {
 
     override def endChoice {
       stack.pop
-    }
-
-    override def startExtension(e: Element, base: QName) {
-      //TODO
-      println("startExtension:" + base)
-    }
-
-    override def stopExtension {
-      //TODO
-      println("stopExtension:")
     }
 
     override def simpleType(e: Element, typ: SimpleType) {
@@ -1769,6 +1756,8 @@ package xsdforms {
     import Util._
     import XsdUtil._
 
+    val extensionStack = new scala.collection.mutable.Stack[DataRecord[TypeDefParticleOption]]
+
     private val topLevelElements =
       s.schemasequence1.flatMap(_.schemaTopOption1.value match {
         case y: TopLevelElement => Some(y)
@@ -1838,7 +1827,6 @@ package xsdforms {
     }
 
     private def process(e: Element) {
-      def exception = unexpected("type of element " + e + " is missing")
       e.typeValue match {
         case Some(x: QName) => process(e, MyType(getType(x)))
         case None => {
@@ -1876,6 +1864,7 @@ package xsdforms {
         case x: SimpleContent =>
           unexpected
         case x: ComplexTypeModelSequence1 =>
+          //sequence or choice
           process(e, x.typeDefParticleOption1.getOrElse(unexpected))
       }
     }
@@ -1910,85 +1899,36 @@ package xsdforms {
     }
 
     private def process(e: Element, et: ExtensionType) {
-      visitor.startExtension(e, et.base)
-      
+      println("startExtension")
       //TODO 
       //resultant type is the eventual content type of the base (which could be a number of nested extensions)
       //if resultant type of et.base is sequence that add typeDefs into the sequence
       //if resultant type of et.base is choice then create sequence of et.base followed by typedefs
+      //either way if will start with a sequence
       //if resultant type of et.base is simpleType then ?
-      
-      val typ = getType(et.base)
-      
-      val resType:String = resultantType(typ)
-      println("resultantType=" + resType)
-      
-      process(e, MyType(getType(et.base)))
-      
-      //the extras
+
+      //the extension of the base type
       et.typeDefParticleOption3 match {
         case Some(typeDefParticleOption) => {
-          process(e, typeDefParticleOption)
+          extensionStack.push(typeDefParticleOption)
         }
         case _ => //do nothing
       }
-      visitor.stopExtension
+
+      process(e, MyType(getType(et.base)))
+
+      println("stopExtension")
     }
 
-    private def resultantType(ref:AnyRef):String = 
-      ref match {
-        case x: TopLevelSimpleType => "element"
-        case x: TopLevelComplexType => resultantType( x)
-        case x: BaseType => "element"
-        case _ => unexpected(ref.toString)
-      }
-    
-    private def resultantType(c:ComplexType):String  = {
-    
-      c.complexTypeModelOption3.value match {
-        case x: ComplexContent =>
-          resultantType( x)
-        case x: SimpleContent =>
-          "element"
-        case x: ComplexTypeModelSequence1 =>
-          resultantType(x.typeDefParticleOption1.getOrElse(unexpected))
-      }
-    }
-    
-    private def resultantType(cc:ComplexContent):String = {
-       val q = toQName(cc.complexcontentoption)
-      val value = cc.complexcontentoption.value
-      println("cc " + q + "=" + value)
-      if (qn("extension") == q)
-        value match {
-          case et: ExtensionType => {
-            resultantType(et.typeDefParticleOption3)
-          }
-          case _ => unexpected()
-        }
-      else unexpected
-    }
-    
-    private def resultantType(x:DataRecord[TypeDefParticleOption]):String = {
-       x.value match {
-        case y: GroupRef =>
-          unexpected
-        case y: ExplicitGroupable =>
-          if (matches(x, qn("sequence")))
-            "sequence"
-          else if (matches(x, qn("choice")))
-            "choice"
-          else unexpected
-        case _ => unexpected
-      }
-    }
-    
     private def process(e: Element, x: BaseType) {
       visitor.baseType(e, x)
     }
 
     private def process(e: Element, x: Sequence) {
       visitor.startSequence(e)
+      val extensions = extensionStack.toList
+      extensionStack.clear
+      extensions.foreach(y => process(e, y))
       x.group.particleOption3.foreach(y => process(e, toQName(y), y.value))
       visitor.endSequence
     }
