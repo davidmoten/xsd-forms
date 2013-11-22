@@ -1906,15 +1906,22 @@ package xsdforms {
           }
           case _ => unexpected()
         }
+      else unexpected
     }
 
     private def process(e: Element, et: ExtensionType) {
       visitor.startExtension(e, et.base)
       
       //TODO 
-      //if et.base is sequence that add typeDefs into the sequence
-      //if et.base is choice then create sequence of et.base followed by typedefs
-      //if et.base is simpleType then ?
+      //resultant type is the eventual content type of the base (which could be a number of nested extensions)
+      //if resultant type of et.base is sequence that add typeDefs into the sequence
+      //if resultant type of et.base is choice then create sequence of et.base followed by typedefs
+      //if resultant type of et.base is simpleType then ?
+      
+      val typ = getType(et.base)
+      
+      val resType:String = resultantType(typ)
+      println("resultantType=" + resType)
       
       process(e, MyType(getType(et.base)))
       
@@ -1928,6 +1935,54 @@ package xsdforms {
       visitor.stopExtension
     }
 
+    private def resultantType(ref:AnyRef):String = 
+      ref match {
+        case x: TopLevelSimpleType => "element"
+        case x: TopLevelComplexType => resultantType( x)
+        case x: BaseType => "element"
+        case _ => unexpected(ref.toString)
+      }
+    
+    private def resultantType(c:ComplexType):String  = {
+    
+      c.complexTypeModelOption3.value match {
+        case x: ComplexContent =>
+          resultantType( x)
+        case x: SimpleContent =>
+          "element"
+        case x: ComplexTypeModelSequence1 =>
+          resultantType(x.typeDefParticleOption1.getOrElse(unexpected))
+      }
+    }
+    
+    private def resultantType(cc:ComplexContent):String = {
+       val q = toQName(cc.complexcontentoption)
+      val value = cc.complexcontentoption.value
+      println("cc " + q + "=" + value)
+      if (qn("extension") == q)
+        value match {
+          case et: ExtensionType => {
+            resultantType(et.typeDefParticleOption3)
+          }
+          case _ => unexpected()
+        }
+      else unexpected
+    }
+    
+    private def resultantType(x:DataRecord[TypeDefParticleOption]):String = {
+       x.value match {
+        case y: GroupRef =>
+          unexpected
+        case y: ExplicitGroupable =>
+          if (matches(x, qn("sequence")))
+            "sequence"
+          else if (matches(x, qn("choice")))
+            "choice"
+          else unexpected
+        case _ => unexpected
+      }
+    }
+    
     private def process(e: Element, x: BaseType) {
       visitor.baseType(e, x)
     }
