@@ -13,7 +13,9 @@ package xsdforms {
     /**
      * Annotation 'label' is the label to be used for the element
      * input field. Usually located just left of the input field
-     * associated with the element with this annotation.
+     * associated with the element with this annotation. If omitted
+     * the default value is the element name with dashes and underscores
+     * replaced with spaces then camel cased.
      */
     val Label = XsdFormsAnnotation("label")
 
