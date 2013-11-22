@@ -422,9 +422,9 @@
         default="0" />
 
       <xs:element name="extension" type="extension2">
-        <xs:annotation i:label="Extension example" />
+        <xs:annotation i:label="Extension example using sequences" />
       </xs:element>
-
+      
     </xs:sequence>
   </xs:complexType>
 
