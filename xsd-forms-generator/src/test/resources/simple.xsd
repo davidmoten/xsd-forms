@@ -11,26 +11,37 @@
       <xs:element name="name" type="xs:string" maxOccurs="unbounded">
         <xs:annotation i:label="Full name" />
       </xs:element>
-      <xs:element name="extension" type="extension" >
+      <xs:element name="extension" type="extension2" >
         <xs:annotation i:label="Extension example" /> 
       </xs:element>
     </xs:sequence>
   </xs:complexType>
   
-  <xs:complexType name="type1">
+  <xs:complexType name="name-value">
   	<xs:sequence>
-  		<xs:element name="name" type="xs:string"/>
-  		<xs:element name="value" type="xs:string"/>
+  		<xs:element name="name" type="xs:string" default="name1"/>
+  		<xs:element name="value" type="xs:string" default="value1"/>
   	</xs:sequence>
   </xs:complexType>
   
-  <xs:complexType name="extension">
+  <xs:complexType name="extension1">
   	<xs:complexContent>
-  		<xs:extension base="type1">
+  		<xs:extension base="name-value">
 			<xs:sequence >
-			    <xs:element name="group" type="xs:string"/>
+			    <xs:element name="group" type="xs:string" default="group1"/>
 			</xs:sequence>  		
   		</xs:extension>
   	</xs:complexContent>
   </xs:complexType>
+  
+  <xs:complexType name="extension2">
+    <xs:complexContent>
+      <xs:extension base="extension1">
+      <xs:sequence >
+          <xs:element name="category" type="xs:string" default="category1"/>
+      </xs:sequence>      
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
 </xs:schema>

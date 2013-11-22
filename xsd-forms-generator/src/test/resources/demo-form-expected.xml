@@ -104,4 +104,10 @@
   <datatype-negative-integer>-12345</datatype-negative-integer>
   <datatype-non-negative-integer>123456</datatype-non-negative-integer>
   <datatype-non-positive-integer>0</datatype-non-positive-integer>
+  <extension>
+    <name>name1</name>
+    <value>value1</value>
+    <group>group1</group>
+    <category>category1</category>
+  </extension>
 </main>

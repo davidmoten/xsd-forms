@@ -621,10 +621,11 @@ package xsdforms {
       // fail
 
       // attempt unmarshal of xml
+      validateAgainstSchema(xml.getText, "/demo.xsd")
+
       //TODO why need to remove namespace?
       val text = xml.getText.replaceAll("xmlns=\".*\"", "")
-      validateAgainstSchema(xml.getText, "/demo.xsd")
-      val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(xml.getText))
+//      val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(text))
     }
 
     private def validateAgainstSchema(xml: String, xsdPath: String) {

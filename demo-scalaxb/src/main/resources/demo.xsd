@@ -407,13 +407,23 @@
         <xs:annotation i:nonRepeatingTitle="MinOccurs=0 for a sequence" />
       </xs:element>
 
-	  <xs:element name="datatype-int" type="xs:int" default="-123"/>
-	  <xs:element name="datatype-long" type="xs:long" default="-1234"/>
-	  <xs:element name="datatype-short" type="xs:short" default="12"/>
-	  <xs:element name="datatype-positive-integer" type="xs:positiveInteger" default="12345"/>
-	  <xs:element name="datatype-negative-integer" type="xs:negativeInteger" default="-12345"/>
-	  <xs:element name="datatype-non-negative-integer" type="xs:nonNegativeInteger" default="123456"/>
-	  <xs:element name="datatype-non-positive-integer" type="xs:nonPositiveInteger" default="0"/>
+      <xs:element name="datatype-int" type="xs:int" default="-123" />
+      <xs:element name="datatype-long" type="xs:long"
+        default="-1234" />
+      <xs:element name="datatype-short" type="xs:short"
+        default="12" />
+      <xs:element name="datatype-positive-integer" type="xs:positiveInteger"
+        default="12345" />
+      <xs:element name="datatype-negative-integer" type="xs:negativeInteger"
+        default="-12345" />
+      <xs:element name="datatype-non-negative-integer" type="xs:nonNegativeInteger"
+        default="123456" />
+      <xs:element name="datatype-non-positive-integer" type="xs:nonPositiveInteger"
+        default="0" />
+
+      <xs:element name="extension" type="extension2">
+        <xs:annotation i:label="Extension example" />
+      </xs:element>
 
     </xs:sequence>
   </xs:complexType>
@@ -491,5 +501,34 @@
       <xs:element name="option" type="string-enumeration" />
     </xs:sequence>
   </xs:complexType>
+
+  <xs:complexType name="name-value">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" default="name1" />
+      <xs:element name="value" type="xs:string" default="value1" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="extension1">
+    <xs:complexContent>
+      <xs:extension base="name-value">
+        <xs:sequence>
+          <xs:element name="group" type="xs:string" default="group1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="extension2">
+    <xs:complexContent>
+      <xs:extension base="extension1">
+        <xs:sequence>
+          <xs:element name="category" type="xs:string"
+            default="category1" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
 
 </xs:schema>
