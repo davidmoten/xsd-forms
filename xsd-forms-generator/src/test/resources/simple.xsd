@@ -5,11 +5,32 @@
   <xs:element name="person" type="person">
     <xs:annotation i:label="Personal details" />
   </xs:element>
+  
   <xs:complexType name="person">
     <xs:sequence>
       <xs:element name="name" type="xs:string" maxOccurs="unbounded">
         <xs:annotation i:label="Full name" />
       </xs:element>
+      <xs:element name="extension" type="extension" >
+        <xs:annotation i:label="Extension example" /> 
+      </xs:element>
     </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="type1">
+  	<xs:sequence>
+  		<xs:element name="name" type="xs:string"/>
+  		<xs:element name="value" type="xs:string"/>
+  	</xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="extension">
+  	<xs:complexContent>
+  		<xs:extension base="type1">
+			<xs:sequence >
+			    <xs:element name="group" type="xs:string"/>
+			</xs:sequence>  		
+  		</xs:extension>
+  	</xs:complexContent>
   </xs:complexType>
 </xs:schema>

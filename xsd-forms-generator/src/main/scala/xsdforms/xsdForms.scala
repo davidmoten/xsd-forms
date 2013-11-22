@@ -80,6 +80,9 @@ package xsdforms {
      */
     val MakeVisible = XsdFormsAnnotation("makeVisible")
     val NonRepeatingTitle = XsdFormsAnnotation("nonRepeatingTitle")
+    /**
+     * Annotation 'description' appears just below the input box.
+     */
     val Description = XsdFormsAnnotation("description")
     val Visible = XsdFormsAnnotation("visible")
 
@@ -139,6 +142,7 @@ package xsdforms {
     val XsdString = XsdDatatype("string")
     val XsdDouble = XsdDatatype("double", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
     val XsdFloat = XsdDatatype("float", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
+
   }
 
   /**
@@ -159,6 +163,8 @@ package xsdforms {
     def endChoice
     def simpleType(e: Element, typ: SimpleType)
     def baseType(e: Element, typ: BaseType)
+    def startExtension(e: Element, base: QName)
+    def stopExtension
   }
 
   //every element is either a sequence, choice or simpleType
@@ -270,6 +276,16 @@ package xsdforms {
 
     override def endChoice {
       stack.pop
+    }
+
+    override def startExtension(e: Element, base: QName) {
+      //TODO
+      println("startExtension:" + base)
+    }
+
+    override def stopExtension {
+      //TODO
+      println("stopExtension:")
     }
 
     override def simpleType(e: Element, typ: SimpleType) {
@@ -1852,25 +1868,56 @@ package xsdforms {
       visitor.simpleType(e, x)
     }
 
-    private def process(e: Element, x: ComplexType) {
-      x.complexTypeModelOption3.value match {
+    private def process(e: Element, c: ComplexType) {
+      c.complexTypeModelOption3.value match {
         case x: ComplexContent =>
-          unexpected
+          process(e, x)
         case x: SimpleContent =>
           unexpected
         case x: ComplexTypeModelSequence1 =>
-          x.typeDefParticleOption1.getOrElse(unexpected).value match {
-            case y: GroupRef =>
-              unexpected
-            case y: ExplicitGroupable =>
-              if (matches(x.typeDefParticleOption1.get, qn("sequence")))
-                process(e, Sequence(y))
-              else if (matches(x.typeDefParticleOption1.get, qn("choice")))
-                process(e, Choice(y))
-              else unexpected
-            case _ => unexpected
-          }
+          process(e, x.typeDefParticleOption1.getOrElse(unexpected))
       }
+    }
+
+    private def process(e: Element, x: DataRecord[TypeDefParticleOption]) {
+      x.value match {
+        case y: GroupRef =>
+          unexpected
+        case y: ExplicitGroupable =>
+          if (matches(x, qn("sequence")))
+            process(e, Sequence(y))
+          else if (matches(x, qn("choice")))
+            process(e, Choice(y))
+          else unexpected
+        case _ => unexpected
+      }
+    }
+
+    private def process(e: Element, cc: ComplexContent) {
+      val q = toQName(cc.complexcontentoption)
+
+      val value = cc.complexcontentoption.value
+      println("cc " + q + "=" + value)
+      if (qn("extension") == q)
+        value match {
+          case et: ExtensionType => {
+            process(e, et)
+          }
+          case _ => unexpected()
+        }
+    }
+
+    private def process(e: Element, et: ExtensionType) {
+      visitor.startExtension(e, et.base)
+      
+      //the extras
+      et.typeDefParticleOption3 match {
+        case Some(typeDefParticleOption) => {
+          process(e, typeDefParticleOption)
+        }
+        case _ => //do nothing
+      }
+      visitor.stopExtension
     }
 
     private def process(e: Element, x: BaseType) {
