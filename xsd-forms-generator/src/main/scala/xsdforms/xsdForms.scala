@@ -1757,6 +1757,7 @@ package xsdforms {
     import XsdUtil._
 
     val extensionStack = new scala.collection.mutable.Stack[DataRecord[TypeDefParticleOption]]
+    val extensionsIncludedInBaseSequence = new scala.collection.mutable.Stack[Boolean]
 
     private val topLevelElements =
       s.schemasequence1.flatMap(_.schemaTopOption1.value match {
@@ -1925,12 +1926,19 @@ package xsdforms {
     }
 
     private def process(e: Element, x: Sequence) {
-      visitor.startSequence(e)
+      val wrapWithSequence = extensionsIncludedInBaseSequence.length==0|| !extensionsIncludedInBaseSequence.top
+      if (wrapWithSequence)
+        visitor.startSequence(e)
       val extensions = extensionStack.toList
       extensionStack.clear
-      extensions.foreach(y => process(e, y))
+      extensionsIncludedInBaseSequence.push(false)
       x.group.particleOption3.foreach(y => process(e, toQName(y), y.value))
-      visitor.endSequence
+      extensionsIncludedInBaseSequence.pop
+      extensionsIncludedInBaseSequence.push(true)
+      extensions.foreach(y => process(e, y))
+      extensionsIncludedInBaseSequence.pop
+      if (wrapWithSequence)
+        visitor.endSequence
     }
 
     private def process(e: Element, q: QName, x: ParticleOption) {
