@@ -784,9 +784,12 @@ package xsdforms {
         if (isMinOccursZero(node.element)) {
           js.line("if (!$('#%s').is(':checked')) return '';", getMinOccursZeroId(number, instances))
         }
-        js
-          .line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
-          .line("    //now add sequence children for each instanceNo")
+        if (node.element.name.isEmpty)
+          js.line("    var xml = '';")
+        else
+          js
+            .line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
+        js.line("    //now add sequence children for each instanceNo")
 
         for (instanceNo <- repeats(node)) {
           val instNos = instances add instanceNo
@@ -797,7 +800,8 @@ package xsdforms {
           }
           js.line("    }")
         }
-        js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
+        if (!node.element.name.isEmpty)
+          js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
         js.line("    return xml;")
 
         addXmlExtractScriptlet(node, js.toString, instances);
@@ -807,8 +811,11 @@ package xsdforms {
     private def addXmlExtractScriptlet(node: NodeChoice, instances: Instances) {
 
       val js = JS()
-        .line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
-        .line("    //now optionally add selected child if any")
+      if (node.element.name.isEmpty)
+        js.line("    var xml = '';")
+      else
+        js.line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
+      js.line("    //now optionally add selected child if any")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
         js.line("    var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(node, instNos))
@@ -819,8 +826,9 @@ package xsdforms {
               .line("    xml += %s();", xmlFunctionName(n, instNos))
             addXmlExtractScriptlet(n, instNos)
         }
-        js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
-          .line("    return xml;")
+        if (!node.element.name.isEmpty)
+          js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
+        js.line("    return xml;")
         addXmlExtractScriptlet(node, js.toString(), instances);
       }
     }
@@ -899,10 +907,16 @@ package xsdforms {
       else
         ""
     private def xmlStart(node: Node) =
-      "'<" + node.element.name.getOrElse("?") + namespace(node) + ">'"
+      node.element.name match {
+        case Some(name) => "'<" + name + namespace(node) + ">'"
+        case _ => "''"
+      }
 
     private def xmlEnd(node: Node) =
-      "'</" + node.element.name.getOrElse("?") + ">'"
+      node.element.name match {
+        case Some(name) => "'</" + name + ">'"
+        case _ => "''"
+      }
 
     private def xml(node: Node, value: String) =
       xmlStart(node) + Plus + value + Plus + xmlEnd(node)
@@ -1743,6 +1757,27 @@ package xsdforms {
 
   }
 
+  case class AnonymousSequenceElement() extends Element {
+    val annotation: Option[xsd.Annotation] = None
+    val elementoption: Option[scalaxb.DataRecord[xsd.ElementOption]] = None
+    val identityConstraintOption4: Seq[scalaxb.DataRecord[xsd.IdentityConstraintOption]] = Nil
+    val id: Option[String] = None
+    val name: Option[String] = None
+    val ref: Option[javax.xml.namespace.QName] = None
+    val typeValue: Option[javax.xml.namespace.QName] = None
+    val substitutionGroup: Option[javax.xml.namespace.QName] = None
+    val minOccurs: BigInt = BigInt(1)
+    val maxOccurs: String = "1"
+    val default: Option[String] = None
+    val fixed: Option[String] = None
+    val nillable: Boolean = false
+    val abstractValue: Boolean = false
+    val finalValue: Option[String] = None
+    val block: Option[String] = None
+    val form: Option[xsd.FormChoice] = None
+    val attributes: Map[String, scalaxb.DataRecord[Any]] = Map()
+  }
+
   /**
    * **************************************************************
    *
@@ -1948,12 +1983,10 @@ package xsdforms {
         }
       } else if (q == qn("sequence")) {
         x match {
-          case y:ExplicitGroupable => process(e, Sequence(y))
+          case y: ExplicitGroupable => process(AnonymousSequenceElement(), Sequence(y))
           case _ => unexpected
         }
-      } 
-      
-      else unexpected(q + x.toString)
+      } else unexpected(q + x.toString)
     }
 
     private def process(e: Element, x: Choice) {
