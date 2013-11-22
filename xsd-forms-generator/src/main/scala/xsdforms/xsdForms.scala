@@ -195,6 +195,7 @@ package xsdforms {
   }
 
   // immutable would be preferrable but should be safe because not changed after tree created
+  case class NodeExtension(element:ElementWrapper,base:Node, child:Node) extends Node
   case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
   trait NodeBasic extends Node
@@ -1909,6 +1910,13 @@ package xsdforms {
 
     private def process(e: Element, et: ExtensionType) {
       visitor.startExtension(e, et.base)
+      
+      //TODO 
+      //if et.base is sequence that add typeDefs into the sequence
+      //if et.base is choice then create sequence of et.base followed by typedefs
+      //if et.base is simpleType then ?
+      
+      process(e, MyType(getType(et.base)))
       
       //the extras
       et.typeDefParticleOption3 match {
