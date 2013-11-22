@@ -1901,12 +1901,6 @@ package xsdforms {
 
     private def process(e: Element, et: ExtensionType) {
       println("startExtension")
-      //TODO 
-      //resultant type is the eventual content type of the base (which could be a number of nested extensions)
-      //if resultant type of et.base is sequence that add typeDefs into the sequence
-      //if resultant type of et.base is choice then create sequence of et.base followed by typedefs
-      //either way if will start with a sequence
-      //if resultant type of et.base is simpleType then ?
 
       //the extension of the base type
       et.typeDefParticleOption3 match {
@@ -1926,7 +1920,7 @@ package xsdforms {
     }
 
     private def process(e: Element, x: Sequence) {
-      val wrapWithSequence = extensionsIncludedInBaseSequence.length==0|| !extensionsIncludedInBaseSequence.top
+      val wrapWithSequence = extensionsIncludedInBaseSequence.isEmpty || !extensionsIncludedInBaseSequence.top
       if (wrapWithSequence)
         visitor.startSequence(e)
       val extensions = extensionStack.toList
@@ -1952,19 +1946,38 @@ package xsdforms {
           case y: ExplicitGroupable => process(e, Choice(y))
           case _ => unexpected
         }
-      } else unexpected(q + x.toString)
+      } else if (q == qn("sequence")) {
+        x match {
+          case y:ExplicitGroupable => process(e, Sequence(y))
+          case _ => unexpected
+        }
+      } 
+      
+      else unexpected(q + x.toString)
     }
 
     private def process(e: Element, x: Choice) {
+      val wrapWithSequence = !extensionStack.isEmpty
+      val extensions = extensionStack.toList
+      extensionStack.clear
+      if (wrapWithSequence)
+        visitor.startSequence(e)
       visitor.startChoice(e, x)
       var index = 0
+      extensionsIncludedInBaseSequence.push(false)
       x.group.particleOption3.foreach(y => {
         index = index + 1
         visitor.startChoiceItem(e, y.value, index)
         process(e, toQName(y), y.value)
         visitor.endChoiceItem
       })
+      extensionsIncludedInBaseSequence.pop
       visitor.endChoice
+      extensionsIncludedInBaseSequence.push(true)
+      extensions.foreach(y => process(e, y))
+      extensionsIncludedInBaseSequence.pop
+      if (wrapWithSequence)
+        visitor.endSequence
     }
   }
 
