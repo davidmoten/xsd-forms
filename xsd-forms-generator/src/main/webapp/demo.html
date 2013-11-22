@@ -20,7 +20,6 @@ function encodeHTML(s) {
 }
           
 function testEncodeHTML() {
-   console.log(encodeHTML('<>'));
    test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
 }
           
@@ -88,7 +87,6 @@ $(function() {
     var val = elem.attr('value');
     elem.datepicker( "option", "dateFormat","yy-mm-dd");
     if (typeof(val) != 'undefined') {
-      console.log("val="+val);
       elem.datepicker('setDate',val);
     }
   });
@@ -101,8 +99,6 @@ $(function() {
   }
   
   function changeMinOccursZeroCheckbox(v,enclosing) {
-    console.log("minOccursZeroCheckbox val=" + v.val());
-    console.log("enclosing id="+ enclosing.attr('id'));
     if (v.is(':checked')) {
       enclosing.find(':input').prop('disabled',false);
       enclosing.find('.min-occurs-zero').prop('checked',true) 
@@ -135,7 +131,6 @@ $(function() {
         elem.change();
     });
     $('input:radio').each( function (index) {
-      console.log("radio.id="+ this.id);
       var elem = $('#' + this.id)
       if (elemVisible(elem))
         elem.change();
@@ -251,7 +246,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-6-instance-1_1');
     var pathDiv = $('#c-item-path-6-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -269,7 +264,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-7-instance-1_1');
     var pathDiv = $('#c-item-path-7-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -542,7 +537,7 @@ $(function() {
     var pathDiv = $('#c-item-path-21-instance-1_1');
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -819,7 +814,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-34-instance-1_1');
     var pathDiv = $('#c-item-path-34-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -878,7 +873,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-37-instance-1_1');
     var pathDiv = $('#c-item-path-37-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -940,7 +935,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-40-instance-1_1');
     var pathDiv = $('#c-item-path-40-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     //facet test
     if ((+(v.val())) < 0)
       ok = false;
@@ -985,7 +980,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-42-instance-1_1');
     var pathDiv = $('#c-item-path-42-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     //facet test
     if ((+(v.val())) < 5)
       ok = false;
@@ -1027,7 +1022,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-44-instance-1_1');
     var pathDiv = $('#c-item-path-44-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     //facet test
     if ((+(v.val())) > 10)
       ok = false;
@@ -1069,7 +1064,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-46-instance-1_1');
     var pathDiv = $('#c-item-path-46-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     //facet test
     if ((+(v.val())) <=5)
       ok = false;
@@ -1111,7 +1106,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-48-instance-1_1');
     var pathDiv = $('#c-item-path-48-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     //facet test
     if ((+(v.val())) >= 10)
       ok = false;
@@ -1199,7 +1194,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-52-instance-1_1');
     var pathDiv = $('#c-item-path-52-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -1218,7 +1213,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-52-instance-1_2');
     var pathDiv = $('#c-item-path-52-instance-1_2');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -1237,7 +1232,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-52-instance-1_3');
     var pathDiv = $('#c-item-path-52-instance-1_3');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -1256,7 +1251,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-52-instance-1_4');
     var pathDiv = $('#c-item-path-52-instance-1_4');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -1275,7 +1270,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-52-instance-1_5');
     var pathDiv = $('#c-item-path-52-instance-1_5');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     return ok;
   }
   
@@ -1313,7 +1308,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-53-instance-1_1');
     var pathDiv = $('#c-item-path-53-instance-1_1');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     // minOccurs=0, ok if blank
     var isBlank  = (v.val() == null) || (v.val().length==0);
     if (isBlank) ok = true;
@@ -1336,7 +1331,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-53-instance-1_2');
     var pathDiv = $('#c-item-path-53-instance-1_2');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     // minOccurs=0, ok if blank
     var isBlank  = (v.val() == null) || (v.val().length==0);
     if (isBlank) ok = true;
@@ -1359,7 +1354,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-53-instance-1_3');
     var pathDiv = $('#c-item-path-53-instance-1_3');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     // minOccurs=0, ok if blank
     var isBlank  = (v.val() == null) || (v.val().length==0);
     if (isBlank) ok = true;
@@ -1382,7 +1377,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-53-instance-1_4');
     var pathDiv = $('#c-item-path-53-instance-1_4');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     // minOccurs=0, ok if blank
     var isBlank  = (v.val() == null) || (v.val().length==0);
     if (isBlank) ok = true;
@@ -1405,7 +1400,7 @@ $(function() {
     var ok = true;
     var v = $('#c-item-53-instance-1_5');
     var pathDiv = $('#c-item-path-53-instance-1_5');
-    ok &= matchesPattern(v,/^\d+(\.\d*)?$/);
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
     // minOccurs=0, ok if blank
     var isBlank  = (v.val() == null) || (v.val().length==0);
     if (isBlank) ok = true;
@@ -3254,6 +3249,204 @@ $('#c-min-occurs-zero-89-instance-1').change();
     showError('c-item-error-96-instance-1_1_1_1',ok);
   });
   
+  $('#c-remove-button-97-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-97-instance-1_1').hide();
+  });
+
+  // datatype-int
+  var validate97instance1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-97-instance-1_1');
+    var pathDiv = $('#c-item-path-97-instance-1_1');
+    ok &= matchesPattern(v,/^-?\d+$/);
+    return ok;
+  }
+  
+  $('#c-item-97-instance-1_1').change( function() {
+    var ok = validate97instance1_1();
+    showError('c-item-error-97-instance-1_1',ok);
+  });
+  
+  $('#c-remove-button-98-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-98-instance-1_1').hide();
+  });
+
+  // datatype-long
+  var validate98instance1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-98-instance-1_1');
+    var pathDiv = $('#c-item-path-98-instance-1_1');
+    ok &= matchesPattern(v,/^-?\d+$/);
+    return ok;
+  }
+  
+  $('#c-item-98-instance-1_1').change( function() {
+    var ok = validate98instance1_1();
+    showError('c-item-error-98-instance-1_1',ok);
+  });
+  
+  $('#c-remove-button-99-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-99-instance-1_1').hide();
+  });
+
+  // datatype-short
+  var validate99instance1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-99-instance-1_1');
+    var pathDiv = $('#c-item-path-99-instance-1_1');
+    ok &= matchesPattern(v,/^-?\d+$/);
+    return ok;
+  }
+  
+  $('#c-item-99-instance-1_1').change( function() {
+    var ok = validate99instance1_1();
+    showError('c-item-error-99-instance-1_1',ok);
+  });
+  
+  $('#c-remove-button-100-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-100-instance-1_1').hide();
+  });
+
+  // datatype-positive-integer
+  var validate100instance1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-100-instance-1_1');
+    var pathDiv = $('#c-item-path-100-instance-1_1');
+    ok &= matchesPattern(v,/^[1-9]\d*$/);
+    return ok;
+  }
+  
+  $('#c-item-100-instance-1_1').change( function() {
+    var ok = validate100instance1_1();
+    showError('c-item-error-100-instance-1_1',ok);
+  });
+  
+  $('#c-remove-button-101-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-101-instance-1_1').hide();
+  });
+
+  // datatype-negative-integer
+  var validate101instance1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-101-instance-1_1');
+    var pathDiv = $('#c-item-path-101-instance-1_1');
+    ok &= matchesPattern(v,/^-[1-9]\d*$/);
+    return ok;
+  }
+  
+  $('#c-item-101-instance-1_1').change( function() {
+    var ok = validate101instance1_1();
+    showError('c-item-error-101-instance-1_1',ok);
+  });
+  
+  $('#c-remove-button-102-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-102-instance-1_1').hide();
+  });
+
+  // datatype-non-negative-integer
+  var validate102instance1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-102-instance-1_1');
+    var pathDiv = $('#c-item-path-102-instance-1_1');
+    ok &= matchesPattern(v,/^\d+$/);
+    return ok;
+  }
+  
+  $('#c-item-102-instance-1_1').change( function() {
+    var ok = validate102instance1_1();
+    showError('c-item-error-102-instance-1_1',ok);
+  });
+  
+  $('#c-remove-button-103-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-103-instance-1_1').hide();
+  });
+
+  // datatype-non-positive-integer
+  var validate103instance1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-103-instance-1_1');
+    var pathDiv = $('#c-item-path-103-instance-1_1');
+    ok &= matchesPattern(v,/^(-\d+)|0$/);
+    return ok;
+  }
+  
+  $('#c-item-103-instance-1_1').change( function() {
+    var ok = validate103instance1_1();
+    showError('c-item-error-103-instance-1_1',ok);
+  });
+  
+  $('#c-remove-button-104-instance-1_1').click(function() {
+    $('#c-repeating-enclosing-104-instance-1_1').hide();
+  });
+
+  $('#c-remove-button-105-instance-1_1_1').click(function() {
+    $('#c-repeating-enclosing-105-instance-1_1_1').hide();
+  });
+
+  // name
+  var validate105instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-105-instance-1_1_1');
+    var pathDiv = $('#c-item-path-105-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#c-item-105-instance-1_1_1').change( function() {
+    var ok = validate105instance1_1_1();
+    showError('c-item-error-105-instance-1_1_1',ok);
+  });
+  
+  $('#c-remove-button-106-instance-1_1_1').click(function() {
+    $('#c-repeating-enclosing-106-instance-1_1_1').hide();
+  });
+
+  // value
+  var validate106instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-106-instance-1_1_1');
+    var pathDiv = $('#c-item-path-106-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#c-item-106-instance-1_1_1').change( function() {
+    var ok = validate106instance1_1_1();
+    showError('c-item-error-106-instance-1_1_1',ok);
+  });
+  
+  $('#c-remove-button-107-instance-1_1_1').click(function() {
+    $('#c-repeating-enclosing-107-instance-1_1_1').hide();
+  });
+
+  // group
+  var validate107instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-107-instance-1_1_1');
+    var pathDiv = $('#c-item-path-107-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#c-item-107-instance-1_1_1').change( function() {
+    var ok = validate107instance1_1_1();
+    showError('c-item-error-107-instance-1_1_1',ok);
+  });
+  
+  $('#c-remove-button-108-instance-1_1_1').click(function() {
+    $('#c-repeating-enclosing-108-instance-1_1_1').hide();
+  });
+
+  // category
+  var validate108instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#c-item-108-instance-1_1_1');
+    var pathDiv = $('#c-item-path-108-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#c-item-108-instance-1_1_1').change( function() {
+    var ok = validate108instance1_1_1();
+    showError('c-item-error-108-instance-1_1_1',ok);
+  });
+  
   //extract xml from element <text-element>
   function getXml2instance1() {
 
@@ -5034,6 +5227,142 @@ if (!$('#c-min-occurs-zero-89-instance-1').is(':checked')) return '';
     return xml;
   }
 
+  //extract xml from element <datatype-int>
+  function getXml97instance1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-97-instance-1_1')) {
+    var v = encodedValueById("c-item-97-instance-1_1");
+    xml += '\n' + spaces(2) + '<datatype-int>' + v + '</datatype-int>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <datatype-long>
+  function getXml98instance1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-98-instance-1_1')) {
+    var v = encodedValueById("c-item-98-instance-1_1");
+    xml += '\n' + spaces(2) + '<datatype-long>' + v + '</datatype-long>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <datatype-short>
+  function getXml99instance1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-99-instance-1_1')) {
+    var v = encodedValueById("c-item-99-instance-1_1");
+    xml += '\n' + spaces(2) + '<datatype-short>' + v + '</datatype-short>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <datatype-positive-integer>
+  function getXml100instance1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-100-instance-1_1')) {
+    var v = encodedValueById("c-item-100-instance-1_1");
+    xml += '\n' + spaces(2) + '<datatype-positive-integer>' + v + '</datatype-positive-integer>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <datatype-negative-integer>
+  function getXml101instance1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-101-instance-1_1')) {
+    var v = encodedValueById("c-item-101-instance-1_1");
+    xml += '\n' + spaces(2) + '<datatype-negative-integer>' + v + '</datatype-negative-integer>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <datatype-non-negative-integer>
+  function getXml102instance1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-102-instance-1_1')) {
+    var v = encodedValueById("c-item-102-instance-1_1");
+    xml += '\n' + spaces(2) + '<datatype-non-negative-integer>' + v + '</datatype-non-negative-integer>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <datatype-non-positive-integer>
+  function getXml103instance1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-103-instance-1_1')) {
+    var v = encodedValueById("c-item-103-instance-1_1");
+    xml += '\n' + spaces(2) + '<datatype-non-positive-integer>' + v + '</datatype-non-positive-integer>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <name>
+  function getXml105instance1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-105-instance-1_1_1')) {
+    var v = encodedValueById("c-item-105-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<name>' + v + '</name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <value>
+  function getXml106instance1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-106-instance-1_1_1')) {
+    var v = encodedValueById("c-item-106-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<value>' + v + '</value>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <group>
+  function getXml107instance1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-107-instance-1_1_1')) {
+    var v = encodedValueById("c-item-107-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<group>' + v + '</group>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <category>
+  function getXml108instance1_1() {
+
+  var xml='';
+  if (idVisible('c-repeating-enclosing-108-instance-1_1_1')) {
+    var v = encodedValueById("c-item-108-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<category>' + v + '</category>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <extension>
+  function getXml104instance1() {
+
+    var xml = '\n' + spaces(2) + '<extension>';
+    //now add sequence children for each instanceNo
+    if (idVisible('c-repeating-enclosing-104-instance-1_1')) {
+      xml += getXml105instance1_1();
+      xml += getXml106instance1_1();
+      xml += getXml107instance1_1();
+      xml += getXml108instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</extension>';
+    return xml;
+  }
+
   //extract xml from element <main>
   function getXml1instance() {
 
@@ -5103,6 +5432,14 @@ if (!$('#c-min-occurs-zero-89-instance-1').is(':checked')) return '';
       xml += getXml83instance1();
       xml += getXml88instance1();
       xml += getXml89instance1();
+      xml += getXml97instance1();
+      xml += getXml98instance1();
+      xml += getXml99instance1();
+      xml += getXml100instance1();
+      xml += getXml101instance1();
+      xml += getXml102instance1();
+      xml += getXml103instance1();
+      xml += getXml104instance1();
     }
     xml += '\n' + spaces(0) + '</main>';
     return xml;
@@ -5118,7 +5455,9 @@ if (!$('#c-min-occurs-zero-89-instance-1').is(':checked')) return '';
 <script type="text/javascript" src="js/xsd-forms-override.js"></script>
 </head>
 <body>
+
 <div class="form">
+<div id="start"></div>
 <form method="POST" action="form.html" name="form">
  
  
@@ -7440,6 +7779,169 @@ if (!$('#c-min-occurs-zero-89-instance-1').is(':checked')) return '';
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-97-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-97-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">97</div>
+            <label class="item-label" for="c-item-input-97-instance-1_1">Datatype Int<em>*</em></label>
+            <div class="item-input">
+              <input number="97" name="c-item-input-97-instance-1_1" id="c-item-97-instance-1_1" class=" item-input-text" type="text" value="-123">
+              </input>
+              <div id="c-item-path-97-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="c-item-error-97-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-98-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-98-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">98</div>
+            <label class="item-label" for="c-item-input-98-instance-1_1">Datatype Long<em>*</em></label>
+            <div class="item-input">
+              <input number="98" name="c-item-input-98-instance-1_1" id="c-item-98-instance-1_1" class=" item-input-text" type="text" value="-1234">
+              </input>
+              <div id="c-item-path-98-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="c-item-error-98-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-99-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-99-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">99</div>
+            <label class="item-label" for="c-item-input-99-instance-1_1">Datatype Short<em>*</em></label>
+            <div class="item-input">
+              <input number="99" name="c-item-input-99-instance-1_1" id="c-item-99-instance-1_1" class=" item-input-text" type="text" value="12">
+              </input>
+              <div id="c-item-path-99-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="c-item-error-99-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-100-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-100-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">100</div>
+            <label class="item-label" for="c-item-input-100-instance-1_1">Datatype Positive Integer<em>*</em></label>
+            <div class="item-input">
+              <input number="100" name="c-item-input-100-instance-1_1" id="c-item-100-instance-1_1" class=" item-input-text" type="text" value="12345">
+              </input>
+              <div id="c-item-path-100-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="c-item-error-100-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-101-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-101-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">101</div>
+            <label class="item-label" for="c-item-input-101-instance-1_1">Datatype Negative Integer<em>*</em></label>
+            <div class="item-input">
+              <input number="101" name="c-item-input-101-instance-1_1" id="c-item-101-instance-1_1" class=" item-input-text" type="text" value="-12345">
+              </input>
+              <div id="c-item-path-101-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="c-item-error-101-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-102-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-102-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">102</div>
+            <label class="item-label" for="c-item-input-102-instance-1_1">Datatype Non Negative Integer<em>*</em></label>
+            <div class="item-input">
+              <input number="102" name="c-item-input-102-instance-1_1" id="c-item-102-instance-1_1" class=" item-input-text" type="text" value="123456">
+              </input>
+              <div id="c-item-path-102-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="c-item-error-102-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="c-item-enclosing-103-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-103-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">103</div>
+            <label class="item-label" for="c-item-input-103-instance-1_1">Datatype Non Positive Integer<em>*</em></label>
+            <div class="item-input">
+              <input number="103" name="c-item-input-103-instance-1_1" id="c-item-103-instance-1_1" class=" item-input-text" type="text" value="0">
+              </input>
+              <div id="c-item-path-103-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="c-item-error-103-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="non-repeating-title">
+          </div>
+          <div id="c-repeating-enclosing-104-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label">Extension example</div>
+            <div id="c-sequence-104-instance-1" class="sequence-content">
+              <div id="c-item-enclosing-105-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-105-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">105</div>
+                  <label class="item-label" for="c-item-input-105-instance-1_1_1">Name</label>
+                  <div class="item-input">
+                    <input number="105" name="c-item-input-105-instance-1_1_1" id="c-item-105-instance-1_1_1" class=" item-input-text" type="text" value="name1">
+                    </input>
+                    <div id="c-item-path-105-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="c-item-error-105-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-106-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-106-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">106</div>
+                  <label class="item-label" for="c-item-input-106-instance-1_1_1">Value</label>
+                  <div class="item-input">
+                    <input number="106" name="c-item-input-106-instance-1_1_1" id="c-item-106-instance-1_1_1" class=" item-input-text" type="text" value="value1">
+                    </input>
+                    <div id="c-item-path-106-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="c-item-error-106-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-107-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-107-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">107</div>
+                  <label class="item-label" for="c-item-input-107-instance-1_1_1">Group</label>
+                  <div class="item-input">
+                    <input number="107" name="c-item-input-107-instance-1_1_1" id="c-item-107-instance-1_1_1" class=" item-input-text" type="text" value="group1">
+                    </input>
+                    <div id="c-item-path-107-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="c-item-error-107-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="c-item-enclosing-108-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="c-repeating-enclosing-108-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">108</div>
+                  <label class="item-label" for="c-item-input-108-instance-1_1_1">Category</label>
+                  <div class="item-input">
+                    <input number="108" name="c-item-input-108-instance-1_1_1" id="c-item-108-instance-1_1_1" class=" item-input-text" type="text" value="category1">
+                    </input>
+                    <div id="c-item-path-108-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="c-item-error-108-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
                 </div>
               </div>

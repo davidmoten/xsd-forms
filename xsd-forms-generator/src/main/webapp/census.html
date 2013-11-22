@@ -20,7 +20,6 @@ function encodeHTML(s) {
 }
           
 function testEncodeHTML() {
-   console.log(encodeHTML('<>'));
    test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
 }
           
@@ -88,7 +87,6 @@ $(function() {
     var val = elem.attr('value');
     elem.datepicker( "option", "dateFormat","yy-mm-dd");
     if (typeof(val) != 'undefined') {
-      console.log("val="+val);
       elem.datepicker('setDate',val);
     }
   });
@@ -101,8 +99,6 @@ $(function() {
   }
   
   function changeMinOccursZeroCheckbox(v,enclosing) {
-    console.log("minOccursZeroCheckbox val=" + v.val());
-    console.log("enclosing id="+ enclosing.attr('id'));
     if (v.is(':checked')) {
       enclosing.find(':input').prop('disabled',false);
       enclosing.find('.min-occurs-zero').prop('checked',true) 
@@ -135,7 +131,6 @@ $(function() {
         elem.change();
     });
     $('input:radio').each( function (index) {
-      console.log("radio.id="+ this.id);
       var elem = $('#' + this.id)
       if (elemVisible(elem))
         elem.change();
@@ -2223,7 +2218,9 @@ $(function() {
 <script type="text/javascript" src="js/xsd-forms-override.js"></script>
 </head>
 <body>
+
 <div class="form">
+<div id="start"></div>
 <form method="POST" action="form.html" name="form">
  
  

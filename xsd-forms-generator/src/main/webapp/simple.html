@@ -20,7 +20,6 @@ function encodeHTML(s) {
 }
           
 function testEncodeHTML() {
-   console.log(encodeHTML('<>'));
    test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
 }
           
@@ -88,7 +87,6 @@ $(function() {
     var val = elem.attr('value');
     elem.datepicker( "option", "dateFormat","yy-mm-dd");
     if (typeof(val) != 'undefined') {
-      console.log("val="+val);
       elem.datepicker('setDate',val);
     }
   });
@@ -101,8 +99,6 @@ $(function() {
   }
   
   function changeMinOccursZeroCheckbox(v,enclosing) {
-    console.log("minOccursZeroCheckbox val=" + v.val());
-    console.log("enclosing id="+ enclosing.attr('id'));
     if (v.is(':checked')) {
       enclosing.find(':input').prop('disabled',false);
       enclosing.find('.min-occurs-zero').prop('checked',true) 
@@ -135,7 +131,6 @@ $(function() {
         elem.change();
     });
     $('input:radio').each( function (index) {
-      console.log("radio.id="+ this.id);
       var elem = $('#' + this.id)
       if (elemVisible(elem))
         elem.change();
@@ -283,6 +278,78 @@ $(function() {
       { elem.show(); return; }
   })
 
+  $('#a-remove-button-3-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-3-instance-1_1').hide();
+  });
+
+  $('#a-remove-button-4-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-4-instance-1_1_1').hide();
+  });
+
+  // name
+  var validate4instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-4-instance-1_1_1');
+    var pathDiv = $('#a-item-path-4-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#a-item-4-instance-1_1_1').change( function() {
+    var ok = validate4instance1_1_1();
+    showError('a-item-error-4-instance-1_1_1',ok);
+  });
+  
+  $('#a-remove-button-5-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-5-instance-1_1_1').hide();
+  });
+
+  // value
+  var validate5instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-5-instance-1_1_1');
+    var pathDiv = $('#a-item-path-5-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#a-item-5-instance-1_1_1').change( function() {
+    var ok = validate5instance1_1_1();
+    showError('a-item-error-5-instance-1_1_1',ok);
+  });
+  
+  $('#a-remove-button-6-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-6-instance-1_1_1').hide();
+  });
+
+  // group
+  var validate6instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-6-instance-1_1_1');
+    var pathDiv = $('#a-item-path-6-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#a-item-6-instance-1_1_1').change( function() {
+    var ok = validate6instance1_1_1();
+    showError('a-item-error-6-instance-1_1_1',ok);
+  });
+  
+  $('#a-remove-button-7-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-7-instance-1_1_1').hide();
+  });
+
+  // category
+  var validate7instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-7-instance-1_1_1');
+    var pathDiv = $('#a-item-path-7-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#a-item-7-instance-1_1_1').change( function() {
+    var ok = validate7instance1_1_1();
+    showError('a-item-error-7-instance-1_1_1',ok);
+  });
+  
   //extract xml from element <name>
   function getXml2instance1() {
 
@@ -310,6 +377,65 @@ $(function() {
    return xml;
   }
 
+  //extract xml from element <name>
+  function getXml4instance1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-4-instance-1_1_1')) {
+    var v = encodedValueById("a-item-4-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<name>' + v + '</name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <value>
+  function getXml5instance1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-5-instance-1_1_1')) {
+    var v = encodedValueById("a-item-5-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<value>' + v + '</value>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <group>
+  function getXml6instance1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-6-instance-1_1_1')) {
+    var v = encodedValueById("a-item-6-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<group>' + v + '</group>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <category>
+  function getXml7instance1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-7-instance-1_1_1')) {
+    var v = encodedValueById("a-item-7-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<category>' + v + '</category>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <extension>
+  function getXml3instance1() {
+
+    var xml = '\n' + spaces(2) + '<extension>';
+    //now add sequence children for each instanceNo
+    if (idVisible('a-repeating-enclosing-3-instance-1_1')) {
+      xml += getXml4instance1_1();
+      xml += getXml5instance1_1();
+      xml += getXml6instance1_1();
+      xml += getXml7instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</extension>';
+    return xml;
+  }
+
   //extract xml from element <person>
   function getXml1instance() {
 
@@ -317,6 +443,7 @@ $(function() {
     //now add sequence children for each instanceNo
     if (idVisible('a-repeating-enclosing-1-instance-1')) {
       xml += getXml2instance1();
+      xml += getXml3instance1();
     }
     xml += '\n' + spaces(0) + '</person>';
     return xml;
@@ -332,7 +459,9 @@ $(function() {
 <script type="text/javascript" src="js/xsd-forms-override.js"></script>
 </head>
 <body>
+
 <div class="form">
+<div id="start"></div>
 <form method="POST" action="form.html" name="form">
  
  
@@ -406,6 +535,71 @@ $(function() {
               </input>
               <div id="a-item-path-2-instance-1_5" class="item-path" enabled="true"></div>
               <div id="a-item-error-2-instance-1_5" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-3-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label">Extension example</div>
+            <div id="a-sequence-3-instance-1" class="sequence-content">
+              <div id="a-item-enclosing-4-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeating-enclosing-4-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">4</div>
+                  <label class="item-label" for="a-item-input-4-instance-1_1_1">Name</label>
+                  <div class="item-input">
+                    <input number="4" name="a-item-input-4-instance-1_1_1" id="a-item-4-instance-1_1_1" class=" item-input-text" type="text" value="name1">
+                    </input>
+                    <div id="a-item-path-4-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="a-item-error-4-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="a-item-enclosing-5-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeating-enclosing-5-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">5</div>
+                  <label class="item-label" for="a-item-input-5-instance-1_1_1">Value</label>
+                  <div class="item-input">
+                    <input number="5" name="a-item-input-5-instance-1_1_1" id="a-item-5-instance-1_1_1" class=" item-input-text" type="text" value="value1">
+                    </input>
+                    <div id="a-item-path-5-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="a-item-error-5-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="a-item-enclosing-6-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeating-enclosing-6-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">6</div>
+                  <label class="item-label" for="a-item-input-6-instance-1_1_1">Group</label>
+                  <div class="item-input">
+                    <input number="6" name="a-item-input-6-instance-1_1_1" id="a-item-6-instance-1_1_1" class=" item-input-text" type="text" value="group1">
+                    </input>
+                    <div id="a-item-path-6-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="a-item-error-6-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="a-item-enclosing-7-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeating-enclosing-7-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">7</div>
+                  <label class="item-label" for="a-item-input-7-instance-1_1_1">Category</label>
+                  <div class="item-input">
+                    <input number="7" name="a-item-input-7-instance-1_1_1" id="a-item-7-instance-1_1_1" class=" item-input-text" type="text" value="category1">
+                    </input>
+                    <div id="a-item-path-7-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="a-item-error-7-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
