@@ -163,6 +163,7 @@ package xsdforms {
     def endChoice
     def simpleType(e: Element, typ: SimpleType)
     def baseType(e: Element, typ: BaseType)
+    def attribute(e:Element, typ:BasicType) 
   }
 
   //every element is either a sequence, choice or simpleType
@@ -170,9 +171,10 @@ package xsdforms {
   // and may be restricted to a regex pattern, have min, max ranges
   // or be an enumeration. all elements may have  minOccurs and maxOccurs
   //attributes.
+  
   case class Sequence(group: ExplicitGroupable)
   case class Choice(group: ExplicitGroupable)
-  case class BaseType(qName: QName);
+  case class BaseType(qName: QName) 
 
   /**
    * **************************************************************
@@ -187,18 +189,27 @@ package xsdforms {
 
   trait Node {
     val element: ElementWrapper
+    val attributes: MutableList[NodeAttribute]
     def isAnonymous = element.name.isEmpty
   }
+  
   trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList()
   }
 
   // immutable would be preferrable but should be safe because not changed after tree created
-  case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
-  case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
   trait NodeBasic extends Node
-  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic
-  case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
+
+  trait BasicType 
+  case class BasicTypeSimple(typ:SimpleType)
+  case class BasicTypeBase(typ:BaseType)
+  
+  //TODO stop using mutable types
+  case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
+  case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
+  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
+  case class NodeBaseType(element: ElementWrapper, typ: BaseType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
+  case class NodeAttribute(element: ElementWrapper,typ: BasicType)
 
   /**
    * **************************************************************
@@ -282,6 +293,10 @@ package xsdforms {
       addChild(s)
     }
 
+    override def attribute(e:Element, typ:BasicType) {
+      stack.top.attributes += NodeAttribute(e, typ)
+    }
+    
     override def baseType(e: Element, typ: BaseType) {
       val s = NodeBaseType(e, typ)
       addChild(s)
@@ -289,8 +304,8 @@ package xsdforms {
 
     private def toString(node: Node, margin: String): String = {
       node match {
-        case NodeBaseType(e, typ) => margin + "NodeBaseType=" + e.name.get
-        case NodeSimpleType(e, typ) => margin + "NodeSimpleType=" + e.name.get
+        case NodeBaseType(e, typ,attr) => margin + "NodeBaseType=" + e.name.get
+        case NodeSimpleType(e, typ,attr) => margin + "NodeSimpleType=" + e.name.get
         case n: NodeGroup => margin + n.getClass.getSimpleName + "=\n" +
           n.children.map(c => toString(c, margin + "  ")).mkString("\n")
         case _ => unexpected
@@ -645,7 +660,6 @@ package xsdforms {
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
-
         html
           .div(classes = List(ClassSequenceLabel), content = Some(label)).closeTag
           .div(id = Some(idPrefix + "sequence-" + number + InstanceDelimiter + instanceNo),
@@ -660,6 +674,7 @@ package xsdforms {
           html closeTag
 
         html closeTag 2
+
       }
       html closeTag
 
@@ -1999,19 +2014,21 @@ package xsdforms {
       extensionStack.clear
       if (wrapWithSequence)
         visitor.startSequence(e)
-      visitor.startChoice(e, x)
+      val anon = AnonymousSequenceElement()
+      val subElement = if (wrapWithSequence) anon else e
+      visitor.startChoice(subElement, x)
       var index = 0
       extensionsIncludedInBaseSequence.push(false)
       x.group.particleOption3.foreach(y => {
         index = index + 1
-        visitor.startChoiceItem(e, y.value, index)
-        process(e, toQName(y), y.value)
+        visitor.startChoiceItem(subElement, y.value, index)
+        process(subElement, toQName(y), y.value)
         visitor.endChoiceItem
       })
       extensionsIncludedInBaseSequence.pop
       visitor.endChoice
       extensionsIncludedInBaseSequence.push(true)
-      extensions.foreach(y => process(e, y))
+      extensions.foreach(y => process(anon, y))
       extensionsIncludedInBaseSequence.pop
       if (wrapWithSequence)
         visitor.endSequence
