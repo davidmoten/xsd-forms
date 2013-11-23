@@ -293,7 +293,7 @@ package xsdforms {
       addChild(s)
     }
 
-    override def attribute(e:Element, typ:BasicType) {
+    override def attribute(e:Element,name:String, typ:BasicType) {
       stack.top.attributes += NodeAttribute(e, typ)
     }
     
@@ -1973,10 +1973,19 @@ package xsdforms {
       visitor.baseType(e, x)
     }
 
+    private def reportAttributes(e:Element) {
+      e.attributes.foreach {x => {
+//        visitor.attribute(e,x._1,typ)
+        }
+      }
+    }
+    
     private def process(e: Element, x: Sequence) {
       val wrapWithSequence = extensionsIncludedInBaseSequence.isEmpty || !extensionsIncludedInBaseSequence.top
-      if (wrapWithSequence)
+      if (wrapWithSequence) {
         visitor.startSequence(e)
+        reportAttributes(e)
+      }
       val extensions = extensionStack.toList
       extensionStack.clear
       extensionsIncludedInBaseSequence.push(false)
@@ -2012,7 +2021,7 @@ package xsdforms {
       val wrapWithSequence = !extensionStack.isEmpty
       val extensions = extensionStack.toList
       extensionStack.clear
-      if (wrapWithSequence)
+      if (wrapWithSequence) 
         visitor.startSequence(e)
       val anon = AnonymousSequenceElement()
       val subElement = if (wrapWithSequence) anon else e
