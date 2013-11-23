@@ -316,11 +316,14 @@ package xsdforms {
    * **************************************************************
    */
 
-  case class Instances(heirarchy: Seq[Int] = List()) {
-    def add(instance: Int): Instances = Instances(heirarchy :+ instance)
+  case class Instances(heirarchy: Seq[Int] = List(), indentsDelta: Int = 0) {
+    def add(instance: Int): Instances = Instances(heirarchy :+ instance, indentsDelta)
+    def add(instance: Int, suppressIndent: Boolean) =
+      Instances(heirarchy :+ instance, indentsDelta - (if (suppressIndent) 1 else 0))
     override def toString = heirarchy.mkString("_")
     def last = heirarchy.last
     def size = heirarchy.size
+    def indentCount = heirarchy.size + indentsDelta
   }
 
   /**
@@ -784,7 +787,7 @@ package xsdforms {
         if (isMinOccursZero(node.element)) {
           js.line("if (!$('#%s').is(':checked')) return '';", getMinOccursZeroId(number, instances))
         }
-        if (node.element.name.isEmpty)
+        if (isAnonymous(node))
           js.line("    var xml = '';")
         else
           js
@@ -792,7 +795,7 @@ package xsdforms {
         js.line("    //now add sequence children for each instanceNo")
 
         for (instanceNo <- repeats(node)) {
-          val instNos = instances add instanceNo
+          val instNos = instances add (instanceNo, isAnonymous(node))
           js.line("    if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
           node.children.foreach { n =>
             js.line("      xml += %s();", xmlFunctionName(n, instNos))
@@ -800,7 +803,7 @@ package xsdforms {
           }
           js.line("    }")
         }
-        if (!node.element.name.isEmpty)
+        if (!isAnonymous(node))
           js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
         js.line("    return xml;")
 
@@ -808,16 +811,18 @@ package xsdforms {
       }
     }
 
+    private def isAnonymous(node: Node) = node.element.name.isEmpty
+
     private def addXmlExtractScriptlet(node: NodeChoice, instances: Instances) {
 
       val js = JS()
-      if (node.element.name.isEmpty)
+      if (isAnonymous(node))
         js.line("    var xml = '';")
       else
         js.line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
       js.line("    //now optionally add selected child if any")
       for (instanceNo <- repeats(node)) {
-        val instNos = instances add instanceNo
+        val instNos = instances add (instanceNo, isAnonymous(node))
         js.line("    var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(node, instNos))
 
         node.children.zipWithIndex.foreach {
@@ -826,7 +831,7 @@ package xsdforms {
               .line("    xml += %s();", xmlFunctionName(n, instNos))
             addXmlExtractScriptlet(n, instNos)
         }
-        if (!node.element.name.isEmpty)
+        if (!isAnonymous(node))
           js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
         js.line("    return xml;")
         addXmlExtractScriptlet(node, js.toString(), instances);
@@ -922,8 +927,8 @@ package xsdforms {
       xmlStart(node) + Plus + value + Plus + xmlEnd(node)
 
     private def spaces(instances: Instances) =
-      if (instances.size == 0) "'\\n' + "
-      else "'\\n' + spaces(" + ((instances.size - 1) * 2) + ") + "
+      if (instances.indentCount == 0) "'\\n' + "
+      else "'\\n' + spaces(" + ((instances.indentCount - 1) * 2) + ") + "
 
     override def toString = text
 
