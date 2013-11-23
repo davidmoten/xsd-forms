@@ -187,6 +187,7 @@ package xsdforms {
 
   trait Node {
     val element: ElementWrapper
+    def isAnonymous = element.name.isEmpty
   }
   trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList()
@@ -787,7 +788,7 @@ package xsdforms {
         if (isMinOccursZero(node.element)) {
           js.line("if (!$('#%s').is(':checked')) return '';", getMinOccursZeroId(number, instances))
         }
-        if (isAnonymous(node))
+        if (node.isAnonymous)
           js.line("    var xml = '';")
         else
           js
@@ -795,7 +796,7 @@ package xsdforms {
         js.line("    //now add sequence children for each instanceNo")
 
         for (instanceNo <- repeats(node)) {
-          val instNos = instances add (instanceNo, isAnonymous(node))
+          val instNos = instances add (instanceNo, node.isAnonymous)
           js.line("    if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
           node.children.foreach { n =>
             js.line("      xml += %s();", xmlFunctionName(n, instNos))
@@ -803,7 +804,7 @@ package xsdforms {
           }
           js.line("    }")
         }
-        if (!isAnonymous(node))
+        if (!node.isAnonymous)
           js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
         js.line("    return xml;")
 
@@ -811,18 +812,16 @@ package xsdforms {
       }
     }
 
-    private def isAnonymous(node: Node) = node.element.name.isEmpty
-
     private def addXmlExtractScriptlet(node: NodeChoice, instances: Instances) {
 
       val js = JS()
-      if (isAnonymous(node))
+      if (node.isAnonymous)
         js.line("    var xml = '';")
       else
         js.line("    var xml = %s%s;", spaces(instances add 1), xmlStart(node))
       js.line("    //now optionally add selected child if any")
       for (instanceNo <- repeats(node)) {
-        val instNos = instances add (instanceNo, isAnonymous(node))
+        val instNos = instances add (instanceNo, node.isAnonymous)
         js.line("    var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(node, instNos))
 
         node.children.zipWithIndex.foreach {
@@ -831,7 +830,7 @@ package xsdforms {
               .line("    xml += %s();", xmlFunctionName(n, instNos))
             addXmlExtractScriptlet(n, instNos)
         }
-        if (!isAnonymous(node))
+        if (!node.isAnonymous)
           js.line("    xml += %s%s;", spaces(instances add 1), xmlEnd(node))
         js.line("    return xml;")
         addXmlExtractScriptlet(node, js.toString(), instances);
