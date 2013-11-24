@@ -679,16 +679,13 @@ package xsdforms {
         if (usesFieldset)
           html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
 
-        sortChildrenByOrder(node).foreach{
-          x => x match {
-            case y:NodeAttribute => doAttribute(y,instNos)
-            case _ => doNode(x, instNos)
-          }
+        sortChildrenByOrder(node).foreach {
+          x =>
+            x match {
+              case y: NodeAttribute => doAttribute(y, instNos)
+              case _ => doNode(x, instNos)
+            }
         }
-
-//        doNodes(node.children, instNos)
-
-//        doAttributes(node.attributes, instNos)
 
         if (usesFieldset)
           html closeTag
@@ -700,15 +697,15 @@ package xsdforms {
 
       addMaxOccursScriptlet(e, instances)
     }
-    
-    private def sortChildrenByOrder(node:NodeGroup) =
+
+    private def sortChildrenByOrder(node: NodeGroup) =
       node.children ++ node.attributes.sortBy({
-          x =>
-            getAnnotation(node.element, Annotation.Order) match {
-              case Some(y) => y.toDouble
-              case None => 0
-            }
-        })
+        x =>
+          getAnnotation(node.element, Annotation.Order) match {
+            case Some(y) => y.toDouble
+            case None => 0
+          }
+      })
 
     private def doNode(node: NodeChoice, instances: Instances) {
       val choice = node.choice
@@ -760,6 +757,8 @@ package xsdforms {
             html.closeTag
           }
         }
+
+        doAttributes(node.attributes, instNos)
 
         html.closeTag
       }
