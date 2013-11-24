@@ -38,6 +38,8 @@ package xsdforms {
     val Before = XsdFormsAnnotation("before")
     val After = XsdFormsAnnotation("after")
 
+    val Order = XsdFormsAnnotation("order")
+
     /**
      * if text=textarea then html textarea used as input. Otherwise normal
      * short text input used.
@@ -191,10 +193,14 @@ package xsdforms {
   trait Node {
     val element: ElementWrapper
     def isAnonymous = element.name.isEmpty
+
+  }
+
+  trait HasAttributes {
     val attributes: MutableList[NodeAttribute]
   }
 
-  trait NodeGroup extends Node {
+  trait NodeGroup extends Node with HasAttributes {
     val children: MutableList[Node] = MutableList()
   }
 
@@ -202,15 +208,15 @@ package xsdforms {
   trait NodeBasic extends Node
 
   trait BasicType
-  case class BasicTypeSimple(typ: SimpleType) extends BasicType
+  case class BasicTypeSimple(typ: SimpleType, attributes: MutableList[NodeAttribute]) extends BasicType with HasAttributes
   case class BasicTypeBase(typ: BaseType) extends BasicType
 
   //TODO stop using mutable types
   case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
   case class NodeSimpleType(element: ElementWrapper, typ: SimpleType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
-  case class NodeBaseType(element: ElementWrapper, typ: BaseType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
-  case class NodeAttribute(element: ElementWrapper, detail: AttributeType2, typ: BasicType)
+  case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
+  case class NodeAttribute(element: ElementWrapper, detail: AttributeType2, typ: BasicType) extends Node
 
   /**
    * **************************************************************
@@ -309,7 +315,7 @@ package xsdforms {
 
     private def toString(node: Node, margin: String): String = {
       node match {
-        case NodeBaseType(e, typ, attr) => margin + "NodeBaseType=" + e.name.get
+        case NodeBaseType(e, typ) => margin + "NodeBaseType=" + e.name.get
         case NodeSimpleType(e, typ, attr) => margin + "NodeSimpleType=" + e.name.get
         case n: NodeGroup => margin + n.getClass.getSimpleName + "=\n" +
           n.children.map(c => toString(c, margin + "  ")).mkString("\n")
@@ -673,9 +679,16 @@ package xsdforms {
         if (usesFieldset)
           html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
 
-        doNodes(node.children, instNos)
+        sortChildrenByOrder(node).foreach{
+          x => x match {
+            case y:NodeAttribute => doAttribute(y,instNos)
+            case _ => doNode(x, instNos)
+          }
+        }
 
-        doAttributes(node.attributes, instNos)
+//        doNodes(node.children, instNos)
+
+//        doAttributes(node.attributes, instNos)
 
         if (usesFieldset)
           html closeTag
@@ -687,6 +700,15 @@ package xsdforms {
 
       addMaxOccursScriptlet(e, instances)
     }
+    
+    private def sortChildrenByOrder(node:NodeGroup) =
+      node.children ++ node.attributes.sortBy({
+          x =>
+            getAnnotation(node.element, Annotation.Order) match {
+              case Some(y) => y.toDouble
+              case None => 0
+            }
+        })
 
     private def doNode(node: NodeChoice, instances: Instances) {
       val choice = node.choice
@@ -758,7 +780,7 @@ package xsdforms {
           doNode(nd, instances)
         }
         case x: BasicTypeBase => {
-          val nd = NodeBaseType(createElement(node), x.typ, attributes = MutableList())
+          val nd = NodeBaseType(createElement(node), x.typ)
           doNode(nd, instances)
         }
       }
@@ -1965,7 +1987,8 @@ package xsdforms {
             }
           val typ: BasicType =
             getType(toQName(x)) match {
-              case y: SimpleType => BasicTypeSimple(y)
+              //TODO use attributes for simpleType
+              case y: SimpleType => BasicTypeSimple(y, MutableList())
               case y: BaseType => BasicTypeBase(y)
               case _ => unexpected(x.toString)
             }
