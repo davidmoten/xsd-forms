@@ -142,7 +142,7 @@ package xsdforms {
     val XsdString = XsdDatatype("string")
     val XsdDouble = XsdDatatype("double", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
     val XsdFloat = XsdDatatype("float", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
-    val XsdAttribute = XsdDatatype("attribute",None)
+    val XsdAttribute = XsdDatatype("attribute", None)
 
   }
 
@@ -210,7 +210,7 @@ package xsdforms {
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
   case class NodeSimpleType(element: ElementWrapper, typ: SimpleType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
   case class NodeBaseType(element: ElementWrapper, typ: BaseType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
-  case class NodeAttribute(element: ElementWrapper,name:String, typ: BasicType)
+  case class NodeAttribute(element: ElementWrapper, name: String, typ: BasicType)
 
   /**
    * **************************************************************
@@ -252,7 +252,7 @@ package xsdforms {
       val seq = NodeSequence(e, MutableList())
       addChild(seq)
       stack.push(seq)
-      nodes.put(e,seq)
+      nodes.put(e, seq)
     }
 
     /**
@@ -278,7 +278,7 @@ package xsdforms {
       val chc = NodeChoice(e, choice, MutableList())
       addChild(chc)
       stack.push(chc)
-      nodes.put(e,chc)
+      nodes.put(e, chc)
     }
 
     override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
@@ -300,7 +300,7 @@ package xsdforms {
 
     override def attribute(e: Element, name: String, typ: BasicType) {
       println(e.name + " " + name + ":" + typ)
-      nodes.get(e).getOrElse(unexpected).attributes += NodeAttribute(e,name, typ)
+      nodes.get(e).getOrElse(unexpected).attributes += NodeAttribute(e, name, typ)
     }
 
     override def baseType(e: Element, typ: BaseType) {
@@ -676,8 +676,8 @@ package xsdforms {
 
         doNodes(node.children, instNos)
 
-        doAttributes(node.attributes,instNos)
-        
+        doAttributes(node.attributes, instNos)
+
         if (usesFieldset)
           html closeTag
 
@@ -747,15 +747,21 @@ package xsdforms {
       addMaxOccursScriptlet(e, instances)
 
     }
-    
-    private def doAttributes(attributes:Seq[NodeAttribute],  instances:Instances) {
-      attributes.foreach { doAttribute(_,instances)}
+
+    private def doAttributes(attributes: Seq[NodeAttribute], instances: Instances) {
+      attributes.foreach { doAttribute(_, instances) }
     }
-    
-    private def doAttribute(node: NodeAttribute, instances:Instances) {
+
+    private def doAttribute(node: NodeAttribute, instances: Instances) {
       node.typ match {
-        case x:BasicTypeSimple => {}
-        case x:BasicTypeBase => {}
+        case x: BasicTypeSimple => {
+          val nd = NodeSimpleType(node.element, x.typ, attributes = MutableList())
+          doNode(nd, instances)
+        }
+        case x: BasicTypeBase => {
+          val nd = NodeBaseType(node.element, x.typ, attributes = MutableList())
+          doNode(nd, instances)
+        }
       }
     }
 
@@ -1859,7 +1865,7 @@ package xsdforms {
       Set(XsdDecimal, XsdString, XsdInteger, XsdDate, XsdDateTime, XsdTime,
         XsdBoolean, XsdInt, XsdLong, XsdShort, XsdPositiveInteger,
         XsdNegativeInteger, XsdNonPositiveInteger, XsdNonNegativeInteger,
-        XsdDouble, XsdFloat,XsdAttribute)
+        XsdDouble, XsdFloat, XsdAttribute)
         .map(qn(_))
 
     private def getType(q: QName): AnyRef = {
@@ -1947,10 +1953,11 @@ package xsdforms {
 
     private def process(e: Element, attributes: AttrDeclsSequence) {
       attributes.attrdeclsoption1.foreach { x =>
-        { val name = x.value match {
-          case y:AttributeType2 => y.name.getOrElse(unexpected)
-          case _ => unexpected
-        }
+        {
+          val name = x.value match {
+            case y: AttributeType2 => y.name.getOrElse(unexpected)
+            case _ => unexpected
+          }
           val typ: BasicType =
             getType(toQName(x)) match {
               case y: SimpleType => BasicTypeSimple(y)
@@ -2010,7 +2017,6 @@ package xsdforms {
     private def process(e: Element, x: BaseType) {
       visitor.baseType(e, x)
     }
-
 
     private def process(e: Element, x: Sequence) {
       val wrapWithSequence = extensionsIncludedInBaseSequence.isEmpty || !extensionsIncludedInBaseSequence.top
