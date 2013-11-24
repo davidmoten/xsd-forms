@@ -164,7 +164,7 @@ package xsdforms {
     def endChoice
     def simpleType(e: Element, typ: SimpleType)
     def baseType(e: Element, typ: BaseType)
-    def attribute(e: Element, name: String, typ: BasicType)
+    def attribute(e: Element, detail: AttributeType2, typ: BasicType)
   }
 
   //every element is either a sequence, choice or simpleType
@@ -210,7 +210,7 @@ package xsdforms {
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
   case class NodeSimpleType(element: ElementWrapper, typ: SimpleType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
   case class NodeBaseType(element: ElementWrapper, typ: BaseType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
-  case class NodeAttribute(element: ElementWrapper, name: String, typ: BasicType)
+  case class NodeAttribute(element: ElementWrapper, detail: AttributeType2, typ: BasicType)
 
   /**
    * **************************************************************
@@ -225,7 +225,7 @@ package xsdforms {
     implicit def unwrap(wrapped: ElementWrapper): Element = wrapped.element
   }
 
-  case class ElementWrapper(element: Element, uniqueId: String)
+  case class ElementWrapper(element: Element, uniqueId: String = java.util.UUID.randomUUID.toString)
 
   /**
    * **************************************************************
@@ -240,13 +240,12 @@ package xsdforms {
 
     import Util._
 
-    import java.util.UUID
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
     import scala.collection.mutable.HashMap
     private val nodes = new HashMap[Element, NodeGroup]()
 
-    private implicit def wrap(e: Element): ElementWrapper = ElementWrapper(e, UUID.randomUUID.toString)
+    private implicit def wrap(e: Element): ElementWrapper = ElementWrapper(e)
 
     override def startSequence(e: Element) {
       val seq = NodeSequence(e, MutableList())
@@ -298,9 +297,9 @@ package xsdforms {
       addChild(s)
     }
 
-    override def attribute(e: Element, name: String, typ: BasicType) {
-      println(e.name + " " + name + ":" + typ)
-      nodes.get(e).getOrElse(unexpected).attributes += NodeAttribute(e, name, typ)
+    override def attribute(e: Element, detail: AttributeType2, typ: BasicType) {
+      println(e.name + " " + detail.name.get + ":" + typ)
+      nodes.get(e).getOrElse(unexpected).attributes += NodeAttribute(e, detail, typ)
     }
 
     override def baseType(e: Element, typ: BaseType) {
@@ -755,14 +754,20 @@ package xsdforms {
     private def doAttribute(node: NodeAttribute, instances: Instances) {
       node.typ match {
         case x: BasicTypeSimple => {
-          val nd = NodeSimpleType(node.element, x.typ, attributes = MutableList())
+          val nd = NodeSimpleType(createElement(node), x.typ, attributes = MutableList())
           doNode(nd, instances)
         }
         case x: BasicTypeBase => {
-          val nd = NodeBaseType(node.element, x.typ, attributes = MutableList())
+          val nd = NodeBaseType(createElement(node), x.typ, attributes = MutableList())
           doNode(nd, instances)
         }
       }
+    }
+
+    private def createElement(node: NodeAttribute) = {
+      val detail = node.detail
+      val minOccurs = if (detail.use == Required) BigInt(1) else BigInt(0)
+      ElementWrapper(MyElement(name = detail.name, default = detail.default, minOccurs = minOccurs))
     }
 
     private def doNode(node: NodeSimpleType, instances: Instances) {
@@ -1801,18 +1806,17 @@ package xsdforms {
 
   }
 
-  case class AnonymousSequenceElement() extends Element {
+  case class MyElement(name: Option[String] = None, default: Option[String] = None, minOccurs: BigInt = BigInt(1),
+    maxOccurs: String = "1") extends Element {
     val annotation: Option[xsd.Annotation] = None
     val elementoption: Option[scalaxb.DataRecord[xsd.ElementOption]] = None
     val identityConstraintOption4: Seq[scalaxb.DataRecord[xsd.IdentityConstraintOption]] = Nil
     val id: Option[String] = None
-    val name: Option[String] = None
+
     val ref: Option[javax.xml.namespace.QName] = None
     val typeValue: Option[javax.xml.namespace.QName] = None
     val substitutionGroup: Option[javax.xml.namespace.QName] = None
-    val minOccurs: BigInt = BigInt(1)
-    val maxOccurs: String = "1"
-    val default: Option[String] = None
+
     val fixed: Option[String] = None
     val nillable: Boolean = false
     val abstractValue: Boolean = false
@@ -1954,17 +1958,19 @@ package xsdforms {
     private def process(e: Element, attributes: AttrDeclsSequence) {
       attributes.attrdeclsoption1.foreach { x =>
         {
-          val name = x.value match {
-            case y: AttributeType2 => y.name.getOrElse(unexpected)
-            case _ => unexpected
-          }
+          val detail =
+            x.value match {
+              case y: AttributeType2 => y
+              case _ => unexpected
+            }
           val typ: BasicType =
             getType(toQName(x)) match {
               case y: SimpleType => BasicTypeSimple(y)
               case y: BaseType => BasicTypeBase(y)
               case _ => unexpected(x.toString)
             }
-          visitor.attribute(e, name, typ)
+
+          visitor.attribute(e, detail, typ)
         }
       }
     }
@@ -2048,7 +2054,7 @@ package xsdforms {
         }
       } else if (q == qn("sequence")) {
         x match {
-          case y: ExplicitGroupable => process(AnonymousSequenceElement(), Sequence(y))
+          case y: ExplicitGroupable => process(MyElement(), Sequence(y))
           case _ => unexpected
         }
       } else unexpected(q + x.toString)
@@ -2061,7 +2067,7 @@ package xsdforms {
       if (wrapWithSequence) {
         visitor.startSequence(e)
       }
-      val anon = AnonymousSequenceElement()
+      val anon = MyElement()
       val subElement = if (wrapWithSequence) anon else e
       visitor.startChoice(subElement, x)
       var index = 0
