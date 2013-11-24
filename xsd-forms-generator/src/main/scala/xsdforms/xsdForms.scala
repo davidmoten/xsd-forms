@@ -210,7 +210,7 @@ package xsdforms {
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
   case class NodeSimpleType(element: ElementWrapper, typ: SimpleType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
   case class NodeBaseType(element: ElementWrapper, typ: BaseType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
-  case class NodeAttribute(element: ElementWrapper, typ: BasicType)
+  case class NodeAttribute(element: ElementWrapper,name:String, typ: BasicType)
 
   /**
    * **************************************************************
@@ -300,7 +300,7 @@ package xsdforms {
 
     override def attribute(e: Element, name: String, typ: BasicType) {
       println(e.name + " " + name + ":" + typ)
-      nodes.get(e).getOrElse(unexpected).attributes += NodeAttribute(e, typ)
+      nodes.get(e).getOrElse(unexpected).attributes += NodeAttribute(e,name, typ)
     }
 
     override def baseType(e: Element, typ: BaseType) {
@@ -676,6 +676,8 @@ package xsdforms {
 
         doNodes(node.children, instNos)
 
+        doAttributes(node.attributes,instNos)
+        
         if (usesFieldset)
           html closeTag
 
@@ -744,6 +746,17 @@ package xsdforms {
 
       addMaxOccursScriptlet(e, instances)
 
+    }
+    
+    private def doAttributes(attributes:Seq[NodeAttribute],  instances:Instances) {
+      attributes.foreach { doAttribute(_,instances)}
+    }
+    
+    private def doAttribute(node: NodeAttribute, instances:Instances) {
+      node.typ match {
+        case x:BasicTypeSimple => {}
+        case x:BasicTypeBase => {}
+      }
     }
 
     private def doNode(node: NodeSimpleType, instances: Instances) {
