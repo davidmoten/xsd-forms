@@ -142,6 +142,7 @@ package xsdforms {
     val XsdString = XsdDatatype("string")
     val XsdDouble = XsdDatatype("double", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
     val XsdFloat = XsdDatatype("float", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
+    val XsdAttribute = XsdDatatype("attribute",None)
 
   }
 
@@ -163,7 +164,7 @@ package xsdforms {
     def endChoice
     def simpleType(e: Element, typ: SimpleType)
     def baseType(e: Element, typ: BaseType)
-    def attribute(e:Element, typ:BasicType) 
+    def attribute(e: Element, name: String, typ: BasicType)
   }
 
   //every element is either a sequence, choice or simpleType
@@ -171,10 +172,10 @@ package xsdforms {
   // and may be restricted to a regex pattern, have min, max ranges
   // or be an enumeration. all elements may have  minOccurs and maxOccurs
   //attributes.
-  
+
   case class Sequence(group: ExplicitGroupable)
   case class Choice(group: ExplicitGroupable)
-  case class BaseType(qName: QName) 
+  case class BaseType(qName: QName)
 
   /**
    * **************************************************************
@@ -189,10 +190,10 @@ package xsdforms {
 
   trait Node {
     val element: ElementWrapper
-    val attributes: MutableList[NodeAttribute]
     def isAnonymous = element.name.isEmpty
+    val attributes: MutableList[NodeAttribute]
   }
-  
+
   trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList()
   }
@@ -200,16 +201,16 @@ package xsdforms {
   // immutable would be preferrable but should be safe because not changed after tree created
   trait NodeBasic extends Node
 
-  trait BasicType 
-  case class BasicTypeSimple(typ:SimpleType)
-  case class BasicTypeBase(typ:BaseType)
-  
+  trait BasicType
+  case class BasicTypeSimple(typ: SimpleType) extends BasicType
+  case class BasicTypeBase(typ: BaseType) extends BasicType
+
   //TODO stop using mutable types
   case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
   case class NodeSimpleType(element: ElementWrapper, typ: SimpleType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
   case class NodeBaseType(element: ElementWrapper, typ: BaseType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
-  case class NodeAttribute(element: ElementWrapper,typ: BasicType)
+  case class NodeAttribute(element: ElementWrapper, typ: BasicType)
 
   /**
    * **************************************************************
@@ -242,6 +243,8 @@ package xsdforms {
     import java.util.UUID
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
+    import scala.collection.mutable.HashMap
+    private val nodes = new HashMap[Element, NodeGroup]()
 
     private implicit def wrap(e: Element): ElementWrapper = ElementWrapper(e, UUID.randomUUID.toString)
 
@@ -249,6 +252,7 @@ package xsdforms {
       val seq = NodeSequence(e, MutableList())
       addChild(seq)
       stack.push(seq)
+      nodes.put(e,seq)
     }
 
     /**
@@ -272,8 +276,9 @@ package xsdforms {
 
     override def startChoice(e: Element, choice: Choice) {
       val chc = NodeChoice(e, choice, MutableList())
-      addChild(chc);
-      stack.push(chc);
+      addChild(chc)
+      stack.push(chc)
+      nodes.put(e,chc)
     }
 
     override def startChoiceItem(e: Element, p: ParticleOption, index: Int) {
@@ -293,10 +298,11 @@ package xsdforms {
       addChild(s)
     }
 
-    override def attribute(e:Element,name:String, typ:BasicType) {
-      stack.top.attributes += NodeAttribute(e, typ)
+    override def attribute(e: Element, name: String, typ: BasicType) {
+      println(e.name + " " + name + ":" + typ)
+      nodes.get(e).getOrElse(unexpected).attributes += NodeAttribute(e, typ)
     }
-    
+
     override def baseType(e: Element, typ: BaseType) {
       val s = NodeBaseType(e, typ)
       addChild(s)
@@ -304,8 +310,8 @@ package xsdforms {
 
     private def toString(node: Node, margin: String): String = {
       node match {
-        case NodeBaseType(e, typ,attr) => margin + "NodeBaseType=" + e.name.get
-        case NodeSimpleType(e, typ,attr) => margin + "NodeSimpleType=" + e.name.get
+        case NodeBaseType(e, typ, attr) => margin + "NodeBaseType=" + e.name.get
+        case NodeSimpleType(e, typ, attr) => margin + "NodeSimpleType=" + e.name.get
         case n: NodeGroup => margin + n.getClass.getSimpleName + "=\n" +
           n.children.map(c => toString(c, margin + "  ")).mkString("\n")
         case _ => unexpected
@@ -1840,7 +1846,7 @@ package xsdforms {
       Set(XsdDecimal, XsdString, XsdInteger, XsdDate, XsdDateTime, XsdTime,
         XsdBoolean, XsdInt, XsdLong, XsdShort, XsdPositiveInteger,
         XsdNegativeInteger, XsdNonPositiveInteger, XsdNonNegativeInteger,
-        XsdDouble, XsdFloat)
+        XsdDouble, XsdFloat,XsdAttribute)
         .map(qn(_))
 
     private def getType(q: QName): AnyRef = {
@@ -1918,9 +1924,28 @@ package xsdforms {
           process(e, x)
         case x: SimpleContent =>
           unexpected
-        case x: ComplexTypeModelSequence1 =>
+        case x: ComplexTypeModelSequence1 => {
           //sequence or choice
           process(e, x.typeDefParticleOption1.getOrElse(unexpected))
+          process(e, x.attrDeclsSequence2)
+        }
+      }
+    }
+
+    private def process(e: Element, attributes: AttrDeclsSequence) {
+      attributes.attrdeclsoption1.foreach { x =>
+        { val name = x.value match {
+          case y:AttributeType2 => y.name.getOrElse(unexpected)
+          case _ => unexpected
+        }
+          val typ: BasicType =
+            getType(toQName(x)) match {
+              case y: SimpleType => BasicTypeSimple(y)
+              case y: BaseType => BasicTypeBase(y)
+              case _ => unexpected(x.toString)
+            }
+          visitor.attribute(e, name, typ)
+        }
       }
     }
 
@@ -1973,18 +1998,11 @@ package xsdforms {
       visitor.baseType(e, x)
     }
 
-    private def reportAttributes(e:Element) {
-      e.attributes.foreach {x => {
-//        visitor.attribute(e,x._1,typ)
-        }
-      }
-    }
-    
+
     private def process(e: Element, x: Sequence) {
       val wrapWithSequence = extensionsIncludedInBaseSequence.isEmpty || !extensionsIncludedInBaseSequence.top
       if (wrapWithSequence) {
         visitor.startSequence(e)
-        reportAttributes(e)
       }
       val extensions = extensionStack.toList
       extensionStack.clear
@@ -2021,8 +2039,9 @@ package xsdforms {
       val wrapWithSequence = !extensionStack.isEmpty
       val extensions = extensionStack.toList
       extensionStack.clear
-      if (wrapWithSequence) 
+      if (wrapWithSequence) {
         visitor.startSequence(e)
+      }
       val anon = AnonymousSequenceElement()
       val subElement = if (wrapWithSequence) anon else e
       visitor.startChoice(subElement, x)
