@@ -2044,17 +2044,8 @@ package xsdforms {
 
     private def process(e: Element, et: ExtensionTypable) {
       println("startExtension")
-
-      //the extension of the base type
-      et.typeDefParticleOption3 match {
-        case Some(typeDefParticleOption) => {
-          extensionStack.push(et)
-        }
-        case _ => //do nothing
-      }
-
+      extensionStack.push(et)
       process(e, MyType(getType(et.base)))
-
       println("stopExtension")
     }
 
@@ -2073,9 +2064,11 @@ package xsdforms {
       x.group.particleOption3.foreach(y => process(e, toQName(y), y.value))
       extensionsIncludedInBaseSequence.pop
       extensionsIncludedInBaseSequence.push(true)
-      extensions.foreach{y => y.typeDefParticleOption3 match {
-        case Some(t) => process(e, t)
-        case _ => {}}
+      extensions.foreach { y =>
+        y.typeDefParticleOption3 match {
+          case Some(t) => process(e, t)
+          case _ => {}
+        }
       }
       extensionsIncludedInBaseSequence.pop
       if (wrapWithSequence)
@@ -2103,15 +2096,17 @@ package xsdforms {
       extensionsIncludedInBaseSequence.pop
       visitor.endChoice
       extensionsIncludedInBaseSequence.push(true)
-      extensions.foreach{y => y.typeDefParticleOption3 match {
-        case Some(t) => process(anon, t)
-        case _ => {}}
+      extensions.foreach { y =>
+        y.typeDefParticleOption3 match {
+          case Some(t) => process(anon, t)
+          case _ => {}
+        }
       }
       extensionsIncludedInBaseSequence.pop
       if (wrapWithSequence)
         visitor.endSequence
     }
-    
+
     private def process(e: Element, q: QName, x: ParticleOption) {
       if (q == qn("element")) {
         x match {
