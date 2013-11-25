@@ -1973,8 +1973,15 @@ package xsdforms {
       c.complexTypeModelOption3.value match {
         case x: ComplexContent =>
           process(e, x)
-        case x: SimpleContent =>
-          unexpected
+        case x: SimpleContent => {
+          val q = toQName(x.simplecontentoption)
+          if (qn("extension") == q){
+            x.simplecontentoption.value match {
+              case t:SimpleExtensionType => {unexpected}
+              case _ => unexpected
+            }
+          } else unexpected
+        }
         case x: ComplexTypeModelSequence1 => {
           //sequence or choice
           process(e, x.typeDefParticleOption1.getOrElse(unexpected))

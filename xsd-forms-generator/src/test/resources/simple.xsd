@@ -23,6 +23,7 @@
         <xs:element name="heightInCm" type="xs:positiveInteger"
           default="183" />
       </xs:sequence>
+      <xs:element name="simple-content" type="simple-content"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="favoriteColor"
       default="blue">
@@ -32,6 +33,14 @@
       default="Jupiter">
       <xs:annotation i:order="1" />
     </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="simple-content">
+    <xs:simpleContent>
+      <xs:extension base="name-value">
+        <xs:attribute name="name" type="xs:string"></xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
   </xs:complexType>
 
   <xs:complexType name="name-value">
