@@ -169,6 +169,46 @@ $(function() {
     $('#a-repeating-enclosing-1-instance-1').hide();
   });
 
+  $('#a-remove-button-17-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-17-instance-1_1').hide();
+  });
+
+  // favoritePlanet
+  var validate17instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-17-instance-1_1');
+    var pathDiv = $('#a-item-path-17-instance-1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#a-item-17-instance-1_1').change( function() {
+    var ok = validate17instance1_1();
+    showError('a-item-error-17-instance-1_1',ok);
+  });
+  
+  $('#a-remove-button-18-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-18-instance-1_1').hide();
+  });
+
+  // favoriteColor
+  var validate18instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-18-instance-1_1');
+    var pathDiv = $('#a-item-path-18-instance-1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#a-item-18-instance-1_1').change( function() {
+    var ok = validate18instance1_1();
+    showError('a-item-error-18-instance-1_1',ok);
+  });
+  
   $('#a-remove-button-2-instance-1_1').click(function() {
     $('#a-repeating-enclosing-2-instance-1_1').hide();
   });
@@ -350,6 +390,147 @@ $(function() {
     showError('a-item-error-7-instance-1_1_1',ok);
   });
   
+  $('#a-remove-button-8-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-8-instance-1_1').hide();
+  });
+
+  $('#a-choice-content-9-instance-1_1_1-choice-1').hide();
+  $('#a-choice-content-9-instance-1_1_1-choice-2').hide();
+  var choiceChange9instance1_1_1 = function addChoiceChange9instance1_1_1() {
+    $(':input[@name=a-item-input-9-instance-1_1_1]').change(function() {
+      var checked = $(':input[name=a-item-input-9-instance-1_1_1]:checked').attr('id');
+      if (checked == 'a-item-9-instance-1_1_1-choice-1') {
+        $('#a-choice-content-9-instance-1_1_1-choice-1').show();
+        $('#a-choice-content-9-instance-1_1_1-choice-1').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#a-choice-content-9-instance-1_1_1-choice-1').hide();
+        $('#a-choice-content-9-instance-1_1_1-choice-1').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'a-item-9-instance-1_1_1-choice-2') {
+        $('#a-choice-content-9-instance-1_1_1-choice-2').show();
+        $('#a-choice-content-9-instance-1_1_1-choice-2').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#a-choice-content-9-instance-1_1_1-choice-2').hide();
+        $('#a-choice-content-9-instance-1_1_1-choice-2').find('.item-path').attr('enabled','false');
+      }
+    });
+  }
+
+  choiceChange9instance1_1_1();
+  $('#a-remove-button-9-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-9-instance-1_1_1').hide();
+  });
+
+  $('#a-remove-button-10-instance-1_1_1_1').click(function() {
+    $('#a-repeating-enclosing-10-instance-1_1_1_1').hide();
+  });
+
+  // name
+  var validate10instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-10-instance-1_1_1_1');
+    var pathDiv = $('#a-item-path-10-instance-1_1_1_1');
+    return ok;
+  }
+  
+  $('#a-item-10-instance-1_1_1_1').change( function() {
+    var ok = validate10instance1_1_1_1();
+    showError('a-item-error-10-instance-1_1_1_1',ok);
+  });
+  
+  $('#a-remove-button-11-instance-1_1_1_1').click(function() {
+    $('#a-repeating-enclosing-11-instance-1_1_1_1').hide();
+  });
+
+  // value
+  var validate11instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-11-instance-1_1_1_1');
+    var pathDiv = $('#a-item-path-11-instance-1_1_1_1');
+    return ok;
+  }
+  
+  $('#a-item-11-instance-1_1_1_1').change( function() {
+    var ok = validate11instance1_1_1_1();
+    showError('a-item-error-11-instance-1_1_1_1',ok);
+  });
+  
+  $('#a-remove-button-12-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-12-instance-1_1_1').hide();
+  });
+
+  // group
+  var validate12instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-12-instance-1_1_1');
+    var pathDiv = $('#a-item-path-12-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#a-item-12-instance-1_1_1').change( function() {
+    var ok = validate12instance1_1_1();
+    showError('a-item-error-12-instance-1_1_1',ok);
+  });
+  
+  $('#a-remove-button-13-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-13-instance-1_1').hide();
+  });
+
+  $('#a-remove-button-14-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-14-instance-1_1_1').hide();
+  });
+
+  // age
+  var validate14instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-14-instance-1_1_1');
+    var pathDiv = $('#a-item-path-14-instance-1_1_1');
+    ok &= matchesPattern(v,/^\d+$/);
+    return ok;
+  }
+  
+  $('#a-item-14-instance-1_1_1').change( function() {
+    var ok = validate14instance1_1_1();
+    showError('a-item-error-14-instance-1_1_1',ok);
+  });
+  
+  $('#a-remove-button-15-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-15-instance-1_1_1').hide();
+  });
+
+  // heightInCm
+  var validate15instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-15-instance-1_1_1');
+    var pathDiv = $('#a-item-path-15-instance-1_1_1');
+    ok &= matchesPattern(v,/^[1-9]\d*$/);
+    return ok;
+  }
+  
+  $('#a-item-15-instance-1_1_1').change( function() {
+    var ok = validate15instance1_1_1();
+    showError('a-item-error-15-instance-1_1_1',ok);
+  });
+  
+  $('#a-remove-button-16-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-16-instance-1_1').hide();
+  });
+
+  // simple-content
+  var validate16instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-16-instance-1_1');
+    var pathDiv = $('#a-item-path-16-instance-1_1');
+    return ok;
+  }
+  
+  $('#a-item-16-instance-1_1').change( function() {
+    var ok = validate16instance1_1();
+    showError('a-item-error-16-instance-1_1',ok);
+  });
+  
   //extract xml from element <name>
   function getXml2instance1() {
 
@@ -436,6 +617,110 @@ $(function() {
     return xml;
   }
 
+  //extract xml from element <name>
+  function getXml10instance1_1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-10-instance-1_1_1_1')) {
+    var v = encodedValueById("a-item-10-instance-1_1_1_1");
+    xml += '\n' + spaces(4) + '<name>' + v + '</name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <value>
+  function getXml11instance1_1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-11-instance-1_1_1_1')) {
+    var v = encodedValueById("a-item-11-instance-1_1_1_1");
+    xml += '\n' + spaces(4) + '<value>' + v + '</value>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <?>
+  function getXml9instance1_1() {
+
+    var xml = '';
+    //now optionally add selected child if any
+    var checked = $(':input[name=a-item-input-9-instance-1_1_1]:checked').attr('id');
+    if (checked == "a-item-9-instance-1_1_1-choice-1")
+    xml += getXml10instance1_1_1();
+    if (checked == "a-item-9-instance-1_1_1-choice-2")
+    xml += getXml11instance1_1_1();
+    return xml;
+  }
+
+  //extract xml from element <group>
+  function getXml12instance1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-12-instance-1_1_1')) {
+    var v = encodedValueById("a-item-12-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<group>' + v + '</group>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <choice-extension>
+  function getXml8instance1() {
+
+    var xml = '\n' + spaces(2) + '<choice-extension>';
+    //now add sequence children for each instanceNo
+    if (idVisible('a-repeating-enclosing-8-instance-1_1')) {
+      xml += getXml9instance1_1();
+      xml += getXml12instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</choice-extension>';
+    return xml;
+  }
+
+  //extract xml from element <age>
+  function getXml14instance1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-14-instance-1_1_1')) {
+    var v = encodedValueById("a-item-14-instance-1_1_1");
+    xml += '\n' + spaces(2) + '<age>' + v + '</age>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <heightInCm>
+  function getXml15instance1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-15-instance-1_1_1')) {
+    var v = encodedValueById("a-item-15-instance-1_1_1");
+    xml += '\n' + spaces(2) + '<heightInCm>' + v + '</heightInCm>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <?>
+  function getXml13instance1() {
+
+    var xml = '';
+    //now add sequence children for each instanceNo
+    if (idVisible('a-repeating-enclosing-13-instance-1_1')) {
+      xml += getXml14instance1_1();
+      xml += getXml15instance1_1();
+    }
+    return xml;
+  }
+
+  //extract xml from element <simple-content>
+  function getXml16instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-16-instance-1_1')) {
+    var v = encodedValueById("a-item-16-instance-1_1");
+    xml += '\n' + spaces(2) + '<simple-content>' + v + '</simple-content>';
+  }
+   return xml;
+  }
+
   //extract xml from element <person>
   function getXml1instance() {
 
@@ -444,6 +729,9 @@ $(function() {
     if (idVisible('a-repeating-enclosing-1-instance-1')) {
       xml += getXml2instance1();
       xml += getXml3instance1();
+      xml += getXml8instance1();
+      xml += getXml13instance1();
+      xml += getXml16instance1();
     }
     xml += '\n' + spaces(0) + '</person>';
     return xml;
@@ -471,6 +759,34 @@ $(function() {
     <div id="a-repeating-enclosing-1-instance-1" class="repeating-enclosing">
       <div class="sequence-label">Personal details</div>
       <div id="a-sequence-1-instance-1" class="sequence-content">
+        <div id="a-item-enclosing-17-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-17-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">17</div>
+            <label class="item-label" for="a-item-input-17-instance-1_1">FavoritePlanet</label>
+            <div class="item-input">
+              <input number="17" name="a-item-input-17-instance-1_1" id="a-item-17-instance-1_1" class=" item-input-text" type="text" value="Jupiter">
+              </input>
+              <div id="a-item-path-17-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-17-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-18-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-18-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">18</div>
+            <label class="item-label" for="a-item-input-18-instance-1_1">FavoriteColor</label>
+            <div class="item-input">
+              <input number="18" name="a-item-input-18-instance-1_1" id="a-item-18-instance-1_1" class=" item-input-text" type="text" value="blue">
+              </input>
+              <div id="a-item-path-18-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-18-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
         <div id="a-item-enclosing-2-instance-1_1" class="item-enclosing">
           <div class="non-repeating-title">
           </div>
@@ -542,7 +858,7 @@ $(function() {
           <div class="non-repeating-title">
           </div>
           <div id="a-repeating-enclosing-3-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label">Extension example</div>
+            <div class="sequence-label">Extension example sequence</div>
             <div id="a-sequence-3-instance-1" class="sequence-content">
               <div id="a-item-enclosing-4-instance-1_1_1" class="item-enclosing">
                 <div class="non-repeating-title">
@@ -600,6 +916,125 @@ $(function() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-8-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label">Extension example sequence</div>
+            <div id="a-sequence-8-instance-1" class="sequence-content">
+              <div id="a-item-enclosing-9-instance-1_1_1" class="choice">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeating-enclosing-9-instance-1_1_1" class="repeating-enclosing">
+                  <div class="choice-label"></div>
+                  <div id="a-div-choice-item-9-instance-1-choice-1" class="div-choice-item">
+                    <input number="9" name="a-item-input-9-instance-1_1_1" id="a-item-9-instance-1_1_1-choice-1" class="choice-item" type="radio" value="number">Name</input>
+                  </div>
+                  <div id="a-div-choice-item-9-instance-1-choice-2" class="div-choice-item">
+                    <input number="9" name="a-item-input-9-instance-1_1_1" id="a-item-9-instance-1_1_1-choice-2" class="choice-item" type="radio" value="number">Value</input>
+                  </div>
+                  <div id="a-choice-content-9-instance-1_1_1-choice-1" class="invisible">
+                    <div id="a-item-enclosing-10-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-10-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">10</div>
+                        <label class="item-label" for="a-item-input-10-instance-1_1_1_1">Name</label>
+                        <div class="item-input">
+                          <input number="10" name="a-item-input-10-instance-1_1_1_1" id="a-item-10-instance-1_1_1_1" class=" item-input-text" type="text" value="name1">
+                          </input>
+                          <div id="a-item-path-10-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-10-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="a-choice-content-9-instance-1_1_1-choice-2" class="invisible">
+                    <div id="a-item-enclosing-11-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-11-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">11</div>
+                        <label class="item-label" for="a-item-input-11-instance-1_1_1_1">Value</label>
+                        <div class="item-input">
+                          <input number="11" name="a-item-input-11-instance-1_1_1_1" id="a-item-11-instance-1_1_1_1" class=" item-input-text" type="text" value="value1">
+                          </input>
+                          <div id="a-item-path-11-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-11-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="a-item-enclosing-12-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeating-enclosing-12-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">12</div>
+                  <label class="item-label" for="a-item-input-12-instance-1_1_1">Group</label>
+                  <div class="item-input">
+                    <input number="12" name="a-item-input-12-instance-1_1_1" id="a-item-12-instance-1_1_1" class=" item-input-text" type="text" value="group1">
+                    </input>
+                    <div id="a-item-path-12-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="a-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sequence">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-13-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="a-sequence-13-instance-1" class="sequence-content">
+              <div id="a-item-enclosing-14-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeating-enclosing-14-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">14</div>
+                  <label class="item-label" for="a-item-input-14-instance-1_1_1">Age<em>*</em></label>
+                  <div class="item-input">
+                    <input number="14" name="a-item-input-14-instance-1_1_1" id="a-item-14-instance-1_1_1" class=" item-input-text" type="text" value="23">
+                    </input>
+                    <div id="a-item-path-14-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="a-item-error-14-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="a-item-enclosing-15-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeating-enclosing-15-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">15</div>
+                  <label class="item-label" for="a-item-input-15-instance-1_1_1">HeightInCm<em>*</em></label>
+                  <div class="item-input">
+                    <input number="15" name="a-item-input-15-instance-1_1_1" id="a-item-15-instance-1_1_1" class=" item-input-text" type="text" value="183">
+                    </input>
+                    <div id="a-item-path-15-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="a-item-error-15-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-16-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-16-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">16</div>
+            <label class="item-label" for="a-item-input-16-instance-1_1">Simple Content<em>*</em></label>
+            <div class="item-input">
+              <input number="16" name="a-item-input-16-instance-1_1" id="a-item-16-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div id="a-item-path-16-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-16-instance-1_1" class="item-error">Invalid</div>
             </div>
           </div>
         </div>
