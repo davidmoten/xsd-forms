@@ -37,8 +37,8 @@
 
   <xs:complexType name="simple-content">
     <xs:simpleContent>
-      <xs:extension base="name-value">
-        <xs:attribute name="name" type="xs:string"></xs:attribute>
+      <xs:extension base="xs:string">
+        <xs:attribute name="name" type="xs:string" default="brian"/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>

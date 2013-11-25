@@ -698,15 +698,16 @@ package xsdforms {
       addMaxOccursScriptlet(e, instances)
     }
 
-    private def sortChildrenByOrder(node: NodeGroup) ={
+    private def sortChildrenByOrder(node: NodeGroup) = {
       (node.children ++ node.attributes).sortBy({
         x =>
           val order = x match {
-            case y:NodeAttribute => {
-              getAnnotation(y.detail,Annotation.Order)}
+            case y: NodeAttribute => {
+              getAnnotation(y.detail, Annotation.Order)
+            }
             case _ => getAnnotation(node.element, Annotation.Order)
           }
-          
+
           order match {
             case Some(y) => y.toDouble
             case None => Int.MaxValue.toDouble
@@ -1975,9 +1976,10 @@ package xsdforms {
           process(e, x)
         case x: SimpleContent => {
           val q = toQName(x.simplecontentoption)
-          if (qn("extension") == q){
+          if (qn("extension") == q) {
             x.simplecontentoption.value match {
-              case t:SimpleExtensionType => {unexpected}
+              case t: SimpleExtensionType =>
+                process(e, t)
               case _ => unexpected
             }
           } else unexpected
@@ -2040,7 +2042,7 @@ package xsdforms {
       else unexpected
     }
 
-    private def process(e: Element, et: ExtensionType) {
+    private def process(e: Element, et: ExtensionTypable) {
       println("startExtension")
 
       //the extension of the base type
