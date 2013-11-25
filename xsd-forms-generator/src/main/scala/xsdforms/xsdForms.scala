@@ -214,7 +214,7 @@ package xsdforms {
   //TODO stop using mutable types
   case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
-  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic
+  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic with HasAttributes
   case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
   case class NodeAttribute(element: ElementWrapper, detail: AttributeType2, typ: BasicType) extends Node
 
@@ -249,7 +249,7 @@ package xsdforms {
     private var tree: Option[Node] = None
     private val stack = new scala.collection.mutable.Stack[Node]
     import scala.collection.mutable.HashMap
-    private val nodes = new HashMap[Element, NodeGroup]()
+    private val nodes = new HashMap[Element, Node]()
 
     private implicit def wrap(e: Element): ElementWrapper = ElementWrapper(e)
 
@@ -301,11 +301,14 @@ package xsdforms {
     override def simpleType(e: Element, typ: SimpleType) {
       val s = NodeSimpleType(e, typ)
       addChild(s)
+      nodes.put(e,s)
     }
 
     override def attribute(e: Element, detail: AttributeType2, typ: BasicType) {
       println(e.name + " " + detail.name.get + ":" + typ)
-      nodes.get(e).getOrElse(unexpected).attributes += NodeAttribute(e, detail, typ)
+      nodes.get(e).getOrElse(unexpected) match {
+        case x: HasAttributes => x.attributes += NodeAttribute(e, detail, typ)
+      }
     }
 
     override def baseType(e: Element, typ: BaseType) {
@@ -776,29 +779,6 @@ package xsdforms {
 
     }
 
-    private def doAttributes(attributes: Seq[NodeAttribute], instances: Instances) {
-      attributes.foreach { doAttribute(_, instances) }
-    }
-
-    private def doAttribute(node: NodeAttribute, instances: Instances) {
-      node.typ match {
-        case x: BasicTypeSimple => {
-          val nd = NodeSimpleType(createElement(node), x.typ, attributes = MutableList())
-          doNode(nd, instances)
-        }
-        case x: BasicTypeBase => {
-          val nd = NodeBaseType(createElement(node), x.typ)
-          doNode(nd, instances)
-        }
-      }
-    }
-
-    private def createElement(node: NodeAttribute) = {
-      val detail = node.detail
-      val minOccurs = if (detail.use == Required) BigInt(1) else BigInt(0)
-      ElementWrapper(MyElement(name = detail.name, default = detail.default, minOccurs = minOccurs))
-    }
-
     private def doNode(node: NodeSimpleType, instances: Instances) {
       val e = node.element
       val typ = node.typ
@@ -819,6 +799,8 @@ package xsdforms {
           .div(classes = List(ClassItemInput))
 
         simpleType(node, instNos)
+        
+        doAttributes(node.attributes, instNos)
 
         html closeTag 2
       }
@@ -975,6 +957,29 @@ package xsdforms {
           .line(functionBody)
           .line("  }")
           .line)
+    }
+
+    private def doAttributes(attributes: Seq[NodeAttribute], instances: Instances) {
+      attributes.foreach { doAttribute(_, instances) }
+    }
+
+    private def doAttribute(node: NodeAttribute, instances: Instances) {
+      node.typ match {
+        case x: BasicTypeSimple => {
+          val nd = NodeSimpleType(createElement(node), x.typ, attributes = MutableList())
+          doNode(nd, instances)
+        }
+        case x: BasicTypeBase => {
+          val nd = NodeBaseType(createElement(node), x.typ)
+          doNode(nd, instances)
+        }
+      }
+    }
+
+    private def createElement(node: NodeAttribute) = {
+      val detail = node.detail
+      val minOccurs = if (detail.use == Required) BigInt(1) else BigInt(0)
+      ElementWrapper(MyElement(name = detail.name, default = detail.default, minOccurs = minOccurs))
     }
 
     private def refById(id: String) = "$(\"#" + id + "\")"
@@ -2067,8 +2072,9 @@ package xsdforms {
       extensions.foreach { y =>
         y.typeDefParticleOption3 match {
           case Some(t) => process(e, t)
-          case _ => {}
+          case None => {}
         }
+        process(e, y.attrDeclsSequence4)
       }
       extensionsIncludedInBaseSequence.pop
       if (wrapWithSequence)
@@ -2099,8 +2105,9 @@ package xsdforms {
       extensions.foreach { y =>
         y.typeDefParticleOption3 match {
           case Some(t) => process(anon, t)
-          case _ => {}
+          case None => {}
         }
+        process(e, y.attrDeclsSequence4)
       }
       extensionsIncludedInBaseSequence.pop
       if (wrapWithSequence)
