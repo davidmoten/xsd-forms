@@ -1868,7 +1868,7 @@ package xsdforms {
     import Util._
     import XsdUtil._
 
-    val extensionStack = new scala.collection.mutable.Stack[DataRecord[TypeDefParticleOption]]
+    val extensionStack = new scala.collection.mutable.Stack[ExtensionTypable]
     val extensionsIncludedInBaseSequence = new scala.collection.mutable.Stack[Boolean]
 
     private val topLevelElements =
@@ -2048,7 +2048,7 @@ package xsdforms {
       //the extension of the base type
       et.typeDefParticleOption3 match {
         case Some(typeDefParticleOption) => {
-          extensionStack.push(typeDefParticleOption)
+          extensionStack.push(et)
         }
         case _ => //do nothing
       }
@@ -2073,29 +2073,13 @@ package xsdforms {
       x.group.particleOption3.foreach(y => process(e, toQName(y), y.value))
       extensionsIncludedInBaseSequence.pop
       extensionsIncludedInBaseSequence.push(true)
-      extensions.foreach(y => process(e, y))
+      extensions.foreach{y => y.typeDefParticleOption3 match {
+        case Some(t) => process(e, t)
+        case _ => {}}
+      }
       extensionsIncludedInBaseSequence.pop
       if (wrapWithSequence)
         visitor.endSequence
-    }
-
-    private def process(e: Element, q: QName, x: ParticleOption) {
-      if (q == qn("element")) {
-        x match {
-          case y: LocalElementable => process(y)
-          case _ => unexpected
-        }
-      } else if (q == qn("choice")) {
-        x match {
-          case y: ExplicitGroupable => process(e, Choice(y))
-          case _ => unexpected
-        }
-      } else if (q == qn("sequence")) {
-        x match {
-          case y: ExplicitGroupable => process(MyElement(), Sequence(y))
-          case _ => unexpected
-        }
-      } else unexpected(q + x.toString)
     }
 
     private def process(e: Element, x: Choice) {
@@ -2119,10 +2103,32 @@ package xsdforms {
       extensionsIncludedInBaseSequence.pop
       visitor.endChoice
       extensionsIncludedInBaseSequence.push(true)
-      extensions.foreach(y => process(anon, y))
+      extensions.foreach{y => y.typeDefParticleOption3 match {
+        case Some(t) => process(anon, t)
+        case _ => {}}
+      }
       extensionsIncludedInBaseSequence.pop
       if (wrapWithSequence)
         visitor.endSequence
+    }
+    
+    private def process(e: Element, q: QName, x: ParticleOption) {
+      if (q == qn("element")) {
+        x match {
+          case y: LocalElementable => process(y)
+          case _ => unexpected
+        }
+      } else if (q == qn("choice")) {
+        x match {
+          case y: ExplicitGroupable => process(e, Choice(y))
+          case _ => unexpected
+        }
+      } else if (q == qn("sequence")) {
+        x match {
+          case y: ExplicitGroupable => process(MyElement(), Sequence(y))
+          case _ => unexpected
+        }
+      } else unexpected(q + x.toString)
     }
   }
 
