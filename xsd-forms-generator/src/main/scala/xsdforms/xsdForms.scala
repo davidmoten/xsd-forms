@@ -698,14 +698,21 @@ package xsdforms {
       addMaxOccursScriptlet(e, instances)
     }
 
-    private def sortChildrenByOrder(node: NodeGroup) =
-      node.children ++ node.attributes.sortBy({
+    private def sortChildrenByOrder(node: NodeGroup) ={
+      (node.children ++ node.attributes).sortBy({
         x =>
-          getAnnotation(node.element, Annotation.Order) match {
+          val order = x match {
+            case y:NodeAttribute => {
+              getAnnotation(y.detail,Annotation.Order)}
+            case _ => getAnnotation(node.element, Annotation.Order)
+          }
+          
+          order match {
             case Some(y) => y.toDouble
-            case None => 0
+            case None => Int.MaxValue.toDouble
           }
       })
+    }
 
     private def doNode(node: NodeChoice, instances: Instances) {
       val choice = node.choice
