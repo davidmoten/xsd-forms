@@ -1,0 +1,49 @@
+<xs:schema targetNamespace="http://org.moten.david/example"
+  xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:i="http://moten.david.org/xsd-forms">
+  <xs:annotation i:numberItems="true" />
+
+  <xs:element name="polrep" type="polrep" />
+
+  <xs:complexType name="polrep">
+    <xs:sequence>
+      <xs:element name="location" type="xs:string" />
+      <xs:element name="incident-coordinates" type="position" />
+      <xs:element name="date-of-incident" type="xs:date" />
+      <xs:element name="time-of-incident" type="xs:time"
+        minOccurs="0" />
+      <xs:element name="description" type="xs:string">
+        <xs:annotation i:text="textarea" />
+      </xs:element>
+      <xs:element name="pollution-source-vessel" type="vessel"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="position">
+    <xs:sequence>
+      <xs:element name="latitude" type="latitude" />
+      <xs:element name="longitude" type="longitude" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="latitude">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="-90" />
+      <xs:maxInclusive value="90" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="longitude">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="-180" />
+      <xs:maxInclusive value="180" />
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="vessel">
+    <xs:sequence></xs:sequence>  
+  </xs:complexType>
+
+  
+
+</xs:schema>
