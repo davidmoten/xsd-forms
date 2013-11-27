@@ -979,7 +979,7 @@ package xsdforms {
           name = getMinOccursZeroName(number, instances),
           classes = List(ClassMinOccursZero),
           typ = Some("checkbox"),
-          checked = Some(false),
+          checked = None,
           value = None,
           number = Some(number))
           .closeTag
@@ -1227,6 +1227,7 @@ package xsdforms {
             number = Some(number))
             .closeTag
       }
+      
     }
 
     private def defaultValue(value: Option[String], r: Restriction): Option[String] = {

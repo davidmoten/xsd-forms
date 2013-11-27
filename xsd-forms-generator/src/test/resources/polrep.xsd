@@ -124,7 +124,7 @@
 			<xs:element name="diesel-bunker" type="xs:boolean" />
 			<xs:element name="hfo-bunker" type="xs:boolean" />
 			<xs:element name="crude" type="xs:boolean" />
-			<xs:element name="unknown" type="xs:boolean" />
+			<xs:element name="unknown" type="xs:boolean" default="true"/>
 			<xs:element name="other" type="yes-no-alt">
 				<xs:annotation i:addBlank="true" />
 			</xs:element>
