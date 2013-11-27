@@ -1,49 +1,106 @@
 <xs:schema targetNamespace="http://org.moten.david/example"
-  xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:i="http://moten.david.org/xsd-forms">
-  <xs:annotation i:numberItems="true" />
+	xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:i="http://moten.david.org/xsd-forms">
+	<xs:annotation i:numberItems="true" />
 
-  <xs:element name="polrep" type="polrep" />
+	<xs:element name="polrep" type="polrep" />
 
-  <xs:complexType name="polrep">
-    <xs:sequence>
-      <xs:element name="location" type="xs:string" />
-      <xs:element name="incident-coordinates" type="position" />
-      <xs:element name="date-of-incident" type="xs:date" />
-      <xs:element name="time-of-incident" type="xs:time"
-        minOccurs="0" />
-      <xs:element name="description" type="xs:string">
-        <xs:annotation i:text="textarea" />
-      </xs:element>
-      <xs:element name="pollution-source-vessel" type="vessel"/>
-    </xs:sequence>
-  </xs:complexType>
+	<xs:complexType name="polrep">
+		<xs:sequence>
+			<xs:element name="location-description" type="xs:string" />
+			<xs:element name="incident-coordinates" type="position" />
+			<xs:element name="date-of-incident" type="xs:date" />
+			<xs:element name="time-of-incident" type="xs:time"
+				minOccurs="0" />
+			<xs:element name="description" type="xs:string">
+				<xs:annotation i:text="textarea" />
+			</xs:element>
+			<xs:element name="pollution-source" type="pollution-source">
+				<xs:annotation i:addBlank="true" />
+			</xs:element>
+			<xs:element name="pollution-source-vessel" type="vessel"
+				minOccurs="0">
+				<xs:annotation i:visible="false" />
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 
-  <xs:complexType name="position">
-    <xs:sequence>
-      <xs:element name="latitude" type="latitude" />
-      <xs:element name="longitude" type="longitude" />
-    </xs:sequence>
-  </xs:complexType>
+	<xs:complexType name="position">
+		<xs:sequence>
+			<xs:element name="latitude" type="latitude" />
+			<xs:element name="longitude" type="longitude" />
+		</xs:sequence>
+	</xs:complexType>
 
-  <xs:simpleType name="latitude">
-    <xs:restriction base="xs:decimal">
-      <xs:minInclusive value="-90" />
-      <xs:maxInclusive value="90" />
-    </xs:restriction>
-  </xs:simpleType>
+	<xs:simpleType name="latitude">
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="-90" />
+			<xs:maxInclusive value="90" />
+		</xs:restriction>
+	</xs:simpleType>
 
-  <xs:simpleType name="longitude">
-    <xs:restriction base="xs:decimal">
-      <xs:minInclusive value="-180" />
-      <xs:maxInclusive value="180" />
-    </xs:restriction>
-  </xs:simpleType>
-  
-  <xs:complexType name="vessel">
-    <xs:sequence></xs:sequence>  
-  </xs:complexType>
+	<xs:simpleType name="longitude">
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="-180" />
+			<xs:maxInclusive value="180" />
+		</xs:restriction>
+	</xs:simpleType>
 
-  
+	<xs:complexType name="vessel">
+		<xs:sequence>
+			<xs:element name="vessel-type" type="vessel-type">
+				<xs:annotation i:addBlank="true" />
+			</xs:element>
+			<xs:element name="vessel-type-other" type="xs:string"
+				minOccurs="0">
+				<xs:annotation i:visible="false" />
+			</xs:element>
+			<xs:element name="name" type="xs:string" minOccurs="0" />
+			<xs:element name="flag-state" type="xs:string" minOccurs="0" />
+			<xs:element name="callsign" type="xs:string" minOccurs="0" />
+			<xs:element name="australian" type="yes-no" minOccurs="0">
+				<xs:annotation i:addBlank="true" />
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="yes-no">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="true">
+				<xs:annotation i:label="Yes" />
+			</xs:enumeration>
+			<xs:enumeration value="false">
+				<xs:annotation i:label="No" />
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="vessel-type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Tanker" />
+			<xs:enumeration value="Container" />
+			<xs:enumeration value="Bulk Cargo" />
+			<xs:enumeration value="Fishing" />
+			<xs:enumeration value="Defence" />
+			<xs:enumeration value="Recreational" />
+			<xs:enumeration value="Other">
+				<xs:annotation i:makeVisible="1" />
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="pollution-source">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Vessel">
+				<xs:annotation i:makeVisible="1" />
+			</xs:enumeration>
+			<xs:enumeration value="Land" />
+			<xs:enumeration value="Other" />
+			<xs:enumeration value="Unknown" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+
 
 </xs:schema>

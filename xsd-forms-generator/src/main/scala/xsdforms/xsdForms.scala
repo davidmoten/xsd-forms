@@ -667,7 +667,7 @@ package xsdforms {
       val label = getAnnotation(e, Annotation.Label).mkString
 
       html
-        .div(classes = List(ClassSequence))
+        .div(classes = List(ClassSequence) ++ getVisibility(e))
       nonRepeatingTitle(e, instances)
       minOccursZeroCheckbox(e, instances)
       repeatButton(e, instances)
@@ -725,7 +725,7 @@ package xsdforms {
 
       val number = elementNumber(e)
 
-      html.div(id = Some(getItemEnclosingId(number, instances add 1)), classes = List(ClassChoice))
+      html.div(id = Some(getItemEnclosingId(number, instances add 1)), classes = List(ClassChoice) ++ getVisibility(e))
       nonRepeatingTitle(e, instances)
       minOccursZeroCheckbox(e, instances)
       repeatButton(e, instances)
@@ -1018,7 +1018,7 @@ package xsdforms {
       addScript(js.toString)
     }
 
-    private def isMinOccursZero(e: ElementWrapper) = e.minOccurs.intValue == 0
+    private def isMinOccursZero(e: ElementWrapper) = e.minOccurs.intValue == 0  && getAnnotation(e,Annotation.Visible) != Some("false")
 
     private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
@@ -1956,7 +1956,7 @@ package xsdforms {
                 case _ => unexpected
               }
             }
-            case _ => unexpected
+            case _ => unexpected("unsupported " + e)
           }
         }
         case _ => unexpected

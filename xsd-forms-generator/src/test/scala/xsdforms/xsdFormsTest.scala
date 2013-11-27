@@ -106,6 +106,16 @@ package xsdforms {
         rootElement = "census",
         outputFile = new File("target/generated-webapp/census-form.html"))
     }
+    
+    @Test
+    def generatePolrepForm {
+      println("generating polrep form")
+      generate(
+        idPrefix = "b-",
+        schemaInputStream = TstUtil.getClass().getResourceAsStream("/polrep.xsd"),
+        rootElement = "polrep",
+        outputFile = new File("target/generated-webapp/polrep-form.html"))
+    }
 
     @Test
     def generateTheDemoForm {
