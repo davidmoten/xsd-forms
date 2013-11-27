@@ -14,7 +14,7 @@
   <time-element-with-default>21:55:00</time-element-with-default>
   <datetime-element>2013-12-25T04:45:00</datetime-element>
   <datetime-element-with-default>2002-05-30T09:30:00</datetime-element-with-default>
-  <boolean-element>true</boolean-element>
+  <boolean-element>false</boolean-element>
   <boolean-element-with-default>true</boolean-element-with-default>
   <string-enumeration>option-1</string-enumeration>
   <string-enumeration-unselected>option-1</string-enumeration-unselected>
@@ -72,7 +72,7 @@
     <nested>
       <A></A>
       <B></B>
-      <C>true</C>
+      <C>false</C>
       <option>option-1</option>
     </nested>
   </named-complex-type>
@@ -91,7 +91,7 @@
   <fieldset-example>
     <A></A>
     <B></B>
-    <C>true</C>
+    <C>false</C>
     <option>option-1</option>
   </fieldset-example>
   <minoccurs-greater-than-one></minoccurs-greater-than-one>

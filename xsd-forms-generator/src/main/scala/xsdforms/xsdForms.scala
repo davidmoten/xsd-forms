@@ -876,6 +876,8 @@ package xsdforms {
           .line("  if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
         if (isRadio(node.element))
           js.line("    var v = encodeHTML($('input[name=%s]:radio:checked').val());", getItemName(number, instNos))
+        else if (isCheckbox(node)) 
+          js.line("    var v = $('#%s').is(':checked');",getItemId(node, instNos))
         else
           js.line("    var v = %s;", valById(getItemId(node, instNos)))
 
@@ -1311,6 +1313,7 @@ package xsdforms {
         case Some("radio") => true
         case _ => false
       }
+    
 
     private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
@@ -1600,6 +1603,8 @@ package xsdforms {
         case _ => "text"
       }
     }
+    
+    private def isCheckbox(node:NodeBasic) = "checkbox" == getInputType(restriction(node))
 
     private def insertMargin(s: String) =
       s.stripMargin.replaceAll("\n", "\n" + margin)

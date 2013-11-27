@@ -26,10 +26,7 @@
 				minOccurs="0">
 				<xs:annotation i:label="Oil" i:addBlank="true" />
 			</xs:element>
-			<xs:element name="pollutant-oil-types" type="pollutant-oil-types">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-			<xs:element name="pollutant-oil-other" type="xs:string">
+			<xs:element name="pollutant-oil-types" type="pollutant-oil-types" minOccurs="0">
 				<xs:annotation i:visible="false" />
 			</xs:element>
 		</xs:sequence>
@@ -128,7 +125,13 @@
 			<xs:element name="hfo-bunker" type="xs:boolean" />
 			<xs:element name="crude" type="xs:boolean" />
 			<xs:element name="unknown" type="xs:boolean" />
-			<xs:element name="other" type="yes-no-alt"/>
+			<xs:element name="other" type="yes-no-alt">
+				<xs:annotation i:addBlank="true" />
+			</xs:element>
+			<xs:element name="other-description" type="xs:string"
+				minOccurs="0">
+				<xs:annotation i:visible="false" />
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 
