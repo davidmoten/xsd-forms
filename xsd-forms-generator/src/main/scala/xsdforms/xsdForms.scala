@@ -1216,7 +1216,7 @@ package xsdforms {
             case Some("true") => Some(true)
             case _ => None
           }
-          val v = defaultValue(e.default, r)
+          val v =  if (checked.isDefined) None else defaultValue(e.default, r)
           html.input(
             id = Some(itemId),
             name = getItemName(number, instances),
