@@ -38,7 +38,6 @@ package xsdforms {
     val Before = XsdFormsAnnotation("before")
     val After = XsdFormsAnnotation("after")
 
-    val Order = XsdFormsAnnotation("order")
 
     /**
      * if text=textarea then html textarea used as input. Otherwise normal
@@ -166,7 +165,6 @@ package xsdforms {
     def endChoice
     def simpleType(e: Element, typ: SimpleType)
     def baseType(e: Element, typ: BaseType)
-    def attribute(e: Element, detail: AttributeType2, typ: BasicType)
   }
 
   //every element is either a sequence, choice or simpleType
@@ -302,13 +300,6 @@ package xsdforms {
       val s = NodeSimpleType(e, typ)
       addChild(s)
       nodes.put(e, s)
-    }
-
-    override def attribute(e: Element, detail: AttributeType2, typ: BasicType) {
-      println(e.name + " " + detail.name.get + ":" + typ)
-      nodes.get(e).getOrElse(unexpected) match {
-        case x: HasAttributes => x.attributes += NodeAttribute(e, detail, typ)
-      }
     }
 
     override def baseType(e: Element, typ: BaseType) {
@@ -683,14 +674,8 @@ package xsdforms {
         if (usesFieldset)
           html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
 
-        sortChildrenByOrder(node).foreach {
-          x =>
-            x match {
-              case y: NodeAttribute => doAttribute(y, instNos)
-              case _ => doNode(x, instNos)
-            }
-        }
-
+        node.children.foreach (x=>doNode(x,instNos))
+        
         if (usesFieldset)
           html closeTag
 
@@ -700,23 +685,6 @@ package xsdforms {
       html closeTag
 
       addMaxOccursScriptlet(e, instances)
-    }
-
-    private def sortChildrenByOrder(node: NodeGroup) = {
-      (node.children ++ node.attributes).sortBy({
-        x =>
-          val order = x match {
-            case y: NodeAttribute => {
-              getAnnotation(y.detail, Annotation.Order)
-            }
-            case _ => getAnnotation(node.element, Annotation.Order)
-          }
-
-          order match {
-            case Some(y) => y.toDouble
-            case None => Int.MaxValue.toDouble
-          }
-      })
     }
 
     private def doNode(node: NodeChoice, instances: Instances) {
@@ -771,8 +739,6 @@ package xsdforms {
           }
         }
 
-        doAttributes(node.attributes, instNos)
-
         html.closeTag
       }
       html.closeTag
@@ -801,8 +767,6 @@ package xsdforms {
           .div(classes = List(ClassItemInput))
 
         simpleType(node, instNos)
-
-        doAttributes(node.attributes, instNos)
 
         html closeTag 2
       }
@@ -960,30 +924,7 @@ package xsdforms {
           .line("  }")
           .line)
     }
-
-    private def doAttributes(attributes: Seq[NodeAttribute], instances: Instances) {
-      attributes.foreach { doAttribute(_, instances) }
-    }
-
-    private def doAttribute(node: NodeAttribute, instances: Instances) {
-      node.typ match {
-        case x: BasicTypeSimple => {
-          val nd = NodeSimpleType(createElement(node), x.typ, attributes = MutableList())
-          doNode(nd, instances)
-        }
-        case x: BasicTypeBase => {
-          val nd = NodeBaseType(createElement(node), x.typ)
-          doNode(nd, instances)
-        }
-      }
-    }
-
-    private def createElement(node: NodeAttribute) = {
-      val detail = node.detail
-      val minOccurs = if (detail.use == Required) BigInt(1) else BigInt(0)
-      ElementWrapper(MyElement(name = detail.name, default = detail.default, minOccurs = minOccurs))
-    }
-
+    
     private def refById(id: String) = "$(\"#" + id + "\")"
     private def valById(id: String) = "encodedValueById(\"" + id + "\")"
     private def namespace(node: Node) =
@@ -1905,7 +1846,7 @@ package xsdforms {
       Set(XsdDecimal, XsdString, XsdInteger, XsdDate, XsdDateTime, XsdTime,
         XsdBoolean, XsdInt, XsdLong, XsdShort, XsdPositiveInteger,
         XsdNegativeInteger, XsdNonPositiveInteger, XsdNonNegativeInteger,
-        XsdDouble, XsdFloat, XsdAttribute)
+        XsdDouble, XsdFloat)
         .map(qn(_))
 
     private def getType(q: QName): AnyRef = {
@@ -1994,28 +1935,6 @@ package xsdforms {
         case x: ComplexTypeModelSequence1 => {
           //sequence or choice
           process(e, x.typeDefParticleOption1.getOrElse(unexpected))
-          process(e, x.attrDeclsSequence2)
-        }
-      }
-    }
-
-    private def process(e: Element, attributes: AttrDeclsSequence) {
-      attributes.attrdeclsoption1.foreach { x =>
-        {
-          val detail =
-            x.value match {
-              case y: AttributeType2 => y
-              case _ => unexpected
-            }
-          val typ: BasicType =
-            getType(toQName(x)) match {
-              //TODO use attributes for simpleType
-              case y: SimpleType => BasicTypeSimple(y, MutableList())
-              case y: BaseType => BasicTypeBase(y)
-              case _ => unexpected(x.toString)
-            }
-
-          visitor.attribute(e, detail, typ)
         }
       }
     }
@@ -2076,7 +1995,6 @@ package xsdforms {
           case Some(t) => process(e, t)
           case None => {}
         }
-        process(e, y.attrDeclsSequence4)
       }
       extensionsIncludedInBaseSequence.pop
       if (wrapWithSequence)
@@ -2109,7 +2027,6 @@ package xsdforms {
           case Some(t) => process(anon, t)
           case None => {}
         }
-        process(e, y.attrDeclsSequence4)
       }
       extensionsIncludedInBaseSequence.pop
       if (wrapWithSequence)
