@@ -22,6 +22,16 @@
 				minOccurs="0">
 				<xs:annotation i:visible="false" />
 			</xs:element>
+			<xs:element name="pollutant-oil" type="yes-no-alt"
+				minOccurs="0">
+				<xs:annotation i:label="Oil" i:addBlank="true" />
+			</xs:element>
+			<xs:element name="pollutant-oil-types" type="pollutant-oil-types">
+				<xs:annotation i:visible="false" />
+			</xs:element>
+			<xs:element name="pollutant-oil-other" type="xs:string">
+				<xs:annotation i:visible="false" />
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -75,6 +85,17 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="yes-no-alt">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="true">
+				<xs:annotation i:label="Yes" i:makeVisible="1" />
+			</xs:enumeration>
+			<xs:enumeration value="false">
+				<xs:annotation i:label="No" />
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="vessel-type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Tanker" />
@@ -100,7 +121,15 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-
-
+	<xs:complexType name="pollutant-oil-types">
+		<xs:sequence>
+			<xs:element name="bilge" type="xs:boolean" />
+			<xs:element name="diesel-bunker" type="xs:boolean" />
+			<xs:element name="hfo-bunker" type="xs:boolean" />
+			<xs:element name="crude" type="xs:boolean" />
+			<xs:element name="unknown" type="xs:boolean" />
+			<xs:element name="other" type="yes-no-alt"/>
+		</xs:sequence>
+	</xs:complexType>
 
 </xs:schema>
