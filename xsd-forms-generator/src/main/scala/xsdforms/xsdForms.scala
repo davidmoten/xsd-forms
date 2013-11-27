@@ -301,7 +301,7 @@ package xsdforms {
     override def simpleType(e: Element, typ: SimpleType) {
       val s = NodeSimpleType(e, typ)
       addChild(s)
-      nodes.put(e,s)
+      nodes.put(e, s)
     }
 
     override def attribute(e: Element, detail: AttributeType2, typ: BasicType) {
@@ -667,7 +667,8 @@ package xsdforms {
       val label = getAnnotation(e, Annotation.Label).mkString
 
       html
-        .div(classes = List(ClassSequence) ++ getVisibility(e))
+        .div(id = Some(getItemEnclosingId(number, instances add 1)),
+          classes = List(ClassSequence) ++ getVisibility(e))
       nonRepeatingTitle(e, instances)
       minOccursZeroCheckbox(e, instances)
       repeatButton(e, instances)
@@ -725,7 +726,8 @@ package xsdforms {
 
       val number = elementNumber(e)
 
-      html.div(id = Some(getItemEnclosingId(number, instances add 1)), classes = List(ClassChoice) ++ getVisibility(e))
+      html.div(id = Some(getItemEnclosingId(number, instances add 1)),
+        classes = List(ClassChoice) ++ getVisibility(e))
       nonRepeatingTitle(e, instances)
       minOccursZeroCheckbox(e, instances)
       repeatButton(e, instances)
@@ -799,7 +801,7 @@ package xsdforms {
           .div(classes = List(ClassItemInput))
 
         simpleType(node, instNos)
-        
+
         doAttributes(node.attributes, instNos)
 
         html closeTag 2
@@ -1018,7 +1020,7 @@ package xsdforms {
       addScript(js.toString)
     }
 
-    private def isMinOccursZero(e: ElementWrapper) = e.minOccurs.intValue == 0  && getAnnotation(e,Annotation.Visible) != Some("false")
+    private def isMinOccursZero(e: ElementWrapper) = e.minOccurs.intValue == 0 && getAnnotation(e, Annotation.Visible) != Some("false")
 
     private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
