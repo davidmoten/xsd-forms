@@ -115,6 +115,16 @@ package xsdforms {
     }
 
     @Test
+    def generateTheDemoForm {
+      println("generating the demo form")
+      generate(
+        idPrefix = "b-",
+        schemaInputStream = TstUtil.getClass().getResourceAsStream("/demo.xsd"),
+        rootElement = "main",
+        outputFile = new File("target/generated-webapp/demo-form.html"))
+    }
+    
+    @Test
     def testGenerateZip() {
       val out = new File("target/out.zip")
       new FileOutputStream(out)
