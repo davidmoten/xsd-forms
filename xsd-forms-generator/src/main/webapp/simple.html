@@ -69,7 +69,7 @@ function toXmlTime(s) {
 }
           
 function toBoolean(s) {
-  if (s == "on" || s == "true")
+  if (s)
     return "true";
   else 
     return "false";
@@ -169,49 +169,11 @@ $(function() {
     $('#a-repeating-enclosing-1-instance-1').hide();
   });
 
-  $('#a-remove-button-17-instance-1_1').click(function() {
-    $('#a-repeating-enclosing-17-instance-1_1').hide();
-  });
-
-  // favoritePlanet
-  var validate17instance1_1 = function () {
-    var ok = true;
-    var v = $('#a-item-17-instance-1_1');
-    var pathDiv = $('#a-item-path-17-instance-1_1');
-    // minOccurs=0, ok if blank
-    var isBlank  = (v.val() == null) || (v.val().length==0);
-    if (isBlank) ok = true;
-    return ok;
-  }
-  
-  $('#a-item-17-instance-1_1').change( function() {
-    var ok = validate17instance1_1();
-    showError('a-item-error-17-instance-1_1',ok);
-  });
-  
-  $('#a-remove-button-18-instance-1_1').click(function() {
-    $('#a-repeating-enclosing-18-instance-1_1').hide();
-  });
-
-  // favoriteColor
-  var validate18instance1_1 = function () {
-    var ok = true;
-    var v = $('#a-item-18-instance-1_1');
-    var pathDiv = $('#a-item-path-18-instance-1_1');
-    // minOccurs=0, ok if blank
-    var isBlank  = (v.val() == null) || (v.val().length==0);
-    if (isBlank) ok = true;
-    return ok;
-  }
-  
-  $('#a-item-18-instance-1_1').change( function() {
-    var ok = validate18instance1_1();
-    showError('a-item-error-18-instance-1_1',ok);
-  });
-  
   $('#a-remove-button-2-instance-1_1').click(function() {
     $('#a-repeating-enclosing-2-instance-1_1').hide();
   });
+
+  $('#a-item-2-instance-1_1').prop('checked',false);
 
   // name
   var validate2instance1_1 = function () {
@@ -231,6 +193,8 @@ $(function() {
     $('#a-repeating-enclosing-2-instance-1_2').hide();
   });
 
+  $('#a-item-2-instance-1_2').prop('checked',false);
+
   // name
   var validate2instance1_2 = function () {
     var ok = true;
@@ -248,6 +212,8 @@ $(function() {
   $('#a-remove-button-2-instance-1_3').click(function() {
     $('#a-repeating-enclosing-2-instance-1_3').hide();
   });
+
+  $('#a-item-2-instance-1_3').prop('checked',false);
 
   // name
   var validate2instance1_3 = function () {
@@ -267,6 +233,8 @@ $(function() {
     $('#a-repeating-enclosing-2-instance-1_4').hide();
   });
 
+  $('#a-item-2-instance-1_4').prop('checked',false);
+
   // name
   var validate2instance1_4 = function () {
     var ok = true;
@@ -284,6 +252,8 @@ $(function() {
   $('#a-remove-button-2-instance-1_5').click(function() {
     $('#a-repeating-enclosing-2-instance-1_5').hide();
   });
+
+  $('#a-item-2-instance-1_5').prop('checked',false);
 
   // name
   var validate2instance1_5 = function () {
@@ -326,6 +296,8 @@ $(function() {
     $('#a-repeating-enclosing-4-instance-1_1_1').hide();
   });
 
+  $('#a-item-4-instance-1_1_1').prop('checked',false);
+
   // name
   var validate4instance1_1_1 = function () {
     var ok = true;
@@ -342,6 +314,8 @@ $(function() {
   $('#a-remove-button-5-instance-1_1_1').click(function() {
     $('#a-repeating-enclosing-5-instance-1_1_1').hide();
   });
+
+  $('#a-item-5-instance-1_1_1').prop('checked',false);
 
   // value
   var validate5instance1_1_1 = function () {
@@ -360,6 +334,8 @@ $(function() {
     $('#a-repeating-enclosing-6-instance-1_1_1').hide();
   });
 
+  $('#a-item-6-instance-1_1_1').prop('checked',false);
+
   // group
   var validate6instance1_1_1 = function () {
     var ok = true;
@@ -376,6 +352,8 @@ $(function() {
   $('#a-remove-button-7-instance-1_1_1').click(function() {
     $('#a-repeating-enclosing-7-instance-1_1_1').hide();
   });
+
+  $('#a-item-7-instance-1_1_1').prop('checked',false);
 
   // category
   var validate7instance1_1_1 = function () {
@@ -427,6 +405,8 @@ $(function() {
     $('#a-repeating-enclosing-10-instance-1_1_1_1').hide();
   });
 
+  $('#a-item-10-instance-1_1_1_1').prop('checked',false);
+
   // name
   var validate10instance1_1_1_1 = function () {
     var ok = true;
@@ -444,6 +424,8 @@ $(function() {
     $('#a-repeating-enclosing-11-instance-1_1_1_1').hide();
   });
 
+  $('#a-item-11-instance-1_1_1_1').prop('checked',false);
+
   // value
   var validate11instance1_1_1_1 = function () {
     var ok = true;
@@ -460,6 +442,8 @@ $(function() {
   $('#a-remove-button-12-instance-1_1_1').click(function() {
     $('#a-repeating-enclosing-12-instance-1_1_1').hide();
   });
+
+  $('#a-item-12-instance-1_1_1').prop('checked',false);
 
   // group
   var validate12instance1_1_1 = function () {
@@ -482,6 +466,8 @@ $(function() {
     $('#a-repeating-enclosing-14-instance-1_1_1').hide();
   });
 
+  $('#a-item-14-instance-1_1_1').prop('checked',false);
+
   // age
   var validate14instance1_1_1 = function () {
     var ok = true;
@@ -500,6 +486,8 @@ $(function() {
     $('#a-repeating-enclosing-15-instance-1_1_1').hide();
   });
 
+  $('#a-item-15-instance-1_1_1').prop('checked',false);
+
   // heightInCm
   var validate15instance1_1_1 = function () {
     var ok = true;
@@ -517,6 +505,8 @@ $(function() {
   $('#a-remove-button-16-instance-1_1').click(function() {
     $('#a-repeating-enclosing-16-instance-1_1').hide();
   });
+
+  $('#a-item-16-instance-1_1').prop('checked',false);
 
   // simple-content
   var validate16instance1_1 = function () {
@@ -753,40 +743,12 @@ $(function() {
 <form method="POST" action="form.html" name="form">
  
  
-  <div class="sequence">
+  <div id="a-item-enclosing-1-instance-1" class="sequence">
     <div class="non-repeating-title">
     </div>
     <div id="a-repeating-enclosing-1-instance-1" class="repeating-enclosing">
       <div class="sequence-label">Personal details</div>
       <div id="a-sequence-1-instance-1" class="sequence-content">
-        <div id="a-item-enclosing-17-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
-          <div id="a-repeating-enclosing-17-instance-1_1" class="repeating-enclosing">
-            <div class="item-number">17</div>
-            <label class="item-label" for="a-item-input-17-instance-1_1">FavoritePlanet</label>
-            <div class="item-input">
-              <input number="17" name="a-item-input-17-instance-1_1" id="a-item-17-instance-1_1" class=" item-input-text" type="text" value="Jupiter">
-              </input>
-              <div id="a-item-path-17-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-17-instance-1_1" class="item-error">Invalid</div>
-            </div>
-          </div>
-        </div>
-        <div id="a-item-enclosing-18-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
-          <div id="a-repeating-enclosing-18-instance-1_1" class="repeating-enclosing">
-            <div class="item-number">18</div>
-            <label class="item-label" for="a-item-input-18-instance-1_1">FavoriteColor</label>
-            <div class="item-input">
-              <input number="18" name="a-item-input-18-instance-1_1" id="a-item-18-instance-1_1" class=" item-input-text" type="text" value="blue">
-              </input>
-              <div id="a-item-path-18-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-18-instance-1_1" class="item-error">Invalid</div>
-            </div>
-          </div>
-        </div>
         <div id="a-item-enclosing-2-instance-1_1" class="item-enclosing">
           <div class="non-repeating-title">
           </div>
@@ -854,7 +816,7 @@ $(function() {
             </div>
           </div>
         </div>
-        <div class="sequence">
+        <div id="a-item-enclosing-3-instance-1_1" class="sequence">
           <div class="non-repeating-title">
           </div>
           <div id="a-repeating-enclosing-3-instance-1_1" class="repeating-enclosing">
@@ -919,7 +881,7 @@ $(function() {
             </div>
           </div>
         </div>
-        <div class="sequence">
+        <div id="a-item-enclosing-8-instance-1_1" class="sequence">
           <div class="non-repeating-title">
           </div>
           <div id="a-repeating-enclosing-8-instance-1_1" class="repeating-enclosing">
@@ -987,7 +949,7 @@ $(function() {
             </div>
           </div>
         </div>
-        <div class="sequence">
+        <div id="a-item-enclosing-13-instance-1_1" class="sequence">
           <div class="non-repeating-title">
           </div>
           <div id="a-repeating-enclosing-13-instance-1_1" class="repeating-enclosing">

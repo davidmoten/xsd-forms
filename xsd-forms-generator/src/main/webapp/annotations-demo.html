@@ -69,7 +69,7 @@ function toXmlTime(s) {
 }
           
 function toBoolean(s) {
-  if (s == "on" || s == "true")
+  if (s)
     return "true";
   else 
     return "false";
@@ -173,6 +173,8 @@ $(function() {
     $('#b-repeating-enclosing-2-instance-1_1').hide();
   });
 
+  $('#b-item-2-instance-1_1').prop('checked',false);
+
   // name
   var validate2instance1_1 = function () {
     var ok = true;
@@ -197,6 +199,8 @@ $(function() {
   $('#b-remove-button-2-instance-1_2').click(function() {
     $('#b-repeating-enclosing-2-instance-1_2').hide();
   });
+
+  $('#b-item-2-instance-1_2').prop('checked',false);
 
   // name
   var validate2instance1_2 = function () {
@@ -272,7 +276,7 @@ $(function() {
 <form method="POST" action="form.html" name="form">
  
  
-  <div class="sequence">
+  <div id="b-item-enclosing-1-instance-1" class="sequence">
     <div class="non-repeating-title">'nonRepeatingTitle' used for maxOccurs>1 elements</div>
     <div id="b-repeating-enclosing-1-instance-1" class="repeating-enclosing">
       <div class="sequence-label">'label' for this complex element</div>
