@@ -85,7 +85,7 @@
   <named-complex-type-with-repeat>
     <A></A>
     <B></B>
-    <C>true</C>
+    <C>false</C>
     <option>option-1</option>
   </named-complex-type-with-repeat>
   <fieldset-example>
@@ -97,6 +97,16 @@
   <minoccurs-greater-than-one></minoccurs-greater-than-one>
   <minoccurs-greater-than-one></minoccurs-greater-than-one>
   <minoccurs-greater-than-one></minoccurs-greater-than-one>
+  <min-occurs-zero-sequence>
+    <first></first>
+    <second></second>
+    <nested>
+      <A></A>
+      <B></B>
+      <C>false</C>
+      <option>option-1</option>
+    </nested>
+  </min-occurs-zero-sequence>
   <datatype-int>-123</datatype-int>
   <datatype-long>-1234</datatype-long>
   <datatype-short>12</datatype-short>

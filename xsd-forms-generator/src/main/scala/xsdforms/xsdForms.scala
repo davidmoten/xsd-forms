@@ -1212,21 +1212,21 @@ package xsdforms {
             .closeTag
         case _ =>
           //text or boolean
-          val checked = e.default match {
-            case Some("true") => Some(true)
-            case _ => None
-          }
-          val v =  if (checked.isDefined) None else defaultValue(e.default, r)
+          val isChecked = inputType=="checkbox" &&  e.default.isDefined && e.default.get == "true"
+          val v =  if (isChecked) None else defaultValue(e.default, r)
           html.input(
             id = Some(itemId),
             name = getItemName(number, instances),
             classes = List(extraClasses, ClassItemInputText),
             typ = Some(inputType),
-            checked = checked,
+            checked = None,
             value = v,
             number = Some(number))
             .closeTag
+         addScript(JS().line("  $('#%s').prop('checked',%s);",itemId, isChecked+"").line)
       }
+      
+     
       
     }
 
