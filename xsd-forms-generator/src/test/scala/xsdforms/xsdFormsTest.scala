@@ -37,12 +37,16 @@ package xsdforms {
         outputFile = file)
     }
 
-    def setupDemoWebapp {
-      val directory = new File("target/demo")
-      FileUtils.deleteDirectory(directory)
-      FileUtils.copyDirectory(new File("src/main/webapp"), directory)
-      generateDemoForm(new File(directory, "demo-form.html"))
-      println("copied webapp directory to target/demo")
+    def generateDemoForm {
+      val file = new File("target/generated-webapp/demo-form.html")
+      generateDemoForm(file)
+    }
+
+    def copyHtmlJs() {
+      val directory = new File("target/generated-webapp")
+      FileUtils.deleteDirectory(new File(directory,"css"))
+      FileUtils.deleteDirectory(new File(directory,"js"))
+      FileUtils.copyDirectory(new File("../xsd-forms-html-js/src/main/resources"), directory)
     }
 
   }
@@ -55,26 +59,9 @@ package xsdforms {
     import java.io._
     import org.junit.Assert._
 
-    @Test
-    def testSetupWebapp() {
-      setupDemoWebapp
-    }
-
     @Before
-    def setupCssJsFiles {
-      {
-        val directory = new File("target/generated-webapp/css")
-        directory.mkdirs
-        FileUtils.deleteDirectory(directory)
-        FileUtils.copyDirectory(new File("src/main/webapp/css"), directory)
-      }
-      {
-        val directory = new File("target/generated-webapp/js")
-        directory.mkdirs
-        FileUtils.deleteDirectory(directory)
-        FileUtils.copyDirectory(new File("src/main/webapp/js"), directory)
-      }
-      println("copied css+js directories to target/generated-webapp")
+    def testSetupWebapp() {
+      copyHtmlJs
     }
 
     @Test
@@ -106,7 +93,7 @@ package xsdforms {
         rootElement = "census",
         outputFile = new File("target/generated-webapp/census-form.html"))
     }
-    
+
     @Test
     def generatePolrepForm {
       println("generating polrep form")
@@ -115,13 +102,6 @@ package xsdforms {
         schemaInputStream = TstUtil.getClass().getResourceAsStream("/polrep.xsd"),
         rootElement = "polrep",
         outputFile = new File("target/generated-webapp/polrep-form.html"))
-    }
-
-    @Test
-    def generateTheDemoForm {
-      val file = new File("target/generated-webapp/demo-form.html")
-      generateDemoForm(file)
-      FileUtils.copyFileToDirectory(file, new File("target/demo"));
     }
 
     @Test
@@ -152,6 +132,7 @@ package xsdforms {
 
       Option.empty
     }
+
     @Test
     def testGenerateDirectory() {
       val out = new File("target/out.zip")
@@ -183,13 +164,18 @@ package xsdforms {
     import TreeToHtmlConverter._
     import com.gargoylesoftware.htmlunit._
 
-    private val uri = new File("target/demo/demo-form.html").toURI().toString()
+    private val uri = new File("target/generated-webapp/demo-form.html").toURI().toString()
     private val WebDriverChromeDriverKey = "webdriver.chrome.driver"
+
+    def prepareDemo {
+      copyHtmlJs
+      generateDemoForm
+    }
 
     //@Test
     def testOnFirefox() {
       println("firefox test")
-      setupDemoWebapp
+      prepareDemo
       if (!"false".equals(System.getProperty("firefox")))
         testOnWebDriver(new FirefoxDriver)
     }
@@ -197,7 +183,7 @@ package xsdforms {
     @Test
     def testOnChrome() {
       println("chrome test")
-      setupDemoWebapp
+      prepareDemo
       if (!"false".equals(System.getProperty("chrome")))
         testOnWebDriver(new ChromeDriver)
     }
@@ -205,7 +191,7 @@ package xsdforms {
     //    @Test
     def testOnHtmlUnit() {
       println("HtmlUnit test")
-      setupDemoWebapp
+      copyHtmlJs
       val driver = new HtmlUnitDriver(BrowserVersion.CHROME)
       driver.setJavascriptEnabled(true)
       testOnWebDriver(driver)
@@ -248,7 +234,7 @@ package xsdforms {
         val log = new File("chromedriver.log")
         if (log.exists) log.delete();
       } finally {
-      // do nothing 
+        // do nothing 
       }
     }
 
@@ -635,7 +621,7 @@ package xsdforms {
 
       //TODO why need to remove namespace?
       val text = xml.getText.replaceAll("xmlns=\".*\"", "")
-//      val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(text))
+      //      val main = scalaxb.fromXML[demo.Main](scala.xml.XML.loadString(text))
     }
 
     private def validateAgainstSchema(xml: String, xsdPath: String) {
@@ -650,20 +636,6 @@ package xsdforms {
     }
   }
 
-  @Test
-  class TreeVisitorTest {
-
-    import TstUtil._
-    @Test
-    def test() {
-      generate(
-        idPrefix = "c-",
-        schemaInputStream = TstUtil.getClass().getResourceAsStream("/demo.xsd"),
-        rootElement = "main",
-        outputFile = new File("target/demo/demo-form-tree.html"))
-    }
-
-  }
 
   @Test
   class JSTest {

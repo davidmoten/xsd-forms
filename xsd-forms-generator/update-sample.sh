@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
-cp target/generated-webapp/census-form.html src/main/webapp/census.html
-cp target/generated-webapp/demo-form.html src/main/webapp/demo.html
-cp target/generated-webapp/simple-form.html src/main/webapp/simple.html
-cp target/generated-webapp/annotations-demo.html src/main/webapp/
-
+rm -rf src/docs/showcase
+mkdir src/docs/showcase
+cp -r target/generated-webapp/* src/docs/showcase
 

@@ -32,8 +32,8 @@ The features of javascript libraries like [http://jquery.com](JQuery) mean that 
 
 *Generated Form* | *Annotated schema* | *Comment* 
 ---------------- | ------------------ | ---------
-[Demo form](http://htmlpreview.github.io/?https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/webapp/demo.html)|[schema](https://github.com/davidmoten/xsd-forms/blob/master/demo-scalaxb/src/main/resources/demo.xsd)|Feature showcase
-[Australian Census 2011](http://htmlpreview.github.io/?https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/webapp/census.html)|[schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/australian-census-2011.xsd)|Based on the 2011 Australian Census form ([pdf](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Main%20Features802011))
+[Demo form](http://htmlpreview.github.io/?https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/docs/showcase/demo.html)|[schema](https://github.com/davidmoten/xsd-forms/blob/master/demo-scalaxb/src/main/resources/demo.xsd)|Feature showcase
+[Australian Census 2011](http://htmlpreview.github.io/?https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/docs/showcase/census.html)|[schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/australian-census-2011.xsd)|Based on the 2011 Australian Census form ([pdf](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Main%20Features802011))
 
 Note that the examples are not fully working and are still in development. The examples look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is working (click Submit on a form). 
 
@@ -89,7 +89,7 @@ Deploying this simple schema to the web service mentioned below give you [this f
 
 Every element in your schema optionally can have a contained &lt;xs:annotation/&gt; element. Place attributes on that element from the xsd-forms schema like below:
 
-[annotations-demo.xsd](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/annotations-demo.xsd) ---> [form](http://htmlpreview.github.io/?https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/main/webapp/annotations-demo.html)
+[annotations-demo.xsd](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/annotations-demo.xsd) ---> [form](http://htmlpreview.github.io/?https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/showcase/annotations-demo.html)
 
 For a full list of annotations and their meanings see the top of the file [xsdForms.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/xsdforms/xsdForms.scala).
 

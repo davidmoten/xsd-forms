@@ -1,0 +1,2771 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
+<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript">
+
+function encodeHTML(s) {
+    if (typeof(s) != "undefined")
+	    return s.replace(/&/g, '&amp;')
+	               .replace(/</g, '&lt;')
+	               .replace(/>/g, '&gt;')
+	               .replace(/"/g, '&quot;');
+     else 
+          return s; 
+}
+          
+function testEncodeHTML() {
+   test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
+}
+          
+function test(condition, message) {
+  if (!condition) alert(message);
+}
+          
+function encodedValueById(id) {
+    return encodeHTML($("#"+id).val());
+}
+
+function spaces(n) {
+    var s = "";
+    for (var i=0;i<n;i++)
+      s = s + " ";
+    return s;
+}
+
+function cloneAndReplaceIds(element, suffix){
+  var clone = element.clone();
+  clone.find("*[id]").andSelf().each(function() { 
+    var previousId = $(this).attr("id");
+    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
+    $(this).attr("id", newId); 
+  });
+  return clone;
+}
+    
+function idVisible(id) {
+    return elemVisible($("#"+id));
+}
+    
+function elemVisible(elem) {
+    return elem.is(":visible");    
+}
+          
+function toXmlDate(s) {
+  return s;
+}
+          
+function toXmlDateTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toXmlTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toBoolean(s) {
+  if (s)
+    return "true";
+  else 
+    return "false";
+}
+          
+$(function() {
+  //run js unit tests        
+  testEncodeHTML();
+  
+  //setup date and time pickers
+  $('input').filter('.datepickerclass').datepicker();
+  //now a workaround because datepicker does not use the initial value with the required format but expects mm/dd/yyyy
+  $('input').filter('.datepickerclass').each(function() {
+    var elem = $(this);
+    var val = elem.attr('value');
+    elem.datepicker( "option", "dateFormat","yy-mm-dd");
+    if (typeof(val) != 'undefined') {
+      elem.datepicker('setDate',val);
+    }
+  });
+  $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm',separator: 'T'});
+  $('input').filter('.timepickerclass').timepicker({});
+
+  function callMethod(methodName, argument) {
+    var method = eval('(' + methodName + ')');
+    return method(argument);
+  }
+  
+  function changeMinOccursZeroCheckbox(v,enclosing) {
+    if (v.is(':checked')) {
+      enclosing.find(':input').prop('disabled',false);
+      enclosing.find('.min-occurs-zero').prop('checked',true) 
+    } else {
+      enclosing.find(':input').prop('disabled',true);
+      enclosing.find('.min-occurs-zero').prop('checked',false)      
+    }
+  }
+  
+  function matchesPattern(elem,regex) {
+    return regex.test(elem.val());
+  }
+  
+  function showError(id,ok) {
+    var error = $("#"+id);
+    if (ok)
+      error.hide();
+    else 
+      error.show();
+  }
+          
+  function validate() {
+    var previousItems = null;
+    $('*[number]').each( function(index) {
+      var thisId = this.id
+      var elem = $('#' + thisId)
+      // will do validations here
+      //if elem visible then do the validation for that element
+      if (elemVisible(elem)) 
+        elem.change();
+    });
+    $('input:radio').each( function (index) {
+      var elem = $('#' + this.id)
+      if (elemVisible(elem))
+        elem.change();
+    });
+    var count = $('.item-error').filter(":visible").length
+    if (count>0) {
+      $('#validation-errors').show();
+      return false;
+    }
+    else { 
+      $('#validation-errors').hide();
+      return true;
+    }
+  }
+          
+  function getXml() {
+    return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +  getXml1instance();
+  }
+
+  $('#submit').click( function () {
+    if (validate()) {
+      var xml = getXml();
+      processXml(xml);
+    }
+  });
+          
+  var processXml = function(xml) {
+    var s = xml.replace(/&/g,"&amp;");
+    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s = "<pre>" + s + "</pre>";
+    $('#submit-comments').html(s);
+  }
+          
+  
+  $('#a-remove-button-1-instance-1').click(function() {
+    $('#a-repeating-enclosing-1-instance-1').hide();
+  });
+
+  $('#a-remove-button-2-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-2-instance-1_1').hide();
+  });
+
+  $('#a-item-2-instance-1_1').prop('checked',false);
+
+  // name
+  var validate2instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-2-instance-1_1');
+    var pathDiv = $('#a-item-path-2-instance-1_1');
+    return ok;
+  }
+  
+  $('#a-item-2-instance-1_1').change( function() {
+    var ok = validate2instance1_1();
+    showError('a-item-error-2-instance-1_1',ok);
+  });
+  
+  $('#a-remove-button-3-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-3-instance-1_1').hide();
+  });
+
+  $('#a-item-3-instance-1_1').prop('checked',false);
+
+  // email
+  var validate3instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-3-instance-1_1');
+    var pathDiv = $('#a-item-path-3-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-3-instance-1_1').change( function() {
+    var ok = validate3instance1_1();
+    showError('a-item-error-3-instance-1_1',ok);
+  });
+  
+  $('#a-remove-button-4-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-4-instance-1_1').hide();
+  });
+
+  $('#a-item-4-instance-1_1').prop('checked',false);
+
+  // date-of-birth
+  var validate4instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-4-instance-1_1');
+    var pathDiv = $('#a-item-path-4-instance-1_1');
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\d$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-4-instance-1_1').change( function() {
+    var ok = validate4instance1_1();
+    showError('a-item-error-4-instance-1_1',ok);
+  });
+  
+  $('#a-remove-button-5-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-5-instance-1_1').hide();
+  });
+
+  $('#a-item-5-instance-1_1').prop('checked',false);
+
+  // time-of-birth
+  var validate5instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-5-instance-1_1');
+    var pathDiv = $('#a-item-path-5-instance-1_1');
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^\d\d:\d\d *$/);
+    if (!(patternMatched))
+      ok = false;
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#a-item-5-instance-1_1').change( function() {
+    var ok = validate5instance1_1();
+    showError('a-item-error-5-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#a-item-path-5-instance-1_1').attr('enabled','false');
+  $('#a-remove-button-6-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-6-instance-1_1').hide();
+  });
+
+  $('#a-item-6-instance-1_1').prop('checked',false);
+
+  // passport-no
+  var validate6instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-6-instance-1_1');
+    var pathDiv = $('#a-item-path-6-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^L[0-9]+$/);
+    if (!(patternMatched))
+      ok = false;
+    //length test
+    if (v.val().length <4)
+      ok = false;
+    //length test
+    if (v.val().length >8)
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-6-instance-1_1').change( function() {
+    var ok = validate6instance1_1();
+    showError('a-item-error-6-instance-1_1',ok);
+  });
+  
+  $('#a-remove-button-7-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-7-instance-1_1').hide();
+  });
+
+  // permanent-resident
+  var validate7instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-7-instance-1_1');
+    var pathDiv = $('#a-item-path-7-instance-1_1');
+    //enumeration test
+    var radioInput=$('input:radio[name=a-item-input-7-instance-1_1]');
+    if (! radioInput.is(':checked')) ok = false;
+    return ok;
+  }
+  
+  $('input:radio[name=a-item-input-7-instance-1_1]').change( function() {
+    var ok = validate7instance1_1();
+    showError('a-item-error-7-instance-1_1',ok);
+  });
+  
+  $('#a-remove-button-8-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-8-instance-1_1').hide();
+  });
+
+  $('#a-item-8-instance-1_1').prop('checked',false);
+
+  // date-time-of-submission
+  var validate8instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-8-instance-1_1');
+    var pathDiv = $('#a-item-path-8-instance-1_1');
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\d$/);
+    if (!(patternMatched))
+      ok = false;
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#a-item-8-instance-1_1').change( function() {
+    var ok = validate8instance1_1();
+    showError('a-item-error-8-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#a-item-path-8-instance-1_1').attr('enabled','false');
+  $('#a-remove-button-9-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-9-instance-1_1').hide();
+  });
+
+  // lived-in
+  var validate9instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-9-instance-1_1');
+    var pathDiv = $('#a-item-path-9-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-9-instance-1_1').change( function() {
+    var ok = validate9instance1_1();
+    showError('a-item-error-9-instance-1_1',ok);
+  });
+  
+  $('#a-repeating-enclosing-9-instance-1_2').hide();
+  $('#a-remove-button-9-instance-1_2').click(function() {
+    $('#a-repeating-enclosing-9-instance-1_2').hide();
+  });
+
+  // lived-in
+  var validate9instance1_2 = function () {
+    var ok = true;
+    var v = $('#a-item-9-instance-1_2');
+    var pathDiv = $('#a-item-path-9-instance-1_2');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-9-instance-1_2').change( function() {
+    var ok = validate9instance1_2();
+    showError('a-item-error-9-instance-1_2',ok);
+  });
+  
+  $('#a-repeating-enclosing-9-instance-1_3').hide();
+  $('#a-remove-button-9-instance-1_3').click(function() {
+    $('#a-repeating-enclosing-9-instance-1_3').hide();
+  });
+
+  // lived-in
+  var validate9instance1_3 = function () {
+    var ok = true;
+    var v = $('#a-item-9-instance-1_3');
+    var pathDiv = $('#a-item-path-9-instance-1_3');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-9-instance-1_3').change( function() {
+    var ok = validate9instance1_3();
+    showError('a-item-error-9-instance-1_3',ok);
+  });
+  
+  $('#a-repeating-enclosing-9-instance-1_4').hide();
+  $('#a-remove-button-9-instance-1_4').click(function() {
+    $('#a-repeating-enclosing-9-instance-1_4').hide();
+  });
+
+  // lived-in
+  var validate9instance1_4 = function () {
+    var ok = true;
+    var v = $('#a-item-9-instance-1_4');
+    var pathDiv = $('#a-item-path-9-instance-1_4');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-9-instance-1_4').change( function() {
+    var ok = validate9instance1_4();
+    showError('a-item-error-9-instance-1_4',ok);
+  });
+  
+  $('#a-repeating-enclosing-9-instance-1_5').hide();
+  $('#a-remove-button-9-instance-1_5').click(function() {
+    $('#a-repeating-enclosing-9-instance-1_5').hide();
+  });
+
+  // lived-in
+  var validate9instance1_5 = function () {
+    var ok = true;
+    var v = $('#a-item-9-instance-1_5');
+    var pathDiv = $('#a-item-path-9-instance-1_5');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-9-instance-1_5').change( function() {
+    var ok = validate9instance1_5();
+    showError('a-item-error-9-instance-1_5',ok);
+  });
+  
+  $('#a-repeat-button-9-instance-1').click( function() {
+    // loop through all repeats until find first nonInvisible repeat and make it visible
+    var elem;
+    elem = $('#a-repeating-enclosing-9-instance-1_1');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-9-instance-1_2');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-9-instance-1_3');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-9-instance-1_4');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-9-instance-1_5');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+  })
+
+  $('#a-remove-button-10-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-10-instance-1_1').hide();
+  });
+
+  $('#a-item-10-instance-1_1').prop('checked',false);
+
+  // number-of-children
+  var validate10instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-10-instance-1_1');
+    var pathDiv = $('#a-item-path-10-instance-1_1');
+    ok &= matchesPattern(v,/^\d+$/);
+    return ok;
+  }
+  
+  $('#a-item-10-instance-1_1').change( function() {
+    var ok = validate10instance1_1();
+    showError('a-item-error-10-instance-1_1',ok);
+  });
+  
+  $('#a-choice-content-11-instance-1_1-choice-1').hide();
+  $('#a-choice-content-11-instance-1_1-choice-2').hide();
+  var choiceChange11instance1_1 = function addChoiceChange11instance1_1() {
+    $(':input[@name=a-item-input-11-instance-1_1]').change(function() {
+      var checked = $(':input[name=a-item-input-11-instance-1_1]:checked').attr('id');
+      if (checked == 'a-item-11-instance-1_1-choice-1') {
+        $('#a-choice-content-11-instance-1_1-choice-1').show();
+        $('#a-choice-content-11-instance-1_1-choice-1').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#a-choice-content-11-instance-1_1-choice-1').hide();
+        $('#a-choice-content-11-instance-1_1-choice-1').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'a-item-11-instance-1_1-choice-2') {
+        $('#a-choice-content-11-instance-1_1-choice-2').show();
+        $('#a-choice-content-11-instance-1_1-choice-2').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#a-choice-content-11-instance-1_1-choice-2').hide();
+        $('#a-choice-content-11-instance-1_1-choice-2').find('.item-path').attr('enabled','false');
+      }
+    });
+  }
+
+  choiceChange11instance1_1();
+  $('#a-remove-button-11-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-11-instance-1_1').hide();
+  });
+
+  $('#a-remove-button-12-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-12-instance-1_1_1').hide();
+  });
+
+  // address
+  var validate12instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-12-instance-1_1_1');
+    var pathDiv = $('#a-item-path-12-instance-1_1_1');
+    //length test
+    if (v.val().length <1)
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-12-instance-1_1_1').change( function() {
+    var ok = validate12instance1_1_1();
+    showError('a-item-error-12-instance-1_1_1',ok);
+  });
+  
+  $('#a-remove-button-13-instance-1_1_1').click(function() {
+    $('#a-repeating-enclosing-13-instance-1_1_1').hide();
+  });
+
+  $('#a-remove-button-14-instance-1_1_1_1').click(function() {
+    $('#a-repeating-enclosing-14-instance-1_1_1_1').hide();
+  });
+
+  $('#a-item-14-instance-1_1_1_1').prop('checked',false);
+
+  // phone
+  var validate14instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-14-instance-1_1_1_1');
+    var pathDiv = $('#a-item-path-14-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^.*[0-9].*[0-9].*[0-9].*$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-14-instance-1_1_1_1').change( function() {
+    var ok = validate14instance1_1_1_1();
+    showError('a-item-error-14-instance-1_1_1_1',ok);
+  });
+  
+  $('#a-remove-button-15-instance-1_1_1_1').click(function() {
+    $('#a-repeating-enclosing-15-instance-1_1_1_1').hide();
+  });
+
+  // type
+  var validate15instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-15-instance-1_1_1_1');
+    var pathDiv = $('#a-item-path-15-instance-1_1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-15-instance-1_1_1_1').change( function() {
+    var ok = validate15instance1_1_1_1();
+    showError('a-item-error-15-instance-1_1_1_1',ok);
+  });
+  
+  $('#a-repeating-enclosing-13-instance-1_1_2').hide();
+  $('#a-remove-button-13-instance-1_1_2').click(function() {
+    $('#a-repeating-enclosing-13-instance-1_1_2').hide();
+  });
+
+  $('#a-remove-button-14-instance-1_1_2_1').click(function() {
+    $('#a-repeating-enclosing-14-instance-1_1_2_1').hide();
+  });
+
+  $('#a-item-14-instance-1_1_2_1').prop('checked',false);
+
+  // phone
+  var validate14instance1_1_2_1 = function () {
+    var ok = true;
+    var v = $('#a-item-14-instance-1_1_2_1');
+    var pathDiv = $('#a-item-path-14-instance-1_1_2_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^.*[0-9].*[0-9].*[0-9].*$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-14-instance-1_1_2_1').change( function() {
+    var ok = validate14instance1_1_2_1();
+    showError('a-item-error-14-instance-1_1_2_1',ok);
+  });
+  
+  $('#a-remove-button-15-instance-1_1_2_1').click(function() {
+    $('#a-repeating-enclosing-15-instance-1_1_2_1').hide();
+  });
+
+  // type
+  var validate15instance1_1_2_1 = function () {
+    var ok = true;
+    var v = $('#a-item-15-instance-1_1_2_1');
+    var pathDiv = $('#a-item-path-15-instance-1_1_2_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-15-instance-1_1_2_1').change( function() {
+    var ok = validate15instance1_1_2_1();
+    showError('a-item-error-15-instance-1_1_2_1',ok);
+  });
+  
+  $('#a-repeating-enclosing-13-instance-1_1_3').hide();
+  $('#a-remove-button-13-instance-1_1_3').click(function() {
+    $('#a-repeating-enclosing-13-instance-1_1_3').hide();
+  });
+
+  $('#a-remove-button-14-instance-1_1_3_1').click(function() {
+    $('#a-repeating-enclosing-14-instance-1_1_3_1').hide();
+  });
+
+  $('#a-item-14-instance-1_1_3_1').prop('checked',false);
+
+  // phone
+  var validate14instance1_1_3_1 = function () {
+    var ok = true;
+    var v = $('#a-item-14-instance-1_1_3_1');
+    var pathDiv = $('#a-item-path-14-instance-1_1_3_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^.*[0-9].*[0-9].*[0-9].*$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-14-instance-1_1_3_1').change( function() {
+    var ok = validate14instance1_1_3_1();
+    showError('a-item-error-14-instance-1_1_3_1',ok);
+  });
+  
+  $('#a-remove-button-15-instance-1_1_3_1').click(function() {
+    $('#a-repeating-enclosing-15-instance-1_1_3_1').hide();
+  });
+
+  // type
+  var validate15instance1_1_3_1 = function () {
+    var ok = true;
+    var v = $('#a-item-15-instance-1_1_3_1');
+    var pathDiv = $('#a-item-path-15-instance-1_1_3_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-15-instance-1_1_3_1').change( function() {
+    var ok = validate15instance1_1_3_1();
+    showError('a-item-error-15-instance-1_1_3_1',ok);
+  });
+  
+  $('#a-repeating-enclosing-13-instance-1_1_4').hide();
+  $('#a-remove-button-13-instance-1_1_4').click(function() {
+    $('#a-repeating-enclosing-13-instance-1_1_4').hide();
+  });
+
+  $('#a-remove-button-14-instance-1_1_4_1').click(function() {
+    $('#a-repeating-enclosing-14-instance-1_1_4_1').hide();
+  });
+
+  $('#a-item-14-instance-1_1_4_1').prop('checked',false);
+
+  // phone
+  var validate14instance1_1_4_1 = function () {
+    var ok = true;
+    var v = $('#a-item-14-instance-1_1_4_1');
+    var pathDiv = $('#a-item-path-14-instance-1_1_4_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^.*[0-9].*[0-9].*[0-9].*$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-14-instance-1_1_4_1').change( function() {
+    var ok = validate14instance1_1_4_1();
+    showError('a-item-error-14-instance-1_1_4_1',ok);
+  });
+  
+  $('#a-remove-button-15-instance-1_1_4_1').click(function() {
+    $('#a-repeating-enclosing-15-instance-1_1_4_1').hide();
+  });
+
+  // type
+  var validate15instance1_1_4_1 = function () {
+    var ok = true;
+    var v = $('#a-item-15-instance-1_1_4_1');
+    var pathDiv = $('#a-item-path-15-instance-1_1_4_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-15-instance-1_1_4_1').change( function() {
+    var ok = validate15instance1_1_4_1();
+    showError('a-item-error-15-instance-1_1_4_1',ok);
+  });
+  
+  $('#a-repeating-enclosing-13-instance-1_1_5').hide();
+  $('#a-remove-button-13-instance-1_1_5').click(function() {
+    $('#a-repeating-enclosing-13-instance-1_1_5').hide();
+  });
+
+  $('#a-remove-button-14-instance-1_1_5_1').click(function() {
+    $('#a-repeating-enclosing-14-instance-1_1_5_1').hide();
+  });
+
+  $('#a-item-14-instance-1_1_5_1').prop('checked',false);
+
+  // phone
+  var validate14instance1_1_5_1 = function () {
+    var ok = true;
+    var v = $('#a-item-14-instance-1_1_5_1');
+    var pathDiv = $('#a-item-path-14-instance-1_1_5_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^.*[0-9].*[0-9].*[0-9].*$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-14-instance-1_1_5_1').change( function() {
+    var ok = validate14instance1_1_5_1();
+    showError('a-item-error-14-instance-1_1_5_1',ok);
+  });
+  
+  $('#a-remove-button-15-instance-1_1_5_1').click(function() {
+    $('#a-repeating-enclosing-15-instance-1_1_5_1').hide();
+  });
+
+  // type
+  var validate15instance1_1_5_1 = function () {
+    var ok = true;
+    var v = $('#a-item-15-instance-1_1_5_1');
+    var pathDiv = $('#a-item-path-15-instance-1_1_5_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#a-item-15-instance-1_1_5_1').change( function() {
+    var ok = validate15instance1_1_5_1();
+    showError('a-item-error-15-instance-1_1_5_1',ok);
+  });
+  
+  $('#a-repeat-button-13-instance-1_1').click( function() {
+    // loop through all repeats until find first nonInvisible repeat and make it visible
+    var elem;
+    elem = $('#a-repeating-enclosing-13-instance-1_1_1');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-13-instance-1_1_2');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-13-instance-1_1_3');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-13-instance-1_1_4');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#a-repeating-enclosing-13-instance-1_1_5');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+  })
+
+  $('#a-remove-button-16-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-16-instance-1_1').hide();
+  });
+
+  $('#a-item-16-instance-1_1').prop('checked',false);
+
+  // code
+  var validate16instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-16-instance-1_1');
+    var pathDiv = $('#a-item-path-16-instance-1_1');
+    ok &= matchesPattern(v,/^\d+$/);
+    //facet test
+    if ((+(v.val())) <=9)
+      ok = false;
+    //facet test
+    if ((+(v.val())) >= 21)
+      ok = false;
+    return ok;
+  }
+  
+  $('#a-item-16-instance-1_1').change( function() {
+    var ok = validate16instance1_1();
+    showError('a-item-error-16-instance-1_1',ok);
+  });
+  
+  $('#a-remove-button-17-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-17-instance-1_1').hide();
+  });
+
+  // story
+  var validate17instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-17-instance-1_1');
+    var pathDiv = $('#a-item-path-17-instance-1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#a-item-17-instance-1_1').change( function() {
+    var ok = validate17instance1_1();
+    showError('a-item-error-17-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#a-item-path-17-instance-1_1').attr('enabled','false');
+  $('#a-remove-button-18-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-18-instance-1_1').hide();
+  });
+
+  $('#a-item-18-instance-1_1').prop('checked',false);
+
+  // height-m
+  var validate18instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-18-instance-1_1');
+    var pathDiv = $('#a-item-path-18-instance-1_1');
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
+    return ok;
+  }
+  
+  $('#a-item-18-instance-1_1').change( function() {
+    var ok = validate18instance1_1();
+    showError('a-item-error-18-instance-1_1',ok);
+  });
+  
+  $('#a-remove-button-19-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-19-instance-1_1').hide();
+  });
+
+  $('#a-item-19-instance-1_1').prop('checked',false);
+
+  // terms-and-conditions-understood
+  var validate19instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-19-instance-1_1');
+    var pathDiv = $('#a-item-path-19-instance-1_1');
+    return ok;
+  }
+  
+  $('#a-item-19-instance-1_1').change( function() {
+    var ok = validate19instance1_1();
+    showError('a-item-error-19-instance-1_1',ok);
+  });
+  
+  $('#a-remove-button-20-instance-1_1').click(function() {
+    $('#a-repeating-enclosing-20-instance-1_1').hide();
+  });
+
+  $('#a-item-20-instance-1_1').prop('checked',false);
+
+  // receive-special-offers
+  var validate20instance1_1 = function () {
+    var ok = true;
+    var v = $('#a-item-20-instance-1_1');
+    var pathDiv = $('#a-item-path-20-instance-1_1');
+    return ok;
+  }
+  
+  $('#a-item-20-instance-1_1').change( function() {
+    var ok = validate20instance1_1();
+    showError('a-item-error-20-instance-1_1',ok);
+  });
+  
+  //extract xml from element <name>
+  function getXml2instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-2-instance-1_1')) {
+    var v = encodedValueById("a-item-2-instance-1_1");
+    xml += '\n' + spaces(2) + '<name>' + v + '</name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <email>
+  function getXml3instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-3-instance-1_1')) {
+    var v = encodedValueById("a-item-3-instance-1_1");
+    xml += '\n' + spaces(2) + '<email>' + v + '</email>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <date-of-birth>
+  function getXml4instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-4-instance-1_1')) {
+    var v = encodedValueById("a-item-4-instance-1_1");
+    xml += '\n' + spaces(2) + '<date-of-birth>' + toXmlDate(v) + '</date-of-birth>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <time-of-birth>
+  function getXml5instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-5-instance-1_1')) {
+    var v = encodedValueById("a-item-5-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<time-of-birth>' + toXmlTime(v) + '</time-of-birth>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <passport-no>
+  function getXml6instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-6-instance-1_1')) {
+    var v = encodedValueById("a-item-6-instance-1_1");
+    xml += '\n' + spaces(2) + '<passport-no>' + v + '</passport-no>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <permanent-resident>
+  function getXml7instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-7-instance-1_1')) {
+    var v = encodeHTML($('input[name=a-item-input-7-instance-1_1]:radio:checked').val());
+    xml += '\n' + spaces(2) + '<permanent-resident>' + v + '</permanent-resident>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <date-time-of-submission>
+  function getXml8instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-8-instance-1_1')) {
+    var v = encodedValueById("a-item-8-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<date-time-of-submission>' + toXmlDate(v) + '</date-time-of-submission>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <lived-in>
+  function getXml9instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-9-instance-1_1')) {
+    var v = encodedValueById("a-item-9-instance-1_1");
+    xml += '\n' + spaces(2) + '<lived-in>' + v + '</lived-in>';
+  }
+  if (idVisible('a-repeating-enclosing-9-instance-1_2')) {
+    var v = encodedValueById("a-item-9-instance-1_2");
+    xml += '\n' + spaces(2) + '<lived-in>' + v + '</lived-in>';
+  }
+  if (idVisible('a-repeating-enclosing-9-instance-1_3')) {
+    var v = encodedValueById("a-item-9-instance-1_3");
+    xml += '\n' + spaces(2) + '<lived-in>' + v + '</lived-in>';
+  }
+  if (idVisible('a-repeating-enclosing-9-instance-1_4')) {
+    var v = encodedValueById("a-item-9-instance-1_4");
+    xml += '\n' + spaces(2) + '<lived-in>' + v + '</lived-in>';
+  }
+  if (idVisible('a-repeating-enclosing-9-instance-1_5')) {
+    var v = encodedValueById("a-item-9-instance-1_5");
+    xml += '\n' + spaces(2) + '<lived-in>' + v + '</lived-in>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <number-of-children>
+  function getXml10instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-10-instance-1_1')) {
+    var v = encodedValueById("a-item-10-instance-1_1");
+    xml += '\n' + spaces(2) + '<number-of-children>' + v + '</number-of-children>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <address>
+  function getXml12instance1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-12-instance-1_1_1')) {
+    var v = encodedValueById("a-item-12-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<address>' + v + '</address>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <phone>
+  function getXml14instance1_1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-14-instance-1_1_1_1')) {
+    var v = encodedValueById("a-item-14-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<phone>' + v + '</phone>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <type>
+  function getXml15instance1_1_1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-15-instance-1_1_1_1')) {
+    var v = encodedValueById("a-item-15-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<type>' + v + '</type>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <phone>
+  function getXml14instance1_1_2() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-14-instance-1_1_2_1')) {
+    var v = encodedValueById("a-item-14-instance-1_1_2_1");
+    xml += '\n' + spaces(6) + '<phone>' + v + '</phone>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <type>
+  function getXml15instance1_1_2() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-15-instance-1_1_2_1')) {
+    var v = encodedValueById("a-item-15-instance-1_1_2_1");
+    xml += '\n' + spaces(6) + '<type>' + v + '</type>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <phone>
+  function getXml14instance1_1_3() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-14-instance-1_1_3_1')) {
+    var v = encodedValueById("a-item-14-instance-1_1_3_1");
+    xml += '\n' + spaces(6) + '<phone>' + v + '</phone>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <type>
+  function getXml15instance1_1_3() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-15-instance-1_1_3_1')) {
+    var v = encodedValueById("a-item-15-instance-1_1_3_1");
+    xml += '\n' + spaces(6) + '<type>' + v + '</type>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <phone>
+  function getXml14instance1_1_4() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-14-instance-1_1_4_1')) {
+    var v = encodedValueById("a-item-14-instance-1_1_4_1");
+    xml += '\n' + spaces(6) + '<phone>' + v + '</phone>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <type>
+  function getXml15instance1_1_4() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-15-instance-1_1_4_1')) {
+    var v = encodedValueById("a-item-15-instance-1_1_4_1");
+    xml += '\n' + spaces(6) + '<type>' + v + '</type>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <phone>
+  function getXml14instance1_1_5() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-14-instance-1_1_5_1')) {
+    var v = encodedValueById("a-item-14-instance-1_1_5_1");
+    xml += '\n' + spaces(6) + '<phone>' + v + '</phone>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <type>
+  function getXml15instance1_1_5() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-15-instance-1_1_5_1')) {
+    var v = encodedValueById("a-item-15-instance-1_1_5_1");
+    xml += '\n' + spaces(6) + '<type>' + v + '</type>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <phone>
+  function getXml13instance1_1() {
+
+    var xml = '\n' + spaces(4) + '<phone>';
+    //now add sequence children for each instanceNo
+    if (idVisible('a-repeating-enclosing-13-instance-1_1_1')) {
+      xml += getXml14instance1_1_1();
+      xml += getXml15instance1_1_1();
+    }
+    if (idVisible('a-repeating-enclosing-13-instance-1_1_2')) {
+      xml += getXml14instance1_1_2();
+      xml += getXml15instance1_1_2();
+    }
+    if (idVisible('a-repeating-enclosing-13-instance-1_1_3')) {
+      xml += getXml14instance1_1_3();
+      xml += getXml15instance1_1_3();
+    }
+    if (idVisible('a-repeating-enclosing-13-instance-1_1_4')) {
+      xml += getXml14instance1_1_4();
+      xml += getXml15instance1_1_4();
+    }
+    if (idVisible('a-repeating-enclosing-13-instance-1_1_5')) {
+      xml += getXml14instance1_1_5();
+      xml += getXml15instance1_1_5();
+    }
+    xml += '\n' + spaces(4) + '</phone>';
+    return xml;
+  }
+
+  //extract xml from element <person>
+  function getXml11instance1() {
+
+    var xml = '\n' + spaces(2) + '<person>';
+    //now optionally add selected child if any
+    var checked = $(':input[name=a-item-input-11-instance-1_1]:checked').attr('id');
+    if (checked == "a-item-11-instance-1_1-choice-1")
+    xml += getXml12instance1_1();
+    if (checked == "a-item-11-instance-1_1-choice-2")
+    xml += getXml13instance1_1();
+    xml += '\n' + spaces(2) + '</person>';
+    return xml;
+  }
+
+  //extract xml from element <code>
+  function getXml16instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-16-instance-1_1')) {
+    var v = encodedValueById("a-item-16-instance-1_1");
+    xml += '\n' + spaces(2) + '<code>' + v + '</code>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <story>
+  function getXml17instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-17-instance-1_1')) {
+    var v = encodedValueById("a-item-17-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<story>' + v + '</story>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <height-m>
+  function getXml18instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-18-instance-1_1')) {
+    var v = encodedValueById("a-item-18-instance-1_1");
+    xml += '\n' + spaces(2) + '<height-m>' + v + '</height-m>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <terms-and-conditions-understood>
+  function getXml19instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-19-instance-1_1')) {
+    var v = $('#a-item-19-instance-1_1').is(':checked');
+    xml += '\n' + spaces(2) + '<terms-and-conditions-understood>' + toBoolean(v) + '</terms-and-conditions-understood>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <receive-special-offers>
+  function getXml20instance1() {
+
+  var xml='';
+  if (idVisible('a-repeating-enclosing-20-instance-1_1')) {
+    var v = $('#a-item-20-instance-1_1').is(':checked');
+    xml += '\n' + spaces(2) + '<receive-special-offers>' + toBoolean(v) + '</receive-special-offers>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <person>
+  function getXml1instance() {
+
+    var xml = '\n' + spaces(0) + '<person xmlns="http://org.moten.david/example">';
+    //now add sequence children for each instanceNo
+    if (idVisible('a-repeating-enclosing-1-instance-1')) {
+      xml += getXml2instance1();
+      xml += getXml3instance1();
+      xml += getXml4instance1();
+      xml += getXml5instance1();
+      xml += getXml6instance1();
+      xml += getXml7instance1();
+      xml += getXml8instance1();
+      xml += getXml9instance1();
+      xml += getXml10instance1();
+      xml += getXml11instance1();
+      xml += getXml16instance1();
+      xml += getXml17instance1();
+      xml += getXml18instance1();
+      xml += getXml19instance1();
+      xml += getXml20instance1();
+    }
+    xml += '\n' + spaces(0) + '</person>';
+    return xml;
+  }
+
+  
+  $("#form").submit(function () { return false; }); // so it won't submit
+  
+  
+  
+});
+</script>
+<script type="text/javascript" src="js/xsd-forms-override.js"></script>
+</head>
+<body>
+
+<div class="form">
+<div id="start"></div>
+<form method="POST" action="form.html" name="form">
+ 
+ 
+  <div id="a-item-enclosing-1-instance-1" class="sequence">
+    <div class="non-repeating-title">
+    </div>
+    <div id="a-repeating-enclosing-1-instance-1" class="repeating-enclosing">
+      <div class="sequence-label">Personal details</div>
+      <div id="a-sequence-1-instance-1" class="sequence-content">
+        <div id="a-item-enclosing-2-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-2-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">2</div>
+            <label class="item-label" for="a-item-input-2-instance-1_1">Full name</label>
+            <div class="item-input">
+              <input number="2" name="a-item-input-2-instance-1_1" id="a-item-2-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div id="a-item-path-2-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-2-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-3-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-3-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">3</div>
+            <label class="item-label" for="a-item-input-3-instance-1_1">Email<em>*</em></label>
+            <div class="item-input">
+              <input number="3" name="a-item-input-3-instance-1_1" id="a-item-3-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div id="a-item-path-3-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-3-instance-1_1" class="item-error">Invalid email format</div>
+              <div class="item-after">If you have concerns about privacy please see our <a href="http://google.com">privacy statement<a></div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-4-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-4-instance-1_1" class="repeating-enclosing">
+            <div class="item-before">Date of birth is required for age based statistical analysis but will not be available publically</div>
+            <div class="item-number">4</div>
+            <label class="item-label" for="a-item-input-4-instance-1_1">Date of birth<em>*</em></label>
+            <div class="item-input">
+              <input number="4" name="a-item-input-4-instance-1_1" id="a-item-4-instance-1_1" class="datepickerclass  item-input-text" type="text">
+              </input>
+              <div class="item-description">dd/mm/yyyy (dd=day, mm=month, yyyy=year)</div>
+              <div id="a-item-path-4-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-4-instance-1_1" class="item-error">This field must of the form dd/mm/yyyy. For example, 12 March 2011 is 12/03/2011</div>
+              <div class="item-after">If you have concerns about privacy please see our <a href="http://google.com">privacy statement<a></div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-5-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-5-instance-1_1" class="repeating-enclosing">
+            <div class="item-before">Time of birth is required for age based statistical analysis but will not be available publically</div>
+            <div class="item-number">5</div>
+            <label class="item-label" for="a-item-input-5-instance-1_1">Time of birth</label>
+            <div class="item-input">
+              <input number="5" name="a-item-input-5-instance-1_1" id="a-item-5-instance-1_1" class="timepickerclass  item-input-text" type="text">
+              </input>
+              <div class="item-description">hh:mm (hh=hour, mm=minute)</div>
+              <div id="a-item-path-5-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-5-instance-1_1" class="item-error">This field must of the form hh:mm. For example, 2pm is 14:30</div>
+              <div class="item-after">If you have concerns about privacy please see our <a href="http://google.com">privacy statement<a></div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-6-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-6-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">6</div>
+            <label class="item-label" for="a-item-input-6-instance-1_1">Passport Number<em>*</em></label>
+            <div class="item-input">
+              <input number="6" name="a-item-input-6-instance-1_1" id="a-item-6-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">L followed by digits</div>
+              <div id="a-item-path-6-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-6-instance-1_1" class="item-error">This field must start with an L and then follow with 3 to 7 digits only</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-7-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-7-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">7</div>
+            <label class="item-label" for="a-item-input-7-instance-1_1">Permanent Resident</label>
+            <div class="item-input">
+              <input number="7" name="a-item-input-7-instance-1_1" id="a-item-7-instance-1_1-0" class="select" type="radio" value="yes">yes</input>
+              <input number="7" name="a-item-input-7-instance-1_1" id="a-item-7-instance-1_1-1" class="select" type="radio" value="no">no</input>
+              <div id="a-item-path-7-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-7-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-8-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-8-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">8</div>
+            <label class="item-label" for="a-item-input-8-instance-1_1">Date Time Of Submission</label>
+            <div class="item-input">
+              <input number="8" name="a-item-input-8-instance-1_1" id="a-item-8-instance-1_1" class="datepickerclass  item-input-text" type="text">
+              </input>
+              <div id="a-item-path-8-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-8-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-9-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeat-button-9-instance-1" class="repeat-button white small">+</div>
+          <div id="a-repeating-enclosing-9-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">9</div>
+            <label class="item-label" for="a-item-input-9-instance-1_1">Lived In</label>
+            <div class="item-input">
+              <select id="a-item-9-instance-1_1" class="select" name="a-item-input-9-instance-1_1" number="9">
+                <option value="Afghanistan">Afghanistan</option>
+                <option value="Albania">Albania</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Andorra">Andorra</option>
+                <option value="Angola">Angola</option>
+                <option value="Antigua & Deps">Antigua & Deps</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Armenia">Armenia</option>
+                <option value="Australia">Van Diemen's Land</option>
+                <option value="Austria">Austria</option>
+                <option value="Azerbaijan">Azerbaijan</option>
+                <option value="Bahamas">Bahamas</option>
+                <option value="Bahrain">Bahrain</option>
+                <option value="Bangladesh">Bangladesh</option>
+                <option value="Barbados">Barbados</option>
+                <option value="Belarus">Belarus</option>
+                <option value="Belgium">Belgium</option>
+                <option value="Belize">Belize</option>
+                <option value="Benin">Benin</option>
+                <option value="Bhutan">Bhutan</option>
+                <option value="Bolivia">Bolivia</option>
+                <option value="Bosnia Herzegovina">Bosnia Herzegovina</option>
+                <option value="Botswana">Botswana</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Brunei">Brunei</option>
+                <option value="Bulgaria">Bulgaria</option>
+                <option value="Burkina">Burkina</option>
+                <option value="Burundi">Burundi</option>
+                <option value="Cambodia">Cambodia</option>
+                <option value="Cameroon">Cameroon</option>
+                <option value="Canada">Canada</option>
+                <option value="Cape Verde">Cape Verde</option>
+                <option value="Central African Rep">Central African Rep</option>
+                <option value="Chad">Chad</option>
+                <option value="Chile">Chile</option>
+                <option value="China">China</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Comoros">Comoros</option>
+                <option value="Congo">Congo</option>
+                <option value="Congo {Democratic Rep}">Congo {Democratic Rep}</option>
+                <option value="Costa Rica">Costa Rica</option>
+                <option value="Croatia">Croatia</option>
+                <option value="Cuba">Cuba</option>
+                <option value="Cyprus">Cyprus</option>
+                <option value="Czech Republic">Czech Republic</option>
+                <option value="Denmark">Denmark</option>
+                <option value="Djibouti">Djibouti</option>
+                <option value="Dominica">Dominica</option>
+                <option value="Dominican Republic">Dominican Republic</option>
+                <option value="East Timor">East Timor</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Egypt">Egypt</option>
+                <option value="El Salvador">El Salvador</option>
+                <option value="Equatorial Guinea">Equatorial Guinea</option>
+                <option value="Eritrea">Eritrea</option>
+                <option value="Estonia">Estonia</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Finland">Finland</option>
+                <option value="France">France</option>
+                <option value="Gabon">Gabon</option>
+                <option value="Gambia">Gambia</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Germany">Germany</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Greece">Greece</option>
+                <option value="Grenada">Grenada</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Guinea-Bissau">Guinea-Bissau</option>
+                <option value="Guyana">Guyana</option>
+                <option value="Haiti">Haiti</option>
+                <option value="Honduras">Honduras</option>
+                <option value="Hungary">Hungary</option>
+                <option value="Iceland">Iceland</option>
+                <option value="India">India</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Iran">Iran</option>
+                <option value="Iraq">Iraq</option>
+                <option value="Ireland {Republic}">Ireland {Republic}</option>
+                <option value="Israel">Israel</option>
+                <option value="Italy">Italy</option>
+                <option value="Ivory Coast">Ivory Coast</option>
+                <option value="Jamaica">Jamaica</option>
+                <option value="Japan">Japan</option>
+                <option value="Jordan">Jordan</option>
+                <option value="Kazakhstan">Kazakhstan</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Kiribati">Kiribati</option>
+                <option value="Korea North">Korea North</option>
+                <option value="Korea South">Korea South</option>
+                <option value="Kosovo">Kosovo</option>
+                <option value="Kuwait">Kuwait</option>
+                <option value="Kyrgyzstan">Kyrgyzstan</option>
+                <option value="Laos">Laos</option>
+                <option value="Latvia">Latvia</option>
+                <option value="Lebanon">Lebanon</option>
+                <option value="Lesotho">Lesotho</option>
+                <option value="Liberia">Liberia</option>
+                <option value="Libya">Libya</option>
+                <option value="Liechtenstein">Liechtenstein</option>
+                <option value="Lithuania">Lithuania</option>
+                <option value="Luxembourg">Luxembourg</option>
+                <option value="Macedonia">Macedonia</option>
+                <option value="Madagascar">Madagascar</option>
+                <option value="Malawi">Malawi</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Maldives">Maldives</option>
+                <option value="Mali">Mali</option>
+                <option value="Malta">Malta</option>
+                <option value="Marshall Islands">Marshall Islands</option>
+                <option value="Mauritania">Mauritania</option>
+                <option value="Mauritius">Mauritius</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Micronesia">Micronesia</option>
+                <option value="Moldova">Moldova</option>
+                <option value="Monaco">Monaco</option>
+                <option value="Mongolia">Mongolia</option>
+                <option value="Montenegro">Montenegro</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Mozambique">Mozambique</option>
+                <option value="Myanmar, {Burma}">Myanmar, {Burma}</option>
+                <option value="Namibia">Namibia</option>
+                <option value="Nauru">Nauru</option>
+                <option value="Nepal">Nepal</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="New Zealand">New Zealand</option>
+                <option value="Nicaragua">Nicaragua</option>
+                <option value="Niger">Niger</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Norway">Norway</option>
+                <option value="Oman">Oman</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="Palau">Palau</option>
+                <option value="Panama">Panama</option>
+                <option value="Papua New Guinea">Papua New Guinea</option>
+                <option value="Paraguay">Paraguay</option>
+                <option value="Peru">Peru</option>
+                <option value="Philippines">Philippines</option>
+                <option value="Poland">Poland</option>
+                <option value="Portugal">Portugal</option>
+                <option value="Qatar">Qatar</option>
+                <option value="Romania">Romania</option>
+                <option value="Russian Federation">Russian Federation</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="St Kitts & Nevis">St Kitts & Nevis</option>
+                <option value="St Lucia">St Lucia</option>
+                <option value="Saint Vincent & the Grenadines">Saint Vincent & the Grenadines</option>
+                <option value="Samoa">Samoa</option>
+                <option value="San Marino">San Marino</option>
+                <option value="Sao Tome & Principe">Sao Tome & Principe</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Serbia">Serbia</option>
+                <option value="Seychelles">Seychelles</option>
+                <option value="Sierra Leone">Sierra Leone</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Slovakia">Slovakia</option>
+                <option value="Slovenia">Slovenia</option>
+                <option value="Solomon Islands">Solomon Islands</option>
+                <option value="Somalia">Somalia</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Spain">Spain</option>
+                <option value="Sri Lanka">Sri Lanka</option>
+                <option value="Sudan">Sudan</option>
+                <option value="Suriname">Suriname</option>
+                <option value="Swaziland">Swaziland</option>
+                <option value="Sweden">Sweden</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Syria">Syria</option>
+                <option value="Taiwan">Taiwan</option>
+                <option value="Tajikistan">Tajikistan</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Togo">Togo</option>
+                <option value="Tonga">Tonga</option>
+                <option value="Trinidad & Tobago">Trinidad & Tobago</option>
+                <option value="Tunisia">Tunisia</option>
+                <option value="Turkey">Turkey</option>
+                <option value="Turkmenistan">Turkmenistan</option>
+                <option value="Tuvalu">Tuvalu</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="United Arab Emirates">United Arab Emirates</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
+                <option value="Uruguay">Uruguay</option>
+                <option value="Uzbekistan">Uzbekistan</option>
+                <option value="Vanuatu">Vanuatu</option>
+                <option value="Vatican City">Vatican City</option>
+                <option value="Venezuela">Venezuela</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Yemen">Yemen</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Zimbabwe">Zimbabwe</option>
+              </select>
+              <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
+              <div id="a-item-path-9-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-9-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+          <div id="a-repeating-enclosing-9-instance-1_2" class="repeating-enclosing">
+            <div class="remove-button-container">
+              <div id="a-remove-button-9-instance-1_2" class="remove-button white small">-</div>
+            </div>
+            <div class="item-number">9</div>
+            <label class="item-label" for="a-item-input-9-instance-1_2">Lived In</label>
+            <div class="item-input">
+              <select id="a-item-9-instance-1_2" class="select" name="a-item-input-9-instance-1_2" number="9">
+                <option value="Afghanistan">Afghanistan</option>
+                <option value="Albania">Albania</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Andorra">Andorra</option>
+                <option value="Angola">Angola</option>
+                <option value="Antigua & Deps">Antigua & Deps</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Armenia">Armenia</option>
+                <option value="Australia">Van Diemen's Land</option>
+                <option value="Austria">Austria</option>
+                <option value="Azerbaijan">Azerbaijan</option>
+                <option value="Bahamas">Bahamas</option>
+                <option value="Bahrain">Bahrain</option>
+                <option value="Bangladesh">Bangladesh</option>
+                <option value="Barbados">Barbados</option>
+                <option value="Belarus">Belarus</option>
+                <option value="Belgium">Belgium</option>
+                <option value="Belize">Belize</option>
+                <option value="Benin">Benin</option>
+                <option value="Bhutan">Bhutan</option>
+                <option value="Bolivia">Bolivia</option>
+                <option value="Bosnia Herzegovina">Bosnia Herzegovina</option>
+                <option value="Botswana">Botswana</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Brunei">Brunei</option>
+                <option value="Bulgaria">Bulgaria</option>
+                <option value="Burkina">Burkina</option>
+                <option value="Burundi">Burundi</option>
+                <option value="Cambodia">Cambodia</option>
+                <option value="Cameroon">Cameroon</option>
+                <option value="Canada">Canada</option>
+                <option value="Cape Verde">Cape Verde</option>
+                <option value="Central African Rep">Central African Rep</option>
+                <option value="Chad">Chad</option>
+                <option value="Chile">Chile</option>
+                <option value="China">China</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Comoros">Comoros</option>
+                <option value="Congo">Congo</option>
+                <option value="Congo {Democratic Rep}">Congo {Democratic Rep}</option>
+                <option value="Costa Rica">Costa Rica</option>
+                <option value="Croatia">Croatia</option>
+                <option value="Cuba">Cuba</option>
+                <option value="Cyprus">Cyprus</option>
+                <option value="Czech Republic">Czech Republic</option>
+                <option value="Denmark">Denmark</option>
+                <option value="Djibouti">Djibouti</option>
+                <option value="Dominica">Dominica</option>
+                <option value="Dominican Republic">Dominican Republic</option>
+                <option value="East Timor">East Timor</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Egypt">Egypt</option>
+                <option value="El Salvador">El Salvador</option>
+                <option value="Equatorial Guinea">Equatorial Guinea</option>
+                <option value="Eritrea">Eritrea</option>
+                <option value="Estonia">Estonia</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Finland">Finland</option>
+                <option value="France">France</option>
+                <option value="Gabon">Gabon</option>
+                <option value="Gambia">Gambia</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Germany">Germany</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Greece">Greece</option>
+                <option value="Grenada">Grenada</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Guinea-Bissau">Guinea-Bissau</option>
+                <option value="Guyana">Guyana</option>
+                <option value="Haiti">Haiti</option>
+                <option value="Honduras">Honduras</option>
+                <option value="Hungary">Hungary</option>
+                <option value="Iceland">Iceland</option>
+                <option value="India">India</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Iran">Iran</option>
+                <option value="Iraq">Iraq</option>
+                <option value="Ireland {Republic}">Ireland {Republic}</option>
+                <option value="Israel">Israel</option>
+                <option value="Italy">Italy</option>
+                <option value="Ivory Coast">Ivory Coast</option>
+                <option value="Jamaica">Jamaica</option>
+                <option value="Japan">Japan</option>
+                <option value="Jordan">Jordan</option>
+                <option value="Kazakhstan">Kazakhstan</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Kiribati">Kiribati</option>
+                <option value="Korea North">Korea North</option>
+                <option value="Korea South">Korea South</option>
+                <option value="Kosovo">Kosovo</option>
+                <option value="Kuwait">Kuwait</option>
+                <option value="Kyrgyzstan">Kyrgyzstan</option>
+                <option value="Laos">Laos</option>
+                <option value="Latvia">Latvia</option>
+                <option value="Lebanon">Lebanon</option>
+                <option value="Lesotho">Lesotho</option>
+                <option value="Liberia">Liberia</option>
+                <option value="Libya">Libya</option>
+                <option value="Liechtenstein">Liechtenstein</option>
+                <option value="Lithuania">Lithuania</option>
+                <option value="Luxembourg">Luxembourg</option>
+                <option value="Macedonia">Macedonia</option>
+                <option value="Madagascar">Madagascar</option>
+                <option value="Malawi">Malawi</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Maldives">Maldives</option>
+                <option value="Mali">Mali</option>
+                <option value="Malta">Malta</option>
+                <option value="Marshall Islands">Marshall Islands</option>
+                <option value="Mauritania">Mauritania</option>
+                <option value="Mauritius">Mauritius</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Micronesia">Micronesia</option>
+                <option value="Moldova">Moldova</option>
+                <option value="Monaco">Monaco</option>
+                <option value="Mongolia">Mongolia</option>
+                <option value="Montenegro">Montenegro</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Mozambique">Mozambique</option>
+                <option value="Myanmar, {Burma}">Myanmar, {Burma}</option>
+                <option value="Namibia">Namibia</option>
+                <option value="Nauru">Nauru</option>
+                <option value="Nepal">Nepal</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="New Zealand">New Zealand</option>
+                <option value="Nicaragua">Nicaragua</option>
+                <option value="Niger">Niger</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Norway">Norway</option>
+                <option value="Oman">Oman</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="Palau">Palau</option>
+                <option value="Panama">Panama</option>
+                <option value="Papua New Guinea">Papua New Guinea</option>
+                <option value="Paraguay">Paraguay</option>
+                <option value="Peru">Peru</option>
+                <option value="Philippines">Philippines</option>
+                <option value="Poland">Poland</option>
+                <option value="Portugal">Portugal</option>
+                <option value="Qatar">Qatar</option>
+                <option value="Romania">Romania</option>
+                <option value="Russian Federation">Russian Federation</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="St Kitts & Nevis">St Kitts & Nevis</option>
+                <option value="St Lucia">St Lucia</option>
+                <option value="Saint Vincent & the Grenadines">Saint Vincent & the Grenadines</option>
+                <option value="Samoa">Samoa</option>
+                <option value="San Marino">San Marino</option>
+                <option value="Sao Tome & Principe">Sao Tome & Principe</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Serbia">Serbia</option>
+                <option value="Seychelles">Seychelles</option>
+                <option value="Sierra Leone">Sierra Leone</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Slovakia">Slovakia</option>
+                <option value="Slovenia">Slovenia</option>
+                <option value="Solomon Islands">Solomon Islands</option>
+                <option value="Somalia">Somalia</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Spain">Spain</option>
+                <option value="Sri Lanka">Sri Lanka</option>
+                <option value="Sudan">Sudan</option>
+                <option value="Suriname">Suriname</option>
+                <option value="Swaziland">Swaziland</option>
+                <option value="Sweden">Sweden</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Syria">Syria</option>
+                <option value="Taiwan">Taiwan</option>
+                <option value="Tajikistan">Tajikistan</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Togo">Togo</option>
+                <option value="Tonga">Tonga</option>
+                <option value="Trinidad & Tobago">Trinidad & Tobago</option>
+                <option value="Tunisia">Tunisia</option>
+                <option value="Turkey">Turkey</option>
+                <option value="Turkmenistan">Turkmenistan</option>
+                <option value="Tuvalu">Tuvalu</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="United Arab Emirates">United Arab Emirates</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
+                <option value="Uruguay">Uruguay</option>
+                <option value="Uzbekistan">Uzbekistan</option>
+                <option value="Vanuatu">Vanuatu</option>
+                <option value="Vatican City">Vatican City</option>
+                <option value="Venezuela">Venezuela</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Yemen">Yemen</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Zimbabwe">Zimbabwe</option>
+              </select>
+              <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
+              <div id="a-item-path-9-instance-1_2" class="item-path" enabled="true"></div>
+              <div id="a-item-error-9-instance-1_2" class="item-error">Invalid</div>
+            </div>
+          </div>
+          <div id="a-repeating-enclosing-9-instance-1_3" class="repeating-enclosing">
+            <div class="remove-button-container">
+              <div id="a-remove-button-9-instance-1_3" class="remove-button white small">-</div>
+            </div>
+            <div class="item-number">9</div>
+            <label class="item-label" for="a-item-input-9-instance-1_3">Lived In</label>
+            <div class="item-input">
+              <select id="a-item-9-instance-1_3" class="select" name="a-item-input-9-instance-1_3" number="9">
+                <option value="Afghanistan">Afghanistan</option>
+                <option value="Albania">Albania</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Andorra">Andorra</option>
+                <option value="Angola">Angola</option>
+                <option value="Antigua & Deps">Antigua & Deps</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Armenia">Armenia</option>
+                <option value="Australia">Van Diemen's Land</option>
+                <option value="Austria">Austria</option>
+                <option value="Azerbaijan">Azerbaijan</option>
+                <option value="Bahamas">Bahamas</option>
+                <option value="Bahrain">Bahrain</option>
+                <option value="Bangladesh">Bangladesh</option>
+                <option value="Barbados">Barbados</option>
+                <option value="Belarus">Belarus</option>
+                <option value="Belgium">Belgium</option>
+                <option value="Belize">Belize</option>
+                <option value="Benin">Benin</option>
+                <option value="Bhutan">Bhutan</option>
+                <option value="Bolivia">Bolivia</option>
+                <option value="Bosnia Herzegovina">Bosnia Herzegovina</option>
+                <option value="Botswana">Botswana</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Brunei">Brunei</option>
+                <option value="Bulgaria">Bulgaria</option>
+                <option value="Burkina">Burkina</option>
+                <option value="Burundi">Burundi</option>
+                <option value="Cambodia">Cambodia</option>
+                <option value="Cameroon">Cameroon</option>
+                <option value="Canada">Canada</option>
+                <option value="Cape Verde">Cape Verde</option>
+                <option value="Central African Rep">Central African Rep</option>
+                <option value="Chad">Chad</option>
+                <option value="Chile">Chile</option>
+                <option value="China">China</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Comoros">Comoros</option>
+                <option value="Congo">Congo</option>
+                <option value="Congo {Democratic Rep}">Congo {Democratic Rep}</option>
+                <option value="Costa Rica">Costa Rica</option>
+                <option value="Croatia">Croatia</option>
+                <option value="Cuba">Cuba</option>
+                <option value="Cyprus">Cyprus</option>
+                <option value="Czech Republic">Czech Republic</option>
+                <option value="Denmark">Denmark</option>
+                <option value="Djibouti">Djibouti</option>
+                <option value="Dominica">Dominica</option>
+                <option value="Dominican Republic">Dominican Republic</option>
+                <option value="East Timor">East Timor</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Egypt">Egypt</option>
+                <option value="El Salvador">El Salvador</option>
+                <option value="Equatorial Guinea">Equatorial Guinea</option>
+                <option value="Eritrea">Eritrea</option>
+                <option value="Estonia">Estonia</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Finland">Finland</option>
+                <option value="France">France</option>
+                <option value="Gabon">Gabon</option>
+                <option value="Gambia">Gambia</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Germany">Germany</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Greece">Greece</option>
+                <option value="Grenada">Grenada</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Guinea-Bissau">Guinea-Bissau</option>
+                <option value="Guyana">Guyana</option>
+                <option value="Haiti">Haiti</option>
+                <option value="Honduras">Honduras</option>
+                <option value="Hungary">Hungary</option>
+                <option value="Iceland">Iceland</option>
+                <option value="India">India</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Iran">Iran</option>
+                <option value="Iraq">Iraq</option>
+                <option value="Ireland {Republic}">Ireland {Republic}</option>
+                <option value="Israel">Israel</option>
+                <option value="Italy">Italy</option>
+                <option value="Ivory Coast">Ivory Coast</option>
+                <option value="Jamaica">Jamaica</option>
+                <option value="Japan">Japan</option>
+                <option value="Jordan">Jordan</option>
+                <option value="Kazakhstan">Kazakhstan</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Kiribati">Kiribati</option>
+                <option value="Korea North">Korea North</option>
+                <option value="Korea South">Korea South</option>
+                <option value="Kosovo">Kosovo</option>
+                <option value="Kuwait">Kuwait</option>
+                <option value="Kyrgyzstan">Kyrgyzstan</option>
+                <option value="Laos">Laos</option>
+                <option value="Latvia">Latvia</option>
+                <option value="Lebanon">Lebanon</option>
+                <option value="Lesotho">Lesotho</option>
+                <option value="Liberia">Liberia</option>
+                <option value="Libya">Libya</option>
+                <option value="Liechtenstein">Liechtenstein</option>
+                <option value="Lithuania">Lithuania</option>
+                <option value="Luxembourg">Luxembourg</option>
+                <option value="Macedonia">Macedonia</option>
+                <option value="Madagascar">Madagascar</option>
+                <option value="Malawi">Malawi</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Maldives">Maldives</option>
+                <option value="Mali">Mali</option>
+                <option value="Malta">Malta</option>
+                <option value="Marshall Islands">Marshall Islands</option>
+                <option value="Mauritania">Mauritania</option>
+                <option value="Mauritius">Mauritius</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Micronesia">Micronesia</option>
+                <option value="Moldova">Moldova</option>
+                <option value="Monaco">Monaco</option>
+                <option value="Mongolia">Mongolia</option>
+                <option value="Montenegro">Montenegro</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Mozambique">Mozambique</option>
+                <option value="Myanmar, {Burma}">Myanmar, {Burma}</option>
+                <option value="Namibia">Namibia</option>
+                <option value="Nauru">Nauru</option>
+                <option value="Nepal">Nepal</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="New Zealand">New Zealand</option>
+                <option value="Nicaragua">Nicaragua</option>
+                <option value="Niger">Niger</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Norway">Norway</option>
+                <option value="Oman">Oman</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="Palau">Palau</option>
+                <option value="Panama">Panama</option>
+                <option value="Papua New Guinea">Papua New Guinea</option>
+                <option value="Paraguay">Paraguay</option>
+                <option value="Peru">Peru</option>
+                <option value="Philippines">Philippines</option>
+                <option value="Poland">Poland</option>
+                <option value="Portugal">Portugal</option>
+                <option value="Qatar">Qatar</option>
+                <option value="Romania">Romania</option>
+                <option value="Russian Federation">Russian Federation</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="St Kitts & Nevis">St Kitts & Nevis</option>
+                <option value="St Lucia">St Lucia</option>
+                <option value="Saint Vincent & the Grenadines">Saint Vincent & the Grenadines</option>
+                <option value="Samoa">Samoa</option>
+                <option value="San Marino">San Marino</option>
+                <option value="Sao Tome & Principe">Sao Tome & Principe</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Serbia">Serbia</option>
+                <option value="Seychelles">Seychelles</option>
+                <option value="Sierra Leone">Sierra Leone</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Slovakia">Slovakia</option>
+                <option value="Slovenia">Slovenia</option>
+                <option value="Solomon Islands">Solomon Islands</option>
+                <option value="Somalia">Somalia</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Spain">Spain</option>
+                <option value="Sri Lanka">Sri Lanka</option>
+                <option value="Sudan">Sudan</option>
+                <option value="Suriname">Suriname</option>
+                <option value="Swaziland">Swaziland</option>
+                <option value="Sweden">Sweden</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Syria">Syria</option>
+                <option value="Taiwan">Taiwan</option>
+                <option value="Tajikistan">Tajikistan</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Togo">Togo</option>
+                <option value="Tonga">Tonga</option>
+                <option value="Trinidad & Tobago">Trinidad & Tobago</option>
+                <option value="Tunisia">Tunisia</option>
+                <option value="Turkey">Turkey</option>
+                <option value="Turkmenistan">Turkmenistan</option>
+                <option value="Tuvalu">Tuvalu</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="United Arab Emirates">United Arab Emirates</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
+                <option value="Uruguay">Uruguay</option>
+                <option value="Uzbekistan">Uzbekistan</option>
+                <option value="Vanuatu">Vanuatu</option>
+                <option value="Vatican City">Vatican City</option>
+                <option value="Venezuela">Venezuela</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Yemen">Yemen</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Zimbabwe">Zimbabwe</option>
+              </select>
+              <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
+              <div id="a-item-path-9-instance-1_3" class="item-path" enabled="true"></div>
+              <div id="a-item-error-9-instance-1_3" class="item-error">Invalid</div>
+            </div>
+          </div>
+          <div id="a-repeating-enclosing-9-instance-1_4" class="repeating-enclosing">
+            <div class="remove-button-container">
+              <div id="a-remove-button-9-instance-1_4" class="remove-button white small">-</div>
+            </div>
+            <div class="item-number">9</div>
+            <label class="item-label" for="a-item-input-9-instance-1_4">Lived In</label>
+            <div class="item-input">
+              <select id="a-item-9-instance-1_4" class="select" name="a-item-input-9-instance-1_4" number="9">
+                <option value="Afghanistan">Afghanistan</option>
+                <option value="Albania">Albania</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Andorra">Andorra</option>
+                <option value="Angola">Angola</option>
+                <option value="Antigua & Deps">Antigua & Deps</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Armenia">Armenia</option>
+                <option value="Australia">Van Diemen's Land</option>
+                <option value="Austria">Austria</option>
+                <option value="Azerbaijan">Azerbaijan</option>
+                <option value="Bahamas">Bahamas</option>
+                <option value="Bahrain">Bahrain</option>
+                <option value="Bangladesh">Bangladesh</option>
+                <option value="Barbados">Barbados</option>
+                <option value="Belarus">Belarus</option>
+                <option value="Belgium">Belgium</option>
+                <option value="Belize">Belize</option>
+                <option value="Benin">Benin</option>
+                <option value="Bhutan">Bhutan</option>
+                <option value="Bolivia">Bolivia</option>
+                <option value="Bosnia Herzegovina">Bosnia Herzegovina</option>
+                <option value="Botswana">Botswana</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Brunei">Brunei</option>
+                <option value="Bulgaria">Bulgaria</option>
+                <option value="Burkina">Burkina</option>
+                <option value="Burundi">Burundi</option>
+                <option value="Cambodia">Cambodia</option>
+                <option value="Cameroon">Cameroon</option>
+                <option value="Canada">Canada</option>
+                <option value="Cape Verde">Cape Verde</option>
+                <option value="Central African Rep">Central African Rep</option>
+                <option value="Chad">Chad</option>
+                <option value="Chile">Chile</option>
+                <option value="China">China</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Comoros">Comoros</option>
+                <option value="Congo">Congo</option>
+                <option value="Congo {Democratic Rep}">Congo {Democratic Rep}</option>
+                <option value="Costa Rica">Costa Rica</option>
+                <option value="Croatia">Croatia</option>
+                <option value="Cuba">Cuba</option>
+                <option value="Cyprus">Cyprus</option>
+                <option value="Czech Republic">Czech Republic</option>
+                <option value="Denmark">Denmark</option>
+                <option value="Djibouti">Djibouti</option>
+                <option value="Dominica">Dominica</option>
+                <option value="Dominican Republic">Dominican Republic</option>
+                <option value="East Timor">East Timor</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Egypt">Egypt</option>
+                <option value="El Salvador">El Salvador</option>
+                <option value="Equatorial Guinea">Equatorial Guinea</option>
+                <option value="Eritrea">Eritrea</option>
+                <option value="Estonia">Estonia</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Finland">Finland</option>
+                <option value="France">France</option>
+                <option value="Gabon">Gabon</option>
+                <option value="Gambia">Gambia</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Germany">Germany</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Greece">Greece</option>
+                <option value="Grenada">Grenada</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Guinea-Bissau">Guinea-Bissau</option>
+                <option value="Guyana">Guyana</option>
+                <option value="Haiti">Haiti</option>
+                <option value="Honduras">Honduras</option>
+                <option value="Hungary">Hungary</option>
+                <option value="Iceland">Iceland</option>
+                <option value="India">India</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Iran">Iran</option>
+                <option value="Iraq">Iraq</option>
+                <option value="Ireland {Republic}">Ireland {Republic}</option>
+                <option value="Israel">Israel</option>
+                <option value="Italy">Italy</option>
+                <option value="Ivory Coast">Ivory Coast</option>
+                <option value="Jamaica">Jamaica</option>
+                <option value="Japan">Japan</option>
+                <option value="Jordan">Jordan</option>
+                <option value="Kazakhstan">Kazakhstan</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Kiribati">Kiribati</option>
+                <option value="Korea North">Korea North</option>
+                <option value="Korea South">Korea South</option>
+                <option value="Kosovo">Kosovo</option>
+                <option value="Kuwait">Kuwait</option>
+                <option value="Kyrgyzstan">Kyrgyzstan</option>
+                <option value="Laos">Laos</option>
+                <option value="Latvia">Latvia</option>
+                <option value="Lebanon">Lebanon</option>
+                <option value="Lesotho">Lesotho</option>
+                <option value="Liberia">Liberia</option>
+                <option value="Libya">Libya</option>
+                <option value="Liechtenstein">Liechtenstein</option>
+                <option value="Lithuania">Lithuania</option>
+                <option value="Luxembourg">Luxembourg</option>
+                <option value="Macedonia">Macedonia</option>
+                <option value="Madagascar">Madagascar</option>
+                <option value="Malawi">Malawi</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Maldives">Maldives</option>
+                <option value="Mali">Mali</option>
+                <option value="Malta">Malta</option>
+                <option value="Marshall Islands">Marshall Islands</option>
+                <option value="Mauritania">Mauritania</option>
+                <option value="Mauritius">Mauritius</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Micronesia">Micronesia</option>
+                <option value="Moldova">Moldova</option>
+                <option value="Monaco">Monaco</option>
+                <option value="Mongolia">Mongolia</option>
+                <option value="Montenegro">Montenegro</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Mozambique">Mozambique</option>
+                <option value="Myanmar, {Burma}">Myanmar, {Burma}</option>
+                <option value="Namibia">Namibia</option>
+                <option value="Nauru">Nauru</option>
+                <option value="Nepal">Nepal</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="New Zealand">New Zealand</option>
+                <option value="Nicaragua">Nicaragua</option>
+                <option value="Niger">Niger</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Norway">Norway</option>
+                <option value="Oman">Oman</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="Palau">Palau</option>
+                <option value="Panama">Panama</option>
+                <option value="Papua New Guinea">Papua New Guinea</option>
+                <option value="Paraguay">Paraguay</option>
+                <option value="Peru">Peru</option>
+                <option value="Philippines">Philippines</option>
+                <option value="Poland">Poland</option>
+                <option value="Portugal">Portugal</option>
+                <option value="Qatar">Qatar</option>
+                <option value="Romania">Romania</option>
+                <option value="Russian Federation">Russian Federation</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="St Kitts & Nevis">St Kitts & Nevis</option>
+                <option value="St Lucia">St Lucia</option>
+                <option value="Saint Vincent & the Grenadines">Saint Vincent & the Grenadines</option>
+                <option value="Samoa">Samoa</option>
+                <option value="San Marino">San Marino</option>
+                <option value="Sao Tome & Principe">Sao Tome & Principe</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Serbia">Serbia</option>
+                <option value="Seychelles">Seychelles</option>
+                <option value="Sierra Leone">Sierra Leone</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Slovakia">Slovakia</option>
+                <option value="Slovenia">Slovenia</option>
+                <option value="Solomon Islands">Solomon Islands</option>
+                <option value="Somalia">Somalia</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Spain">Spain</option>
+                <option value="Sri Lanka">Sri Lanka</option>
+                <option value="Sudan">Sudan</option>
+                <option value="Suriname">Suriname</option>
+                <option value="Swaziland">Swaziland</option>
+                <option value="Sweden">Sweden</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Syria">Syria</option>
+                <option value="Taiwan">Taiwan</option>
+                <option value="Tajikistan">Tajikistan</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Togo">Togo</option>
+                <option value="Tonga">Tonga</option>
+                <option value="Trinidad & Tobago">Trinidad & Tobago</option>
+                <option value="Tunisia">Tunisia</option>
+                <option value="Turkey">Turkey</option>
+                <option value="Turkmenistan">Turkmenistan</option>
+                <option value="Tuvalu">Tuvalu</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="United Arab Emirates">United Arab Emirates</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
+                <option value="Uruguay">Uruguay</option>
+                <option value="Uzbekistan">Uzbekistan</option>
+                <option value="Vanuatu">Vanuatu</option>
+                <option value="Vatican City">Vatican City</option>
+                <option value="Venezuela">Venezuela</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Yemen">Yemen</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Zimbabwe">Zimbabwe</option>
+              </select>
+              <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
+              <div id="a-item-path-9-instance-1_4" class="item-path" enabled="true"></div>
+              <div id="a-item-error-9-instance-1_4" class="item-error">Invalid</div>
+            </div>
+          </div>
+          <div id="a-repeating-enclosing-9-instance-1_5" class="repeating-enclosing">
+            <div class="remove-button-container">
+              <div id="a-remove-button-9-instance-1_5" class="remove-button white small">-</div>
+            </div>
+            <div class="item-number">9</div>
+            <label class="item-label" for="a-item-input-9-instance-1_5">Lived In</label>
+            <div class="item-input">
+              <select id="a-item-9-instance-1_5" class="select" name="a-item-input-9-instance-1_5" number="9">
+                <option value="Afghanistan">Afghanistan</option>
+                <option value="Albania">Albania</option>
+                <option value="Algeria">Algeria</option>
+                <option value="Andorra">Andorra</option>
+                <option value="Angola">Angola</option>
+                <option value="Antigua & Deps">Antigua & Deps</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Armenia">Armenia</option>
+                <option value="Australia">Van Diemen's Land</option>
+                <option value="Austria">Austria</option>
+                <option value="Azerbaijan">Azerbaijan</option>
+                <option value="Bahamas">Bahamas</option>
+                <option value="Bahrain">Bahrain</option>
+                <option value="Bangladesh">Bangladesh</option>
+                <option value="Barbados">Barbados</option>
+                <option value="Belarus">Belarus</option>
+                <option value="Belgium">Belgium</option>
+                <option value="Belize">Belize</option>
+                <option value="Benin">Benin</option>
+                <option value="Bhutan">Bhutan</option>
+                <option value="Bolivia">Bolivia</option>
+                <option value="Bosnia Herzegovina">Bosnia Herzegovina</option>
+                <option value="Botswana">Botswana</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Brunei">Brunei</option>
+                <option value="Bulgaria">Bulgaria</option>
+                <option value="Burkina">Burkina</option>
+                <option value="Burundi">Burundi</option>
+                <option value="Cambodia">Cambodia</option>
+                <option value="Cameroon">Cameroon</option>
+                <option value="Canada">Canada</option>
+                <option value="Cape Verde">Cape Verde</option>
+                <option value="Central African Rep">Central African Rep</option>
+                <option value="Chad">Chad</option>
+                <option value="Chile">Chile</option>
+                <option value="China">China</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Comoros">Comoros</option>
+                <option value="Congo">Congo</option>
+                <option value="Congo {Democratic Rep}">Congo {Democratic Rep}</option>
+                <option value="Costa Rica">Costa Rica</option>
+                <option value="Croatia">Croatia</option>
+                <option value="Cuba">Cuba</option>
+                <option value="Cyprus">Cyprus</option>
+                <option value="Czech Republic">Czech Republic</option>
+                <option value="Denmark">Denmark</option>
+                <option value="Djibouti">Djibouti</option>
+                <option value="Dominica">Dominica</option>
+                <option value="Dominican Republic">Dominican Republic</option>
+                <option value="East Timor">East Timor</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Egypt">Egypt</option>
+                <option value="El Salvador">El Salvador</option>
+                <option value="Equatorial Guinea">Equatorial Guinea</option>
+                <option value="Eritrea">Eritrea</option>
+                <option value="Estonia">Estonia</option>
+                <option value="Ethiopia">Ethiopia</option>
+                <option value="Fiji">Fiji</option>
+                <option value="Finland">Finland</option>
+                <option value="France">France</option>
+                <option value="Gabon">Gabon</option>
+                <option value="Gambia">Gambia</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Germany">Germany</option>
+                <option value="Ghana">Ghana</option>
+                <option value="Greece">Greece</option>
+                <option value="Grenada">Grenada</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Guinea">Guinea</option>
+                <option value="Guinea-Bissau">Guinea-Bissau</option>
+                <option value="Guyana">Guyana</option>
+                <option value="Haiti">Haiti</option>
+                <option value="Honduras">Honduras</option>
+                <option value="Hungary">Hungary</option>
+                <option value="Iceland">Iceland</option>
+                <option value="India">India</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Iran">Iran</option>
+                <option value="Iraq">Iraq</option>
+                <option value="Ireland {Republic}">Ireland {Republic}</option>
+                <option value="Israel">Israel</option>
+                <option value="Italy">Italy</option>
+                <option value="Ivory Coast">Ivory Coast</option>
+                <option value="Jamaica">Jamaica</option>
+                <option value="Japan">Japan</option>
+                <option value="Jordan">Jordan</option>
+                <option value="Kazakhstan">Kazakhstan</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Kiribati">Kiribati</option>
+                <option value="Korea North">Korea North</option>
+                <option value="Korea South">Korea South</option>
+                <option value="Kosovo">Kosovo</option>
+                <option value="Kuwait">Kuwait</option>
+                <option value="Kyrgyzstan">Kyrgyzstan</option>
+                <option value="Laos">Laos</option>
+                <option value="Latvia">Latvia</option>
+                <option value="Lebanon">Lebanon</option>
+                <option value="Lesotho">Lesotho</option>
+                <option value="Liberia">Liberia</option>
+                <option value="Libya">Libya</option>
+                <option value="Liechtenstein">Liechtenstein</option>
+                <option value="Lithuania">Lithuania</option>
+                <option value="Luxembourg">Luxembourg</option>
+                <option value="Macedonia">Macedonia</option>
+                <option value="Madagascar">Madagascar</option>
+                <option value="Malawi">Malawi</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Maldives">Maldives</option>
+                <option value="Mali">Mali</option>
+                <option value="Malta">Malta</option>
+                <option value="Marshall Islands">Marshall Islands</option>
+                <option value="Mauritania">Mauritania</option>
+                <option value="Mauritius">Mauritius</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Micronesia">Micronesia</option>
+                <option value="Moldova">Moldova</option>
+                <option value="Monaco">Monaco</option>
+                <option value="Mongolia">Mongolia</option>
+                <option value="Montenegro">Montenegro</option>
+                <option value="Morocco">Morocco</option>
+                <option value="Mozambique">Mozambique</option>
+                <option value="Myanmar, {Burma}">Myanmar, {Burma}</option>
+                <option value="Namibia">Namibia</option>
+                <option value="Nauru">Nauru</option>
+                <option value="Nepal">Nepal</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="New Zealand">New Zealand</option>
+                <option value="Nicaragua">Nicaragua</option>
+                <option value="Niger">Niger</option>
+                <option value="Nigeria">Nigeria</option>
+                <option value="Norway">Norway</option>
+                <option value="Oman">Oman</option>
+                <option value="Pakistan">Pakistan</option>
+                <option value="Palau">Palau</option>
+                <option value="Panama">Panama</option>
+                <option value="Papua New Guinea">Papua New Guinea</option>
+                <option value="Paraguay">Paraguay</option>
+                <option value="Peru">Peru</option>
+                <option value="Philippines">Philippines</option>
+                <option value="Poland">Poland</option>
+                <option value="Portugal">Portugal</option>
+                <option value="Qatar">Qatar</option>
+                <option value="Romania">Romania</option>
+                <option value="Russian Federation">Russian Federation</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="St Kitts & Nevis">St Kitts & Nevis</option>
+                <option value="St Lucia">St Lucia</option>
+                <option value="Saint Vincent & the Grenadines">Saint Vincent & the Grenadines</option>
+                <option value="Samoa">Samoa</option>
+                <option value="San Marino">San Marino</option>
+                <option value="Sao Tome & Principe">Sao Tome & Principe</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="Senegal">Senegal</option>
+                <option value="Serbia">Serbia</option>
+                <option value="Seychelles">Seychelles</option>
+                <option value="Sierra Leone">Sierra Leone</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Slovakia">Slovakia</option>
+                <option value="Slovenia">Slovenia</option>
+                <option value="Solomon Islands">Solomon Islands</option>
+                <option value="Somalia">Somalia</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Spain">Spain</option>
+                <option value="Sri Lanka">Sri Lanka</option>
+                <option value="Sudan">Sudan</option>
+                <option value="Suriname">Suriname</option>
+                <option value="Swaziland">Swaziland</option>
+                <option value="Sweden">Sweden</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Syria">Syria</option>
+                <option value="Taiwan">Taiwan</option>
+                <option value="Tajikistan">Tajikistan</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Togo">Togo</option>
+                <option value="Tonga">Tonga</option>
+                <option value="Trinidad & Tobago">Trinidad & Tobago</option>
+                <option value="Tunisia">Tunisia</option>
+                <option value="Turkey">Turkey</option>
+                <option value="Turkmenistan">Turkmenistan</option>
+                <option value="Tuvalu">Tuvalu</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Ukraine">Ukraine</option>
+                <option value="United Arab Emirates">United Arab Emirates</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
+                <option value="Uruguay">Uruguay</option>
+                <option value="Uzbekistan">Uzbekistan</option>
+                <option value="Vanuatu">Vanuatu</option>
+                <option value="Vatican City">Vatican City</option>
+                <option value="Venezuela">Venezuela</option>
+                <option value="Vietnam">Vietnam</option>
+                <option value="Yemen">Yemen</option>
+                <option value="Zambia">Zambia</option>
+                <option value="Zimbabwe">Zimbabwe</option>
+              </select>
+              <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
+              <div id="a-item-path-9-instance-1_5" class="item-path" enabled="true"></div>
+              <div id="a-item-error-9-instance-1_5" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-10-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-10-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">10</div>
+            <label class="item-label" for="a-item-input-10-instance-1_1">Number Of Children<em>*</em></label>
+            <div class="item-input">
+              <input number="10" name="a-item-input-10-instance-1_1" id="a-item-10-instance-1_1" class=" item-input-text" type="text" value="0">
+              </input>
+              <div id="a-item-path-10-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-10-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-11-instance-1_1" class="choice">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-11-instance-1_1" class="repeating-enclosing">
+            <div class="choice-label">Primary contact method:</div>
+            <div id="a-div-choice-item-11-instance-1-choice-1" class="div-choice-item">
+              <input number="11" name="a-item-input-11-instance-1_1" id="a-item-11-instance-1_1-choice-1" class="choice-item" type="radio" value="number">Address</input>
+            </div>
+            <div id="a-div-choice-item-11-instance-1-choice-2" class="div-choice-item">
+              <input number="11" name="a-item-input-11-instance-1_1" id="a-item-11-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Phone<em>*</em></input>
+            </div>
+            <div id="a-choice-content-11-instance-1_1-choice-1" class="invisible">
+              <div id="a-item-enclosing-12-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeating-enclosing-12-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">12</div>
+                  <label class="item-label" for="a-item-input-12-instance-1_1_1">Address</label>
+                  <div class="item-input">
+                    <textarea id="a-item-12-instance-1_1_1" class=" item-input-textarea" name="a-item-input-12-instance-1_1_1" number="12"></textarea>
+                    <div id="a-item-path-12-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="a-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="a-choice-content-11-instance-1_1-choice-2" class="invisible">
+              <div id="a-item-enclosing-13-instance-1_1_1" class="sequence">
+                <div class="non-repeating-title">
+                </div>
+                <div id="a-repeat-button-13-instance-1_1" class="repeat-button white small">+</div>
+                <div id="a-repeating-enclosing-13-instance-1_1_1" class="repeating-enclosing">
+                  <div class="sequence-label"></div>
+                  <div id="a-sequence-13-instance-1" class="sequence-content">
+                    <div id="a-item-enclosing-14-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-14-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">14</div>
+                        <label class="item-label" for="a-item-input-14-instance-1_1_1_1">Phone<em>*</em></label>
+                        <div class="item-input">
+                          <input number="14" name="a-item-input-14-instance-1_1_1_1" id="a-item-14-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="a-item-path-14-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-14-instance-1_1_1_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="a-item-enclosing-15-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-15-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">15</div>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_1_1">Type</label>
+                        <div class="item-input">
+                          <select id="a-item-15-instance-1_1_1_1" class="select" name="a-item-input-15-instance-1_1_1_1" number="15">
+                            <option value="home">home</option>
+                            <option value="work">work</option>
+                            <option value="mobile">mobile</option>
+                          </select>
+                          <div id="a-item-path-15-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-15-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="a-repeating-enclosing-13-instance-1_1_2" class="repeating-enclosing">
+                  <div class="sequence-label"></div>
+                  <div id="a-sequence-13-instance-2" class="sequence-content">
+                    <div class="remove-button-container">
+                      <div id="a-remove-button-13-instance-1_1_2" class="remove-button white small">-</div>
+                    </div>
+                    <div id="a-item-enclosing-14-instance-1_1_2_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-14-instance-1_1_2_1" class="repeating-enclosing">
+                        <div class="item-number">14</div>
+                        <label class="item-label" for="a-item-input-14-instance-1_1_2_1">Phone<em>*</em></label>
+                        <div class="item-input">
+                          <input number="14" name="a-item-input-14-instance-1_1_2_1" id="a-item-14-instance-1_1_2_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="a-item-path-14-instance-1_1_2_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-14-instance-1_1_2_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="a-item-enclosing-15-instance-1_1_2_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-15-instance-1_1_2_1" class="repeating-enclosing">
+                        <div class="item-number">15</div>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_2_1">Type</label>
+                        <div class="item-input">
+                          <select id="a-item-15-instance-1_1_2_1" class="select" name="a-item-input-15-instance-1_1_2_1" number="15">
+                            <option value="home">home</option>
+                            <option value="work">work</option>
+                            <option value="mobile">mobile</option>
+                          </select>
+                          <div id="a-item-path-15-instance-1_1_2_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-15-instance-1_1_2_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="a-repeating-enclosing-13-instance-1_1_3" class="repeating-enclosing">
+                  <div class="sequence-label"></div>
+                  <div id="a-sequence-13-instance-3" class="sequence-content">
+                    <div class="remove-button-container">
+                      <div id="a-remove-button-13-instance-1_1_3" class="remove-button white small">-</div>
+                    </div>
+                    <div id="a-item-enclosing-14-instance-1_1_3_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-14-instance-1_1_3_1" class="repeating-enclosing">
+                        <div class="item-number">14</div>
+                        <label class="item-label" for="a-item-input-14-instance-1_1_3_1">Phone<em>*</em></label>
+                        <div class="item-input">
+                          <input number="14" name="a-item-input-14-instance-1_1_3_1" id="a-item-14-instance-1_1_3_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="a-item-path-14-instance-1_1_3_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-14-instance-1_1_3_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="a-item-enclosing-15-instance-1_1_3_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-15-instance-1_1_3_1" class="repeating-enclosing">
+                        <div class="item-number">15</div>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_3_1">Type</label>
+                        <div class="item-input">
+                          <select id="a-item-15-instance-1_1_3_1" class="select" name="a-item-input-15-instance-1_1_3_1" number="15">
+                            <option value="home">home</option>
+                            <option value="work">work</option>
+                            <option value="mobile">mobile</option>
+                          </select>
+                          <div id="a-item-path-15-instance-1_1_3_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-15-instance-1_1_3_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="a-repeating-enclosing-13-instance-1_1_4" class="repeating-enclosing">
+                  <div class="sequence-label"></div>
+                  <div id="a-sequence-13-instance-4" class="sequence-content">
+                    <div class="remove-button-container">
+                      <div id="a-remove-button-13-instance-1_1_4" class="remove-button white small">-</div>
+                    </div>
+                    <div id="a-item-enclosing-14-instance-1_1_4_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-14-instance-1_1_4_1" class="repeating-enclosing">
+                        <div class="item-number">14</div>
+                        <label class="item-label" for="a-item-input-14-instance-1_1_4_1">Phone<em>*</em></label>
+                        <div class="item-input">
+                          <input number="14" name="a-item-input-14-instance-1_1_4_1" id="a-item-14-instance-1_1_4_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="a-item-path-14-instance-1_1_4_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-14-instance-1_1_4_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="a-item-enclosing-15-instance-1_1_4_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-15-instance-1_1_4_1" class="repeating-enclosing">
+                        <div class="item-number">15</div>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_4_1">Type</label>
+                        <div class="item-input">
+                          <select id="a-item-15-instance-1_1_4_1" class="select" name="a-item-input-15-instance-1_1_4_1" number="15">
+                            <option value="home">home</option>
+                            <option value="work">work</option>
+                            <option value="mobile">mobile</option>
+                          </select>
+                          <div id="a-item-path-15-instance-1_1_4_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-15-instance-1_1_4_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="a-repeating-enclosing-13-instance-1_1_5" class="repeating-enclosing">
+                  <div class="sequence-label"></div>
+                  <div id="a-sequence-13-instance-5" class="sequence-content">
+                    <div class="remove-button-container">
+                      <div id="a-remove-button-13-instance-1_1_5" class="remove-button white small">-</div>
+                    </div>
+                    <div id="a-item-enclosing-14-instance-1_1_5_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-14-instance-1_1_5_1" class="repeating-enclosing">
+                        <div class="item-number">14</div>
+                        <label class="item-label" for="a-item-input-14-instance-1_1_5_1">Phone<em>*</em></label>
+                        <div class="item-input">
+                          <input number="14" name="a-item-input-14-instance-1_1_5_1" id="a-item-14-instance-1_1_5_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="a-item-path-14-instance-1_1_5_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-14-instance-1_1_5_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="a-item-enclosing-15-instance-1_1_5_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="a-repeating-enclosing-15-instance-1_1_5_1" class="repeating-enclosing">
+                        <div class="item-number">15</div>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_5_1">Type</label>
+                        <div class="item-input">
+                          <select id="a-item-15-instance-1_1_5_1" class="select" name="a-item-input-15-instance-1_1_5_1" number="15">
+                            <option value="home">home</option>
+                            <option value="work">work</option>
+                            <option value="mobile">mobile</option>
+                          </select>
+                          <div id="a-item-path-15-instance-1_1_5_1" class="item-path" enabled="true"></div>
+                          <div id="a-item-error-15-instance-1_1_5_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-16-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-16-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">16</div>
+            <label class="item-label" for="a-item-input-16-instance-1_1">Identifier Code</label>
+            <div class="item-input">
+              <input number="16" name="a-item-input-16-instance-1_1" id="a-item-16-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">Between 10 and 20</div>
+              <div id="a-item-path-16-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-16-instance-1_1" class="item-error">This field must be a whole number between 10 and 20 inclusive</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-17-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-17-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">17</div>
+            <label class="item-label" for="a-item-input-17-instance-1_1">Story</label>
+            <div class="item-input">
+              <textarea id="a-item-17-instance-1_1" class=" item-input-textarea" name="a-item-input-17-instance-1_1" number="17"></textarea>
+              <div id="a-item-path-17-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-17-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-18-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-18-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">18</div>
+            <label class="item-label" for="a-item-input-18-instance-1_1">Height in metres<em>*</em></label>
+            <div class="item-input">
+              <input number="18" name="a-item-input-18-instance-1_1" id="a-item-18-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div id="a-item-path-18-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-18-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-19-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-19-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">19</div>
+            <label class="item-label" for="a-item-input-19-instance-1_1">I acknowledge the <a href=''>Terms and Conditions</a><em>*</em></label>
+            <div class="item-input">
+              <input number="19" name="a-item-input-19-instance-1_1" id="a-item-19-instance-1_1" class=" item-input-text" type="checkbox">
+              </input>
+              <div id="a-item-path-19-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-19-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="a-item-enclosing-20-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="a-repeating-enclosing-20-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">20</div>
+            <label class="item-label" for="a-item-input-20-instance-1_1">I wish to receive emails about special offers<em>*</em></label>
+            <div class="item-input">
+              <input number="20" name="a-item-input-20-instance-1_1" id="a-item-20-instance-1_1" class=" item-input-text" type="checkbox">
+              </input>
+              <div id="a-item-path-20-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="a-item-error-20-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="submit" class="submit">Submit</div>
+  <p><div id="submit-comments"></div></p>
+
+</form>
+</div>
+</body>
+</html>

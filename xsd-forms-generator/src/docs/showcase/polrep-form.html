@@ -1,0 +1,2671 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
+<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript">
+
+function encodeHTML(s) {
+    if (typeof(s) != "undefined")
+	    return s.replace(/&/g, '&amp;')
+	               .replace(/</g, '&lt;')
+	               .replace(/>/g, '&gt;')
+	               .replace(/"/g, '&quot;');
+     else 
+          return s; 
+}
+          
+function testEncodeHTML() {
+   test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
+}
+          
+function test(condition, message) {
+  if (!condition) alert(message);
+}
+          
+function encodedValueById(id) {
+    return encodeHTML($("#"+id).val());
+}
+
+function spaces(n) {
+    var s = "";
+    for (var i=0;i<n;i++)
+      s = s + " ";
+    return s;
+}
+
+function cloneAndReplaceIds(element, suffix){
+  var clone = element.clone();
+  clone.find("*[id]").andSelf().each(function() { 
+    var previousId = $(this).attr("id");
+    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
+    $(this).attr("id", newId); 
+  });
+  return clone;
+}
+    
+function idVisible(id) {
+    return elemVisible($("#"+id));
+}
+    
+function elemVisible(elem) {
+    return elem.is(":visible");    
+}
+          
+function toXmlDate(s) {
+  return s;
+}
+          
+function toXmlDateTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toXmlTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toBoolean(s) {
+  if (s)
+    return "true";
+  else 
+    return "false";
+}
+          
+$(function() {
+  //run js unit tests        
+  testEncodeHTML();
+  
+  //setup date and time pickers
+  $('input').filter('.datepickerclass').datepicker();
+  //now a workaround because datepicker does not use the initial value with the required format but expects mm/dd/yyyy
+  $('input').filter('.datepickerclass').each(function() {
+    var elem = $(this);
+    var val = elem.attr('value');
+    elem.datepicker( "option", "dateFormat","yy-mm-dd");
+    if (typeof(val) != 'undefined') {
+      elem.datepicker('setDate',val);
+    }
+  });
+  $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm',separator: 'T'});
+  $('input').filter('.timepickerclass').timepicker({});
+
+  function callMethod(methodName, argument) {
+    var method = eval('(' + methodName + ')');
+    return method(argument);
+  }
+  
+  function changeMinOccursZeroCheckbox(v,enclosing) {
+    if (v.is(':checked')) {
+      enclosing.find(':input').prop('disabled',false);
+      enclosing.find('.min-occurs-zero').prop('checked',true) 
+    } else {
+      enclosing.find(':input').prop('disabled',true);
+      enclosing.find('.min-occurs-zero').prop('checked',false)      
+    }
+  }
+  
+  function matchesPattern(elem,regex) {
+    return regex.test(elem.val());
+  }
+  
+  function showError(id,ok) {
+    var error = $("#"+id);
+    if (ok)
+      error.hide();
+    else 
+      error.show();
+  }
+          
+  function validate() {
+    var previousItems = null;
+    $('*[number]').each( function(index) {
+      var thisId = this.id
+      var elem = $('#' + thisId)
+      // will do validations here
+      //if elem visible then do the validation for that element
+      if (elemVisible(elem)) 
+        elem.change();
+    });
+    $('input:radio').each( function (index) {
+      var elem = $('#' + this.id)
+      if (elemVisible(elem))
+        elem.change();
+    });
+    var count = $('.item-error').filter(":visible").length
+    if (count>0) {
+      $('#validation-errors').show();
+      return false;
+    }
+    else { 
+      $('#validation-errors').hide();
+      return true;
+    }
+  }
+          
+  function getXml() {
+    return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +  getXml1instance();
+  }
+
+  $('#submit').click( function () {
+    if (validate()) {
+      var xml = getXml();
+      processXml(xml);
+    }
+  });
+          
+  var processXml = function(xml) {
+    var s = xml.replace(/&/g,"&amp;");
+    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s = "<pre>" + s + "</pre>";
+    $('#submit-comments').html(s);
+  }
+          
+  
+  $('#b-remove-button-1-instance-1').click(function() {
+    $('#b-repeating-enclosing-1-instance-1').hide();
+  });
+
+  $('#b-remove-button-2-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-2-instance-1_1').hide();
+  });
+
+  $('#b-item-2-instance-1_1').prop('checked',false);
+
+  // location-description
+  var validate2instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-2-instance-1_1');
+    var pathDiv = $('#b-item-path-2-instance-1_1');
+    return ok;
+  }
+  
+  $('#b-item-2-instance-1_1').change( function() {
+    var ok = validate2instance1_1();
+    showError('b-item-error-2-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-3-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-3-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-4-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-4-instance-1_1_1').hide();
+  });
+
+  $('#b-item-4-instance-1_1_1').prop('checked',false);
+
+  // latitude
+  var validate4instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-4-instance-1_1_1');
+    var pathDiv = $('#b-item-path-4-instance-1_1_1');
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
+    //facet test
+    if ((+(v.val())) < -90)
+      ok = false;
+    //facet test
+    if ((+(v.val())) > 90)
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-4-instance-1_1_1').change( function() {
+    var ok = validate4instance1_1_1();
+    showError('b-item-error-4-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-5-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-5-instance-1_1_1').hide();
+  });
+
+  $('#b-item-5-instance-1_1_1').prop('checked',false);
+
+  // longitude
+  var validate5instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-5-instance-1_1_1');
+    var pathDiv = $('#b-item-path-5-instance-1_1_1');
+    ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
+    //facet test
+    if ((+(v.val())) < -180)
+      ok = false;
+    //facet test
+    if ((+(v.val())) > 180)
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-5-instance-1_1_1').change( function() {
+    var ok = validate5instance1_1_1();
+    showError('b-item-error-5-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-6-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-6-instance-1_1').hide();
+  });
+
+  $('#b-item-6-instance-1_1').prop('checked',false);
+
+  // date-of-incident
+  var validate6instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-6-instance-1_1');
+    var pathDiv = $('#b-item-path-6-instance-1_1');
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\d$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-6-instance-1_1').change( function() {
+    var ok = validate6instance1_1();
+    showError('b-item-error-6-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-7-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-7-instance-1_1').hide();
+  });
+
+  $('#b-item-7-instance-1_1').prop('checked',false);
+
+  // time-of-incident
+  var validate7instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-7-instance-1_1');
+    var pathDiv = $('#b-item-path-7-instance-1_1');
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^\d\d:\d\d *$/);
+    if (!(patternMatched))
+      ok = false;
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-7-instance-1_1').change( function() {
+    var ok = validate7instance1_1();
+    showError('b-item-error-7-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-7-instance-1_1').attr('enabled','false');
+  $('#b-remove-button-8-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-8-instance-1_1').hide();
+  });
+
+  // description
+  var validate8instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-8-instance-1_1');
+    var pathDiv = $('#b-item-path-8-instance-1_1');
+    return ok;
+  }
+  
+  $('#b-item-8-instance-1_1').change( function() {
+    var ok = validate8instance1_1();
+    showError('b-item-error-8-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-9-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-9-instance-1_1').hide();
+  });
+
+  $('#b-item-9-instance-1_1').change( function() {
+    var v = $('#b-item-9-instance-1_1');
+    var refersTo = $('#b-item-enclosing-10-instance-1_1');
+    if ('Vessel' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // pollution-source
+  var validate9instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-9-instance-1_1');
+    var pathDiv = $('#b-item-path-9-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-9-instance-1_1').change( function() {
+    var ok = validate9instance1_1();
+    showError('b-item-error-9-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-10-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-10-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-11-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-11-instance-1_1_1').hide();
+  });
+
+  $('#b-item-11-instance-1_1_1').change( function() {
+    var v = $('#b-item-11-instance-1_1_1');
+    var refersTo = $('#b-item-enclosing-12-instance-1_1_1');
+    if ('Other' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // vessel-type
+  var validate11instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-11-instance-1_1_1');
+    var pathDiv = $('#b-item-path-11-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-11-instance-1_1_1').change( function() {
+    var ok = validate11instance1_1_1();
+    showError('b-item-error-11-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-12-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-12-instance-1_1_1').hide();
+  });
+
+  $('#b-item-12-instance-1_1_1').prop('checked',false);
+
+  // vessel-type-other
+  var validate12instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-12-instance-1_1_1');
+    var pathDiv = $('#b-item-path-12-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-12-instance-1_1_1').change( function() {
+    var ok = validate12instance1_1_1();
+    showError('b-item-error-12-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-12-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-13-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-13-instance-1_1_1').hide();
+  });
+
+  $('#b-item-13-instance-1_1_1').prop('checked',false);
+
+  // name
+  var validate13instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-13-instance-1_1_1');
+    var pathDiv = $('#b-item-path-13-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-13-instance-1_1_1').change( function() {
+    var ok = validate13instance1_1_1();
+    showError('b-item-error-13-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-13-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-14-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-14-instance-1_1_1').hide();
+  });
+
+  $('#b-item-14-instance-1_1_1').prop('checked',false);
+
+  // flag-state
+  var validate14instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-14-instance-1_1_1');
+    var pathDiv = $('#b-item-path-14-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-14-instance-1_1_1').change( function() {
+    var ok = validate14instance1_1_1();
+    showError('b-item-error-14-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-14-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-15-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-15-instance-1_1_1').hide();
+  });
+
+  $('#b-item-15-instance-1_1_1').prop('checked',false);
+
+  // callsign
+  var validate15instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-15-instance-1_1_1');
+    var pathDiv = $('#b-item-path-15-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-15-instance-1_1_1').change( function() {
+    var ok = validate15instance1_1_1();
+    showError('b-item-error-15-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-15-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-16-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-16-instance-1_1_1').hide();
+  });
+
+  // australian
+  var validate16instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-16-instance-1_1_1');
+    var pathDiv = $('#b-item-path-16-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-16-instance-1_1_1').change( function() {
+    var ok = validate16instance1_1_1();
+    showError('b-item-error-16-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-16-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-17-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-17-instance-1_1').hide();
+  });
+
+  $('#b-item-17-instance-1_1').change( function() {
+    var v = $('#b-item-17-instance-1_1');
+    var refersTo = $('#b-item-enclosing-18-instance-1_1');
+    if ('true' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // pollutant-oil
+  var validate17instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-17-instance-1_1');
+    var pathDiv = $('#b-item-path-17-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-17-instance-1_1').change( function() {
+    var ok = validate17instance1_1();
+    showError('b-item-error-17-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-17-instance-1_1').attr('enabled','false');
+  $('#b-remove-button-18-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-18-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-19-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-19-instance-1_1_1').hide();
+  });
+
+  $('#b-item-19-instance-1_1_1').prop('checked',false);
+
+  // bilge
+  var validate19instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-19-instance-1_1_1');
+    var pathDiv = $('#b-item-path-19-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-19-instance-1_1_1').change( function() {
+    var ok = validate19instance1_1_1();
+    showError('b-item-error-19-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-20-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-20-instance-1_1_1').hide();
+  });
+
+  $('#b-item-20-instance-1_1_1').prop('checked',false);
+
+  // diesel-bunker
+  var validate20instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-20-instance-1_1_1');
+    var pathDiv = $('#b-item-path-20-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-20-instance-1_1_1').change( function() {
+    var ok = validate20instance1_1_1();
+    showError('b-item-error-20-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-21-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-21-instance-1_1_1').hide();
+  });
+
+  $('#b-item-21-instance-1_1_1').prop('checked',false);
+
+  // hfo-bunker
+  var validate21instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-21-instance-1_1_1');
+    var pathDiv = $('#b-item-path-21-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-21-instance-1_1_1').change( function() {
+    var ok = validate21instance1_1_1();
+    showError('b-item-error-21-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-22-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-22-instance-1_1_1').hide();
+  });
+
+  $('#b-item-22-instance-1_1_1').prop('checked',false);
+
+  // crude
+  var validate22instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-22-instance-1_1_1');
+    var pathDiv = $('#b-item-path-22-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-22-instance-1_1_1').change( function() {
+    var ok = validate22instance1_1_1();
+    showError('b-item-error-22-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-23-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-23-instance-1_1_1').hide();
+  });
+
+  $('#b-item-23-instance-1_1_1').prop('checked',false);
+
+  // unknown
+  var validate23instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-23-instance-1_1_1');
+    var pathDiv = $('#b-item-path-23-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-23-instance-1_1_1').change( function() {
+    var ok = validate23instance1_1_1();
+    showError('b-item-error-23-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-24-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-24-instance-1_1_1').hide();
+  });
+
+  $('#b-item-24-instance-1_1_1').change( function() {
+    var v = $('#b-item-24-instance-1_1_1');
+    var refersTo = $('#b-item-enclosing-25-instance-1_1_1');
+    if ('true' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // other
+  var validate24instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-24-instance-1_1_1');
+    var pathDiv = $('#b-item-path-24-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-24-instance-1_1_1').change( function() {
+    var ok = validate24instance1_1_1();
+    showError('b-item-error-24-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-25-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-25-instance-1_1_1').hide();
+  });
+
+  $('#b-item-25-instance-1_1_1').prop('checked',false);
+
+  // other-description
+  var validate25instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-25-instance-1_1_1');
+    var pathDiv = $('#b-item-path-25-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-25-instance-1_1_1').change( function() {
+    var ok = validate25instance1_1_1();
+    showError('b-item-error-25-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-25-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-26-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-26-instance-1_1').hide();
+  });
+
+  $('#b-item-26-instance-1_1').change( function() {
+    var v = $('#b-item-26-instance-1_1');
+    var refersTo = $('#b-item-enclosing-27-instance-1_1');
+    if ('true' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // pollutant-chemical
+  var validate26instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-26-instance-1_1');
+    var pathDiv = $('#b-item-path-26-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-26-instance-1_1').change( function() {
+    var ok = validate26instance1_1();
+    showError('b-item-error-26-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-26-instance-1_1').attr('enabled','false');
+  $('#b-remove-button-27-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-27-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-28-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-28-instance-1_1_1').hide();
+  });
+
+  $('#b-item-28-instance-1_1_1').prop('checked',false);
+
+  // name
+  var validate28instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-28-instance-1_1_1');
+    var pathDiv = $('#b-item-path-28-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-28-instance-1_1_1').change( function() {
+    var ok = validate28instance1_1_1();
+    showError('b-item-error-28-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-29-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-29-instance-1_1_1').hide();
+  });
+
+  $('#b-item-29-instance-1_1_1').prop('checked',false);
+
+  // marpol-cat-un-no
+  var validate29instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-29-instance-1_1_1');
+    var pathDiv = $('#b-item-path-29-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-29-instance-1_1_1').change( function() {
+    var ok = validate29instance1_1_1();
+    showError('b-item-error-29-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-30-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-30-instance-1_1').hide();
+  });
+
+  $('#b-item-30-instance-1_1').change( function() {
+    var v = $('#b-item-30-instance-1_1');
+    var refersTo = $('#b-item-enclosing-31-instance-1_1');
+    if ('true' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // pollutant-other
+  var validate30instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-30-instance-1_1');
+    var pathDiv = $('#b-item-path-30-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-30-instance-1_1').change( function() {
+    var ok = validate30instance1_1();
+    showError('b-item-error-30-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-31-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-31-instance-1_1').hide();
+  });
+
+  $('#b-item-31-instance-1_1').prop('checked',false);
+
+  // pollutant-other-details
+  var validate31instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-31-instance-1_1');
+    var pathDiv = $('#b-item-path-31-instance-1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-31-instance-1_1').change( function() {
+    var ok = validate31instance1_1();
+    showError('b-item-error-31-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-31-instance-1_1').attr('enabled','false');
+  $('#b-remove-button-32-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-32-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-33-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-33-instance-1_1_1').hide();
+  });
+
+  $('#b-item-33-instance-1_1_1').prop('checked',false);
+
+  // size-metres
+  var validate33instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-33-instance-1_1_1');
+    var pathDiv = $('#b-item-path-33-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-33-instance-1_1_1').change( function() {
+    var ok = validate33instance1_1_1();
+    showError('b-item-error-33-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-33-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-34-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-34-instance-1_1_1').hide();
+  });
+
+  $('#b-item-34-instance-1_1_1').prop('checked',false);
+
+  // amount-litres
+  var validate34instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-34-instance-1_1_1');
+    var pathDiv = $('#b-item-path-34-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-34-instance-1_1_1').change( function() {
+    var ok = validate34instance1_1_1();
+    showError('b-item-error-34-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-34-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-35-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-35-instance-1_1').hide();
+  });
+
+  // discharge-stopped
+  var validate35instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-35-instance-1_1');
+    var pathDiv = $('#b-item-path-35-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-35-instance-1_1').change( function() {
+    var ok = validate35instance1_1();
+    showError('b-item-error-35-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-35-instance-1_1').attr('enabled','false');
+  $('#b-remove-button-36-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-36-instance-1_1').hide();
+  });
+
+  $('#b-item-36-instance-1_1').change( function() {
+    var v = $('#b-item-36-instance-1_1');
+    var refersTo = $('#b-item-enclosing-37-instance-1_1');
+    if ('true' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // response-action-undertaken
+  var validate36instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-36-instance-1_1');
+    var pathDiv = $('#b-item-path-36-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-36-instance-1_1').change( function() {
+    var ok = validate36instance1_1();
+    showError('b-item-error-36-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-36-instance-1_1').attr('enabled','false');
+  $('#b-remove-button-37-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-37-instance-1_1').hide();
+  });
+
+  // response-action-details
+  var validate37instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-37-instance-1_1');
+    var pathDiv = $('#b-item-path-37-instance-1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-37-instance-1_1').change( function() {
+    var ok = validate37instance1_1();
+    showError('b-item-error-37-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-37-instance-1_1').attr('enabled','false');
+  $('#b-remove-button-38-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-38-instance-1_1').hide();
+  });
+
+  $('#b-item-38-instance-1_1').prop('checked',false);
+
+  $('#b-item-38-instance-1_1').width('30em');
+  // weather-conditions-at-site
+  var validate38instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-38-instance-1_1');
+    var pathDiv = $('#b-item-path-38-instance-1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-38-instance-1_1').change( function() {
+    var ok = validate38instance1_1();
+    showError('b-item-error-38-instance-1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-38-instance-1_1').attr('enabled','false');
+  $('#b-remove-button-39-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-39-instance-1_1').hide();
+  });
+
+  $('#b-item-39-instance-1_1').change( function() {
+    var v = $('#b-item-39-instance-1_1');
+    var refersTo = $('#b-item-enclosing-40-instance-1_1');
+    if ('true' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // photos-taken
+  var validate39instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-39-instance-1_1');
+    var pathDiv = $('#b-item-path-39-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-39-instance-1_1').change( function() {
+    var ok = validate39instance1_1();
+    showError('b-item-error-39-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-40-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-40-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-41-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-41-instance-1_1_1').hide();
+  });
+
+  $('#b-item-41-instance-1_1_1').prop('checked',false);
+
+  // details
+  var validate41instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-41-instance-1_1_1');
+    var pathDiv = $('#b-item-path-41-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-41-instance-1_1_1').change( function() {
+    var ok = validate41instance1_1_1();
+    showError('b-item-error-41-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-42-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-42-instance-1_1_1').hide();
+  });
+
+  $('#b-item-42-instance-1_1_1').prop('checked',false);
+
+  // held-by
+  var validate42instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-42-instance-1_1_1');
+    var pathDiv = $('#b-item-path-42-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-42-instance-1_1_1').change( function() {
+    var ok = validate42instance1_1_1();
+    showError('b-item-error-42-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-43-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-43-instance-1_1').hide();
+  });
+
+  $('#b-item-43-instance-1_1').change( function() {
+    var v = $('#b-item-43-instance-1_1');
+    var refersTo = $('#b-item-enclosing-44-instance-1_1');
+    if ('true' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // video-taken
+  var validate43instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-43-instance-1_1');
+    var pathDiv = $('#b-item-path-43-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-43-instance-1_1').change( function() {
+    var ok = validate43instance1_1();
+    showError('b-item-error-43-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-44-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-44-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-45-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-45-instance-1_1_1').hide();
+  });
+
+  $('#b-item-45-instance-1_1_1').prop('checked',false);
+
+  // details
+  var validate45instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-45-instance-1_1_1');
+    var pathDiv = $('#b-item-path-45-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-45-instance-1_1_1').change( function() {
+    var ok = validate45instance1_1_1();
+    showError('b-item-error-45-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-46-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-46-instance-1_1_1').hide();
+  });
+
+  $('#b-item-46-instance-1_1_1').prop('checked',false);
+
+  // held-by
+  var validate46instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-46-instance-1_1_1');
+    var pathDiv = $('#b-item-path-46-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-46-instance-1_1_1').change( function() {
+    var ok = validate46instance1_1_1();
+    showError('b-item-error-46-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-47-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-47-instance-1_1').hide();
+  });
+
+  $('#b-item-47-instance-1_1').change( function() {
+    var v = $('#b-item-47-instance-1_1');
+    var refersTo = $('#b-item-enclosing-48-instance-1_1');
+    if ('true' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // samples-taken
+  var validate47instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-47-instance-1_1');
+    var pathDiv = $('#b-item-path-47-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-47-instance-1_1').change( function() {
+    var ok = validate47instance1_1();
+    showError('b-item-error-47-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-48-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-48-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-49-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-49-instance-1_1_1').hide();
+  });
+
+  $('#b-item-49-instance-1_1_1').prop('checked',false);
+
+  // details
+  var validate49instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-49-instance-1_1_1');
+    var pathDiv = $('#b-item-path-49-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-49-instance-1_1_1').change( function() {
+    var ok = validate49instance1_1_1();
+    showError('b-item-error-49-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-50-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-50-instance-1_1_1').hide();
+  });
+
+  $('#b-item-50-instance-1_1_1').prop('checked',false);
+
+  // held-by
+  var validate50instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-50-instance-1_1_1');
+    var pathDiv = $('#b-item-path-50-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-50-instance-1_1_1').change( function() {
+    var ok = validate50instance1_1_1();
+    showError('b-item-error-50-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-51-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-51-instance-1_1').hide();
+  });
+
+  $('#b-item-51-instance-1_1').change( function() {
+    var v = $('#b-item-51-instance-1_1');
+    var refersTo = $('#b-item-enclosing-52-instance-1_1');
+    if ('true' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  })
+  // items-retrieved
+  var validate51instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-51-instance-1_1');
+    var pathDiv = $('#b-item-path-51-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-51-instance-1_1').change( function() {
+    var ok = validate51instance1_1();
+    showError('b-item-error-51-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-52-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-52-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-53-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-53-instance-1_1_1').hide();
+  });
+
+  $('#b-item-53-instance-1_1_1').prop('checked',false);
+
+  // details
+  var validate53instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-53-instance-1_1_1');
+    var pathDiv = $('#b-item-path-53-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-53-instance-1_1_1').change( function() {
+    var ok = validate53instance1_1_1();
+    showError('b-item-error-53-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-54-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-54-instance-1_1_1').hide();
+  });
+
+  $('#b-item-54-instance-1_1_1').prop('checked',false);
+
+  // held-by
+  var validate54instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-54-instance-1_1_1');
+    var pathDiv = $('#b-item-path-54-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-54-instance-1_1_1').change( function() {
+    var ok = validate54instance1_1_1();
+    showError('b-item-error-54-instance-1_1_1',ok);
+  });
+  
+  //extract xml from element <location-description>
+  function getXml2instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-2-instance-1_1')) {
+    var v = encodedValueById("b-item-2-instance-1_1");
+    xml += '\n' + spaces(2) + '<location-description>' + v + '</location-description>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <latitude>
+  function getXml4instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-4-instance-1_1_1')) {
+    var v = encodedValueById("b-item-4-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<latitude>' + v + '</latitude>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <longitude>
+  function getXml5instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-5-instance-1_1_1')) {
+    var v = encodedValueById("b-item-5-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<longitude>' + v + '</longitude>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <incident-coordinates>
+  function getXml3instance1() {
+
+    var xml = '\n' + spaces(2) + '<incident-coordinates>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-3-instance-1_1')) {
+      xml += getXml4instance1_1();
+      xml += getXml5instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</incident-coordinates>';
+    return xml;
+  }
+
+  //extract xml from element <date-of-incident>
+  function getXml6instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-6-instance-1_1')) {
+    var v = encodedValueById("b-item-6-instance-1_1");
+    xml += '\n' + spaces(2) + '<date-of-incident>' + toXmlDate(v) + '</date-of-incident>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <time-of-incident>
+  function getXml7instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-7-instance-1_1')) {
+    var v = encodedValueById("b-item-7-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<time-of-incident>' + toXmlTime(v) + '</time-of-incident>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <description>
+  function getXml8instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-8-instance-1_1')) {
+    var v = encodedValueById("b-item-8-instance-1_1");
+    xml += '\n' + spaces(2) + '<description>' + v + '</description>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <pollution-source>
+  function getXml9instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-9-instance-1_1')) {
+    var v = encodedValueById("b-item-9-instance-1_1");
+    xml += '\n' + spaces(2) + '<pollution-source>' + v + '</pollution-source>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <vessel-type>
+  function getXml11instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-11-instance-1_1_1')) {
+    var v = encodedValueById("b-item-11-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<vessel-type>' + v + '</vessel-type>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <vessel-type-other>
+  function getXml12instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-12-instance-1_1_1')) {
+    var v = encodedValueById("b-item-12-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<vessel-type-other>' + v + '</vessel-type-other>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <name>
+  function getXml13instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-13-instance-1_1_1')) {
+    var v = encodedValueById("b-item-13-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<name>' + v + '</name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <flag-state>
+  function getXml14instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-14-instance-1_1_1')) {
+    var v = encodedValueById("b-item-14-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<flag-state>' + v + '</flag-state>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <callsign>
+  function getXml15instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-15-instance-1_1_1')) {
+    var v = encodedValueById("b-item-15-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<callsign>' + v + '</callsign>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <australian>
+  function getXml16instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-16-instance-1_1_1')) {
+    var v = encodedValueById("b-item-16-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<australian>' + v + '</australian>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <pollution-source-vessel>
+  function getXml10instance1() {
+
+    var xml = '\n' + spaces(2) + '<pollution-source-vessel>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-10-instance-1_1')) {
+      xml += getXml11instance1_1();
+      xml += getXml12instance1_1();
+      xml += getXml13instance1_1();
+      xml += getXml14instance1_1();
+      xml += getXml15instance1_1();
+      xml += getXml16instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</pollution-source-vessel>';
+    return xml;
+  }
+
+  //extract xml from element <pollutant-oil>
+  function getXml17instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-17-instance-1_1')) {
+    var v = encodedValueById("b-item-17-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<pollutant-oil>' + v + '</pollutant-oil>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <bilge>
+  function getXml19instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-19-instance-1_1_1')) {
+    var v = $('#b-item-19-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<bilge>' + toBoolean(v) + '</bilge>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <diesel-bunker>
+  function getXml20instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-20-instance-1_1_1')) {
+    var v = $('#b-item-20-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<diesel-bunker>' + toBoolean(v) + '</diesel-bunker>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <hfo-bunker>
+  function getXml21instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-21-instance-1_1_1')) {
+    var v = $('#b-item-21-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<hfo-bunker>' + toBoolean(v) + '</hfo-bunker>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <crude>
+  function getXml22instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-22-instance-1_1_1')) {
+    var v = $('#b-item-22-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<crude>' + toBoolean(v) + '</crude>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <unknown>
+  function getXml23instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-23-instance-1_1_1')) {
+    var v = $('#b-item-23-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<unknown>' + toBoolean(v) + '</unknown>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <other>
+  function getXml24instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-24-instance-1_1_1')) {
+    var v = encodedValueById("b-item-24-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<other>' + v + '</other>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <other-description>
+  function getXml25instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-25-instance-1_1_1')) {
+    var v = encodedValueById("b-item-25-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<other-description>' + v + '</other-description>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <pollutant-oil-types>
+  function getXml18instance1() {
+
+    var xml = '\n' + spaces(2) + '<pollutant-oil-types>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-18-instance-1_1')) {
+      xml += getXml19instance1_1();
+      xml += getXml20instance1_1();
+      xml += getXml21instance1_1();
+      xml += getXml22instance1_1();
+      xml += getXml23instance1_1();
+      xml += getXml24instance1_1();
+      xml += getXml25instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</pollutant-oil-types>';
+    return xml;
+  }
+
+  //extract xml from element <pollutant-chemical>
+  function getXml26instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-26-instance-1_1')) {
+    var v = encodedValueById("b-item-26-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<pollutant-chemical>' + v + '</pollutant-chemical>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <name>
+  function getXml28instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-28-instance-1_1_1')) {
+    var v = encodedValueById("b-item-28-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<name>' + v + '</name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <marpol-cat-un-no>
+  function getXml29instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-29-instance-1_1_1')) {
+    var v = encodedValueById("b-item-29-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<marpol-cat-un-no>' + v + '</marpol-cat-un-no>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <pollutant-chemical-details>
+  function getXml27instance1() {
+
+    var xml = '\n' + spaces(2) + '<pollutant-chemical-details>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-27-instance-1_1')) {
+      xml += getXml28instance1_1();
+      xml += getXml29instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</pollutant-chemical-details>';
+    return xml;
+  }
+
+  //extract xml from element <pollutant-other>
+  function getXml30instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-30-instance-1_1')) {
+    var v = encodedValueById("b-item-30-instance-1_1");
+    xml += '\n' + spaces(2) + '<pollutant-other>' + v + '</pollutant-other>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <pollutant-other-details>
+  function getXml31instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-31-instance-1_1')) {
+    var v = encodedValueById("b-item-31-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<pollutant-other-details>' + v + '</pollutant-other-details>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <size-metres>
+  function getXml33instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-33-instance-1_1_1')) {
+    var v = encodedValueById("b-item-33-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<size-metres>' + v + '</size-metres>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <amount-litres>
+  function getXml34instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-34-instance-1_1_1')) {
+    var v = encodedValueById("b-item-34-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<amount-litres>' + v + '</amount-litres>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <pollutant-extent>
+  function getXml32instance1() {
+
+    var xml = '\n' + spaces(2) + '<pollutant-extent>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-32-instance-1_1')) {
+      xml += getXml33instance1_1();
+      xml += getXml34instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</pollutant-extent>';
+    return xml;
+  }
+
+  //extract xml from element <discharge-stopped>
+  function getXml35instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-35-instance-1_1')) {
+    var v = encodedValueById("b-item-35-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<discharge-stopped>' + v + '</discharge-stopped>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <response-action-undertaken>
+  function getXml36instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-36-instance-1_1')) {
+    var v = encodedValueById("b-item-36-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<response-action-undertaken>' + v + '</response-action-undertaken>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <response-action-details>
+  function getXml37instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-37-instance-1_1')) {
+    var v = encodedValueById("b-item-37-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<response-action-details>' + v + '</response-action-details>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <weather-conditions-at-site>
+  function getXml38instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-38-instance-1_1')) {
+    var v = encodedValueById("b-item-38-instance-1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(2) + '<weather-conditions-at-site>' + v + '</weather-conditions-at-site>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <photos-taken>
+  function getXml39instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-39-instance-1_1')) {
+    var v = encodedValueById("b-item-39-instance-1_1");
+    xml += '\n' + spaces(2) + '<photos-taken>' + v + '</photos-taken>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <details>
+  function getXml41instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-41-instance-1_1_1')) {
+    var v = encodedValueById("b-item-41-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<details>' + v + '</details>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <held-by>
+  function getXml42instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-42-instance-1_1_1')) {
+    var v = encodedValueById("b-item-42-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<held-by>' + v + '</held-by>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <photos-taken-details>
+  function getXml40instance1() {
+
+    var xml = '\n' + spaces(2) + '<photos-taken-details>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-40-instance-1_1')) {
+      xml += getXml41instance1_1();
+      xml += getXml42instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</photos-taken-details>';
+    return xml;
+  }
+
+  //extract xml from element <video-taken>
+  function getXml43instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-43-instance-1_1')) {
+    var v = encodedValueById("b-item-43-instance-1_1");
+    xml += '\n' + spaces(2) + '<video-taken>' + v + '</video-taken>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <details>
+  function getXml45instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-45-instance-1_1_1')) {
+    var v = encodedValueById("b-item-45-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<details>' + v + '</details>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <held-by>
+  function getXml46instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-46-instance-1_1_1')) {
+    var v = encodedValueById("b-item-46-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<held-by>' + v + '</held-by>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <video-taken-details>
+  function getXml44instance1() {
+
+    var xml = '\n' + spaces(2) + '<video-taken-details>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-44-instance-1_1')) {
+      xml += getXml45instance1_1();
+      xml += getXml46instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</video-taken-details>';
+    return xml;
+  }
+
+  //extract xml from element <samples-taken>
+  function getXml47instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-47-instance-1_1')) {
+    var v = encodedValueById("b-item-47-instance-1_1");
+    xml += '\n' + spaces(2) + '<samples-taken>' + v + '</samples-taken>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <details>
+  function getXml49instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-49-instance-1_1_1')) {
+    var v = encodedValueById("b-item-49-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<details>' + v + '</details>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <held-by>
+  function getXml50instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-50-instance-1_1_1')) {
+    var v = encodedValueById("b-item-50-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<held-by>' + v + '</held-by>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <samples-taken-details>
+  function getXml48instance1() {
+
+    var xml = '\n' + spaces(2) + '<samples-taken-details>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-48-instance-1_1')) {
+      xml += getXml49instance1_1();
+      xml += getXml50instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</samples-taken-details>';
+    return xml;
+  }
+
+  //extract xml from element <items-retrieved>
+  function getXml51instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-51-instance-1_1')) {
+    var v = encodedValueById("b-item-51-instance-1_1");
+    xml += '\n' + spaces(2) + '<items-retrieved>' + v + '</items-retrieved>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <details>
+  function getXml53instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-53-instance-1_1_1')) {
+    var v = encodedValueById("b-item-53-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<details>' + v + '</details>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <held-by>
+  function getXml54instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-54-instance-1_1_1')) {
+    var v = encodedValueById("b-item-54-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<held-by>' + v + '</held-by>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <items-retrieved-details>
+  function getXml52instance1() {
+
+    var xml = '\n' + spaces(2) + '<items-retrieved-details>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-52-instance-1_1')) {
+      xml += getXml53instance1_1();
+      xml += getXml54instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</items-retrieved-details>';
+    return xml;
+  }
+
+  //extract xml from element <polrep>
+  function getXml1instance() {
+
+    var xml = '\n' + spaces(0) + '<polrep xmlns="http://org.moten.david/example">';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-1-instance-1')) {
+      xml += getXml2instance1();
+      xml += getXml3instance1();
+      xml += getXml6instance1();
+      xml += getXml7instance1();
+      xml += getXml8instance1();
+      xml += getXml9instance1();
+      xml += getXml10instance1();
+      xml += getXml17instance1();
+      xml += getXml18instance1();
+      xml += getXml26instance1();
+      xml += getXml27instance1();
+      xml += getXml30instance1();
+      xml += getXml31instance1();
+      xml += getXml32instance1();
+      xml += getXml35instance1();
+      xml += getXml36instance1();
+      xml += getXml37instance1();
+      xml += getXml38instance1();
+      xml += getXml39instance1();
+      xml += getXml40instance1();
+      xml += getXml43instance1();
+      xml += getXml44instance1();
+      xml += getXml47instance1();
+      xml += getXml48instance1();
+      xml += getXml51instance1();
+      xml += getXml52instance1();
+    }
+    xml += '\n' + spaces(0) + '</polrep>';
+    return xml;
+  }
+
+  
+  $("#form").submit(function () { return false; }); // so it won't submit
+  
+  
+  
+});
+</script>
+<script type="text/javascript" src="js/xsd-forms-override.js"></script>
+</head>
+<body>
+
+<div class="form">
+<div id="start"></div>
+<form method="POST" action="form.html" name="form">
+ 
+ 
+  <div id="b-item-enclosing-1-instance-1" class="sequence">
+    <div class="non-repeating-title">
+    </div>
+    <div id="b-repeating-enclosing-1-instance-1" class="repeating-enclosing">
+      <div class="sequence-label"></div>
+      <div id="b-sequence-1-instance-1" class="sequence-content">
+        <div id="b-item-enclosing-2-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-2-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">2</div>
+            <label class="item-label" for="b-item-input-2-instance-1_1">Location Description</label>
+            <div class="item-input">
+              <input number="2" name="b-item-input-2-instance-1_1" id="b-item-2-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div id="b-item-path-2-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-2-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-3-instance-1_1" class="sequence">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-3-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="b-sequence-3-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-4-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-4-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">4</div>
+                  <label class="item-label" for="b-item-input-4-instance-1_1_1">Latitude</label>
+                  <div class="item-input">
+                    <input number="4" name="b-item-input-4-instance-1_1_1" id="b-item-4-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-4-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-4-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-5-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-5-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">5</div>
+                  <label class="item-label" for="b-item-input-5-instance-1_1_1">Longitude</label>
+                  <div class="item-input">
+                    <input number="5" name="b-item-input-5-instance-1_1_1" id="b-item-5-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-5-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-5-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-6-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-6-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">6</div>
+            <label class="item-label" for="b-item-input-6-instance-1_1">Date Of Incident<em>*</em></label>
+            <div class="item-input">
+              <input number="6" name="b-item-input-6-instance-1_1" id="b-item-6-instance-1_1" class="datepickerclass  item-input-text" type="text">
+              </input>
+              <div id="b-item-path-6-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-6-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-7-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-7-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">7</div>
+            <label class="item-label" for="b-item-input-7-instance-1_1">Time Of Incident</label>
+            <div class="item-input">
+              <input number="7" name="b-item-input-7-instance-1_1" id="b-item-7-instance-1_1" class="timepickerclass  item-input-text" type="text">
+              </input>
+              <div id="b-item-path-7-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-7-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-8-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-8-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">8</div>
+            <label class="item-label" for="b-item-input-8-instance-1_1">Description</label>
+            <div class="item-input">
+              <textarea id="b-item-8-instance-1_1" class=" item-input-textarea" name="b-item-input-8-instance-1_1" number="8"></textarea>
+              <div id="b-item-path-8-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-8-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-9-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-9-instance-1_1" class="repeating-enclosing">
+            <div class="item-title">Pollutant</div>
+            <div class="item-number">9</div>
+            <label class="item-label" for="b-item-input-9-instance-1_1">Pollution Source</label>
+            <div class="item-input">
+              <select id="b-item-9-instance-1_1" class="select" name="b-item-input-9-instance-1_1" number="9">
+                <option value="">Select one...</option>
+                <option value="Vessel">Vessel</option>
+                <option value="Land">Land</option>
+                <option value="Other">Other</option>
+                <option value="Unknown">Unknown</option>
+              </select>
+              <div id="b-item-path-9-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-9-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-10-instance-1_1" class="sequence invisible">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-10-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="b-sequence-10-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-11-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-11-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">11</div>
+                  <label class="item-label" for="b-item-input-11-instance-1_1_1">Vessel Type</label>
+                  <div class="item-input">
+                    <select id="b-item-11-instance-1_1_1" class="select" name="b-item-input-11-instance-1_1_1" number="11">
+                      <option value="">Select one...</option>
+                      <option value="Tanker">Tanker</option>
+                      <option value="Container">Container</option>
+                      <option value="Bulk Cargo">Bulk Cargo</option>
+                      <option value="Fishing">Fishing</option>
+                      <option value="Defence">Defence</option>
+                      <option value="Recreational">Recreational</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <div id="b-item-path-11-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-11-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-12-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-12-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">12</div>
+                  <label class="item-label" for="b-item-input-12-instance-1_1_1">Vessel Type Other</label>
+                  <div class="item-input">
+                    <input number="12" name="b-item-input-12-instance-1_1_1" id="b-item-12-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-12-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-13-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-13-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">13</div>
+                  <label class="item-label" for="b-item-input-13-instance-1_1_1">Name</label>
+                  <div class="item-input">
+                    <input number="13" name="b-item-input-13-instance-1_1_1" id="b-item-13-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-13-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-13-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-14-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-14-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">14</div>
+                  <label class="item-label" for="b-item-input-14-instance-1_1_1">Flag State</label>
+                  <div class="item-input">
+                    <input number="14" name="b-item-input-14-instance-1_1_1" id="b-item-14-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-14-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-14-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-15-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-15-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">15</div>
+                  <label class="item-label" for="b-item-input-15-instance-1_1_1">Callsign</label>
+                  <div class="item-input">
+                    <input number="15" name="b-item-input-15-instance-1_1_1" id="b-item-15-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-15-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-15-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-16-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-16-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">16</div>
+                  <label class="item-label" for="b-item-input-16-instance-1_1_1">Australian</label>
+                  <div class="item-input">
+                    <select id="b-item-16-instance-1_1_1" class="select" name="b-item-input-16-instance-1_1_1" number="16">
+                      <option value="">Select one...</option>
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </select>
+                    <div id="b-item-path-16-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-16-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-17-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-17-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">17</div>
+            <label class="item-label" for="b-item-input-17-instance-1_1">Oil</label>
+            <div class="item-input">
+              <select id="b-item-17-instance-1_1" class="select" name="b-item-input-17-instance-1_1" number="17">
+                <option value="">Select one...</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <div id="b-item-path-17-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-17-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-18-instance-1_1" class="sequence invisible">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-18-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="b-sequence-18-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-19-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-19-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">19</div>
+                  <label class="item-label" for="b-item-input-19-instance-1_1_1">Bilge<em>*</em></label>
+                  <div class="item-input">
+                    <input number="19" name="b-item-input-19-instance-1_1_1" id="b-item-19-instance-1_1_1" class=" item-input-text" type="checkbox">
+                    </input>
+                    <div id="b-item-path-19-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-19-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-20-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-20-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">20</div>
+                  <label class="item-label" for="b-item-input-20-instance-1_1_1">Diesel Bunker<em>*</em></label>
+                  <div class="item-input">
+                    <input number="20" name="b-item-input-20-instance-1_1_1" id="b-item-20-instance-1_1_1" class=" item-input-text" type="checkbox">
+                    </input>
+                    <div id="b-item-path-20-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-20-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-21-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-21-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">21</div>
+                  <label class="item-label" for="b-item-input-21-instance-1_1_1">Hfo Bunker<em>*</em></label>
+                  <div class="item-input">
+                    <input number="21" name="b-item-input-21-instance-1_1_1" id="b-item-21-instance-1_1_1" class=" item-input-text" type="checkbox">
+                    </input>
+                    <div id="b-item-path-21-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-21-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-22-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-22-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">22</div>
+                  <label class="item-label" for="b-item-input-22-instance-1_1_1">Crude<em>*</em></label>
+                  <div class="item-input">
+                    <input number="22" name="b-item-input-22-instance-1_1_1" id="b-item-22-instance-1_1_1" class=" item-input-text" type="checkbox">
+                    </input>
+                    <div id="b-item-path-22-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-22-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-23-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-23-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">23</div>
+                  <label class="item-label" for="b-item-input-23-instance-1_1_1">Unknown<em>*</em></label>
+                  <div class="item-input">
+                    <input number="23" name="b-item-input-23-instance-1_1_1" id="b-item-23-instance-1_1_1" class=" item-input-text" type="checkbox">
+                    </input>
+                    <div id="b-item-path-23-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-23-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-24-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-24-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">24</div>
+                  <label class="item-label" for="b-item-input-24-instance-1_1_1">Other</label>
+                  <div class="item-input">
+                    <select id="b-item-24-instance-1_1_1" class="select" name="b-item-input-24-instance-1_1_1" number="24">
+                      <option value="">Select one...</option>
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </select>
+                    <div id="b-item-path-24-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-24-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-25-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-25-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">25</div>
+                  <label class="item-label" for="b-item-input-25-instance-1_1_1">Other Description</label>
+                  <div class="item-input">
+                    <input number="25" name="b-item-input-25-instance-1_1_1" id="b-item-25-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-25-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-25-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-26-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-26-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">26</div>
+            <label class="item-label" for="b-item-input-26-instance-1_1">Chemical</label>
+            <div class="item-input">
+              <select id="b-item-26-instance-1_1" class="select" name="b-item-input-26-instance-1_1" number="26">
+                <option value="">Select one...</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <div id="b-item-path-26-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-26-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-27-instance-1_1" class="sequence invisible">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-27-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="b-sequence-27-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-28-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-28-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">28</div>
+                  <label class="item-label" for="b-item-input-28-instance-1_1_1">Name</label>
+                  <div class="item-input">
+                    <input number="28" name="b-item-input-28-instance-1_1_1" id="b-item-28-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-28-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-28-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-29-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-29-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">29</div>
+                  <label class="item-label" for="b-item-input-29-instance-1_1_1">MARPOL cat/UN nos</label>
+                  <div class="item-input">
+                    <input number="29" name="b-item-input-29-instance-1_1_1" id="b-item-29-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-29-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-29-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-30-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-30-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">30</div>
+            <label class="item-label" for="b-item-input-30-instance-1_1">Garbage, packaged, sewage, other</label>
+            <div class="item-input">
+              <select id="b-item-30-instance-1_1" class="select" name="b-item-input-30-instance-1_1" number="30">
+                <option value="">Select one...</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <div id="b-item-path-30-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-30-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-31-instance-1_1" class="item-enclosing invisible">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-31-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">31</div>
+            <label class="item-label" for="b-item-input-31-instance-1_1">Details/description</label>
+            <div class="item-input">
+              <input number="31" name="b-item-input-31-instance-1_1" id="b-item-31-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div id="b-item-path-31-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-31-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-32-instance-1_1" class="sequence">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-32-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label">Extent</div>
+            <div id="b-sequence-32-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-33-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-33-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">33</div>
+                  <label class="item-label" for="b-item-input-33-instance-1_1_1">Size of spill (length and width in metres)</label>
+                  <div class="item-input">
+                    <input number="33" name="b-item-input-33-instance-1_1_1" id="b-item-33-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-33-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-33-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-34-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-34-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">34</div>
+                  <label class="item-label" for="b-item-input-34-instance-1_1_1">Amount of pollutant, if known (litres)</label>
+                  <div class="item-input">
+                    <input number="34" name="b-item-input-34-instance-1_1_1" id="b-item-34-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-34-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-34-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-35-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-35-instance-1_1" class="repeating-enclosing">
+            <div class="item-title">Additional information</div>
+            <div class="item-number">35</div>
+            <label class="item-label" for="b-item-input-35-instance-1_1">Has the discharge stopped?</label>
+            <div class="item-input">
+              <select id="b-item-35-instance-1_1" class="select" name="b-item-input-35-instance-1_1" number="35">
+                <option value="">Select one...</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <div id="b-item-path-35-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-35-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-36-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-36-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">36</div>
+            <label class="item-label" for="b-item-input-36-instance-1_1">Response action undertaken?</label>
+            <div class="item-input">
+              <select id="b-item-36-instance-1_1" class="select" name="b-item-input-36-instance-1_1" number="36">
+                <option value="">Select one...</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <div id="b-item-path-36-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-36-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-37-instance-1_1" class="item-enclosing invisible">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-37-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">37</div>
+            <label class="item-label" for="b-item-input-37-instance-1_1">Details</label>
+            <div class="item-input">
+              <textarea id="b-item-37-instance-1_1" class=" item-input-textarea" name="b-item-input-37-instance-1_1" number="37"></textarea>
+              <div class="item-description">Please include any environmental impact</div>
+              <div id="b-item-path-37-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-37-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-38-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-38-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">38</div>
+            <label class="item-label" for="b-item-input-38-instance-1_1">Weather conditions at site</label>
+            <div class="item-input">
+              <input number="38" name="b-item-input-38-instance-1_1" id="b-item-38-instance-1_1" class=" item-input-text" type="text">
+              </input>
+              <div id="b-item-path-38-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-38-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-39-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-39-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">39</div>
+            <label class="item-label" for="b-item-input-39-instance-1_1">Photos Taken</label>
+            <div class="item-input">
+              <select id="b-item-39-instance-1_1" class="select" name="b-item-input-39-instance-1_1" number="39">
+                <option value="">Select one...</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <div id="b-item-path-39-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-39-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-40-instance-1_1" class="sequence invisible">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-40-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="b-sequence-40-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-41-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-41-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">41</div>
+                  <label class="item-label" for="b-item-input-41-instance-1_1_1">Details</label>
+                  <div class="item-input">
+                    <input number="41" name="b-item-input-41-instance-1_1_1" id="b-item-41-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-41-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-41-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-42-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-42-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">42</div>
+                  <label class="item-label" for="b-item-input-42-instance-1_1_1">Held By</label>
+                  <div class="item-input">
+                    <input number="42" name="b-item-input-42-instance-1_1_1" id="b-item-42-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-42-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-42-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-43-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-43-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">43</div>
+            <label class="item-label" for="b-item-input-43-instance-1_1">Video Taken</label>
+            <div class="item-input">
+              <select id="b-item-43-instance-1_1" class="select" name="b-item-input-43-instance-1_1" number="43">
+                <option value="">Select one...</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <div id="b-item-path-43-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-43-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-44-instance-1_1" class="sequence invisible">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-44-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="b-sequence-44-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-45-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-45-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">45</div>
+                  <label class="item-label" for="b-item-input-45-instance-1_1_1">Details</label>
+                  <div class="item-input">
+                    <input number="45" name="b-item-input-45-instance-1_1_1" id="b-item-45-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-45-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-45-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-46-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-46-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">46</div>
+                  <label class="item-label" for="b-item-input-46-instance-1_1_1">Held By</label>
+                  <div class="item-input">
+                    <input number="46" name="b-item-input-46-instance-1_1_1" id="b-item-46-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-46-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-46-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-47-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-47-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">47</div>
+            <label class="item-label" for="b-item-input-47-instance-1_1">Samples Taken</label>
+            <div class="item-input">
+              <select id="b-item-47-instance-1_1" class="select" name="b-item-input-47-instance-1_1" number="47">
+                <option value="">Select one...</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <div id="b-item-path-47-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-47-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-48-instance-1_1" class="sequence invisible">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-48-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="b-sequence-48-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-49-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-49-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">49</div>
+                  <label class="item-label" for="b-item-input-49-instance-1_1_1">Details</label>
+                  <div class="item-input">
+                    <input number="49" name="b-item-input-49-instance-1_1_1" id="b-item-49-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-49-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-49-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-50-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-50-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">50</div>
+                  <label class="item-label" for="b-item-input-50-instance-1_1_1">Held By</label>
+                  <div class="item-input">
+                    <input number="50" name="b-item-input-50-instance-1_1_1" id="b-item-50-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-50-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-50-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-51-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-51-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">51</div>
+            <label class="item-label" for="b-item-input-51-instance-1_1">Items Retrieved</label>
+            <div class="item-input">
+              <select id="b-item-51-instance-1_1" class="select" name="b-item-input-51-instance-1_1" number="51">
+                <option value="">Select one...</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <div id="b-item-path-51-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-51-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-52-instance-1_1" class="sequence invisible">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-52-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label"></div>
+            <div id="b-sequence-52-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-53-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-53-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">53</div>
+                  <label class="item-label" for="b-item-input-53-instance-1_1_1">Details</label>
+                  <div class="item-input">
+                    <input number="53" name="b-item-input-53-instance-1_1_1" id="b-item-53-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-53-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-53-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-54-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-54-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">54</div>
+                  <label class="item-label" for="b-item-input-54-instance-1_1_1">Held By</label>
+                  <div class="item-input">
+                    <input number="54" name="b-item-input-54-instance-1_1_1" id="b-item-54-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-54-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-54-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="submit" class="submit">Submit</div>
+  <p><div id="submit-comments"></div></p>
+
+</form>
+</div>
+</body>
+</html>

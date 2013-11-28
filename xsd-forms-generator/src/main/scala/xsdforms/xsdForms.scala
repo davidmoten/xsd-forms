@@ -25,6 +25,8 @@ package xsdforms {
      * radio selectors.
      */
     val Choice = XsdFormsAnnotation("choice")
+    
+    
     val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
 
     /**

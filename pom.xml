@@ -47,6 +47,7 @@
 			<modules>
 				<module>xsd-scalaxb</module>
 				<module>demo-scalaxb</module>
+                <module>xsd-forms-html-js</module>
 				<module>xsd-forms-generator</module>
 				<module>xsd-forms-generator-webapp</module>
 				<module>xsd-forms-maven-plugin</module>
