@@ -1,7 +1,15 @@
 xsd-forms
 =========
 
-You have a data model and you want to make a web form. *xsd-forms* does the menial ui creation and entry validation work for you and then allows you to customize it as you wish using css and jquery.  The form it produces is 100% html and js without any server side dependency beyond how you process the submitted xml. The form is thus platform agnostic in terms of your backend.
+You have a data model and you want to make a web form that submits structured data (XML/JSON). 
+
+*xsd-forms* does this for you:
+
+* ui creation and entry validation work
+* allows further customization using css and javascript (especially jquery)
+* generated form is 100% html/javascript without any server side dependency beyond how you process the submitted xml. 
+
+The form is thus platform agnostic in terms of your backend.
 
 This project is largely written in Scala with a small amount of Java. 
 
@@ -164,6 +172,16 @@ The default generated form just displays the captured xml on the page under the 
     processXml = function (xml) {
       alert(xml);
     } 
+
+###Can I submit JSON instead?
+Yep. Use this *extraScript* (using [xml2json.js](http://goessner.net/download/prj/jsonxml/)):
+
+    //for example, display the xml in an alert box
+    processXml = function (xml) {
+      var json = xml2json(xml);
+      //alert or you could do a jquery ajax call to submit to a web server
+      alert(json);
+    }
 
 ###How do I override the appearance/behaviour of the generated form?
 
