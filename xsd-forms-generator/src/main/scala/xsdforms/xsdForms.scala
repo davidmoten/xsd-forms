@@ -25,8 +25,7 @@ package xsdforms {
      * radio selectors.
      */
     val Choice = XsdFormsAnnotation("choice")
-    
-    
+
     val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
 
     /**
@@ -34,12 +33,29 @@ package xsdforms {
      */
     val Legend = XsdFormsAnnotation("legend")
     val RepeatLabel = XsdFormsAnnotation("repeatLabel")
+
+    /**
+     *  'minOccursZeroLabel' is the button label when a sequence of
+     *  elements (a complex type) has minOccurs="0". Clicking the
+     *  minOccursZero button toggles the visiblity of the sequence.
+     */
     val MinOccursZeroLabel = XsdFormsAnnotation("minOccursZeroLabel")
     val RemoveLabel = XsdFormsAnnotation("removeLabel")
+    
+    /**
+     * 'title' is for the text to be used as the title for an element.
+     */
     val Title = XsdFormsAnnotation("title")
+    
+    /**
+     * 'before' is the text to appear before an element.
+     */
     val Before = XsdFormsAnnotation("before")
+    
+    /**
+     * 'after' is the text to appear after an element.
+     */
     val After = XsdFormsAnnotation("after")
-
 
     /**
      * if text=textarea then html textarea used as input. Otherwise normal
@@ -64,6 +80,11 @@ package xsdforms {
      *  representing no selection.
      */
     val AddBlank = XsdFormsAnnotation("addBlank")
+
+    /**
+     * 'css' can be set to a group of css styles which will be applied to
+     *  the element. For example 'width:20em;font-size:80%'.
+     */
     val Css = XsdFormsAnnotation("css")
 
     /**
@@ -82,11 +103,22 @@ package xsdforms {
      * element with number n greater than the current element will be made visible.
      */
     val MakeVisible = XsdFormsAnnotation("makeVisible")
+    
+    /**
+     * 'nonRepeatingTitle' is the title displayed after 'title' for a complexType 
+     * that has maxOccurs > 1.
+     */
     val NonRepeatingTitle = XsdFormsAnnotation("nonRepeatingTitle")
+    
     /**
      * Annotation 'description' appears just below the input box.
      */
     val Description = XsdFormsAnnotation("description")
+    
+    /**
+     * 'visible' = false will hide the element at first. This is most
+     *  useful in conjunction with 'makeVisible'.
+     */
     val Visible = XsdFormsAnnotation("visible")
 
     /**
@@ -676,8 +708,8 @@ package xsdforms {
         if (usesFieldset)
           html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
 
-        node.children.foreach (x=>doNode(x,instNos))
-        
+        node.children.foreach(x => doNode(x, instNos))
+
         if (usesFieldset)
           html closeTag
 
@@ -878,8 +910,8 @@ package xsdforms {
           .line("  if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
         if (isRadio(node.element))
           js.line("    var v = encodeHTML($('input[name=%s]:radio:checked').val());", getItemName(number, instNos))
-        else if (isCheckbox(node)) 
-          js.line("    var v = $('#%s').is(':checked');",getItemId(node, instNos))
+        else if (isCheckbox(node))
+          js.line("    var v = $('#%s').is(':checked');", getItemId(node, instNos))
         else
           js.line("    var v = %s;", valById(getItemId(node, instNos)))
 
@@ -928,7 +960,7 @@ package xsdforms {
           .line("  }")
           .line)
     }
-    
+
     private def refById(id: String) = "$(\"#" + id + "\")"
     private def valById(id: String) = "encodedValueById(\"" + id + "\")"
     private def namespace(node: Node) =
@@ -1214,8 +1246,8 @@ package xsdforms {
             .closeTag
         case _ =>
           //text or boolean
-          val isChecked = inputType=="checkbox" &&  e.default.isDefined && e.default.get == "true"
-          val v =  if (isChecked) None else defaultValue(e.default, r)
+          val isChecked = inputType == "checkbox" && e.default.isDefined && e.default.get == "true"
+          val v = if (isChecked) None else defaultValue(e.default, r)
           html.input(
             id = Some(itemId),
             name = getItemName(number, instances),
@@ -1225,11 +1257,9 @@ package xsdforms {
             value = v,
             number = Some(number))
             .closeTag
-         addScript(JS().line("  $('#%s').prop('checked',%s);",itemId, isChecked+"").line)
+          addScript(JS().line("  $('#%s').prop('checked',%s);", itemId, isChecked + "").line)
       }
-      
-     
-      
+
     }
 
     private def defaultValue(value: Option[String], r: Restriction): Option[String] = {
@@ -1316,7 +1346,6 @@ package xsdforms {
         case Some("radio") => true
         case _ => false
       }
-    
 
     private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
@@ -1606,8 +1635,8 @@ package xsdforms {
         case _ => "text"
       }
     }
-    
-    private def isCheckbox(node:NodeBasic) = "checkbox" == getInputType(restriction(node))
+
+    private def isCheckbox(node: NodeBasic) = "checkbox" == getInputType(restriction(node))
 
     private def insertMargin(s: String) =
       s.stripMargin.replaceAll("\n", "\n" + margin)
