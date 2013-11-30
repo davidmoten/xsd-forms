@@ -53,7 +53,9 @@ package xsdforms {
     val MinOccursZeroLabel = XsdFormsAnnotation("minOccursZeroLabel")
 
     /**
-     * TODO
+     * 'removeLabel' is the text on the button that when pressed
+     * removes the current instance of the element or complexType.
+     * The default is '-'.
      */
     val RemoveLabel = XsdFormsAnnotation("removeLabel")
 
