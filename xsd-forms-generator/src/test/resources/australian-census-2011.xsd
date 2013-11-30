@@ -1,299 +1,305 @@
 <xs:schema targetNamespace="http://org.moten.david/example2"
-	xmlns="http://org.moten.david/example2" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:i="http://moten.david.org/xsd-forms">
-	<xs:annotation i:numberItems="true">
-		<i:header><![CDATA[
+  xmlns="http://org.moten.david/example2" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:i="http://moten.david.org/xsd-forms">
+  <xs:annotation i:numberItems="true">
+    <xs:appinfo>
+      <i:header><![CDATA[
 <h2>Australian Census 2011 extract</h2>
 ]]></i:header>
-		<i:footer><![CDATA[
+      <i:footer><![CDATA[
     <p>Thanks for your time.</p>
 ]]></i:footer>
-	</xs:annotation>
+    </xs:appinfo>
+  </xs:annotation>
 
-	<xs:element name="census" type="census" />
+  <xs:element name="census" type="census" />
 
-	<xs:complexType name="census">
-		<xs:sequence>
-			<xs:element name="dwelling-address" type="address">
-				<xs:annotation i:label="What is the address of this dwelling?" />
-			</xs:element>
-			<xs:element name="name" type="name">
-				<xs:annotation i:label="Name of the person" />
-			</xs:element>
-			<xs:element name="gender" type="gender">
-				<xs:annotation i:label="Is the person male or female?"
-					i:addBlank="true" />
-			</xs:element>
-			<xs:choice>
-				<xs:annotation
-					i:label="What is the person's date of birth (or age last birthday)?" />
-				<xs:element name="date-of-birth" type="xs:date">
-					<xs:annotation i:choiceLabel="Date of birth" i:label="" />
-				</xs:element>
-				<xs:element name="age-last-birthday" type="age">
-					<xs:annotation i:choiceLabel="Age last birthday"
-						i:label="" />
-				</xs:element>
-			</xs:choice>
-			<xs:element name="marital-status" type="marital-status">
-				<xs:annotation i:title="What is the person's current marital status?"
-					i:before="'Married refers to registered marriages." i:addBlank="true" />
-			</xs:element>
-			<xs:element name="indigenous-origin" type="indigenous-origin">
-				<xs:annotation
-					i:title="Is the person of Aboriginal or Torres Strait Islander origin?"
-					i:before="For persons of both Aboriginal and Torres Strait Islander origin, select 'Both'."
-					i:addBlank="true" i:label="" />
-			</xs:element>
-			<xs:element name="residential address" type="residential-address" />
-			<xs:element name="residential address-one-year-ago" type="residential-address-one-year-ago" />
-			<xs:element name="residential address-five-years-ago"
-				type="residential-address-five-years-ago" />
-			<xs:element name="citizen" type="xs:boolean">
-				<xs:annotation i:title="Citizenship"
-					i:label="The person is an Australian citizen" />
-			</xs:element>
-			<xs:element name="country-of-birth" type="country-of-birth" />
-			<xs:element name="father-place-of-birth" type="australia-or-overseas">
-				<xs:annotation
-					i:label="Was the person's father born in Australia or overseas?"
-					i:addBlank="true" />
-			</xs:element>
-			<xs:element name="mother-place-of-birth" type="australia-or-overseas">
-				<xs:annotation
-					i:label="Was the person's mother born in Australia or overseas?"
-					i:addBlank="true" />
-			</xs:element>
-			<xs:element name="language-at-home" type="language-at-home">
-				<xs:annotation
-					i:label="Does the person speak a language other than English at home?" />
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="census">
+    <xs:sequence>
+      <xs:element name="dwelling-address" type="address">
+        <xs:annotation i:label="What is the address of this dwelling?" />
+      </xs:element>
+      <xs:element name="name" type="name">
+        <xs:annotation i:label="Name of the person" />
+      </xs:element>
+      <xs:element name="gender" type="gender">
+        <xs:annotation i:label="Is the person male or female?"
+          i:addBlank="true" />
+      </xs:element>
+      <xs:choice>
+        <xs:annotation
+          i:label="What is the person's date of birth (or age last birthday)?" />
+        <xs:element name="date-of-birth" type="xs:date">
+          <xs:annotation i:choiceLabel="Date of birth"
+            i:label="" />
+        </xs:element>
+        <xs:element name="age-last-birthday" type="age">
+          <xs:annotation i:choiceLabel="Age last birthday"
+            i:label="" />
+        </xs:element>
+      </xs:choice>
+      <xs:element name="marital-status" type="marital-status">
+        <xs:annotation i:title="What is the person's current marital status?"
+          i:before="'Married refers to registered marriages."
+          i:addBlank="true" />
+      </xs:element>
+      <xs:element name="indigenous-origin" type="indigenous-origin">
+        <xs:annotation
+          i:title="Is the person of Aboriginal or Torres Strait Islander origin?"
+          i:before="For persons of both Aboriginal and Torres Strait Islander origin, select 'Both'."
+          i:addBlank="true" i:label="" />
+      </xs:element>
+      <xs:element name="residential address" type="residential-address" />
+      <xs:element name="residential address-one-year-ago"
+        type="residential-address-one-year-ago" />
+      <xs:element name="residential address-five-years-ago"
+        type="residential-address-five-years-ago" />
+      <xs:element name="citizen" type="xs:boolean">
+        <xs:annotation i:title="Citizenship"
+          i:label="The person is an Australian citizen" />
+      </xs:element>
+      <xs:element name="country-of-birth" type="country-of-birth" />
+      <xs:element name="father-place-of-birth" type="australia-or-overseas">
+        <xs:annotation
+          i:label="Was the person's father born in Australia or overseas?"
+          i:addBlank="true" />
+      </xs:element>
+      <xs:element name="mother-place-of-birth" type="australia-or-overseas">
+        <xs:annotation
+          i:label="Was the person's mother born in Australia or overseas?"
+          i:addBlank="true" />
+      </xs:element>
+      <xs:element name="language-at-home" type="language-at-home">
+        <xs:annotation
+          i:label="Does the person speak a language other than English at home?" />
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:complexType name="address">
-		<xs:sequence>
-			<xs:element name="apartment-flat-unit-number" type="xs:string"
-				minOccurs="0">
-				<xs:annotation i:label="Apartment/Flat/Unit number"
-					i:width="4em" />
-			</xs:element>
-			<xs:element name="street-number" type="xs:string"
-				minOccurs="0">
-				<xs:annotation i:width="5em" />
-			</xs:element>
-			<xs:element name="street-name" type="xs:string" minOccurs="0">
-				<xs:annotation i:width="20em" />
-			</xs:element>
-			<xs:element name="suburb-locality" type="non-blank-string">
-				<xs:annotation i:width="20em" />
-			</xs:element>
-			<xs:element name="state" type="state">
-				<xs:annotation i:addBlank="true" />
-			</xs:element>
-			<xs:element name="postcode" type="postcode">
-				<xs:annotation i:validation="Not a valid postcode"
-					i:width="4em" />
-			</xs:element>
-			<xs:element name="property-building-name" type="xs:string"
-				minOccurs="0">
-				<xs:annotation i:width="25em" />
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="address">
+    <xs:sequence>
+      <xs:element name="apartment-flat-unit-number" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:label="Apartment/Flat/Unit number"
+          i:width="4em" />
+      </xs:element>
+      <xs:element name="street-number" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:width="5em" />
+      </xs:element>
+      <xs:element name="street-name" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:width="20em" />
+      </xs:element>
+      <xs:element name="suburb-locality" type="non-blank-string">
+        <xs:annotation i:width="20em" />
+      </xs:element>
+      <xs:element name="state" type="state">
+        <xs:annotation i:addBlank="true" />
+      </xs:element>
+      <xs:element name="postcode" type="postcode">
+        <xs:annotation i:validation="Not a valid postcode"
+          i:width="4em" />
+      </xs:element>
+      <xs:element name="property-building-name" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:width="25em" />
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:simpleType name="state">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="ACT" />
-			<xs:enumeration value="NSW" />
-			<xs:enumeration value="NT" />
-			<xs:enumeration value="QLD" />
-			<xs:enumeration value="SA" />
-			<xs:enumeration value="TAS" />
-			<xs:enumeration value="VIC" />
-			<xs:enumeration value="WA" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="state">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ACT" />
+      <xs:enumeration value="NSW" />
+      <xs:enumeration value="NT" />
+      <xs:enumeration value="QLD" />
+      <xs:enumeration value="SA" />
+      <xs:enumeration value="TAS" />
+      <xs:enumeration value="VIC" />
+      <xs:enumeration value="WA" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="postcode">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="[0-9]{4}" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="postcode">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{4}" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:complexType name="name">
-		<xs:sequence>
-			<xs:element name="first-name" type="xs:string">
-				<xs:annotation i:css="width:20em" />
-			</xs:element>
-			<xs:element name="last-name" type="xs:string">
-				<xs:annotation i:width="20em" />
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="name">
+    <xs:sequence>
+      <xs:element name="first-name" type="xs:string">
+        <xs:annotation i:css="width:20em" />
+      </xs:element>
+      <xs:element name="last-name" type="xs:string">
+        <xs:annotation i:width="20em" />
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:simpleType name="gender">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Male" />
-			<xs:enumeration value="Female" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="gender">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Male" />
+      <xs:enumeration value="Female" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="age">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="150" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="age">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="150" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="marital-status">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Never married" />
-			<xs:enumeration value="Widowed" />
-			<xs:enumeration value="Divorced" />
-			<xs:enumeration value="Separated but not divorced" />
-			<xs:enumeration value="Married" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="marital-status">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Never married" />
+      <xs:enumeration value="Widowed" />
+      <xs:enumeration value="Divorced" />
+      <xs:enumeration value="Separated but not divorced" />
+      <xs:enumeration value="Married" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="indigenous-origin">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="No" />
-			<xs:enumeration value="Aboriginal" />
-			<xs:enumeration value="Torres Strait Islander" />
-			<xs:enumeration value="Both" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="indigenous-origin">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="No" />
+      <xs:enumeration value="Aboriginal" />
+      <xs:enumeration value="Torres Strait Islander" />
+      <xs:enumeration value="Both" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="always-true">
-		<xs:restriction base="boolean">
-			<xs:enumeration value="true" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="always-true">
+    <xs:restriction base="boolean">
+      <xs:enumeration value="true" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:complexType name="residential-address">
-		<xs:choice>
-			<xs:annotation i:label="Where does the person usually live?" />
-			<xs:element name="residential-same-as-dwelling-address"
-				type="always-true">
-				<xs:annotation i:visible="false"
-					i:label="Same as address of dwelling at top of form" />
-			</xs:element>
-			<xs:element name="residential-address" type="address">
-				<xs:annotation i:choiceLabel="Elsewhere in Australia" />
-			</xs:element>
-			<xs:element name="other-country" type="always-true">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-		</xs:choice>
-	</xs:complexType>
+  <xs:complexType name="residential-address">
+    <xs:choice>
+      <xs:annotation i:label="Where does the person usually live?" />
+      <xs:element name="residential-same-as-dwelling-address"
+        type="always-true">
+        <xs:annotation i:visible="false"
+          i:label="Same as address of dwelling at top of form" />
+      </xs:element>
+      <xs:element name="residential-address" type="address">
+        <xs:annotation i:choiceLabel="Elsewhere in Australia" />
+      </xs:element>
+      <xs:element name="other-country" type="always-true">
+        <xs:annotation i:visible="false" />
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
 
-	<xs:complexType name="residential-address-one-year-ago">
-		<xs:choice>
-			<xs:annotation
-				i:label="Where did the person usually live one year ago (at 9 August 2010)?" />
-			<xs:element name="residential-same-as-current" type="always-true">
-				<xs:annotation i:visible="false"
-					i:label="Same as address in last question" />
-			</xs:element>
-			<xs:element name="residential-address" type="address">
-				<xs:annotation i:choiceLabel="Elsewhere in Australia" />
-			</xs:element>
-			<xs:element name="other-country" type="always-true">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-		</xs:choice>
-	</xs:complexType>
+  <xs:complexType name="residential-address-one-year-ago">
+    <xs:choice>
+      <xs:annotation
+        i:label="Where did the person usually live one year ago (at 9 August 2010)?" />
+      <xs:element name="residential-same-as-current" type="always-true">
+        <xs:annotation i:visible="false"
+          i:label="Same as address in last question" />
+      </xs:element>
+      <xs:element name="residential-address" type="address">
+        <xs:annotation i:choiceLabel="Elsewhere in Australia" />
+      </xs:element>
+      <xs:element name="other-country" type="always-true">
+        <xs:annotation i:visible="false" />
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
 
-	<xs:complexType name="residential-address-five-years-ago">
-		<xs:choice>
-			<xs:annotation
-				i:label="Where did the person usually live five years ago (at 9 August 2006)?" />
-			<xs:element name="residential-same-as-current" type="always-true">
-				<xs:annotation i:visible="false"
-					i:label="Same as address in last question" />
-			</xs:element>
-			<xs:element name="residential-address" type="address">
-				<xs:annotation i:choiceLabel="Elsewhere in Australia" />
-			</xs:element>
-			<xs:element name="other-country" type="always-true">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-		</xs:choice>
-	</xs:complexType>
+  <xs:complexType name="residential-address-five-years-ago">
+    <xs:choice>
+      <xs:annotation
+        i:label="Where did the person usually live five years ago (at 9 August 2006)?" />
+      <xs:element name="residential-same-as-current" type="always-true">
+        <xs:annotation i:visible="false"
+          i:label="Same as address in last question" />
+      </xs:element>
+      <xs:element name="residential-address" type="address">
+        <xs:annotation i:choiceLabel="Elsewhere in Australia" />
+      </xs:element>
+      <xs:element name="other-country" type="always-true">
+        <xs:annotation i:visible="false" />
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
 
 
-	<xs:complexType name="country-of-birth">
-		<xs:choice>
-			<xs:annotation i:label="In which country was the person born?" />
-			<xs:element name="australia" type="always-true">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-			<xs:element name="other" type="other-country" />
-		</xs:choice>
-	</xs:complexType>
+  <xs:complexType name="country-of-birth">
+    <xs:choice>
+      <xs:annotation i:label="In which country was the person born?" />
+      <xs:element name="australia" type="always-true">
+        <xs:annotation i:visible="false" />
+      </xs:element>
+      <xs:element name="other" type="other-country" />
+    </xs:choice>
+  </xs:complexType>
 
-	<xs:complexType name="other-country">
-		<xs:sequence>
-			<xs:element name="country" type="country-list-1">
-				<xs:annotation i:addBlank="true" i:makeVisible="Other->1" />
-			</xs:element>
-			<xs:element name="other-country" type="xs:string">
-				<xs:annotation i:label="Country" i:visible="false" />
-			</xs:element>
-			<xs:element name="year-of-arrival" type="xs:integer" />
-		</xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="other-country">
+    <xs:sequence>
+      <xs:element name="country" type="country-list-1">
+        <xs:annotation i:addBlank="true" i:makeVisible="Other->1" />
+      </xs:element>
+      <xs:element name="other-country" type="xs:string">
+        <xs:annotation i:label="Country" i:visible="false" />
+      </xs:element>
+      <xs:element name="year-of-arrival" type="xs:integer" />
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:simpleType name="non-blank-string">
-		<xs:restriction base="xs:string">
-			<xs:minLength value="1" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="non-blank-string">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="country-list-1">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="England" />
-			<xs:enumeration value="New Zealand" />
-			<xs:enumeration value="Italy" />
-			<xs:enumeration value="Vietnam" />
-			<xs:enumeration value="India" />
-			<xs:enumeration value="Scotland" />
-			<xs:enumeration value="Other" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="country-list-1">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="England" />
+      <xs:enumeration value="New Zealand" />
+      <xs:enumeration value="Italy" />
+      <xs:enumeration value="Vietnam" />
+      <xs:enumeration value="India" />
+      <xs:enumeration value="Scotland" />
+      <xs:enumeration value="Other" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="australia-or-overseas">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Australia" />
-			<xs:enumeration value="Overseas" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="australia-or-overseas">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Australia" />
+      <xs:enumeration value="Overseas" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:complexType name="language-at-home">
-		<xs:sequence>
-			<xs:element name="language-at-home" type="language">
-				<xs:annotation i:addBlank="true" i:label="Language"
-					i:before="If more than one language spoken other than English select the one that is spoken most often"
-					i:makeVisible="Other->1" />
-			</xs:element>
-			<xs:element name="language-at-home-other" type="xs:string">
-				<xs:annotation i:visible="false" i:label="Other language at home" />
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="language-at-home">
+    <xs:sequence>
+      <xs:element name="language-at-home" type="language">
+        <xs:annotation i:addBlank="true" i:label="Language"
+          i:before="If more than one language spoken other than English select the one that is spoken most often"
+          i:makeVisible="Other->1" />
+      </xs:element>
+      <xs:element name="language-at-home-other" type="xs:string">
+        <xs:annotation i:visible="false" i:label="Other language at home" />
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:simpleType name="language">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="English only" />
-			<xs:enumeration value="Italian" />
-			<xs:enumeration value="Greek" />
-			<xs:enumeration value="Cantonese" />
-			<xs:enumeration value="Arabic" />
-			<xs:enumeration value="Mandarin" />
-			<xs:enumeration value="Vietnamese" />
-			<xs:enumeration value="Other" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="language">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="English only" />
+      <xs:enumeration value="Italian" />
+      <xs:enumeration value="Greek" />
+      <xs:enumeration value="Cantonese" />
+      <xs:enumeration value="Arabic" />
+      <xs:enumeration value="Mandarin" />
+      <xs:enumeration value="Vietnamese" />
+      <xs:enumeration value="Other" />
+    </xs:restriction>
+  </xs:simpleType>
 
 </xs:schema>

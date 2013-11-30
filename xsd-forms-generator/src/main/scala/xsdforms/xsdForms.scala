@@ -1747,18 +1747,18 @@ package xsdforms {
 
         explicitPatterns ++ implicitPatterns
       }
-    
+
     private sealed trait InputType {
-      val name:String;
+      val name: String;
     }
     private case object Checkbox extends InputType {
-      val name="checkbox";
+      val name = "checkbox";
     }
     private case object TextBox extends InputType {
-      val name="text"
+      val name = "text"
     }
 
-    private def getInputType(r: Restriction):InputType = {
+    private def getInputType(r: Restriction): InputType = {
       val qn = toQN(r)
       qn match {
         case QN(xs, XsdBoolean.name) => Checkbox
@@ -2053,6 +2053,7 @@ package xsdforms {
      * Visits the element definition tree.
      */
     def traverse {
+      topLevelAnnotations
       val element =
         if (rootElement.isDefined)
 
@@ -2067,7 +2068,11 @@ package xsdforms {
           topLevelElements(0)
 
       process(element)
+    }
 
+    private def topLevelAnnotations {
+      //TODO use header and footer and script annotations 
+      //      println(s)
     }
 
     private def process(e: Element) {
