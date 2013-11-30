@@ -30,17 +30,17 @@
 				minOccurs="0">
 				<xs:annotation i:visible="false" />
 			</xs:element>
-			<xs:element name='pollutant-chemical' type="yes-no-alt"
+			<xs:element name='pollutant-chemical' type="yes-no"
 				minOccurs="0">
-				<xs:annotation i:label="Chemical" i:addBlank="true" />
+				<xs:annotation i:label="Chemical" i:addBlank="true" i:makeVisible="true->1"/>
 			</xs:element>
 			<xs:element name="pollutant-chemical-details" type="pollutant-chemical-details"
 				minOccurs="0">
 				<xs:annotation i:visible="false" />
 			</xs:element>
-			<xs:element name="pollutant-other" type="yes-no-alt">
+			<xs:element name="pollutant-other" type="yes-no">
 				<xs:annotation i:label="Garbage, packaged, sewage, other"
-					i:addBlank="true" />
+					i:addBlank="true" i:makeVisible="true->1"/>
 			</xs:element>
 			<xs:element name="pollutant-other-details" type="xs:string"
 				minOccurs="0">
@@ -56,10 +56,10 @@
 					i:title="Additional information" i:addBlank="true" />
 			</xs:element>
 
-			<xs:element name="response-action-undertaken" type="yes-no-alt"
+			<xs:element name="response-action-undertaken" type="yes-no"
 				minOccurs="0">
 				<xs:annotation i:label="Response action undertaken?"
-					i:addBlank="true" />
+					i:addBlank="true" i:makeVisible="true->1" />
 			</xs:element>
 
 			<xs:element name="response-action-details" type="xs:string"
@@ -73,32 +73,32 @@
 				<xs:annotation i:label="Weather conditions at site" i:width="30em" />
 			</xs:element>
 
-			<xs:element name="photos-taken" type="yes-no-alt">
-				<xs:annotation i:addBlank="true" />
+			<xs:element name="photos-taken" type="yes-no">
+				<xs:annotation i:addBlank="true" i:makeVisible="true->1"/>
 			</xs:element>
 			<xs:element name="photos-taken-details" type="taken-details"
 				minOccurs="0">
 				<xs:annotation i:visible="false" />
 			</xs:element>
 
-			<xs:element name="video-taken" type="yes-no-alt">
-				<xs:annotation i:addBlank="true" />
+			<xs:element name="video-taken" type="yes-no">
+				<xs:annotation i:addBlank="true" i:makeVisible="true->1" />
 			</xs:element>
 			<xs:element name="video-taken-details" type="taken-details"
 				minOccurs="0">
 				<xs:annotation i:visible="false" />
 			</xs:element>
 
-			<xs:element name="samples-taken" type="yes-no-alt">
-				<xs:annotation i:addBlank="true" />
+			<xs:element name="samples-taken" type="yes-no">
+				<xs:annotation i:addBlank="true"  i:makeVisible="true->1"/>
 			</xs:element>
 			<xs:element name="samples-taken-details" type="taken-details"
 				minOccurs="0">
 				<xs:annotation i:visible="false" />
 			</xs:element>
 
-			<xs:element name="items-retrieved" type="yes-no-alt">
-				<xs:annotation i:addBlank="true" />
+			<xs:element name="items-retrieved" type="yes-no">
+				<xs:annotation i:addBlank="true" i:makeVisible="true->1" />
 			</xs:element>
 			<xs:element name="items-retrieved-details" type="taken-details"
 				minOccurs="0">
@@ -172,17 +172,6 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="yes-no-alt">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="true">
-				<xs:annotation i:label="Yes" i:makeVisible="1" />
-			</xs:enumeration>
-			<xs:enumeration value="false">
-				<xs:annotation i:label="No" />
-			</xs:enumeration>
-		</xs:restriction>
-	</xs:simpleType>
-
 	<xs:simpleType name="vessel-type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Tanker" />
@@ -215,7 +204,7 @@
 			<xs:element name="hfo-bunker" type="xs:boolean" />
 			<xs:element name="crude" type="xs:boolean" />
 			<xs:element name="unknown" type="xs:boolean" />
-			<xs:element name="other" type="yes-no-alt">
+			<xs:element name="other" type="yes-no">
 				<xs:annotation i:addBlank="true" />
 			</xs:element>
 			<xs:element name="other-description" type="xs:string"

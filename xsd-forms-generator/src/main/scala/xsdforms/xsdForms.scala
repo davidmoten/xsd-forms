@@ -1411,10 +1411,17 @@ package xsdforms {
         if (initializeBlank)
           html.option(content = Some("Select one..."), value = "").closeTag
         val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
-        val makeVisible = parseMakeVisibleMap(makeVisibleString)
+        val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
         en.foreach { x =>
+          val value = x._2.valueAttribute
+          
+          //get the makeVisible annotation from the named element or the enumeration element in that order.
+          val makeVisible = makeVisibleMapOnElement.get(value) match {
+            case Some(y:Int) => Some(y.toString)
+            case None => getAnnotation(x._2, Annotation.MakeVisible)
+          }
           html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
-          getAnnotation(x._2, Annotation.MakeVisible) match {
+          makeVisible match {
             case Some(y: String) => {
               val refersTo = number + y.toInt
               val js = JS()
