@@ -26,12 +26,21 @@ package xsdforms {
      */
     val Choice = XsdFormsAnnotation("choice")
 
+    /**
+     * TODO
+     */
     val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
 
     /**
      * If legend is set then is used as label for a fieldset block.
      */
     val Legend = XsdFormsAnnotation("legend")
+
+    /**
+     * 'repeatLabel' is the text on the button that when pressed
+     * creates another instance of the element or complexType at
+     * that level. The default is '+'.
+     */
     val RepeatLabel = XsdFormsAnnotation("repeatLabel")
 
     /**
@@ -40,18 +49,22 @@ package xsdforms {
      *  minOccursZero button toggles the visiblity of the sequence.
      */
     val MinOccursZeroLabel = XsdFormsAnnotation("minOccursZeroLabel")
+
+    /**
+     * TODO
+     */
     val RemoveLabel = XsdFormsAnnotation("removeLabel")
-    
+
     /**
      * 'title' is for the text to be used as the title for an element.
      */
     val Title = XsdFormsAnnotation("title")
-    
+
     /**
      * 'before' is the text to appear before an element.
      */
     val Before = XsdFormsAnnotation("before")
-    
+
     /**
      * 'after' is the text to appear after an element.
      */
@@ -103,18 +116,18 @@ package xsdforms {
      * element with number n greater than the current element will be made visible.
      */
     val MakeVisible = XsdFormsAnnotation("makeVisible")
-    
+
     /**
-     * 'nonRepeatingTitle' is the title displayed after 'title' for a complexType 
+     * 'nonRepeatingTitle' is the title displayed after 'title' for a complexType
      * that has maxOccurs > 1.
      */
     val NonRepeatingTitle = XsdFormsAnnotation("nonRepeatingTitle")
-    
+
     /**
      * Annotation 'description' appears just below the input box.
      */
     val Description = XsdFormsAnnotation("description")
-    
+
     /**
      * 'visible' = false will hide the element at first. This is most
      *  useful in conjunction with 'makeVisible'.
@@ -122,7 +135,7 @@ package xsdforms {
     val Visible = XsdFormsAnnotation("visible")
 
     /**
-     * maxRepeats should be an integer value >0 for an element and is the
+     * 'maxRepeats' should be an integer value >0 for an element and is the
      * maximum number of repeats generated in html of the element (all
      * be them hidden).
      */
