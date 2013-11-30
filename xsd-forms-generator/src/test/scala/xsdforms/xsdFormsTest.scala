@@ -236,6 +236,10 @@ package xsdforms {
         //testRepeatWhenMinOccursIsZero(driver, 53)
         //TODO reenable 
         //testChoiceRepeat(driver,58)
+        
+        //TODO test boolean restriction to one value means error shown if not that value
+        //TODO test minOccurs=0 for missing optional element
+        
         testSubmission(driver)
         driver.close
         //now need to ensure that any driver executable (e.g. chromedriver)

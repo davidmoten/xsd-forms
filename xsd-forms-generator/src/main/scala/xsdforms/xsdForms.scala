@@ -165,7 +165,7 @@ package xsdforms {
    */
   object Util {
     def unexpected(s: String) = throw new RuntimeException(s)
-    def unexpected() = throw new RuntimeException()
+    def unexpected = throw new RuntimeException
   }
 
   case class XsdDatatype(name: String, pattern: Option[String] = None)
@@ -1324,14 +1324,14 @@ package xsdforms {
             .closeTag
         case _ =>
           //text or boolean
-          val isChecked = inputType == "checkbox" &&
+          val isChecked = inputType == Checkbox &&
             e.default.isDefined && e.default.get == "true"
           val v = if (isChecked) None else defaultValue(e.default, r)
           html.input(
             id = Some(itemId),
             name = getItemName(number, instances),
             classes = List(extraClasses, ClassItemInputText),
-            typ = Some(inputType),
+            typ = Some(inputType.name),
             checked = None,
             value = v,
             number = Some(number))
@@ -1746,17 +1746,27 @@ package xsdforms {
 
         explicitPatterns ++ implicitPatterns
       }
+    
+    private sealed trait InputType {
+      val name:String;
+    }
+    private case object Checkbox extends InputType {
+      val name="checkbox";
+    }
+    private case object TextBox extends InputType {
+      val name="text"
+    }
 
-    private def getInputType(r: Restriction) = {
+    private def getInputType(r: Restriction):InputType = {
       val qn = toQN(r)
       qn match {
-        case QN(xs, XsdBoolean.name) => "checkbox"
-        case _ => "text"
+        case QN(xs, XsdBoolean.name) => Checkbox
+        case _ => TextBox
       }
     }
 
     private def isCheckbox(node: NodeBasic) =
-      "checkbox" == getInputType(restriction(node))
+      Checkbox == getInputType(restriction(node))
 
     private def insertMargin(s: String) =
       s.stripMargin.replaceAll("\n", "\n" + margin)
@@ -1823,7 +1833,7 @@ package xsdforms {
           case Some(x) => (
             x.simpleDerivationOption3.value match {
               case y: Restriction =>
-                (getInputType(y) != "text") || isMandatory(e, y)
+                (getInputType(y) != TextBox) || isMandatory(e, y)
               case _ =>
                 !isText
             })
@@ -1844,7 +1854,7 @@ package xsdforms {
 
     private def isMandatory(e: Element, r: Restriction): Boolean = {
       val patterns = getPatterns(r)
-      getInputType(r) == "text" &&
+      getInputType(r) == TextBox &&
         e.minOccurs.intValue == 1 &&
         patterns.size > 0 &&
         !patterns.exists(java.util.regex.Pattern.matches(_, ""))
@@ -2135,7 +2145,7 @@ package xsdforms {
           case et: ExtensionType => {
             process(e, et)
           }
-          case _ => unexpected()
+          case _ => unexpected
         }
       else unexpected
     }
