@@ -7,7 +7,7 @@ You have a data model and you want to make a web form that submits structured da
 
 The form is javascript/html only and does not interact with a server for validation.
 
-This project is largely written in Scala with a small amount of Java. 
+This project is written in Scala with a small amount of Java. 
 
 **Status:** pre-alpha. 
 
