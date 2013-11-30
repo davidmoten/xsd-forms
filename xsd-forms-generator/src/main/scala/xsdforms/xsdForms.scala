@@ -1492,7 +1492,8 @@ package xsdforms {
                 .line("      refersTo.show();")
                 .line("    else")
                 .line("      refersTo.hide();")
-                .line("  })")
+                .line("  });")
+                .line
               addScript(js)
             }
             case _ =>

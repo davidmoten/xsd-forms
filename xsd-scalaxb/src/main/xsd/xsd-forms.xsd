@@ -4,6 +4,12 @@
 	targetNamespace="http://moten.david.org/xsd-forms"
 	elementFormDefault="qualified" version="1.0">
 
+    <element name="header" type="string"/>
+
+    <element name="footer" type="string"/>
+
+	<element name="script" type="string"/>
+
 	<attribute name="title" type="string">
 		<annotation>
 			<documentation>
