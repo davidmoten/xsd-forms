@@ -472,6 +472,8 @@ package xsdforms {
 
     def parseMakeVisibleMap(value: Option[String]): Map[String, Int] = {
       import Util._
+      
+      val Problem = "could not parse makeVisible, expecting 'value1->1,value2->2' (pairs delimited by comma and key value delimited by '->'"
       value match {
         case Some(s) =>
           s.split(",")
@@ -480,7 +482,7 @@ package xsdforms {
               x => {
                 val items = x.split("->")
                 if (items.length<2) 
-                  unexpected("could not parse makeVisible, expecting 'value1->1,value2->2' (pairs delimited by comma and key value delimited by '->'")
+                  unexpected(Problem)
                 (items(0), items(1).toInt)
               }).toMap
         case None => Map()
