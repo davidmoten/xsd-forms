@@ -27,7 +27,9 @@ package xsdforms {
     val Choice = XsdFormsAnnotation("choice")
 
     /**
-     * TODO
+     * For a radio selector, choice label will go against the selector.
+     * Use 'label' against the element itself (which will be made
+     * visible by the selector).
      */
     val ChoiceLabel = XsdFormsAnnotation("choiceLabel")
 
@@ -113,10 +115,10 @@ package xsdforms {
 
     /**
      * On a named element, set annotation makeVisible="value1->n1,value2->n2" where
-     * value1,value2 are enumerated values and n1,n2 integers are the relative indexes (1 
-     * equates to the following element at the same level) of the element that is to be 
+     * value1,value2 are enumerated values and n1,n2 integers are the relative indexes (1
+     * equates to the following element at the same level) of the element that is to be
      * made visible on selection of that value. On an enumeration element set annotation
-     *  makeVisible='n' where n is an integer only. The element that is to be made visible 
+     *  makeVisible='n' where n is an integer only. The element that is to be made visible
      * should be annotated with visible='false'.
      */
     val MakeVisible = XsdFormsAnnotation("makeVisible")
@@ -257,8 +259,10 @@ package xsdforms {
   case class BasicTypeBase(typ: BaseType) extends BasicType
 
   //TODO stop using mutable types
-  case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
-  case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeSequence(element: ElementWrapper,
+    override val children: MutableList[Node]) extends NodeGroup
+  case class NodeChoice(element: ElementWrapper, choice: Choice,
+    override val children: MutableList[Node]) extends NodeGroup
   case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic
   case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
 
@@ -275,7 +279,8 @@ package xsdforms {
     implicit def unwrap(wrapped: ElementWrapper): Element = wrapped.element
   }
 
-  case class ElementWrapper(element: Element, uniqueId: String = java.util.UUID.randomUUID.toString)
+  case class ElementWrapper(element: Element,
+    uniqueId: String = java.util.UUID.randomUUID.toString)
 
   /**
    * **************************************************************
@@ -416,7 +421,8 @@ package xsdforms {
     def getItemErrorId(idPrefix: String, number: Int, instances: Instances) =
       idPrefix + "item-error-" + number + InstanceDelimiter + instances
 
-    def getChoiceItemId(idPrefix: String, number: Int, index: Int, instances: Instances): String =
+    def getChoiceItemId(idPrefix: String, number: Int, index: Int,
+      instances: Instances): String =
       getItemId(idPrefix, number, instances) + ChoiceIndexDelimiter + index
 
     def getChoiceItemName(idPrefix: String, number: Int, instances: Instances) =
@@ -428,13 +434,15 @@ package xsdforms {
     def getRemoveButtonId(idPrefix: String, number: Int, instances: Instances) =
       idPrefix + "remove-button-" + number + InstanceDelimiter + instances
 
-    def getRepeatingEnclosingId(idPrefix: String, number: Int, instances: Instances): String =
+    def getRepeatingEnclosingId(idPrefix: String, number: Int,
+      instances: Instances): String =
       idPrefix + "repeating-enclosing-" + number + InstanceDelimiter + instances
 
     def getMinOccursZeroId(idPrefix: String, number: Int, instances: Instances): String =
       idPrefix + "min-occurs-zero-" + number + InstanceDelimiter + instances
 
-    def getMinOccursZeroName(idPrefix: String, number: Int, instances: Instances): String =
+    def getMinOccursZeroName(idPrefix: String, number: Int,
+      instances: Instances): String =
       idPrefix + "min-occurs-zero-name" + number + InstanceDelimiter + instances
 
     val ClassInvisible = "invisible"
@@ -596,7 +604,8 @@ package xsdforms {
       extraScript: Option[String] = None) {
       val text = generateHtmlAsString(schema, idPrefix, rootElement, extraScript)
 
-      val zipIn = new ZipInputStream(Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
+      val zipIn = new ZipInputStream(
+        Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
 
       val iterator = Iterator.continually(zipIn.getNextEntry).takeWhile(_ != null)
       iterator.foreach { zipEntry =>
@@ -651,7 +660,8 @@ package xsdforms {
    * **************************************************************
    */
 
-  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String, extraScript: Option[String], tree: Node) {
+  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String,
+    extraScript: Option[String], tree: Node) {
 
     import TreeToHtmlConverter._
     import XsdUtil._
@@ -714,7 +724,8 @@ package xsdforms {
       }
     }
 
-    private def hasButton(e: Element) = e.maxOccurs != "1" && e.minOccurs.toString != e.maxOccurs
+    private def hasButton(e: Element) =
+      e.maxOccurs != "1" && e.minOccurs.toString != e.maxOccurs
 
     private def doNode(node: NodeSequence, instances: Instances) {
       val e = node.element
@@ -739,7 +750,8 @@ package xsdforms {
             classes = List(ClassSequenceContent))
         addRemoveButton(e, instNos)
         if (usesFieldset)
-          html.fieldset(legend = legend, classes = List(ClassFieldset), id = Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
+          html.fieldset(legend = legend, classes = List(ClassFieldset), id =
+            Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
 
         node.children.foreach(x => doNode(x, instNos))
 
@@ -785,7 +797,8 @@ package xsdforms {
           val particle = x._1
           val index = x._2 + 1
           html.div(
-            id = Some(idPrefix + "div-choice-item-" + number + InstanceDelimiter + instanceNo + ChoiceIndexDelimiter + index),
+            id = Some(idPrefix + "div-choice-item-" + number + InstanceDelimiter +
+              instanceNo + ChoiceIndexDelimiter + index),
             classes = List(ClassDivChoiceItem))
           html.input(
             id = Some(getChoiceItemId(number, index, instNos)),
@@ -800,7 +813,8 @@ package xsdforms {
 
         node.children.zipWithIndex.foreach {
           case (n, index) => {
-            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instNos)), classes = List(ClassInvisible))
+            html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instNos)),
+              classes = List(ClassInvisible))
             doNode(n, instNos)
             html.closeTag
           }
@@ -828,7 +842,8 @@ package xsdforms {
         itemTitle(e)
         addRemoveButton(e, instNos)
         itemBefore(e)
-        html.div(classes = List(ClassItemNumber), content = Some(number.toString)).closeTag
+        html.div(classes = List(ClassItemNumber),
+          content = Some(number.toString)).closeTag
           .label(forInputName = getItemName(number, instNos),
             classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
           .div(classes = List(ClassItemInput))
@@ -854,7 +869,8 @@ package xsdforms {
         itemTitle(e)
         addRemoveButton(e, instNos)
         itemBefore(e)
-        html.div(classes = List(ClassItemNumber), content = Some(number.toString)).closeTag
+        html.div(classes = List(ClassItemNumber),
+          content = Some(number.toString)).closeTag
           .label(forInputName = getItemName(number, instNos),
             classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
           .div(classes = List(ClassItemInput))
@@ -875,7 +891,8 @@ package xsdforms {
         val js = JS()
         val number = elementNumber(node)
         if (isMinOccursZero(node.element)) {
-          js.line("if (!$('#%s').is(':checked')) return '';", getMinOccursZeroId(number, instances))
+          js.line("if (!$('#%s').is(':checked')) return '';",
+            getMinOccursZeroId(number, instances))
         }
         if (node.isAnonymous)
           js.line("    var xml = '';")
@@ -911,7 +928,8 @@ package xsdforms {
       js.line("    //now optionally add selected child if any")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add (instanceNo, node.isAnonymous)
-        js.line("    var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(node, instNos))
+        js.line("    var checked = $(':input[name=%s]:checked').attr('id');",
+          getChoiceItemName(node, instNos))
 
         node.children.zipWithIndex.foreach {
           case (n, index) =>
@@ -926,15 +944,18 @@ package xsdforms {
       }
     }
 
-    private def addXmlExtractScriptlet(node: NodeSimpleType, instances: Instances) {
+    private def addXmlExtractScriptlet(node: NodeSimpleType,
+      instances: Instances) {
       addXmlExtractScriptletForSimpleOrBase(node, instances)
     }
 
-    private def addXmlExtractScriptlet(node: NodeBaseType, instances: Instances) {
+    private def addXmlExtractScriptlet(node: NodeBaseType,
+      instances: Instances) {
       addXmlExtractScriptletForSimpleOrBase(node, instances)
     }
 
-    private def addXmlExtractScriptletForSimpleOrBase(node: NodeBasic, instances: Instances) {
+    private def addXmlExtractScriptletForSimpleOrBase(node: NodeBasic,
+      instances: Instances) {
       val number = elementNumber(node)
       val js = JS().line("  var xml='';")
       for (instanceNo <- repeats(node)) {
@@ -942,7 +963,8 @@ package xsdforms {
         js
           .line("  if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
         if (isRadio(node.element))
-          js.line("    var v = encodeHTML($('input[name=%s]:radio:checked').val());", getItemName(number, instNos))
+          js.line("    var v = encodeHTML($('input[name=%s]:radio:checked').val());",
+            getItemName(number, instNos))
         else if (isCheckbox(node))
           js.line("    var v = $('#%s').is(':checked');", getItemId(node, instNos))
         else
@@ -954,7 +976,8 @@ package xsdforms {
               .line("    if (v.length>0)")
             "  "
           } else ""
-        js.line("    %sxml += %s%s;", extraIndent, spaces(instNos), xml(node, transformToXmlValue(node, "v")))
+        js.line("    %sxml += %s%s;", extraIndent, spaces(instNos),
+          xml(node, transformToXmlValue(node, "v")))
 
           .line("  }")
       }
@@ -984,7 +1007,8 @@ package xsdforms {
       "getXml" + number + "instance" + instances
     }
 
-    private def addXmlExtractScriptlet(node: Node, functionBody: String, instances: Instances) {
+    private def addXmlExtractScriptlet(node: Node, functionBody: String,
+      instances: Instances) {
       val functionName = xmlFunctionName(node, instances)
       addScript(
         JS().line("  //extract xml from element <%s>", node.element.name.getOrElse("?"))
@@ -1030,7 +1054,8 @@ package xsdforms {
       addScript(js.toString)
     }
 
-    private def isMinOccursZero(e: ElementWrapper) = e.minOccurs.intValue == 0 && getAnnotation(e, Annotation.Visible) != Some("false")
+    private def isMinOccursZero(e: ElementWrapper) =
+      e.minOccurs.intValue == 0 && getAnnotation(e, Annotation.Visible) != Some("false")
 
     private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
@@ -1039,7 +1064,8 @@ package xsdforms {
         html
           .div(
             classes = List(ClassMinOccursZeroLabel),
-            content = Some(getAnnotation(e, Annotation.MinOccursZeroLabel).getOrElse("Click to enable")))
+            content = Some(getAnnotation(e, Annotation.MinOccursZeroLabel)
+              .getOrElse("Click to enable")))
           .closeTag
         html.input(
           id = Some(getMinOccursZeroId(number, instances)),
@@ -1052,10 +1078,12 @@ package xsdforms {
           .closeTag
         html.closeTag
         val js = JS()
-          .line("$('#%s').change( function () {", getMinOccursZeroId(number, instances))
+          .line("$('#%s').change( function () {",
+            getMinOccursZeroId(number, instances))
         for (instanceNo <- repeats(e)) {
           js
-            .line("  changeMinOccursZeroCheckbox($(this),$('#%s'));", getRepeatingEnclosingId(number, instances add instanceNo))
+            .line("  changeMinOccursZeroCheckbox($(this),$('#%s'));",
+              getRepeatingEnclosingId(number, instances add instanceNo))
         }
 
         js.line("})")
@@ -1077,7 +1105,8 @@ package xsdforms {
       forEachParticle(x => {
         val index = x._2 + 1
         addScript(
-          JS().line("  $('#%s').hide();", choiceContentId(idPrefix, number, index, instances)))
+          JS().line("  $('#%s').hide();",
+            choiceContentId(idPrefix, number, index, instances)))
       })
     }
 
@@ -1086,18 +1115,23 @@ package xsdforms {
 
       val forEachParticle = particles.zipWithIndex.foreach _
 
-      val choiceChangeFunction = "choiceChange" + number + "instance" + instances;
+      val choiceChangeFunction = "choiceChange" + number +
+        "instance" + instances;
 
       val js = JS()
-      js.line("  var %s = function addChoiceChange%sinstance%s() {", choiceChangeFunction, number.toString, instances)
-        .line("    $(':input[@name=%s]').change(function() {", getChoiceItemName(number, instances))
-        .line("      var checked = $(':input[name=%s]:checked').attr('id');", getChoiceItemName(number, instances))
+      js.line("  var %s = function addChoiceChange%sinstance%s() {",
+        choiceChangeFunction, number.toString, instances)
+        .line("    $(':input[@name=%s]').change(function() {",
+          getChoiceItemName(number, instances))
+        .line("      var checked = $(':input[name=%s]:checked').attr('id');",
+          getChoiceItemName(number, instances))
 
       forEachParticle(x => {
         val index = x._2 + 1
         val ccId =
           choiceContentId(idPrefix, number, index, instances)
-        js.line("      if (checked == '%s') {", getChoiceItemId(number, index, instances))
+        js.line("      if (checked == '%s') {",
+          getChoiceItemId(number, index, instances))
           .line("        $('#%s').show();", ccId)
           .line("        $('#%s').find('.item-path').attr('enabled','true');", ccId)
           .line("      }")
@@ -1120,7 +1154,9 @@ package xsdforms {
       val labels =
         p match {
           case x: Element => {
-            getAnnotation(x, Annotation.ChoiceLabel) ++ getAnnotation(x, Annotation.Label) ++ Some(getLabel(x, None))
+            getAnnotation(x, Annotation.ChoiceLabel) ++
+              getAnnotation(x, Annotation.Label) ++
+              Some(getLabel(x, None))
           }
           case _ => unexpected
         }
@@ -1128,7 +1164,8 @@ package xsdforms {
     }
 
     private class MyRestriction(qName: QName)
-      extends Restriction(None, SimpleRestrictionModelSequence(), None, Some(qName), Map())
+      extends Restriction(None, SimpleRestrictionModelSequence(),
+        None, Some(qName), Map())
 
     private def getVisibility(e: Element) =
       getAnnotation(e, Annotation.Visible) match {
@@ -1152,7 +1189,8 @@ package xsdforms {
         html.div(
           id = Some(getRepeatButtonId(number, instances)),
           classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
-          content = Some(getAnnotation(e, Annotation.RepeatLabel).getOrElse("+"))).closeTag
+          content = Some(getAnnotation(e, Annotation.RepeatLabel)
+            .getOrElse("+"))).closeTag
     }
 
     private def repeatingEnclosing(e: ElementWrapper, instances: Instances) {
@@ -1176,14 +1214,18 @@ package xsdforms {
 
     private def itemTitle(e: Element) {
       getAnnotation(e, Annotation.Title) match {
-        case Some(x) => html.div(classes = List(ClassItemTitle), content = Some(x)).closeTag
+        case Some(x) =>
+          html.div(classes = List(ClassItemTitle),
+            content = Some(x)).closeTag
         case _ =>
       }
     }
 
     private def itemBefore(e: Element) {
       getAnnotation(e, Annotation.Before) match {
-        case Some(x) => html.div(classes = List(ClassItemBefore), content = Some(x)).closeTag
+        case Some(x) =>
+          html.div(classes = List(ClassItemBefore),
+            content = Some(x)).closeTag
         case _ =>
       }
     }
@@ -1241,7 +1283,8 @@ package xsdforms {
 
     }
 
-    private def addInput(e: ElementWrapper, qn: QN, r: Restriction, instances: Instances) {
+    private def addInput(e: ElementWrapper, qn: QN, r: Restriction,
+      instances: Instances) {
 
       val number = elementNumber(e)
 
@@ -1279,7 +1322,8 @@ package xsdforms {
             .closeTag
         case _ =>
           //text or boolean
-          val isChecked = inputType == "checkbox" && e.default.isDefined && e.default.get == "true"
+          val isChecked = inputType == "checkbox" &&
+            e.default.isDefined && e.default.get == "true"
           val v = if (isChecked) None else defaultValue(e.default, r)
           html.input(
             id = Some(itemId),
@@ -1290,7 +1334,8 @@ package xsdforms {
             value = v,
             number = Some(number))
             .closeTag
-          addScript(JS().line("  $('#%s').prop('checked',%s);", itemId, isChecked + "").line)
+          addScript(JS().line("  $('#%s').prop('checked',%s);",
+            itemId, isChecked + "").line)
       }
 
     }
@@ -1328,7 +1373,8 @@ package xsdforms {
                 val pair = y.split(':')
                 if (pair.size != 2)
                   unexpected("css properties incorrect syntax\n" + pair)
-                addScript(JS().line("  $('#%s').css('%s','%s');", itemId, pair(0), pair(1)))
+                addScript(JS().line("  $('#%s').css('%s','%s');",
+                  itemId, pair(0), pair(1)))
               })
         }
         case None =>
@@ -1346,7 +1392,8 @@ package xsdforms {
           .div(
             id = Some(getRemoveButtonId(number, instances)),
             classes = List(ClassRemoveButton, ClassWhite, ClassSmall),
-            content = Some(getAnnotation(e, Annotation.RemoveLabel).getOrElse("-")))
+            content = Some(getAnnotation(e, Annotation.RemoveLabel)
+              .getOrElse("-")))
           .closeTag
           .closeTag
 
@@ -1362,7 +1409,8 @@ package xsdforms {
     private def isEnumeration(r: Restriction) =
       !getEnumeration(r).isEmpty
 
-    private def addEnumeration(e: ElementWrapper, r: Restriction, instances: Instances) {
+    private def addEnumeration(e: ElementWrapper, r: Restriction,
+      instances: Instances) {
       val number = elementNumber(e)
       val en = getEnumeration(r)
 
@@ -1393,8 +1441,10 @@ package xsdforms {
           case _ => None
         }).flatten
 
-    private def enumeration(e: ElementWrapper, en: Seq[(String, NoFixedFacet)],
-      number: Int, isRadio: Boolean, initializeBlank: Boolean, instances: Instances) {
+    private def enumeration(e: ElementWrapper,
+      en: Seq[(String, NoFixedFacet)],
+      number: Int, isRadio: Boolean, initializeBlank: Boolean,
+      instances: Instances) {
       if (isRadio) {
         //TODO add makeVisible logic for radio buttons
         en.zipWithIndex.foreach(x => {
@@ -1414,7 +1464,8 @@ package xsdforms {
           classes = List(ClassSelect),
           number = Some(number))
         if (initializeBlank)
-          html.option(content = Some("Select one..."), value = "").closeTag
+          html.option(content = Some("Select one..."), value = "")
+            .closeTag
         val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
         val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
         en.foreach { x =>
@@ -1430,9 +1481,11 @@ package xsdforms {
             case Some(y: String) => {
               val refersTo = number + y.toInt
               val js = JS()
-                .line("  $('#%s').change( function() {", getItemId(number, instances))
+                .line("  $('#%s').change( function() {",
+                  getItemId(number, instances))
                 .line("    var v = $('#%s');", getItemId(number, instances))
-                .line("    var refersTo = $('#%s');", getItemEnclosingId(refersTo, instances))
+                .line("    var refersTo = $('#%s');",
+                  getItemEnclosingId(refersTo, instances))
                 .line("    if ('%s' == v.val())", x._2.valueAttribute)
                 .line("      refersTo.show();")
                 .line("    else")
@@ -1463,7 +1516,8 @@ package xsdforms {
       html.div(
         id = Some(itemErrorId),
         classes = List(ClassItemError),
-        content = Some(getAnnotation(e, Annotation.Validation).getOrElse("Invalid")))
+        content = Some(getAnnotation(e, Annotation.Validation)
+          .getOrElse("Invalid")))
         .closeTag
 
     }
@@ -1480,7 +1534,8 @@ package xsdforms {
     private def addHelp(e: Element) {
       getAnnotation(e, Annotation.Help) match {
         case Some(x) =>
-          html.div(classes = List(ClassItemHelp), content = Some(x)).closeTag
+          html.div(classes = List(ClassItemHelp),
+            content = Some(x)).closeTag
         case None =>
       }
     }
@@ -1488,7 +1543,8 @@ package xsdforms {
     private def addAfter(e: Element) {
       getAnnotation(e, Annotation.After) match {
         case Some(x) =>
-          html.div(classes = List(ClassItemAfter), content = Some(x)).closeTag
+          html.div(classes = List(ClassItemAfter),
+            content = Some(x)).closeTag
         case None =>
       }
     }
@@ -1511,12 +1567,14 @@ package xsdforms {
       }
     }
 
-    private def createDeclarationScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
+    private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
+      instances: Instances) = {
       val number = elementNumber(e)
       val itemId = getItemId(number, instances)
       JS()
         .line("// %s", e.name.get)
-        .line("var validate%sinstance%s = function () {", number.toString, instances)
+        .line("var validate%sinstance%s = function () {",
+          number.toString, instances)
         .line("  var ok = true;")
         .line("  var v = $('#%s');", itemId)
         .line("  var pathDiv = $('#%s');", getPathId(number, instances))
@@ -1534,22 +1592,25 @@ package xsdforms {
     }
 
     private def createLengthTestScriptlet(r: Restriction) = {
-      r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
-        val start = """
+      r.simpleRestrictionModelSequence3
+        .facetsOption2
+        .seq
+        .flatMap(f => {
+          val start = """
 |  //length test
 |  if (v.val().length """
-        val finish = """)
+          val finish = """)
 |    ok = false;"""
-        f match {
-          case DataRecord(xs, Some("minLength"), x: NumFacet) =>
-            Some(start + "<" + x.valueAttribute + finish)
-          case DataRecord(xs, Some("maxLength"), x: NumFacet) =>
-            Some(start + ">" + x.valueAttribute + finish)
-          case DataRecord(xs, Some("length"), x: NumFacet) =>
-            Some(start + "!=" + x.valueAttribute + finish)
-          case _ => None
-        }
-      }).mkString("")
+          f match {
+            case DataRecord(xs, Some("minLength"), x: NumFacet) =>
+              Some(start + "<" + x.valueAttribute + finish)
+            case DataRecord(xs, Some("maxLength"), x: NumFacet) =>
+              Some(start + ">" + x.valueAttribute + finish)
+            case DataRecord(xs, Some("length"), x: NumFacet) =>
+              Some(start + "!=" + x.valueAttribute + finish)
+            case _ => None
+          }
+        }).mkString("")
     }
 
     private def createCanExcludeScriptlet(e: Element) =
@@ -1584,18 +1645,22 @@ package xsdforms {
     private def createPatternsTestScriptlet(patterns: Seq[String]) =
       if (patterns.size > 0)
         JS().line("  var patternMatched =false;")
-          .append(patterns.zipWithIndex.map(x => createPatternScriptlet(x)).mkString(""))
+          .append(patterns
+            .zipWithIndex
+            .map(x => createPatternScriptlet(x)).mkString(""))
           .line("  if (!(patternMatched))")
           .line("    ok = false;")
           .toString
       else ""
 
-    private def createEnumerationTestScriptlet(node: NodeBasic, instances: Instances) = {
+    private def createEnumerationTestScriptlet(node: NodeBasic,
+      instances: Instances) = {
       val js = JS()
       if (isEnumeration(restriction(node))) {
         js.line("  //enumeration test")
         if (isRadio(node.element))
-          js.line("  var radioInput=$('input:radio[name=%s]');", getItemName(elementNumber(node), instances))
+          js.line("  var radioInput=$('input:radio[name=%s]');",
+            getItemName(elementNumber(node), instances))
             .line("  if (! radioInput.is(':checked')) ok = false;")
         else
           js.line("  if ($.trim(v.val()).length ==0) ok = false;")
@@ -1612,7 +1677,8 @@ package xsdforms {
       val js = JS()
       val basePattern = getBasePattern(qn)
       basePattern match {
-        case Some(pattern) => js.line("  ok &= matchesPattern(v,/^%s$/);", pattern)
+        case Some(pattern) =>
+          js.line("  ok &= matchesPattern(v,/^%s$/);", pattern)
         case _ =>
       }
       js.toString
@@ -1624,28 +1690,33 @@ package xsdforms {
       else
         "#" + getItemId(elementNumber(e), instances)
 
-    private def createClosingScriptlet(e: ElementWrapper, qn: QN, instances: Instances) = {
+    private def createClosingScriptlet(e: ElementWrapper,
+      qn: QN, instances: Instances) = {
       val number = elementNumber(e)
       val changeMethod = "change("
       val js = JS()
         .line("  return ok;")
         .line("}")
         .line
-        .line("$('%s').change( function() {", changeReference(e, instances))
-        .line("  var ok = validate%sinstance%s();", number.toString, instances)
+        .line("$('%s').change( function() {",
+          changeReference(e, instances))
+        .line("  var ok = validate%sinstance%s();",
+          number.toString, instances)
         .line("  showError('%s',ok);", getItemErrorId(number, instances))
         .line("});")
         .line
       if (e.minOccurs.intValue == 0 && e.default.isEmpty)
         js.line("//disable item-path due to minOccurs=0 and default is empty")
-          .line("$('#%s').attr('enabled','false');", getPathId(number, instances))
+          .line("$('#%s').attr('enabled','false');",
+            getPathId(number, instances))
       js.toString
     }
 
     private def getPatterns(r: Restriction): Seq[String] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
         f match {
-          case DataRecord(xs, Some("pattern"), x: Pattern) => Some(x.valueAttribute)
+          case DataRecord(xs, Some("pattern"), x: Pattern) =>
+            Some(x.valueAttribute)
           case _ => None
         }
       })
@@ -1661,10 +1732,13 @@ package xsdforms {
         //calculate implicit patterns for dates, times, and datetimes
         val implicitPatterns =
           qn match {
-            case QN(xs, XsdDate.name) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
+            case QN(xs, XsdDate.name) =>
+              Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
             //TODO why spaces on end of time?
-            case QN(xs, XsdTime.name) => Some("\\d\\d:\\d\\d *")
-            case QN(xs, XsdDateTime.name) => Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
+            case QN(xs, XsdTime.name) =>
+              Some("\\d\\d:\\d\\d *")
+            case QN(xs, XsdDateTime.name) =>
+              Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
             case _ => None
           }
 
@@ -1679,7 +1753,8 @@ package xsdforms {
       }
     }
 
-    private def isCheckbox(node: NodeBasic) = "checkbox" == getInputType(restriction(node))
+    private def isCheckbox(node: NodeBasic) =
+      "checkbox" == getInputType(restriction(node))
 
     private def insertMargin(s: String) =
       s.stripMargin.replaceAll("\n", "\n" + margin)
@@ -1690,10 +1765,12 @@ package xsdforms {
     private def isMultiple(e: ElementWrapper): Boolean =
       return (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
 
-    private def repeatingEnclosingIds(e: ElementWrapper, instances: Instances) =
+    private def repeatingEnclosingIds(e: ElementWrapper,
+      instances: Instances) =
       repeats(e).map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
 
-    private def addMaxOccursScriptlet(e: ElementWrapper, instances: Instances) {
+    private def addMaxOccursScriptlet(e: ElementWrapper,
+      instances: Instances) {
       val number = elementNumber(e)
       if (isMultiple(e)) {
         val repeatButtonId = getRepeatButtonId(number, instances)
@@ -1715,7 +1792,8 @@ package xsdforms {
       }
     }
 
-    private def getAnnotation(e: Annotatedable, key: XsdFormsAnnotation): Option[String] =
+    private def getAnnotation(e: Annotatedable,
+      key: XsdFormsAnnotation): Option[String] =
       e.annotation match {
         case Some(x) =>
           x.attributes.get("@{" + AppInfoSchema + "}" + key.name) match {
@@ -1802,8 +1880,10 @@ package xsdforms {
 
     private def repeats(e: ElementWrapper): Range = 1 to numInstances(e)
 
-    private def choiceContentId(idPrefix: String, number: Int, index: Int, instances: Instances) =
-      idPrefix + "choice-content-" + number + InstanceDelimiter + instances + ChoiceIndexDelimiter + index
+    private def choiceContentId(idPrefix: String, number: Int, index: Int,
+      instances: Instances) =
+      idPrefix + "choice-content-" + number + InstanceDelimiter +
+        instances + ChoiceIndexDelimiter + index
     private def getMinOccursZeroId(number: Int, instances: Instances) =
       TreeToHtmlConverter.getMinOccursZeroId(idPrefix, number, instances)
     private def getMinOccursZeroName(number: Int, instances: Instances) =
@@ -1812,17 +1892,21 @@ package xsdforms {
       TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instances)
     private def getRemoveButtonId(number: Int, instances: Instances) =
       TreeToHtmlConverter.getRemoveButtonId(idPrefix, number, instances)
-    private def getRepeatingEnclosingId(element: ElementWrapper, instances: Instances): String =
-      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, elementNumber(element), instances)
+    private def getRepeatingEnclosingId(element: ElementWrapper,
+      instances: Instances): String =
+      TreeToHtmlConverter.getRepeatingEnclosingId(
+        idPrefix, elementNumber(element), instances)
     private def getRepeatingEnclosingId(number: Int, instances: Instances) =
       TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instances)
     private def getChoiceItemName(node: Node, instances: Instances): String =
       getChoiceItemName(elementNumber(node.element), instances)
     private def getChoiceItemName(number: Int, instances: Instances): String =
       TreeToHtmlConverter.getChoiceItemName(idPrefix, number, instances)
-    private def getChoiceItemId(node: Node, index: Int, instances: Instances): String =
+    private def getChoiceItemId(node: Node, index: Int,
+      instances: Instances): String =
       getChoiceItemId(elementNumber(node.element), index, instances)
-    private def getChoiceItemId(number: Int, index: Int, instances: Instances): String =
+    private def getChoiceItemId(number: Int, index: Int,
+      instances: Instances): String =
       TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instances)
     private def getItemId(node: Node, instances: Instances): String =
       getItemId(elementNumber(node.element), instances)
@@ -1830,7 +1914,8 @@ package xsdforms {
       getItemId(elementNumber(element), instances)
     private def getItemId(number: Int, instances: Instances): String =
       TreeToHtmlConverter.getItemId(idPrefix, number, instances)
-    private def getItemId(number: Int, enumeration: Integer, instances: Instances): String =
+    private def getItemId(number: Int, enumeration: Integer,
+      instances: Instances): String =
       getItemId(number, instances) + "-" + enumeration
     private def getItemName(number: Int, instances: Instances) =
       TreeToHtmlConverter.getItemName(idPrefix, number, instances)
@@ -1853,7 +1938,8 @@ package xsdforms {
     private implicit def toQN(qName: QName): QN =
       QN(qName.getNamespaceURI(), qName.getLocalPart())
 
-    def template = io.Source.fromInputStream(getClass.getResourceAsStream("/template.html")).mkString
+    def template = io.Source.fromInputStream(
+      getClass.getResourceAsStream("/template.html")).mkString
 
     def text =
       template
@@ -1863,7 +1949,8 @@ package xsdforms {
 
   }
 
-  case class MyElement(name: Option[String] = None, default: Option[String] = None, minOccurs: BigInt = BigInt(1),
+  case class MyElement(name: Option[String] = None,
+    default: Option[String] = None, minOccurs: BigInt = BigInt(1),
     maxOccurs: String = "1") extends Element {
     val annotation: Option[xsd.Annotation] = None
     val elementoption: Option[scalaxb.DataRecord[xsd.ElementOption]] = None
@@ -1905,15 +1992,18 @@ package xsdforms {
         case _ => None
       })
 
-    private val topLevelComplexTypes = s.schemasequence1.flatMap(_.schemaTopOption1.value match {
-      case y: TopLevelComplexType => Some(y)
-      case _ => None
-    })
+    private val topLevelComplexTypes = s
+      .schemasequence1
+      .flatMap(_.schemaTopOption1.value match {
+        case y: TopLevelComplexType => Some(y)
+        case _ => None
+      })
 
-    private val topLevelSimpleTypes = s.schemasequence1.flatMap(_.schemaTopOption1.value match {
-      case y: TopLevelSimpleType => Some(y)
-      case _ => None
-    })
+    private val topLevelSimpleTypes = s
+      .schemasequence1.flatMap(_.schemaTopOption1.value match {
+        case y: TopLevelSimpleType => Some(y)
+        case _ => None
+      })
 
     private val targetNs = s.targetNamespace.getOrElse(
       unexpected("schema must have targetNamespace attribute")).toString
@@ -2060,7 +2150,8 @@ package xsdforms {
     }
 
     private def process(e: Element, x: Sequence) {
-      val wrapWithSequence = extensionsIncludedInBaseSequence.isEmpty || !extensionsIncludedInBaseSequence.top
+      val wrapWithSequence =
+        extensionsIncludedInBaseSequence.isEmpty || !extensionsIncludedInBaseSequence.top
       if (wrapWithSequence) {
         visitor.startSequence(e)
       }
@@ -2172,8 +2263,10 @@ package xsdforms {
         content = content)
 
     def select(id: Option[String] = None, name: String,
-      classes: List[String] = List(), content: Option[String] = None, number: Option[Int] = None) =
-      element(name = Select, id = id, classes = classes, nameAttr = Some(name), numberAttr = number,
+      classes: List[String] = List(),
+      content: Option[String] = None, number: Option[Int] = None) =
+      element(name = Select, id = id, classes = classes,
+        nameAttr = Some(name), numberAttr = number,
         content = content)
 
     def option(id: Option[String] = None,
@@ -2225,7 +2318,8 @@ package xsdforms {
       number: Option[Int] = None,
       typ: Option[String]) =
       element(name = Input, id = id, classes = classes, checked = checked,
-        content = content, value = value, nameAttr = Some(name), typ = typ, numberAttr = number)
+        content = content, value = value,
+        nameAttr = Some(name), typ = typ, numberAttr = number)
 
     private def classNames(classes: List[String]) =
       if (classes.length == 0)
@@ -2281,7 +2375,8 @@ package xsdforms {
     }
 
     def closeTag: Html = {
-      if (stack.isEmpty) throw new RuntimeException("closeTag called on empty html stack! html so far=\n" + s.toString)
+      if (stack.isEmpty)
+        throw new RuntimeException("closeTag called on empty html stack! html so far=\n" + s.toString)
       val element = stack.head
       if (!element.hasContent) {
         indent

@@ -233,7 +233,7 @@
   <xs:complexType name="other-country">
     <xs:sequence>
       <xs:element name="country" type="country-list-1">
-        <xs:annotation i:addBlank="true" />
+        <xs:annotation i:addBlank="true" i:makeVisible="Other->1" />
       </xs:element>
       <xs:element name="other-country" type="xs:string">
         <xs:annotation i:label="Country" i:visible="false" />
@@ -256,9 +256,7 @@
       <xs:enumeration value="Vietnam" />
       <xs:enumeration value="India" />
       <xs:enumeration value="Scotland" />
-      <xs:enumeration value="Other">
-        <xs:annotation i:makeVisible="1" />
-      </xs:enumeration>
+      <xs:enumeration value="Other"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -273,7 +271,8 @@
     <xs:sequence>
       <xs:element name="language-at-home" type="language">
         <xs:annotation i:addBlank="true" i:label="Language"
-          i:before="If more than one language spoken other than English select the one that is spoken most often" />
+          i:before="If more than one language spoken other than English select the one that is spoken most often" 
+          i:makeVisible="Other->1"/>
       </xs:element>
       <xs:element name="language-at-home-other" type="xs:string">
         <xs:annotation i:visible="false" i:label="Other language at home" />
@@ -290,9 +289,7 @@
       <xs:enumeration value="Arabic" />
       <xs:enumeration value="Mandarin" />
       <xs:enumeration value="Vietnamese" />
-      <xs:enumeration value="Other">
-        <xs:annotation i:makeVisible="1" />
-      </xs:enumeration>
+      <xs:enumeration value="Other"/>
     </xs:restriction>
   </xs:simpleType>
 
