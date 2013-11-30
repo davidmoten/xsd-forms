@@ -112,8 +112,12 @@ package xsdforms {
     val Help = XsdFormsAnnotation("help")
 
     /**
-     * makeVisible=n, n integer, means that on selection of this choice the
-     * element with number n greater than the current element will be made visible.
+     * On a named element, set annotation makeVisible="value1->n1,value2->n2" where
+     * value1,value2 are enumerated values and n1,n2 integers are the relative indexes (1 
+     * equates to the following element at the same level) of the element that is to be 
+     * made visible on selection of that value. On an enumeration element set annotation
+     *  makeVisible='n' where n is an integer only. The element that is to be made visible 
+     * should be annotated with visible='false'.
      */
     val MakeVisible = XsdFormsAnnotation("makeVisible")
 
@@ -399,7 +403,7 @@ package xsdforms {
    */
 
   object TreeToHtmlConverter {
-    
+
     val InstanceDelimiter = "-instance-"
     val ChoiceIndexDelimiter = "-choice-"
 
@@ -472,7 +476,7 @@ package xsdforms {
 
     def parseMakeVisibleMap(value: Option[String]): Map[String, Int] = {
       import Util._
-      
+
       val Problem = "could not parse makeVisible, expecting 'value1->1,value2->2' (pairs delimited by comma and key value delimited by '->'"
       value match {
         case Some(s) =>
@@ -481,7 +485,7 @@ package xsdforms {
             .map(
               x => {
                 val items = x.split("->")
-                if (items.length<2) 
+                if (items.length < 2)
                   unexpected(Problem)
                 (items(0), items(1).toInt)
               }).toMap
@@ -1392,6 +1396,7 @@ package xsdforms {
     private def enumeration(e: ElementWrapper, en: Seq[(String, NoFixedFacet)],
       number: Int, isRadio: Boolean, initializeBlank: Boolean, instances: Instances) {
       if (isRadio) {
+        //TODO add makeVisible logic for radio buttons
         en.zipWithIndex.foreach(x => {
           html.input(
             id = Some(getItemId(number, x._2, instances)),
@@ -1414,10 +1419,10 @@ package xsdforms {
         val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
         en.foreach { x =>
           val value = x._2.valueAttribute
-          
+
           //get the makeVisible annotation from the named element or the enumeration element in that order.
           val makeVisible = makeVisibleMapOnElement.get(value) match {
-            case Some(y:Int) => Some(y.toString)
+            case Some(y: Int) => Some(y.toString)
             case None => getAnnotation(x._2, Annotation.MakeVisible)
           }
           html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
