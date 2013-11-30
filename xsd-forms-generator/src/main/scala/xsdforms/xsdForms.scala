@@ -212,6 +212,8 @@ package xsdforms {
    */
 
   trait Visitor {
+    def items(header: Option[String], footer: Option[String],
+      extraImports: Option[String], extraScript: Option[String])
     def startSequence(e: Element)
     def endSequence
     def startChoice(e: Element, choice: Choice)
@@ -283,6 +285,9 @@ package xsdforms {
 
   case class ElementWrapper(element: Element,
     uniqueId: String = java.util.UUID.randomUUID.toString)
+    
+  case class Configuration(header:Option[String],footer:Option[String],
+      extraImports:Option[String],extraScript:Option[String])
 
   /**
    * **************************************************************
@@ -304,6 +309,10 @@ package xsdforms {
 
     private implicit def wrap(e: Element): ElementWrapper = ElementWrapper(e)
 
+    override def items(configuration:Configuration) {
+      
+    }
+    
     override def startSequence(e: Element) {
       val seq = NodeSequence(e, MutableList())
       addChild(seq)
@@ -2071,12 +2080,12 @@ package xsdforms {
     }
 
     private def topLevelAnnotations {
-      //TODO use header and footer and script annotations 
-      println(s.schemaoption
+      //first get the children of the annotation - appinfo element
+      val children = s.schemaoption
         .filter(toQName(_) == qn(XsdAnnotation))
         .map(_.value)
         .map(x => x match {
-          case y:Annotation => y
+          case y: Annotation => y
           case _ => unexpected
         })
         .map(_.annotationoption)
@@ -2084,12 +2093,22 @@ package xsdforms {
         .filter(toQName(_) == qn("appinfo"))
         .map(_.value)
         .map(x => x match {
-          case y:Appinfo => y
-          case _ => unexpected})
-       .map(x => x.mixed)
-       .flatten
-      )
+          case y: Appinfo => y
+          case _ => unexpected
+        })
+        .map(x => x.mixed)
+        .flatten
 
+      def extract(elementName: String) =
+        children
+          .filter(_.key.isDefined)
+          .filter(toQName(_) == qn(AppInfoSchema, elementName))
+          .map(_.value)
+          .map(x => scala.xml.XML.loadString(x.toString))
+          .map(x => x.text).mkString("\n")
+
+      println(extract("header"))
+      println(extract("footer"))
     }
 
     private def process(e: Element) {
