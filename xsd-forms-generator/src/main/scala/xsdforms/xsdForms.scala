@@ -235,33 +235,28 @@ package xsdforms {
 
   import scala.collection.mutable.MutableList
 
-  trait Node {
+  sealed trait Node {
     val element: ElementWrapper
     def isAnonymous = element.name.isEmpty
 
   }
 
-  trait HasAttributes {
-    val attributes: MutableList[NodeAttribute]
-  }
-
-  trait NodeGroup extends Node with HasAttributes {
+  sealed trait NodeGroup extends Node  {
     val children: MutableList[Node] = MutableList()
   }
 
   // immutable would be preferrable but should be safe because not changed after tree created
-  trait NodeBasic extends Node
+  sealed trait NodeBasic extends Node
 
   trait BasicType
-  case class BasicTypeSimple(typ: SimpleType, attributes: MutableList[NodeAttribute]) extends BasicType with HasAttributes
+  case class BasicTypeSimple(typ: SimpleType) extends BasicType 
   case class BasicTypeBase(typ: BaseType) extends BasicType
 
   //TODO stop using mutable types
-  case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
-  case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node], attributes: MutableList[NodeAttribute] = MutableList()) extends NodeGroup
-  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType, attributes: MutableList[NodeAttribute] = MutableList()) extends NodeBasic with HasAttributes
+  case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
+  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic 
   case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
-  case class NodeAttribute(element: ElementWrapper, detail: AttributeType2, typ: BasicType) extends Node
 
   /**
    * **************************************************************
@@ -357,7 +352,7 @@ package xsdforms {
     private def toString(node: Node, margin: String): String = {
       node match {
         case NodeBaseType(e, typ) => margin + "NodeBaseType=" + e.name.get
-        case NodeSimpleType(e, typ, attr) => margin + "NodeSimpleType=" + e.name.get
+        case NodeSimpleType(e, typ) => margin + "NodeSimpleType=" + e.name.get
         case n: NodeGroup => margin + n.getClass.getSimpleName + "=\n" +
           n.children.map(c => toString(c, margin + "  ")).mkString("\n")
         case _ => unexpected
