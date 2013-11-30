@@ -199,7 +199,7 @@ package xsdforms {
     val XsdDouble = XsdDatatype("double", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
     val XsdFloat = XsdDatatype("float", Some("-?\\d(\\.\\d*)?([eE]-?\\d+)?"))
     val XsdAttribute = XsdDatatype("attribute", None)
-
+    val XsdAnnotation = XsdDatatype("annotation", None)
   }
 
   /**
@@ -2072,7 +2072,24 @@ package xsdforms {
 
     private def topLevelAnnotations {
       //TODO use header and footer and script annotations 
-      //      println(s)
+      println(s.schemaoption
+        .filter(toQName(_) == qn(XsdAnnotation))
+        .map(_.value)
+        .map(x => x match {
+          case y:Annotation => y
+          case _ => unexpected
+        })
+        .map(_.annotationoption)
+        .flatten
+        .filter(toQName(_) == qn("appinfo"))
+        .map(_.value)
+        .map(x => x match {
+          case y:Appinfo => y
+          case _ => unexpected})
+       .map(x => x.mixed)
+       .flatten
+      )
+
     }
 
     private def process(e: Element) {
