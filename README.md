@@ -3,13 +3,9 @@ xsd-forms
 
 You have a data model and you want to make a web form that submits structured data (XML/JSON). 
 
-*xsd-forms* does this for you:
+*xsd-forms* does this for you based on an xml schema (XSD) that has been annotated with some presentation information.
 
-* ui creation and entry validation work
-* allows further customization using css and javascript (especially jquery)
-* generated form is 100% html/javascript without any server side dependency beyond how you process the submitted xml. 
-
-The form is thus platform agnostic in terms of your backend.
+The form is javascript/html only and does not interact with a server for validation.
 
 This project is largely written in Scala with a small amount of Java. 
 
