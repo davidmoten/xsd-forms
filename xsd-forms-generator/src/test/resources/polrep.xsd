@@ -22,9 +22,9 @@
 				minOccurs="0">
 				<xs:annotation i:visible="false" />
 			</xs:element>
-			<xs:element name="pollutant-oil" type="yes-no-alt"
+			<xs:element name="pollutant-oil" type="yes-no"
 				minOccurs="0">
-				<xs:annotation i:label="Oil" i:addBlank="true" />
+				<xs:annotation i:label="Oil" i:addBlank="true" i:makeVisible="true->1"/>
 			</xs:element>
 			<xs:element name="pollutant-oil-types" type="pollutant-oil-types"
 				minOccurs="0">

@@ -44,8 +44,8 @@ package xsdforms {
 
     def copyHtmlJs() {
       val directory = new File("target/generated-webapp")
-      FileUtils.deleteDirectory(new File(directory,"css"))
-      FileUtils.deleteDirectory(new File(directory,"js"))
+      FileUtils.deleteDirectory(new File(directory, "css"))
+      FileUtils.deleteDirectory(new File(directory, "js"))
       FileUtils.copyDirectory(new File("../xsd-forms-html-js/src/main/resources"), directory)
     }
 
@@ -123,7 +123,7 @@ package xsdforms {
         rootElement = "main",
         outputFile = new File("target/generated-webapp/demo-form.html"))
     }
-    
+
     @Test
     def testGenerateZip() {
       val out = new File("target/out.zip")
@@ -646,14 +646,13 @@ package xsdforms {
     }
   }
 
-
   @Test
   class JSTest {
 
     import org.junit.Assert._
 
     @Test
-    def testJS() {
+    def testJS {
       val js = JS()
         .line("function %s(doc,%s) {", "logit", "name")
         .line("  console.log(doc);")
@@ -665,6 +664,42 @@ function logit(doc,name) {
 }"""
       assertEquals(expected, js.toString)
     }
+  }
+
+  @Test
+  class TreeToHtmlConverterTest {
+    import org.junit.Assert._
+    import TreeToHtmlConverter._
+
+    @Test
+    def testParseSingle {
+      assertEquals(
+          Map("true" -> 1),
+          parseMakeVisibleMap(Some("true->1")))
+    }
+
+    @Test
+    def testParseThree {
+      assertEquals(
+          Map("true" -> 1, "yes" -> 2, "boo" -> 3),
+          parseMakeVisibleMap(Some("true->1,yes->2,boo->3")))
+    }
+
+    @Test
+    def testParseNone {
+      assertTrue(parseMakeVisibleMap(None).isEmpty)
+    }
+
+    @Test
+    def testParseBlankReturnsEmptyMap {
+      try {
+        assertTrue(parseMakeVisibleMap(Some("")).isEmpty)
+        fail
+      } catch {
+        case _ =>
+      }
+    }
+
   }
 
 }

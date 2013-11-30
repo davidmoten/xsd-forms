@@ -241,7 +241,7 @@ package xsdforms {
 
   }
 
-  sealed trait NodeGroup extends Node  {
+  sealed trait NodeGroup extends Node {
     val children: MutableList[Node] = MutableList()
   }
 
@@ -249,13 +249,13 @@ package xsdforms {
   sealed trait NodeBasic extends Node
 
   trait BasicType
-  case class BasicTypeSimple(typ: SimpleType) extends BasicType 
+  case class BasicTypeSimple(typ: SimpleType) extends BasicType
   case class BasicTypeBase(typ: BaseType) extends BasicType
 
   //TODO stop using mutable types
   case class NodeSequence(element: ElementWrapper, override val children: MutableList[Node]) extends NodeGroup
   case class NodeChoice(element: ElementWrapper, choice: Choice, override val children: MutableList[Node]) extends NodeGroup
-  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic 
+  case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic
   case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
 
   /**
@@ -399,6 +399,7 @@ package xsdforms {
    */
 
   object TreeToHtmlConverter {
+    
     val InstanceDelimiter = "-instance-"
     val ChoiceIndexDelimiter = "-choice-"
 
@@ -468,6 +469,24 @@ package xsdforms {
     val ClassMinOccursZero = "min-occurs-zero"
     val ClassMinOccursZeroContainer = "min-occurs-zero-container"
     val ClassMinOccursZeroLabel = "min-occurs-zero-label"
+
+    def parseMakeVisibleMap(value: Option[String]): Map[String, Int] = {
+      import Util._
+      value match {
+        case Some(s) =>
+          s.split(",")
+            .toList
+            .map(
+              x => {
+                val items = x.split("->")
+                if (items.length<2) 
+                  unexpected("could not parse makeVisible, expecting 'value1->1,value2->2' (pairs delimited by comma and key value delimited by '->'")
+                (items(0), items(1).toInt)
+              }).toMap
+        case None => Map()
+      }
+
+    }
   }
 
   case class XsdFormsAnnotation(name: String)
@@ -1345,7 +1364,7 @@ package xsdforms {
         case Some("true") => true
         case _ => false
       }
-      enumeration(en, number, isRadio(e), initializeBlank, instances)
+      enumeration(e, en, number, isRadio(e), initializeBlank, instances)
     }
 
     private def isRadio(e: ElementWrapper) =
@@ -1368,7 +1387,7 @@ package xsdforms {
           case _ => None
         }).flatten
 
-    private def enumeration(en: Seq[(String, NoFixedFacet)],
+    private def enumeration(e: ElementWrapper, en: Seq[(String, NoFixedFacet)],
       number: Int, isRadio: Boolean, initializeBlank: Boolean, instances: Instances) {
       if (isRadio) {
         en.zipWithIndex.foreach(x => {
@@ -1389,6 +1408,8 @@ package xsdforms {
           number = Some(number))
         if (initializeBlank)
           html.option(content = Some("Select one..."), value = "").closeTag
+        val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
+        val makeVisible = parseMakeVisibleMap(makeVisibleString)
         en.foreach { x =>
           html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
           getAnnotation(x._2, Annotation.MakeVisible) match {
