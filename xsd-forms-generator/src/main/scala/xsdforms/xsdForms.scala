@@ -310,7 +310,7 @@ package xsdforms {
     private implicit def wrap(e: Element): ElementWrapper = ElementWrapper(e)
 
     override def configuration(config: Configuration) {
-	  configuration = Some(config)
+      configuration = Some(config)
     }
 
     override def startSequence(e: Element) {
@@ -387,7 +387,7 @@ package xsdforms {
     }
 
     def rootNode: Node = tree.get;
-    
+
   }
 
   /**
@@ -525,13 +525,11 @@ package xsdforms {
    * **************************************************************
    */
 
+  /**
+   * Utility class for building javascript statements.
+   */
   case class JS() {
     val b = new StringBuffer()
-
-    def lines(s: String): JS = {
-      b append s
-      this
-    }
 
     def line: JS = line("")
 
@@ -558,12 +556,25 @@ package xsdforms {
    * **************************************************************
    */
 
+  /**
+   * Generates html and javascript based on XML schema (XSD).
+   */
   object Generator {
     import java.io._
     import java.util.UUID
     import java.util.zip._
     import org.apache.commons.io._
 
+    /**
+     *  Using the given xml schema generates html and js files and copies
+     *  static js and css into a zipped file that is written to the given
+     *  OutputStream. The result is a standalone site for the form.
+     *
+     * @param schema
+     * @param zip
+     * @param idPrefix
+     * @param rootElement
+     */
     def generateZip(
       schema: InputStream,
       zip: OutputStream,
@@ -582,6 +593,16 @@ package xsdforms {
       zipOut.close
     }
 
+    /**
+     *  Using the given xml schema generates html and js files and copies
+     *  static js and css into the given directory. The result is a
+     *  standalone site for the form.
+     *
+     * @param schema
+     * @param directory
+     * @param idPrefix
+     * @param rootElement
+     */
     def generateDirectory(
       schema: InputStream,
       directory: File,
@@ -627,6 +648,15 @@ package xsdforms {
       action(text.getBytes, name, false)
     }
 
+    /**
+     *  Using the given xml schema generates html and js into a file that
+     *  is written to the given OutputStream.
+     *
+     * @param schema
+     * @param html
+     * @param idPrefix
+     * @param rootElement
+     */
     def generateHtml(schema: InputStream,
       html: OutputStream,
       idPrefix: String = "a-",
@@ -636,6 +666,15 @@ package xsdforms {
       html write text.getBytes
     }
 
+    /**
+     * Returns the text of a file containing generated html and js based on
+     * the given schema.
+     *
+     * @param schema
+     * @param idPrefix
+     * @param rootElement
+     * @return html text including js
+     */
     def generateHtmlAsString(schema: InputStream,
       idPrefix: String = "a-",
       rootElement: Option[String] = None): String = {
@@ -652,9 +691,9 @@ package xsdforms {
       new SchemaTraversor(schemaXb, rootElement, visitor).traverse
       println("tree:\n" + visitor)
 
-      new TreeToHtmlConverter(ns, idPrefix, 
-          visitor.configuration,
-          visitor.rootNode).text
+      new TreeToHtmlConverter(ns, idPrefix,
+        visitor.configuration,
+        visitor.rootNode).text
     }
 
   }
@@ -669,7 +708,7 @@ package xsdforms {
    */
 
   class TreeToHtmlConverter(targetNamespace: String, idPrefix: String,
-    configuration:Option[Configuration], tree: Node) {
+    configuration: Option[Configuration], tree: Node) {
 
     import TreeToHtmlConverter._
     import XsdUtil._
@@ -1251,8 +1290,8 @@ package xsdforms {
       }
     }
 
-    private def getTextType(e: Element) =
-      getAnnotation(e, Annotation.Text)
+    private def isTextArea(e: Element) =
+      getAnnotation(e, Annotation.Text) == "textarea"
 
     private def simpleType(node: NodeBasic, instances: Instances) {
       val e = node.element
@@ -1319,31 +1358,30 @@ package xsdforms {
       val number = elementNumber(e)
       val inputType = getInputType(r)
       val itemId = getItemId(number, instances)
-      getTextType(e) match {
-        case Some("textarea") =>
-          html.textarea(
-            id = Some(itemId),
-            name = getItemName(number, instances),
-            classes = List(extraClasses, ClassItemInputTextarea),
-            content = Some(e.default.mkString),
-            number = Some(number))
-            .closeTag
-        case _ =>
-          //text or boolean
-          val isChecked = inputType == Checkbox &&
-            e.default.isDefined && e.default.get == "true"
-          val v = if (isChecked) None else defaultValue(e.default, r)
-          html.input(
-            id = Some(itemId),
-            name = getItemName(number, instances),
-            classes = List(extraClasses, ClassItemInputText),
-            typ = Some(inputType.name),
-            checked = None,
-            value = v,
-            number = Some(number))
-            .closeTag
-          addScript(JS().line("  $('#%s').prop('checked',%s);",
-            itemId, isChecked + "").line)
+      if (isTextArea(e)) {
+        html.textarea(
+          id = Some(itemId),
+          name = getItemName(number, instances),
+          classes = List(extraClasses, ClassItemInputTextarea),
+          content = Some(e.default.mkString),
+          number = Some(number))
+          .closeTag
+      } else {
+        //text or boolean
+        val isChecked = inputType == Checkbox &&
+          e.default.isDefined && e.default.get == "true"
+        val v = if (isChecked) None else defaultValue(e.default, r)
+        html.input(
+          id = Some(itemId),
+          name = getItemName(number, instances),
+          classes = List(extraClasses, ClassItemInputText),
+          typ = Some(inputType.name),
+          checked = None,
+          value = v,
+          number = Some(number))
+          .closeTag
+        addScript(JS().line("  $('#%s').prop('checked',%s);",
+          itemId, isChecked + "").line)
       }
 
     }
