@@ -1968,10 +1968,10 @@ package xsdforms {
     def text =
       template
         .replace("//GENERATED_SCRIPT", script.toString)
-        .replace("//EXTRA_SCRIPT", configuration.map(_.extraScript).mkString(""))
-        .replace("<!--HEADER-->", configuration.map(_.header).mkString(""))
-        .replace("<!--FOOTER-->", configuration.map(_.footer).mkString(""))
-        .replace("<!--EXTRA_IMPORTS-->", configuration.map(_.extraImports).mkString(""))
+        .replace("//EXTRA_SCRIPT", configuration.flatMap(_.extraScript).mkString(""))
+        .replace("<!--HEADER-->", configuration.flatMap(_.header).mkString(""))
+        .replace("<!--FOOTER-->", configuration.flatMap(_.footer).mkString(""))
+        .replace("<!--EXTRA_IMPORTS-->", configuration.flatMap(_.extraImports).mkString(""))
         .replace("<!--GENERATED_HTML-->", html.toString)
 
   }
