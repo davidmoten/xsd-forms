@@ -9,6 +9,12 @@
       <i:footer><![CDATA[
     <p>Thanks for your time.</p>
 ]]></i:footer>
+      <i:extraImports><![CDATA[
+<!-- extra imports would go here -->
+]]></i:extraImports>
+      <i:extraScript><![CDATA[
+// extra script would go here
+]]></i:extraScript>
     </xs:appinfo>
   </xs:annotation>
 
