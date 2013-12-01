@@ -1,11 +1,11 @@
 xsd-forms
 =========
 
-You have a data model and you want to make a web form that submits structured data (XML/JSON). 
+You want to make a web form that submits structured data (XML/JSON). 
 
-*xsd-forms* does this for you based on an xml schema (XSD) that has been annotated with some presentation information.
+*xsd-forms* generates one for you based on an xml schema (XSD) that has been annotated with some presentation information.
 
-The form is javascript/html only and does not interact with a server for validation.
+The form is javascript/html only and performs all validation using javascript.
 
 This project is written in Scala with a small amount of Java. 
 
