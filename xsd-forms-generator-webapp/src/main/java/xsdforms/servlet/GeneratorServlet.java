@@ -28,9 +28,6 @@ public class GeneratorServlet extends HttpServlet {
 		String idPrefix = nullToBlank(req.getParameter(PARAMETER_ID_PREFIX));
 		String rootElementParam = blankToNull(req.getParameter(PARAMETER_ROOT_ELEMENT));
 		Option<String> rootElement = Option.apply(rootElementParam);
-		String extraScriptParameter = blankToNull(req
-				.getParameter(PARAMETER_EXTRA_SCRIPT));
-		Option<String> extraScript = Option.apply(extraScriptParameter);
 
 		String action = req.getParameter("action");
 		if (ACTION_ZIP.equals(action)) {
