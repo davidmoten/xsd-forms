@@ -8,7 +8,9 @@
 
     <element name="footer" type="string"/>
 
-	<element name="script" type="string"/>
+	<element name="extraImports" type="string"/>
+  
+	<element name="extraScript" type="string"/>
 
 	<attribute name="title" type="string">
 		<annotation>

@@ -81,6 +81,22 @@ You need to make a schema using only the elements and types that are supported b
 <xs:schema targetNamespace="http://org.moten.david/example"
   xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:i="http://moten.david.org/xsd-forms">
+  <xs:annotation i:numberItems="true">
+    <xs:appinfo>
+      <i:header><![CDATA[
+<h2>Title of the form</h2>
+]]></i:header>
+      <i:footer><![CDATA[
+    <p>Thanks for your time.</p>
+]]></i:footer>
+      <i:extraImports><![CDATA[
+    <!-- more imports here -->
+]]></i:extraImports>
+      <i:extraScript><![CDATA[
+  // extra script would go here
+]]></i:extraScript>
+    </xs:appinfo>
+  </xs:annotation>
   <xs:element name="name" type="xs:string">
     <xs:annotation i:label="Full name" />
   </xs:element>
