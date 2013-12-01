@@ -24,7 +24,7 @@ package xsdforms {
       //write results to a file
       outputFile.getParentFile().mkdirs
       val fos = new java.io.FileOutputStream(outputFile);
-      Generator.generateHtml(schemaInputStream, fos, idPrefix, Some(rootElement), extraScript)
+      Generator.generateHtml(schemaInputStream, fos, idPrefix, Some(rootElement))
       fos.close
     }
 

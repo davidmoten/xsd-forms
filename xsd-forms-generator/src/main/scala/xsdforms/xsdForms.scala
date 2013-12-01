@@ -568,8 +568,7 @@ package xsdforms {
       schema: InputStream,
       zip: OutputStream,
       idPrefix: String = "a-",
-      rootElement: Option[String] = None,
-      extraScript: Option[String] = None) {
+      rootElement: Option[String] = None) {
 
       val zipOut = new ZipOutputStream(zip)
 
@@ -578,7 +577,7 @@ package xsdforms {
         zipOut write bytes
       }
 
-      copyJsCssAndGeneratedForm(schema, action, idPrefix, rootElement, extraScript)
+      copyJsCssAndGeneratedForm(schema, action, idPrefix, rootElement)
 
       zipOut.close
     }
@@ -587,8 +586,7 @@ package xsdforms {
       schema: InputStream,
       directory: File,
       idPrefix: String = "a-",
-      rootElement: Option[String] = None,
-      extraScript: Option[String] = None) {
+      rootElement: Option[String] = None) {
 
       def action(bytes: Array[Byte], name: String, isDirectory: Boolean) {
         import org.apache.commons.io.FileUtils
@@ -604,16 +602,15 @@ package xsdforms {
         }
       }
 
-      copyJsCssAndGeneratedForm(schema, action, idPrefix, rootElement, extraScript)
+      copyJsCssAndGeneratedForm(schema, action, idPrefix, rootElement)
     }
 
     private def copyJsCssAndGeneratedForm(
       schema: InputStream,
       action: (Array[Byte], String, Boolean) => Unit,
       idPrefix: String = "a-",
-      rootElement: Option[String] = None,
-      extraScript: Option[String] = None) {
-      val text = generateHtmlAsString(schema, idPrefix, rootElement, extraScript)
+      rootElement: Option[String] = None) {
+      val text = generateHtmlAsString(schema, idPrefix, rootElement)
 
       val zipIn = new ZipInputStream(
         Generator.getClass().getResourceAsStream("/xsd-forms-js-css.zip"))
@@ -633,17 +630,15 @@ package xsdforms {
     def generateHtml(schema: InputStream,
       html: OutputStream,
       idPrefix: String = "a-",
-      rootElement: Option[String] = None,
-      extraScript: Option[String] = None) {
+      rootElement: Option[String] = None) {
 
-      val text = generateHtmlAsString(schema, idPrefix, rootElement, extraScript)
+      val text = generateHtmlAsString(schema, idPrefix, rootElement)
       html write text.getBytes
     }
 
     def generateHtmlAsString(schema: InputStream,
       idPrefix: String = "a-",
-      rootElement: Option[String] = None,
-      extraScript: Option[String] = None): String = {
+      rootElement: Option[String] = None): String = {
 
       import scala.xml._
 

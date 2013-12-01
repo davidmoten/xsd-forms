@@ -38,11 +38,11 @@ public class GeneratorServlet extends HttpServlet {
 			resp.setHeader("Content-Disposition",
 					"attachment; filename=site.zip");
 			Generator.generateZip(schemaIn, resp.getOutputStream(), idPrefix,
-					rootElement, extraScript);
+					rootElement);
 		} else {
 			resp.setContentType("text/html");
 			Generator.generateHtml(schemaIn, resp.getOutputStream(), idPrefix,
-					rootElement, extraScript);
+					rootElement);
 		}
 	}
 	
