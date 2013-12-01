@@ -212,8 +212,7 @@ package xsdforms {
    */
 
   trait Visitor {
-    def items(header: Option[String], footer: Option[String],
-      extraImports: Option[String], extraScript: Option[String])
+    def configuration(configuration: Configuration)
     def startSequence(e: Element)
     def endSequence
     def startChoice(e: Element, choice: Choice)
@@ -285,9 +284,9 @@ package xsdforms {
 
   case class ElementWrapper(element: Element,
     uniqueId: String = java.util.UUID.randomUUID.toString)
-    
-  case class Configuration(header:Option[String],footer:Option[String],
-      extraImports:Option[String],extraScript:Option[String])
+
+  case class Configuration(header: Option[String], footer: Option[String],
+    extraImports: Option[String], extraScript: Option[String])
 
   /**
    * **************************************************************
@@ -303,16 +302,17 @@ package xsdforms {
     import Util._
 
     private var tree: Option[Node] = None
+    var configuration: Option[Configuration] = None
     private val stack = new scala.collection.mutable.Stack[Node]
     import scala.collection.mutable.HashMap
     private val nodes = new HashMap[Element, Node]()
 
     private implicit def wrap(e: Element): ElementWrapper = ElementWrapper(e)
 
-    override def items(configuration:Configuration) {
-      
+    override def configuration(config: Configuration) {
+	  configuration = Some(config)
     }
-    
+
     override def startSequence(e: Element) {
       val seq = NodeSequence(e, MutableList())
       addChild(seq)
@@ -387,7 +387,7 @@ package xsdforms {
     }
 
     def rootNode: Node = tree.get;
-
+    
   }
 
   /**
@@ -657,7 +657,9 @@ package xsdforms {
       new SchemaTraversor(schemaXb, rootElement, visitor).traverse
       println("tree:\n" + visitor)
 
-      new TreeToHtmlConverter(ns, idPrefix, extraScript, visitor.rootNode).text
+      new TreeToHtmlConverter(ns, idPrefix, 
+          visitor.configuration,
+          visitor.rootNode).text
     }
 
   }
@@ -672,7 +674,7 @@ package xsdforms {
    */
 
   class TreeToHtmlConverter(targetNamespace: String, idPrefix: String,
-    extraScript: Option[String], tree: Node) {
+    configuration:Option[Configuration], tree: Node) {
 
     import TreeToHtmlConverter._
     import XsdUtil._
@@ -1966,7 +1968,10 @@ package xsdforms {
     def text =
       template
         .replace("//GENERATED_SCRIPT", script.toString)
-        .replace("//EXTRA_SCRIPT", extraScript.mkString)
+        .replace("//EXTRA_SCRIPT", configuration.map(_.extraScript).mkString(""))
+        .replace("<!--HEADER-->", configuration.map(_.header).mkString(""))
+        .replace("<!--FOOTER-->", configuration.map(_.footer).mkString(""))
+        .replace("<!--EXTRA_IMPORTS-->", configuration.map(_.extraImports).mkString(""))
         .replace("<!--GENERATED_HTML-->", html.toString)
 
   }
@@ -2105,10 +2110,14 @@ package xsdforms {
           .filter(toQName(_) == qn(AppInfoSchema, elementName))
           .map(_.value)
           .map(x => scala.xml.XML.loadString(x.toString))
-          .map(x => x.text).mkString("\n")
+          .map(x => x.text).headOption
 
-      println(extract("header"))
-      println(extract("footer"))
+      val header = extract("header")
+      val footer = extract("footer")
+      val extraImports = extract("extraImports")
+      val extraScript = extract("extraScript")
+      val configuration = Configuration(header, footer, extraImports, extraScript)
+      visitor.configuration(configuration)
     }
 
     private def process(e: Element) {
