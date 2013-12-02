@@ -66,12 +66,6 @@ public class GenerateMojo extends AbstractMojo {
 	@Parameter(property = "xsdforms.root.element")
 	private String rootElement;
 
-	/**
-	 * Extra script to include in jquery document body.
-	 */
-	@Parameter(property = "xsdforms.extra.script")
-	private String extraScript;
-
 	@Override
 	public void execute() throws MojoExecutionException {
 
@@ -80,18 +74,8 @@ public class GenerateMojo extends AbstractMojo {
 		// look first on classpath
 		InputStream schemaIn = getInputStreamFromClasspathOrFile(schema);
 
-		String extraJs = null;
-		if (extraScript != null) {
-			InputStream extraScriptIn = getInputStreamFromClasspathOrFile(extraScript);
-			try {
-				extraJs = IOUtil.toString(extraScriptIn);
-			} catch (IOException e) {
-				throw new MojoExecutionException(e.getMessage(), e);
-			}
-		}
-
 		Generator.generateDirectory(schemaIn, outputDirectory, idPrefix,
-				Option.apply(rootElement), Option.apply(extraJs));
+				Option.apply(rootElement));
 	}
 
 	private static InputStream getInputStreamFromClasspathOrFile(String path)
