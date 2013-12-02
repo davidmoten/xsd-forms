@@ -2344,7 +2344,7 @@ package xsdforms {
     val Enabled = "enabled"
     val Checked = "checked"
     val Name = "name"
-  }
+2  }
 
   private class Html {
     import Html._

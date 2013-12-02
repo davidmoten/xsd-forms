@@ -2,12 +2,14 @@
   xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:i="http://moten.david.org/xsd-forms">
   <xs:annotation>
+  <xs:appinfo>
 <i:header><![CDATA[
 <h2>'header' here</h2>
 ]]></i:header>
       <i:footer><![CDATA[
     <p>'footer' here.</p>
 ]]></i:footer>
+  </xs:appinfo>
   </xs:annotation>
   <xs:element name="person" type="person">
     <xs:annotation i:label="'label' for this complex element"
