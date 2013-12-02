@@ -46,8 +46,6 @@
 					<idPrefix>a-</idPrefix>
 					<!--  don't need rootElement if only one top level element in schema -->
 					<rootElement>main</rootElement>
-					<!--  classpath checked first then file system -->
-					<extraScript>${basedir}/src/main/js/extraScript.js</extraScript>
 					<!--  outputDirectory defaults to ${project.build.directory}/generated-resources -->
 					<outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
 				</configuration>
