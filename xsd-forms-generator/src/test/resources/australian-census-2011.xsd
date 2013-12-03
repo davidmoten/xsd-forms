@@ -55,10 +55,10 @@
           i:before="For persons of both Aboriginal and Torres Strait Islander origin, select 'Both'."
           i:addBlank="true" i:label="" />
       </xs:element>
-      <xs:element name="residential address" type="residential-address" />
-      <xs:element name="residential address-one-year-ago"
+      <xs:element name="residential-address" type="residential-address" />
+      <xs:element name="residential-address-one-year-ago"
         type="residential-address-one-year-ago" />
-      <xs:element name="residential address-five-years-ago"
+      <xs:element name="residential-address-five-years-ago"
         type="residential-address-five-years-ago" />
       <xs:element name="citizen" type="xs:boolean">
         <xs:annotation i:title="Citizenship"
