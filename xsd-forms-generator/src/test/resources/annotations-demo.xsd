@@ -1,6 +1,7 @@
 <xs:schema targetNamespace="http://org.moten.david/example"
   xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:i="http://moten.david.org/xsd-forms">
+ 
   <xs:annotation>
   <xs:appinfo>
 <i:header><![CDATA[
@@ -11,6 +12,7 @@
 ]]></i:footer>
   </xs:appinfo>
   </xs:annotation>
+
   <xs:element name="person" type="person">
     <xs:annotation i:label="'label' for this complex element"
       i:nonRepeatingTitle="'nonRepeatingTitle' used for maxOccurs>1 elements" />
