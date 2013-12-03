@@ -113,6 +113,10 @@ Every element in your schema optionally can have a contained &lt;xs:annotation/&
 
 For a full list of annotations and their meanings see the top of the file [xsdForms.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/xsdforms/xsdForms.scala).
 
+This is what the form from annotations-demo.xsd looks like:
+
+<img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/screen1.png"/>
+
 #### Generate using web service 
 A [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) is available. At this service you can 
 
