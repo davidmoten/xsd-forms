@@ -27,7 +27,7 @@
           i:validation="'validation' is the message to indicate an invalid response'"
           i:repeatLabel="'repeatLabel' click to repeat question"
           i:removeLabel="'removeLabel' click to remove repeat"
-          i:maxRepeats="2" />
+          i:maxRepeats="3" />
       </xs:element>
     </xs:sequence>
   </xs:complexType>
