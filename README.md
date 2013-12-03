@@ -190,11 +190,12 @@ The default generated form just displays the captured xml on the page under the 
     } 
 
 ###Can I submit JSON instead?
-Yep. Use this *extraScript* (using [xml2json.js](http://goessner.net/download/prj/jsonxml/)):
+Yep. Use this *extraScript* (using [xml2json.js](https://code.google.com/p/x2js/)):
 
     //for example, display the xml in an alert box
     processXml = function (xml) {
-      var json = xml2json(xml);
+      var x2js = new X2JS(); 
+      var json = x2js.xml_str2json(xml);
       //alert or you could do a jquery ajax call to submit to a web server
       alert(json);
     }
