@@ -519,6 +519,8 @@ $(function() {
     $('#a-repeating-enclosing-12-instance-1_1_1').hide();
   });
 
+  $('#a-item-12-instance-1_1_1').prop('checked',false);
+
   // address
   var validate12instance1_1_1 = function () {
     var ok = true;
@@ -833,6 +835,8 @@ $(function() {
   $('#a-remove-button-17-instance-1_1').click(function() {
     $('#a-repeating-enclosing-17-instance-1_1').hide();
   });
+
+  $('#a-item-17-instance-1_1').prop('checked',false);
 
   // story
   var validate17instance1_1 = function () {
@@ -2481,7 +2485,8 @@ $(function() {
                   <div class="item-number">12</div>
                   <label class="item-label" for="a-item-input-12-instance-1_1_1">Address</label>
                   <div class="item-input">
-                    <textarea id="a-item-12-instance-1_1_1" class=" item-input-textarea" name="a-item-input-12-instance-1_1_1" number="12"></textarea>
+                    <input number="12" name="a-item-input-12-instance-1_1_1" id="a-item-12-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
                     <div id="a-item-path-12-instance-1_1_1" class="item-path" enabled="true"></div>
                     <div id="a-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
@@ -2711,7 +2716,8 @@ $(function() {
             <div class="item-number">17</div>
             <label class="item-label" for="a-item-input-17-instance-1_1">Story</label>
             <div class="item-input">
-              <textarea id="a-item-17-instance-1_1" class=" item-input-textarea" name="a-item-input-17-instance-1_1" number="17"></textarea>
+              <input number="17" name="a-item-input-17-instance-1_1" id="a-item-17-instance-1_1" class=" item-input-text" type="text">
+              </input>
               <div id="a-item-path-17-instance-1_1" class="item-path" enabled="true"></div>
               <div id="a-item-error-17-instance-1_1" class="item-error">Invalid</div>
             </div>
@@ -2768,7 +2774,7 @@ $(function() {
   <p><div id="submit-comments"></div></p>
 
 </form>
-</div>
 
+</div>
 </body>
 </html>

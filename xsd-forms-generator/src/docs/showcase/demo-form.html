@@ -213,6 +213,8 @@ $(function() {
     $('#b-repeating-enclosing-4-instance-1_1').hide();
   });
 
+  $('#b-item-4-instance-1_1').prop('checked',false);
+
   // long-text
   var validate4instance1_1 = function () {
     var ok = true;
@@ -229,6 +231,8 @@ $(function() {
   $('#b-remove-button-5-instance-1_1').click(function() {
     $('#b-repeating-enclosing-5-instance-1_1').hide();
   });
+
+  $('#b-item-5-instance-1_1').prop('checked',false);
 
   // long-text-with-default
   var validate5instance1_1 = function () {
@@ -710,6 +714,8 @@ $(function() {
   $('#b-remove-button-28-instance-1_1').click(function() {
     $('#b-repeating-enclosing-28-instance-1_1').hide();
   });
+
+  $('#b-item-28-instance-1_1').prop('checked',false);
 
   $('#b-item-28-instance-1_1').css('color','white');
   $('#b-item-28-instance-1_1').css('height','12em');
@@ -5775,7 +5781,8 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             <div class="item-number">4</div>
             <label class="item-label" for="b-item-input-4-instance-1_1">Long Text</label>
             <div class="item-input">
-              <textarea id="b-item-4-instance-1_1" class=" item-input-textarea" name="b-item-input-4-instance-1_1" number="4"></textarea>
+              <input number="4" name="b-item-input-4-instance-1_1" id="b-item-4-instance-1_1" class=" item-input-text" type="text">
+              </input>
               <div id="b-item-path-4-instance-1_1" class="item-path" enabled="true"></div>
               <div id="b-item-error-4-instance-1_1" class="item-error">Invalid</div>
             </div>
@@ -5788,7 +5795,8 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             <div class="item-number">5</div>
             <label class="item-label" for="b-item-input-5-instance-1_1">Long Text With Default</label>
             <div class="item-input">
-              <textarea id="b-item-5-instance-1_1" class=" item-input-textarea" name="b-item-input-5-instance-1_1" number="5">default</textarea>
+              <input number="5" name="b-item-input-5-instance-1_1" id="b-item-5-instance-1_1" class=" item-input-text" type="text" value="default">
+              </input>
               <div id="b-item-path-5-instance-1_1" class="item-path" enabled="true"></div>
               <div id="b-item-error-5-instance-1_1" class="item-error">Invalid</div>
             </div>
@@ -6134,7 +6142,8 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             <div class="item-number">28</div>
             <label class="item-label" for="b-item-input-28-instance-1_1">Css Override</label>
             <div class="item-input">
-              <textarea id="b-item-28-instance-1_1" class=" item-input-textarea" name="b-item-input-28-instance-1_1" number="28"></textarea>
+              <input number="28" name="b-item-input-28-instance-1_1" id="b-item-28-instance-1_1" class=" item-input-text" type="text">
+              </input>
               <div id="b-item-path-28-instance-1_1" class="item-path" enabled="true"></div>
               <div id="b-item-error-28-instance-1_1" class="item-error">Invalid</div>
             </div>
@@ -8228,7 +8237,7 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
   <p><div id="submit-comments"></div></p>
 
 </form>
-</div>
 
+</div>
 </body>
 </html>
