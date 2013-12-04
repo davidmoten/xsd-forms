@@ -3,14 +3,18 @@
   xmlns:i="http://moten.david.org/xsd-forms">
  
   <xs:annotation>
-  <xs:appinfo>
-<i:header><![CDATA[
+    <xs:appinfo>
+      <i:header>
+<![CDATA[
 <h2>'header' here</h2>
-]]></i:header>
-      <i:footer><![CDATA[
+]]>
+      </i:header>
+      <i:footer>
+<![CDATA[
     <p>'footer' here.</p>
-]]></i:footer>
-  </xs:appinfo>
+]]>
+      </i:footer>
+    </xs:appinfo>
   </xs:annotation>
 
   <xs:element name="person" type="person">
