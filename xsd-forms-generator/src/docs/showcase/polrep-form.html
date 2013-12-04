@@ -8,6 +8,7 @@
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="js/xml2json.js"></script>
+
 <script type="text/javascript">
 
 function encodeHTML(s) {
@@ -299,6 +300,8 @@ $(function() {
   $('#b-remove-button-8-instance-1_1').click(function() {
     $('#b-repeating-enclosing-8-instance-1_1').hide();
   });
+
+  $('#b-item-8-instance-1_1').prop('checked',false);
 
   // description
   var validate8instance1_1 = function () {
@@ -907,6 +910,8 @@ $(function() {
   $('#b-remove-button-37-instance-1_1').click(function() {
     $('#b-repeating-enclosing-37-instance-1_1').hide();
   });
+
+  $('#b-item-37-instance-1_1').prop('checked',false);
 
   // response-action-details
   var validate37instance1_1 = function () {
@@ -1904,8 +1909,8 @@ $(function() {
 <script type="text/javascript" src="js/xsd-forms-override.js"></script>
 </head>
 <body>
-
 <div class="form">
+
 <div id="start"></div>
 <form method="POST" action="form.html" name="form">
  
@@ -2002,7 +2007,8 @@ $(function() {
             <div class="item-number">8</div>
             <label class="item-label" for="b-item-input-8-instance-1_1">Description</label>
             <div class="item-input">
-              <textarea id="b-item-8-instance-1_1" class=" item-input-textarea" name="b-item-input-8-instance-1_1" number="8"></textarea>
+              <input number="8" name="b-item-input-8-instance-1_1" id="b-item-8-instance-1_1" class=" item-input-text" type="text">
+              </input>
               <div id="b-item-path-8-instance-1_1" class="item-path" enabled="true"></div>
               <div id="b-item-error-8-instance-1_1" class="item-error">Invalid</div>
             </div>
@@ -2423,7 +2429,8 @@ $(function() {
             <div class="item-number">37</div>
             <label class="item-label" for="b-item-input-37-instance-1_1">Details</label>
             <div class="item-input">
-              <textarea id="b-item-37-instance-1_1" class=" item-input-textarea" name="b-item-input-37-instance-1_1" number="37"></textarea>
+              <input number="37" name="b-item-input-37-instance-1_1" id="b-item-37-instance-1_1" class=" item-input-text" type="text">
+              </input>
               <div class="item-description">Please include any environmental impact</div>
               <div id="b-item-path-37-instance-1_1" class="item-path" enabled="true"></div>
               <div id="b-item-error-37-instance-1_1" class="item-error">Invalid</div>
@@ -2669,6 +2676,7 @@ $(function() {
   <p><div id="submit-comments"></div></p>
 
 </form>
+
 </div>
 </body>
 </html>

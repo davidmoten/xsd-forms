@@ -8,6 +8,7 @@
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="js/xml2json.js"></script>
+
 <script type="text/javascript">
 
 function encodeHTML(s) {
@@ -223,6 +224,33 @@ $(function() {
     showError('b-item-error-2-instance-1_2',ok);
   });
   
+  $('#b-repeating-enclosing-2-instance-1_3').hide();
+  $('#b-remove-button-2-instance-1_3').click(function() {
+    $('#b-repeating-enclosing-2-instance-1_3').hide();
+  });
+
+  $('#b-item-2-instance-1_3').prop('checked',false);
+
+  // name
+  var validate2instance1_3 = function () {
+    var ok = true;
+    var v = $('#b-item-2-instance-1_3');
+    var pathDiv = $('#b-item-path-2-instance-1_3');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^[a-zA-Z][a-zA-Z]*$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-2-instance-1_3').change( function() {
+    var ok = validate2instance1_3();
+    showError('b-item-error-2-instance-1_3',ok);
+  });
+  
   $('#b-repeat-button-2-instance-1').click( function() {
     // loop through all repeats until find first nonInvisible repeat and make it visible
     var elem;
@@ -230,6 +258,9 @@ $(function() {
     if (!elemVisible(elem))
       { elem.show(); return; }
     elem = $('#b-repeating-enclosing-2-instance-1_2');
+    if (!elemVisible(elem))
+      { elem.show(); return; }
+    elem = $('#b-repeating-enclosing-2-instance-1_3');
     if (!elemVisible(elem))
       { elem.show(); return; }
   })
@@ -244,6 +275,10 @@ $(function() {
   }
   if (idVisible('b-repeating-enclosing-2-instance-1_2')) {
     var v = encodedValueById("b-item-2-instance-1_2");
+    xml += '\n' + spaces(2) + '<name>' + v + '</name>';
+  }
+  if (idVisible('b-repeating-enclosing-2-instance-1_3')) {
+    var v = encodedValueById("b-item-2-instance-1_3");
     xml += '\n' + spaces(2) + '<name>' + v + '</name>';
   }
    return xml;
@@ -271,8 +306,10 @@ $(function() {
 <script type="text/javascript" src="js/xsd-forms-override.js"></script>
 </head>
 <body>
-
 <div class="form">
+
+<h2>'header' here</h2>
+
 <div id="start"></div>
 <form method="POST" action="form.html" name="form">
  
@@ -317,6 +354,23 @@ $(function() {
               <div class="item-after">'after' might be used for some informative remarks about the topic and appears after the validation message</div>
             </div>
           </div>
+          <div id="b-repeating-enclosing-2-instance-1_3" class="repeating-enclosing">
+            <div class="item-title">'title' for this question</div>
+            <div class="remove-button-container">
+              <div id="b-remove-button-2-instance-1_3" class="remove-button white small">'removeLabel' click to remove repeat</div>
+            </div>
+            <div class="item-before">'before' might be used for a descriptive preamble to a question</div>
+            <div class="item-number">2</div>
+            <label class="item-label" for="b-item-input-2-instance-1_3">'label' goes here, defaults to element name<em>*</em></label>
+            <div class="item-input">
+              <input number="2" name="b-item-input-2-instance-1_3" id="b-item-2-instance-1_3" class=" item-input-text" type="text">
+              </input>
+              <div class="item-description">'description' goes here to describe the input format for example</div>
+              <div id="b-item-path-2-instance-1_3" class="item-path" enabled="true"></div>
+              <div id="b-item-error-2-instance-1_3" class="item-error">'validation' is the message to indicate an invalid response'</div>
+              <div class="item-after">'after' might be used for some informative remarks about the topic and appears after the validation message</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -327,6 +381,9 @@ $(function() {
   <p><div id="submit-comments"></div></p>
 
 </form>
+
+    <p>'footer' here.</p>
+
 </div>
 </body>
 </html>

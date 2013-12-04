@@ -196,8 +196,9 @@ Yep. Use this *extraScript* (using [xml2json.js](https://code.google.com/p/x2js/
     processXml = function (xml) {
       var x2js = new X2JS(); 
       var json = x2js.xml_str2json(xml);
+      var jsonString = JSON.stringify(json);
       //alert or you could do a jquery ajax call to submit to a web server
-      alert(json);
+      alert(jsonString);
     }
 
 ###How do I override the appearance/behaviour of the generated form?

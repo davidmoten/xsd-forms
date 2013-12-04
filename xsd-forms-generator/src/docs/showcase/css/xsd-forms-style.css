@@ -13,16 +13,6 @@ body {
 	background-color: #F5F5F5 ;/*#EDFAD9;*/
 }
 
-.form-title {
-	font-size: 15;
-	padding-bottom: 5px;
-}
-
-.form-description {
-	padding-left: 10px;
-	padding-bottom: 10px;
-}
-
 .sequence {
 	clear:left;
 }

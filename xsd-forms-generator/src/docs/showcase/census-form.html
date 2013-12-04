@@ -1,0 +1,3270 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/xsd-forms-style.css" type="text/css"/>
+<link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
+<link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="js/xml2json.js"></script>
+
+<!-- extra imports would go here -->
+
+<script type="text/javascript">
+
+function encodeHTML(s) {
+    if (typeof(s) != "undefined")
+	    return s.replace(/&/g, '&amp;')
+	               .replace(/</g, '&lt;')
+	               .replace(/>/g, '&gt;')
+	               .replace(/"/g, '&quot;');
+     else 
+          return s; 
+}
+          
+function testEncodeHTML() {
+   test('&lt;&gt;' == encodeHTML('<>'), "angle brackets encoded")          
+}
+          
+function test(condition, message) {
+  if (!condition) alert(message);
+}
+          
+function encodedValueById(id) {
+    return encodeHTML($("#"+id).val());
+}
+
+function spaces(n) {
+    var s = "";
+    for (var i=0;i<n;i++)
+      s = s + " ";
+    return s;
+}
+
+function cloneAndReplaceIds(element, suffix){
+  var clone = element.clone();
+  clone.find("*[id]").andSelf().each(function() { 
+    var previousId = $(this).attr("id");
+    var newId = previousId.replace(/(-[0-9][0-9]*)$/,"$1" + suffix);
+    $(this).attr("id", newId); 
+  });
+  return clone;
+}
+    
+function idVisible(id) {
+    return elemVisible($("#"+id));
+}
+    
+function elemVisible(elem) {
+    return elem.is(":visible");    
+}
+          
+function toXmlDate(s) {
+  return s;
+}
+          
+function toXmlDateTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toXmlTime(s) {
+  return $.trim(s) +":00";
+}
+          
+function toBoolean(s) {
+  if (s)
+    return "true";
+  else 
+    return "false";
+}
+          
+$(function() {
+  //run js unit tests        
+  testEncodeHTML();
+  
+  //setup date and time pickers
+  $('input').filter('.datepickerclass').datepicker();
+  //now a workaround because datepicker does not use the initial value with the required format but expects mm/dd/yyyy
+  $('input').filter('.datepickerclass').each(function() {
+    var elem = $(this);
+    var val = elem.attr('value');
+    elem.datepicker( "option", "dateFormat","yy-mm-dd");
+    if (typeof(val) != 'undefined') {
+      elem.datepicker('setDate',val);
+    }
+  });
+  $('input').filter('.datetimepickerclass').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm',separator: 'T'});
+  $('input').filter('.timepickerclass').timepicker({});
+
+  function callMethod(methodName, argument) {
+    var method = eval('(' + methodName + ')');
+    return method(argument);
+  }
+  
+  function changeMinOccursZeroCheckbox(v,enclosing) {
+    if (v.is(':checked')) {
+      enclosing.find(':input').prop('disabled',false);
+      enclosing.find('.min-occurs-zero').prop('checked',true) 
+    } else {
+      enclosing.find(':input').prop('disabled',true);
+      enclosing.find('.min-occurs-zero').prop('checked',false)      
+    }
+  }
+  
+  function matchesPattern(elem,regex) {
+    return regex.test(elem.val());
+  }
+  
+  function showError(id,ok) {
+    var error = $("#"+id);
+    if (ok)
+      error.hide();
+    else 
+      error.show();
+  }
+          
+  function validate() {
+    var previousItems = null;
+    $('*[number]').each( function(index) {
+      var thisId = this.id
+      var elem = $('#' + thisId)
+      // will do validations here
+      //if elem visible then do the validation for that element
+      if (elemVisible(elem)) 
+        elem.change();
+    });
+    $('input:radio').each( function (index) {
+      var elem = $('#' + this.id)
+      if (elemVisible(elem))
+        elem.change();
+    });
+    var count = $('.item-error').filter(":visible").length
+    if (count>0) {
+      $('#validation-errors').show();
+      return false;
+    }
+    else { 
+      $('#validation-errors').hide();
+      return true;
+    }
+  }
+          
+  function getXml() {
+    return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +  getXml1instance();
+  }
+
+  $('#submit').click( function () {
+    if (validate()) {
+      var xml = getXml();
+      processXml(xml);
+    }
+  });
+          
+  var processXml = function(xml) {
+    var s = xml.replace(/&/g,"&amp;");
+    s = s.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s = "<pre>" + s + "</pre>";
+    $('#submit-comments').html(s);
+  }
+          
+  
+  $('#b-remove-button-1-instance-1').click(function() {
+    $('#b-repeating-enclosing-1-instance-1').hide();
+  });
+
+  $('#b-remove-button-2-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-2-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-3-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-3-instance-1_1_1').hide();
+  });
+
+  $('#b-item-3-instance-1_1_1').prop('checked',false);
+
+  $('#b-item-3-instance-1_1_1').width('4em');
+  // apartment-flat-unit-number
+  var validate3instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-3-instance-1_1_1');
+    var pathDiv = $('#b-item-path-3-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-3-instance-1_1_1').change( function() {
+    var ok = validate3instance1_1_1();
+    showError('b-item-error-3-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-3-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-4-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-4-instance-1_1_1').hide();
+  });
+
+  $('#b-item-4-instance-1_1_1').prop('checked',false);
+
+  $('#b-item-4-instance-1_1_1').width('5em');
+  // street-number
+  var validate4instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-4-instance-1_1_1');
+    var pathDiv = $('#b-item-path-4-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-4-instance-1_1_1').change( function() {
+    var ok = validate4instance1_1_1();
+    showError('b-item-error-4-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-4-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-5-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-5-instance-1_1_1').hide();
+  });
+
+  $('#b-item-5-instance-1_1_1').prop('checked',false);
+
+  $('#b-item-5-instance-1_1_1').width('20em');
+  // street-name
+  var validate5instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-5-instance-1_1_1');
+    var pathDiv = $('#b-item-path-5-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-5-instance-1_1_1').change( function() {
+    var ok = validate5instance1_1_1();
+    showError('b-item-error-5-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-5-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-6-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-6-instance-1_1_1').hide();
+  });
+
+  $('#b-item-6-instance-1_1_1').prop('checked',false);
+
+  $('#b-item-6-instance-1_1_1').width('20em');
+  // suburb-locality
+  var validate6instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-6-instance-1_1_1');
+    var pathDiv = $('#b-item-path-6-instance-1_1_1');
+    //length test
+    if (v.val().length <1)
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-6-instance-1_1_1').change( function() {
+    var ok = validate6instance1_1_1();
+    showError('b-item-error-6-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-7-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-7-instance-1_1_1').hide();
+  });
+
+  // state
+  var validate7instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-7-instance-1_1_1');
+    var pathDiv = $('#b-item-path-7-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-7-instance-1_1_1').change( function() {
+    var ok = validate7instance1_1_1();
+    showError('b-item-error-7-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-8-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-8-instance-1_1_1').hide();
+  });
+
+  $('#b-item-8-instance-1_1_1').prop('checked',false);
+
+  $('#b-item-8-instance-1_1_1').width('4em');
+  // postcode
+  var validate8instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-8-instance-1_1_1');
+    var pathDiv = $('#b-item-path-8-instance-1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^[0-9]{4}$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-8-instance-1_1_1').change( function() {
+    var ok = validate8instance1_1_1();
+    showError('b-item-error-8-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-9-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-9-instance-1_1_1').hide();
+  });
+
+  $('#b-item-9-instance-1_1_1').prop('checked',false);
+
+  $('#b-item-9-instance-1_1_1').width('25em');
+  // property-building-name
+  var validate9instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-9-instance-1_1_1');
+    var pathDiv = $('#b-item-path-9-instance-1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-9-instance-1_1_1').change( function() {
+    var ok = validate9instance1_1_1();
+    showError('b-item-error-9-instance-1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-9-instance-1_1_1').attr('enabled','false');
+  $('#b-remove-button-10-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-10-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-11-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-11-instance-1_1_1').hide();
+  });
+
+  $('#b-item-11-instance-1_1_1').prop('checked',false);
+
+  $('#b-item-11-instance-1_1_1').css('width','20em');
+  // first-name
+  var validate11instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-11-instance-1_1_1');
+    var pathDiv = $('#b-item-path-11-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-11-instance-1_1_1').change( function() {
+    var ok = validate11instance1_1_1();
+    showError('b-item-error-11-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-12-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-12-instance-1_1_1').hide();
+  });
+
+  $('#b-item-12-instance-1_1_1').prop('checked',false);
+
+  $('#b-item-12-instance-1_1_1').width('20em');
+  // last-name
+  var validate12instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-12-instance-1_1_1');
+    var pathDiv = $('#b-item-path-12-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-12-instance-1_1_1').change( function() {
+    var ok = validate12instance1_1_1();
+    showError('b-item-error-12-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-13-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-13-instance-1_1').hide();
+  });
+
+  // gender
+  var validate13instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-13-instance-1_1');
+    var pathDiv = $('#b-item-path-13-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-13-instance-1_1').change( function() {
+    var ok = validate13instance1_1();
+    showError('b-item-error-13-instance-1_1',ok);
+  });
+  
+  $('#b-choice-content-14-instance-1_1-choice-1').hide();
+  $('#b-choice-content-14-instance-1_1-choice-2').hide();
+  var choiceChange14instance1_1 = function addChoiceChange14instance1_1() {
+    $(':input[@name=b-item-input-14-instance-1_1]').change(function() {
+      var checked = $(':input[name=b-item-input-14-instance-1_1]:checked').attr('id');
+      if (checked == 'b-item-14-instance-1_1-choice-1') {
+        $('#b-choice-content-14-instance-1_1-choice-1').show();
+        $('#b-choice-content-14-instance-1_1-choice-1').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-14-instance-1_1-choice-1').hide();
+        $('#b-choice-content-14-instance-1_1-choice-1').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'b-item-14-instance-1_1-choice-2') {
+        $('#b-choice-content-14-instance-1_1-choice-2').show();
+        $('#b-choice-content-14-instance-1_1-choice-2').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-14-instance-1_1-choice-2').hide();
+        $('#b-choice-content-14-instance-1_1-choice-2').find('.item-path').attr('enabled','false');
+      }
+    });
+  }
+
+  choiceChange14instance1_1();
+  $('#b-remove-button-14-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-14-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-15-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-15-instance-1_1_1').hide();
+  });
+
+  $('#b-item-15-instance-1_1_1').prop('checked',false);
+
+  // date-of-birth
+  var validate15instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-15-instance-1_1_1');
+    var pathDiv = $('#b-item-path-15-instance-1_1_1');
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\d$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-15-instance-1_1_1').change( function() {
+    var ok = validate15instance1_1_1();
+    showError('b-item-error-15-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-16-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-16-instance-1_1_1').hide();
+  });
+
+  $('#b-item-16-instance-1_1_1').prop('checked',false);
+
+  // age-last-birthday
+  var validate16instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-16-instance-1_1_1');
+    var pathDiv = $('#b-item-path-16-instance-1_1_1');
+    ok &= matchesPattern(v,/^\d+$/);
+    //facet test
+    if ((+(v.val())) < 0)
+      ok = false;
+    //facet test
+    if ((+(v.val())) > 150)
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-16-instance-1_1_1').change( function() {
+    var ok = validate16instance1_1_1();
+    showError('b-item-error-16-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-17-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-17-instance-1_1').hide();
+  });
+
+  // marital-status
+  var validate17instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-17-instance-1_1');
+    var pathDiv = $('#b-item-path-17-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-17-instance-1_1').change( function() {
+    var ok = validate17instance1_1();
+    showError('b-item-error-17-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-18-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-18-instance-1_1').hide();
+  });
+
+  // indigenous-origin
+  var validate18instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-18-instance-1_1');
+    var pathDiv = $('#b-item-path-18-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-18-instance-1_1').change( function() {
+    var ok = validate18instance1_1();
+    showError('b-item-error-18-instance-1_1',ok);
+  });
+  
+  $('#b-choice-content-19-instance-1_1-choice-1').hide();
+  $('#b-choice-content-19-instance-1_1-choice-2').hide();
+  $('#b-choice-content-19-instance-1_1-choice-3').hide();
+  var choiceChange19instance1_1 = function addChoiceChange19instance1_1() {
+    $(':input[@name=b-item-input-19-instance-1_1]').change(function() {
+      var checked = $(':input[name=b-item-input-19-instance-1_1]:checked').attr('id');
+      if (checked == 'b-item-19-instance-1_1-choice-1') {
+        $('#b-choice-content-19-instance-1_1-choice-1').show();
+        $('#b-choice-content-19-instance-1_1-choice-1').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-19-instance-1_1-choice-1').hide();
+        $('#b-choice-content-19-instance-1_1-choice-1').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'b-item-19-instance-1_1-choice-2') {
+        $('#b-choice-content-19-instance-1_1-choice-2').show();
+        $('#b-choice-content-19-instance-1_1-choice-2').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-19-instance-1_1-choice-2').hide();
+        $('#b-choice-content-19-instance-1_1-choice-2').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'b-item-19-instance-1_1-choice-3') {
+        $('#b-choice-content-19-instance-1_1-choice-3').show();
+        $('#b-choice-content-19-instance-1_1-choice-3').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-19-instance-1_1-choice-3').hide();
+        $('#b-choice-content-19-instance-1_1-choice-3').find('.item-path').attr('enabled','false');
+      }
+    });
+  }
+
+  choiceChange19instance1_1();
+  $('#b-remove-button-19-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-19-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-20-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-20-instance-1_1_1').hide();
+  });
+
+  // residential-same-as-dwelling-address
+  var validate20instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-20-instance-1_1_1');
+    var pathDiv = $('#b-item-path-20-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-20-instance-1_1_1').change( function() {
+    var ok = validate20instance1_1_1();
+    showError('b-item-error-20-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-21-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-21-instance-1_1_1').hide();
+  });
+
+  $('#b-remove-button-22-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-22-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-22-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-22-instance-1_1_1_1').width('4em');
+  // apartment-flat-unit-number
+  var validate22instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-22-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-22-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-22-instance-1_1_1_1').change( function() {
+    var ok = validate22instance1_1_1_1();
+    showError('b-item-error-22-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-22-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-23-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-23-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-23-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-23-instance-1_1_1_1').width('5em');
+  // street-number
+  var validate23instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-23-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-23-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-23-instance-1_1_1_1').change( function() {
+    var ok = validate23instance1_1_1_1();
+    showError('b-item-error-23-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-23-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-24-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-24-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-24-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-24-instance-1_1_1_1').width('20em');
+  // street-name
+  var validate24instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-24-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-24-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-24-instance-1_1_1_1').change( function() {
+    var ok = validate24instance1_1_1_1();
+    showError('b-item-error-24-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-24-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-25-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-25-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-25-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-25-instance-1_1_1_1').width('20em');
+  // suburb-locality
+  var validate25instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-25-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-25-instance-1_1_1_1');
+    //length test
+    if (v.val().length <1)
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-25-instance-1_1_1_1').change( function() {
+    var ok = validate25instance1_1_1_1();
+    showError('b-item-error-25-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-26-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-26-instance-1_1_1_1').hide();
+  });
+
+  // state
+  var validate26instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-26-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-26-instance-1_1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-26-instance-1_1_1_1').change( function() {
+    var ok = validate26instance1_1_1_1();
+    showError('b-item-error-26-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-27-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-27-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-27-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-27-instance-1_1_1_1').width('4em');
+  // postcode
+  var validate27instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-27-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-27-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^[0-9]{4}$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-27-instance-1_1_1_1').change( function() {
+    var ok = validate27instance1_1_1_1();
+    showError('b-item-error-27-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-28-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-28-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-28-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-28-instance-1_1_1_1').width('25em');
+  // property-building-name
+  var validate28instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-28-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-28-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-28-instance-1_1_1_1').change( function() {
+    var ok = validate28instance1_1_1_1();
+    showError('b-item-error-28-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-28-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-29-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-29-instance-1_1_1').hide();
+  });
+
+  // other-country
+  var validate29instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-29-instance-1_1_1');
+    var pathDiv = $('#b-item-path-29-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-29-instance-1_1_1').change( function() {
+    var ok = validate29instance1_1_1();
+    showError('b-item-error-29-instance-1_1_1',ok);
+  });
+  
+  $('#b-choice-content-30-instance-1_1-choice-1').hide();
+  $('#b-choice-content-30-instance-1_1-choice-2').hide();
+  $('#b-choice-content-30-instance-1_1-choice-3').hide();
+  var choiceChange30instance1_1 = function addChoiceChange30instance1_1() {
+    $(':input[@name=b-item-input-30-instance-1_1]').change(function() {
+      var checked = $(':input[name=b-item-input-30-instance-1_1]:checked').attr('id');
+      if (checked == 'b-item-30-instance-1_1-choice-1') {
+        $('#b-choice-content-30-instance-1_1-choice-1').show();
+        $('#b-choice-content-30-instance-1_1-choice-1').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-30-instance-1_1-choice-1').hide();
+        $('#b-choice-content-30-instance-1_1-choice-1').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'b-item-30-instance-1_1-choice-2') {
+        $('#b-choice-content-30-instance-1_1-choice-2').show();
+        $('#b-choice-content-30-instance-1_1-choice-2').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-30-instance-1_1-choice-2').hide();
+        $('#b-choice-content-30-instance-1_1-choice-2').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'b-item-30-instance-1_1-choice-3') {
+        $('#b-choice-content-30-instance-1_1-choice-3').show();
+        $('#b-choice-content-30-instance-1_1-choice-3').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-30-instance-1_1-choice-3').hide();
+        $('#b-choice-content-30-instance-1_1-choice-3').find('.item-path').attr('enabled','false');
+      }
+    });
+  }
+
+  choiceChange30instance1_1();
+  $('#b-remove-button-30-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-30-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-31-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-31-instance-1_1_1').hide();
+  });
+
+  // residential-same-as-current
+  var validate31instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-31-instance-1_1_1');
+    var pathDiv = $('#b-item-path-31-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-31-instance-1_1_1').change( function() {
+    var ok = validate31instance1_1_1();
+    showError('b-item-error-31-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-32-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-32-instance-1_1_1').hide();
+  });
+
+  $('#b-remove-button-33-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-33-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-33-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-33-instance-1_1_1_1').width('4em');
+  // apartment-flat-unit-number
+  var validate33instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-33-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-33-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-33-instance-1_1_1_1').change( function() {
+    var ok = validate33instance1_1_1_1();
+    showError('b-item-error-33-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-33-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-34-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-34-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-34-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-34-instance-1_1_1_1').width('5em');
+  // street-number
+  var validate34instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-34-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-34-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-34-instance-1_1_1_1').change( function() {
+    var ok = validate34instance1_1_1_1();
+    showError('b-item-error-34-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-34-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-35-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-35-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-35-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-35-instance-1_1_1_1').width('20em');
+  // street-name
+  var validate35instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-35-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-35-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-35-instance-1_1_1_1').change( function() {
+    var ok = validate35instance1_1_1_1();
+    showError('b-item-error-35-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-35-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-36-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-36-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-36-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-36-instance-1_1_1_1').width('20em');
+  // suburb-locality
+  var validate36instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-36-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-36-instance-1_1_1_1');
+    //length test
+    if (v.val().length <1)
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-36-instance-1_1_1_1').change( function() {
+    var ok = validate36instance1_1_1_1();
+    showError('b-item-error-36-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-37-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-37-instance-1_1_1_1').hide();
+  });
+
+  // state
+  var validate37instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-37-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-37-instance-1_1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-37-instance-1_1_1_1').change( function() {
+    var ok = validate37instance1_1_1_1();
+    showError('b-item-error-37-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-38-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-38-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-38-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-38-instance-1_1_1_1').width('4em');
+  // postcode
+  var validate38instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-38-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-38-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^[0-9]{4}$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-38-instance-1_1_1_1').change( function() {
+    var ok = validate38instance1_1_1_1();
+    showError('b-item-error-38-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-39-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-39-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-39-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-39-instance-1_1_1_1').width('25em');
+  // property-building-name
+  var validate39instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-39-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-39-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-39-instance-1_1_1_1').change( function() {
+    var ok = validate39instance1_1_1_1();
+    showError('b-item-error-39-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-39-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-40-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-40-instance-1_1_1').hide();
+  });
+
+  // other-country
+  var validate40instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-40-instance-1_1_1');
+    var pathDiv = $('#b-item-path-40-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-40-instance-1_1_1').change( function() {
+    var ok = validate40instance1_1_1();
+    showError('b-item-error-40-instance-1_1_1',ok);
+  });
+  
+  $('#b-choice-content-41-instance-1_1-choice-1').hide();
+  $('#b-choice-content-41-instance-1_1-choice-2').hide();
+  $('#b-choice-content-41-instance-1_1-choice-3').hide();
+  var choiceChange41instance1_1 = function addChoiceChange41instance1_1() {
+    $(':input[@name=b-item-input-41-instance-1_1]').change(function() {
+      var checked = $(':input[name=b-item-input-41-instance-1_1]:checked').attr('id');
+      if (checked == 'b-item-41-instance-1_1-choice-1') {
+        $('#b-choice-content-41-instance-1_1-choice-1').show();
+        $('#b-choice-content-41-instance-1_1-choice-1').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-41-instance-1_1-choice-1').hide();
+        $('#b-choice-content-41-instance-1_1-choice-1').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'b-item-41-instance-1_1-choice-2') {
+        $('#b-choice-content-41-instance-1_1-choice-2').show();
+        $('#b-choice-content-41-instance-1_1-choice-2').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-41-instance-1_1-choice-2').hide();
+        $('#b-choice-content-41-instance-1_1-choice-2').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'b-item-41-instance-1_1-choice-3') {
+        $('#b-choice-content-41-instance-1_1-choice-3').show();
+        $('#b-choice-content-41-instance-1_1-choice-3').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-41-instance-1_1-choice-3').hide();
+        $('#b-choice-content-41-instance-1_1-choice-3').find('.item-path').attr('enabled','false');
+      }
+    });
+  }
+
+  choiceChange41instance1_1();
+  $('#b-remove-button-41-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-41-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-42-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-42-instance-1_1_1').hide();
+  });
+
+  // residential-same-as-current
+  var validate42instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-42-instance-1_1_1');
+    var pathDiv = $('#b-item-path-42-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-42-instance-1_1_1').change( function() {
+    var ok = validate42instance1_1_1();
+    showError('b-item-error-42-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-43-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-43-instance-1_1_1').hide();
+  });
+
+  $('#b-remove-button-44-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-44-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-44-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-44-instance-1_1_1_1').width('4em');
+  // apartment-flat-unit-number
+  var validate44instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-44-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-44-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-44-instance-1_1_1_1').change( function() {
+    var ok = validate44instance1_1_1_1();
+    showError('b-item-error-44-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-44-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-45-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-45-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-45-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-45-instance-1_1_1_1').width('5em');
+  // street-number
+  var validate45instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-45-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-45-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-45-instance-1_1_1_1').change( function() {
+    var ok = validate45instance1_1_1_1();
+    showError('b-item-error-45-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-45-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-46-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-46-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-46-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-46-instance-1_1_1_1').width('20em');
+  // street-name
+  var validate46instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-46-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-46-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-46-instance-1_1_1_1').change( function() {
+    var ok = validate46instance1_1_1_1();
+    showError('b-item-error-46-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-46-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-47-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-47-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-47-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-47-instance-1_1_1_1').width('20em');
+  // suburb-locality
+  var validate47instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-47-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-47-instance-1_1_1_1');
+    //length test
+    if (v.val().length <1)
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-47-instance-1_1_1_1').change( function() {
+    var ok = validate47instance1_1_1_1();
+    showError('b-item-error-47-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-48-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-48-instance-1_1_1_1').hide();
+  });
+
+  // state
+  var validate48instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-48-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-48-instance-1_1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-48-instance-1_1_1_1').change( function() {
+    var ok = validate48instance1_1_1_1();
+    showError('b-item-error-48-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-49-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-49-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-49-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-49-instance-1_1_1_1').width('4em');
+  // postcode
+  var validate49instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-49-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-49-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
+    var patternMatched =false;
+    patternMatched |= matchesPattern(v,/^[0-9]{4}$/);
+    if (!(patternMatched))
+      ok = false;
+    return ok;
+  }
+  
+  $('#b-item-49-instance-1_1_1_1').change( function() {
+    var ok = validate49instance1_1_1_1();
+    showError('b-item-error-49-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-50-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-50-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-50-instance-1_1_1_1').prop('checked',false);
+
+  $('#b-item-50-instance-1_1_1_1').width('25em');
+  // property-building-name
+  var validate50instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-50-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-50-instance-1_1_1_1');
+    // minOccurs=0, ok if blank
+    var isBlank  = (v.val() == null) || (v.val().length==0);
+    if (isBlank) ok = true;
+    return ok;
+  }
+  
+  $('#b-item-50-instance-1_1_1_1').change( function() {
+    var ok = validate50instance1_1_1_1();
+    showError('b-item-error-50-instance-1_1_1_1',ok);
+  });
+  
+  //disable item-path due to minOccurs=0 and default is empty
+  $('#b-item-path-50-instance-1_1_1_1').attr('enabled','false');
+  $('#b-remove-button-51-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-51-instance-1_1_1').hide();
+  });
+
+  // other-country
+  var validate51instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-51-instance-1_1_1');
+    var pathDiv = $('#b-item-path-51-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-51-instance-1_1_1').change( function() {
+    var ok = validate51instance1_1_1();
+    showError('b-item-error-51-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-52-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-52-instance-1_1').hide();
+  });
+
+  $('#b-item-52-instance-1_1').prop('checked',false);
+
+  // citizen
+  var validate52instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-52-instance-1_1');
+    var pathDiv = $('#b-item-path-52-instance-1_1');
+    return ok;
+  }
+  
+  $('#b-item-52-instance-1_1').change( function() {
+    var ok = validate52instance1_1();
+    showError('b-item-error-52-instance-1_1',ok);
+  });
+  
+  $('#b-choice-content-53-instance-1_1-choice-1').hide();
+  $('#b-choice-content-53-instance-1_1-choice-2').hide();
+  var choiceChange53instance1_1 = function addChoiceChange53instance1_1() {
+    $(':input[@name=b-item-input-53-instance-1_1]').change(function() {
+      var checked = $(':input[name=b-item-input-53-instance-1_1]:checked').attr('id');
+      if (checked == 'b-item-53-instance-1_1-choice-1') {
+        $('#b-choice-content-53-instance-1_1-choice-1').show();
+        $('#b-choice-content-53-instance-1_1-choice-1').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-53-instance-1_1-choice-1').hide();
+        $('#b-choice-content-53-instance-1_1-choice-1').find('.item-path').attr('enabled','false');
+      }
+      if (checked == 'b-item-53-instance-1_1-choice-2') {
+        $('#b-choice-content-53-instance-1_1-choice-2').show();
+        $('#b-choice-content-53-instance-1_1-choice-2').find('.item-path').attr('enabled','true');
+      }
+      else {
+        $('#b-choice-content-53-instance-1_1-choice-2').hide();
+        $('#b-choice-content-53-instance-1_1-choice-2').find('.item-path').attr('enabled','false');
+      }
+    });
+  }
+
+  choiceChange53instance1_1();
+  $('#b-remove-button-53-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-53-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-54-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-54-instance-1_1_1').hide();
+  });
+
+  // australia
+  var validate54instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-54-instance-1_1_1');
+    var pathDiv = $('#b-item-path-54-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-54-instance-1_1_1').change( function() {
+    var ok = validate54instance1_1_1();
+    showError('b-item-error-54-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-55-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-55-instance-1_1_1').hide();
+  });
+
+  $('#b-remove-button-56-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-56-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-56-instance-1_1_1_1').change( function() {
+    var v = $('#b-item-56-instance-1_1_1_1');
+    var refersTo = $('#b-item-enclosing-57-instance-1_1_1_1');
+    if ('Other' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  });
+
+  // country
+  var validate56instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-56-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-56-instance-1_1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-56-instance-1_1_1_1').change( function() {
+    var ok = validate56instance1_1_1_1();
+    showError('b-item-error-56-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-57-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-57-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-57-instance-1_1_1_1').prop('checked',false);
+
+  // other-country
+  var validate57instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-57-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-57-instance-1_1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-57-instance-1_1_1_1').change( function() {
+    var ok = validate57instance1_1_1_1();
+    showError('b-item-error-57-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-58-instance-1_1_1_1').click(function() {
+    $('#b-repeating-enclosing-58-instance-1_1_1_1').hide();
+  });
+
+  $('#b-item-58-instance-1_1_1_1').prop('checked',false);
+
+  // year-of-arrival
+  var validate58instance1_1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-58-instance-1_1_1_1');
+    var pathDiv = $('#b-item-path-58-instance-1_1_1_1');
+    ok &= matchesPattern(v,/^\d+$/);
+    return ok;
+  }
+  
+  $('#b-item-58-instance-1_1_1_1').change( function() {
+    var ok = validate58instance1_1_1_1();
+    showError('b-item-error-58-instance-1_1_1_1',ok);
+  });
+  
+  $('#b-remove-button-59-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-59-instance-1_1').hide();
+  });
+
+  // father-place-of-birth
+  var validate59instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-59-instance-1_1');
+    var pathDiv = $('#b-item-path-59-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-59-instance-1_1').change( function() {
+    var ok = validate59instance1_1();
+    showError('b-item-error-59-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-60-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-60-instance-1_1').hide();
+  });
+
+  // mother-place-of-birth
+  var validate60instance1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-60-instance-1_1');
+    var pathDiv = $('#b-item-path-60-instance-1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-60-instance-1_1').change( function() {
+    var ok = validate60instance1_1();
+    showError('b-item-error-60-instance-1_1',ok);
+  });
+  
+  $('#b-remove-button-61-instance-1_1').click(function() {
+    $('#b-repeating-enclosing-61-instance-1_1').hide();
+  });
+
+  $('#b-remove-button-62-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-62-instance-1_1_1').hide();
+  });
+
+  $('#b-item-62-instance-1_1_1').change( function() {
+    var v = $('#b-item-62-instance-1_1_1');
+    var refersTo = $('#b-item-enclosing-63-instance-1_1_1');
+    if ('Other' == v.val())
+      refersTo.show();
+    else
+      refersTo.hide();
+  });
+
+  // language-at-home
+  var validate62instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-62-instance-1_1_1');
+    var pathDiv = $('#b-item-path-62-instance-1_1_1');
+    //enumeration test
+    if ($.trim(v.val()).length ==0) ok = false;
+    return ok;
+  }
+  
+  $('#b-item-62-instance-1_1_1').change( function() {
+    var ok = validate62instance1_1_1();
+    showError('b-item-error-62-instance-1_1_1',ok);
+  });
+  
+  $('#b-remove-button-63-instance-1_1_1').click(function() {
+    $('#b-repeating-enclosing-63-instance-1_1_1').hide();
+  });
+
+  $('#b-item-63-instance-1_1_1').prop('checked',false);
+
+  // language-at-home-other
+  var validate63instance1_1_1 = function () {
+    var ok = true;
+    var v = $('#b-item-63-instance-1_1_1');
+    var pathDiv = $('#b-item-path-63-instance-1_1_1');
+    return ok;
+  }
+  
+  $('#b-item-63-instance-1_1_1').change( function() {
+    var ok = validate63instance1_1_1();
+    showError('b-item-error-63-instance-1_1_1',ok);
+  });
+  
+  //extract xml from element <apartment-flat-unit-number>
+  function getXml3instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-3-instance-1_1_1')) {
+    var v = encodedValueById("b-item-3-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<apartment-flat-unit-number>' + v + '</apartment-flat-unit-number>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <street-number>
+  function getXml4instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-4-instance-1_1_1')) {
+    var v = encodedValueById("b-item-4-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<street-number>' + v + '</street-number>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <street-name>
+  function getXml5instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-5-instance-1_1_1')) {
+    var v = encodedValueById("b-item-5-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<street-name>' + v + '</street-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <suburb-locality>
+  function getXml6instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-6-instance-1_1_1')) {
+    var v = encodedValueById("b-item-6-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<suburb-locality>' + v + '</suburb-locality>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <state>
+  function getXml7instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-7-instance-1_1_1')) {
+    var v = encodedValueById("b-item-7-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<state>' + v + '</state>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <postcode>
+  function getXml8instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-8-instance-1_1_1')) {
+    var v = encodedValueById("b-item-8-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<postcode>' + v + '</postcode>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <property-building-name>
+  function getXml9instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-9-instance-1_1_1')) {
+    var v = encodedValueById("b-item-9-instance-1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(4) + '<property-building-name>' + v + '</property-building-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <dwelling-address>
+  function getXml2instance1() {
+
+    var xml = '\n' + spaces(2) + '<dwelling-address>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-2-instance-1_1')) {
+      xml += getXml3instance1_1();
+      xml += getXml4instance1_1();
+      xml += getXml5instance1_1();
+      xml += getXml6instance1_1();
+      xml += getXml7instance1_1();
+      xml += getXml8instance1_1();
+      xml += getXml9instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</dwelling-address>';
+    return xml;
+  }
+
+  //extract xml from element <first-name>
+  function getXml11instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-11-instance-1_1_1')) {
+    var v = encodedValueById("b-item-11-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<first-name>' + v + '</first-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <last-name>
+  function getXml12instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-12-instance-1_1_1')) {
+    var v = encodedValueById("b-item-12-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<last-name>' + v + '</last-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <name>
+  function getXml10instance1() {
+
+    var xml = '\n' + spaces(2) + '<name>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-10-instance-1_1')) {
+      xml += getXml11instance1_1();
+      xml += getXml12instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</name>';
+    return xml;
+  }
+
+  //extract xml from element <gender>
+  function getXml13instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-13-instance-1_1')) {
+    var v = encodedValueById("b-item-13-instance-1_1");
+    xml += '\n' + spaces(2) + '<gender>' + v + '</gender>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <date-of-birth>
+  function getXml15instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-15-instance-1_1_1')) {
+    var v = encodedValueById("b-item-15-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<date-of-birth>' + toXmlDate(v) + '</date-of-birth>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <age-last-birthday>
+  function getXml16instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-16-instance-1_1_1')) {
+    var v = encodedValueById("b-item-16-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<age-last-birthday>' + v + '</age-last-birthday>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <census>
+  function getXml14instance1() {
+
+    var xml = '\n' + spaces(2) + '<census>';
+    //now optionally add selected child if any
+    var checked = $(':input[name=b-item-input-14-instance-1_1]:checked').attr('id');
+    if (checked == "b-item-14-instance-1_1-choice-1")
+    xml += getXml15instance1_1();
+    if (checked == "b-item-14-instance-1_1-choice-2")
+    xml += getXml16instance1_1();
+    xml += '\n' + spaces(2) + '</census>';
+    return xml;
+  }
+
+  //extract xml from element <marital-status>
+  function getXml17instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-17-instance-1_1')) {
+    var v = encodedValueById("b-item-17-instance-1_1");
+    xml += '\n' + spaces(2) + '<marital-status>' + v + '</marital-status>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <indigenous-origin>
+  function getXml18instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-18-instance-1_1')) {
+    var v = encodedValueById("b-item-18-instance-1_1");
+    xml += '\n' + spaces(2) + '<indigenous-origin>' + v + '</indigenous-origin>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <residential-same-as-dwelling-address>
+  function getXml20instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-20-instance-1_1_1')) {
+    var v = $('#b-item-20-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<residential-same-as-dwelling-address>' + toBoolean(v) + '</residential-same-as-dwelling-address>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <apartment-flat-unit-number>
+  function getXml22instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-22-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-22-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<apartment-flat-unit-number>' + v + '</apartment-flat-unit-number>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <street-number>
+  function getXml23instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-23-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-23-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-number>' + v + '</street-number>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <street-name>
+  function getXml24instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-24-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-24-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-name>' + v + '</street-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <suburb-locality>
+  function getXml25instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-25-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-25-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<suburb-locality>' + v + '</suburb-locality>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <state>
+  function getXml26instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-26-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-26-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<state>' + v + '</state>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <postcode>
+  function getXml27instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-27-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-27-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<postcode>' + v + '</postcode>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <property-building-name>
+  function getXml28instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-28-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-28-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<property-building-name>' + v + '</property-building-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <residential-address>
+  function getXml21instance1_1() {
+
+    var xml = '\n' + spaces(4) + '<residential-address>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-21-instance-1_1_1')) {
+      xml += getXml22instance1_1_1();
+      xml += getXml23instance1_1_1();
+      xml += getXml24instance1_1_1();
+      xml += getXml25instance1_1_1();
+      xml += getXml26instance1_1_1();
+      xml += getXml27instance1_1_1();
+      xml += getXml28instance1_1_1();
+    }
+    xml += '\n' + spaces(4) + '</residential-address>';
+    return xml;
+  }
+
+  //extract xml from element <other-country>
+  function getXml29instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-29-instance-1_1_1')) {
+    var v = $('#b-item-29-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<other-country>' + toBoolean(v) + '</other-country>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <residential-address>
+  function getXml19instance1() {
+
+    var xml = '\n' + spaces(2) + '<residential-address>';
+    //now optionally add selected child if any
+    var checked = $(':input[name=b-item-input-19-instance-1_1]:checked').attr('id');
+    if (checked == "b-item-19-instance-1_1-choice-1")
+    xml += getXml20instance1_1();
+    if (checked == "b-item-19-instance-1_1-choice-2")
+    xml += getXml21instance1_1();
+    if (checked == "b-item-19-instance-1_1-choice-3")
+    xml += getXml29instance1_1();
+    xml += '\n' + spaces(2) + '</residential-address>';
+    return xml;
+  }
+
+  //extract xml from element <residential-same-as-current>
+  function getXml31instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-31-instance-1_1_1')) {
+    var v = $('#b-item-31-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<residential-same-as-current>' + toBoolean(v) + '</residential-same-as-current>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <apartment-flat-unit-number>
+  function getXml33instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-33-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-33-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<apartment-flat-unit-number>' + v + '</apartment-flat-unit-number>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <street-number>
+  function getXml34instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-34-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-34-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-number>' + v + '</street-number>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <street-name>
+  function getXml35instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-35-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-35-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-name>' + v + '</street-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <suburb-locality>
+  function getXml36instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-36-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-36-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<suburb-locality>' + v + '</suburb-locality>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <state>
+  function getXml37instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-37-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-37-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<state>' + v + '</state>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <postcode>
+  function getXml38instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-38-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-38-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<postcode>' + v + '</postcode>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <property-building-name>
+  function getXml39instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-39-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-39-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<property-building-name>' + v + '</property-building-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <residential-address>
+  function getXml32instance1_1() {
+
+    var xml = '\n' + spaces(4) + '<residential-address>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-32-instance-1_1_1')) {
+      xml += getXml33instance1_1_1();
+      xml += getXml34instance1_1_1();
+      xml += getXml35instance1_1_1();
+      xml += getXml36instance1_1_1();
+      xml += getXml37instance1_1_1();
+      xml += getXml38instance1_1_1();
+      xml += getXml39instance1_1_1();
+    }
+    xml += '\n' + spaces(4) + '</residential-address>';
+    return xml;
+  }
+
+  //extract xml from element <other-country>
+  function getXml40instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-40-instance-1_1_1')) {
+    var v = $('#b-item-40-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<other-country>' + toBoolean(v) + '</other-country>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <residential-address-one-year-ago>
+  function getXml30instance1() {
+
+    var xml = '\n' + spaces(2) + '<residential-address-one-year-ago>';
+    //now optionally add selected child if any
+    var checked = $(':input[name=b-item-input-30-instance-1_1]:checked').attr('id');
+    if (checked == "b-item-30-instance-1_1-choice-1")
+    xml += getXml31instance1_1();
+    if (checked == "b-item-30-instance-1_1-choice-2")
+    xml += getXml32instance1_1();
+    if (checked == "b-item-30-instance-1_1-choice-3")
+    xml += getXml40instance1_1();
+    xml += '\n' + spaces(2) + '</residential-address-one-year-ago>';
+    return xml;
+  }
+
+  //extract xml from element <residential-same-as-current>
+  function getXml42instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-42-instance-1_1_1')) {
+    var v = $('#b-item-42-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<residential-same-as-current>' + toBoolean(v) + '</residential-same-as-current>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <apartment-flat-unit-number>
+  function getXml44instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-44-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-44-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<apartment-flat-unit-number>' + v + '</apartment-flat-unit-number>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <street-number>
+  function getXml45instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-45-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-45-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-number>' + v + '</street-number>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <street-name>
+  function getXml46instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-46-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-46-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<street-name>' + v + '</street-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <suburb-locality>
+  function getXml47instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-47-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-47-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<suburb-locality>' + v + '</suburb-locality>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <state>
+  function getXml48instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-48-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-48-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<state>' + v + '</state>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <postcode>
+  function getXml49instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-49-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-49-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<postcode>' + v + '</postcode>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <property-building-name>
+  function getXml50instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-50-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-50-instance-1_1_1_1");
+    if (v.length>0)
+      xml += '\n' + spaces(6) + '<property-building-name>' + v + '</property-building-name>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <residential-address>
+  function getXml43instance1_1() {
+
+    var xml = '\n' + spaces(4) + '<residential-address>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-43-instance-1_1_1')) {
+      xml += getXml44instance1_1_1();
+      xml += getXml45instance1_1_1();
+      xml += getXml46instance1_1_1();
+      xml += getXml47instance1_1_1();
+      xml += getXml48instance1_1_1();
+      xml += getXml49instance1_1_1();
+      xml += getXml50instance1_1_1();
+    }
+    xml += '\n' + spaces(4) + '</residential-address>';
+    return xml;
+  }
+
+  //extract xml from element <other-country>
+  function getXml51instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-51-instance-1_1_1')) {
+    var v = $('#b-item-51-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<other-country>' + toBoolean(v) + '</other-country>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <residential-address-five-years-ago>
+  function getXml41instance1() {
+
+    var xml = '\n' + spaces(2) + '<residential-address-five-years-ago>';
+    //now optionally add selected child if any
+    var checked = $(':input[name=b-item-input-41-instance-1_1]:checked').attr('id');
+    if (checked == "b-item-41-instance-1_1-choice-1")
+    xml += getXml42instance1_1();
+    if (checked == "b-item-41-instance-1_1-choice-2")
+    xml += getXml43instance1_1();
+    if (checked == "b-item-41-instance-1_1-choice-3")
+    xml += getXml51instance1_1();
+    xml += '\n' + spaces(2) + '</residential-address-five-years-ago>';
+    return xml;
+  }
+
+  //extract xml from element <citizen>
+  function getXml52instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-52-instance-1_1')) {
+    var v = $('#b-item-52-instance-1_1').is(':checked');
+    xml += '\n' + spaces(2) + '<citizen>' + toBoolean(v) + '</citizen>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <australia>
+  function getXml54instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-54-instance-1_1_1')) {
+    var v = $('#b-item-54-instance-1_1_1').is(':checked');
+    xml += '\n' + spaces(4) + '<australia>' + toBoolean(v) + '</australia>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <country>
+  function getXml56instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-56-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-56-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<country>' + v + '</country>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <other-country>
+  function getXml57instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-57-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-57-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<other-country>' + v + '</other-country>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <year-of-arrival>
+  function getXml58instance1_1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-58-instance-1_1_1_1')) {
+    var v = encodedValueById("b-item-58-instance-1_1_1_1");
+    xml += '\n' + spaces(6) + '<year-of-arrival>' + v + '</year-of-arrival>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <other>
+  function getXml55instance1_1() {
+
+    var xml = '\n' + spaces(4) + '<other>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-55-instance-1_1_1')) {
+      xml += getXml56instance1_1_1();
+      xml += getXml57instance1_1_1();
+      xml += getXml58instance1_1_1();
+    }
+    xml += '\n' + spaces(4) + '</other>';
+    return xml;
+  }
+
+  //extract xml from element <country-of-birth>
+  function getXml53instance1() {
+
+    var xml = '\n' + spaces(2) + '<country-of-birth>';
+    //now optionally add selected child if any
+    var checked = $(':input[name=b-item-input-53-instance-1_1]:checked').attr('id');
+    if (checked == "b-item-53-instance-1_1-choice-1")
+    xml += getXml54instance1_1();
+    if (checked == "b-item-53-instance-1_1-choice-2")
+    xml += getXml55instance1_1();
+    xml += '\n' + spaces(2) + '</country-of-birth>';
+    return xml;
+  }
+
+  //extract xml from element <father-place-of-birth>
+  function getXml59instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-59-instance-1_1')) {
+    var v = encodedValueById("b-item-59-instance-1_1");
+    xml += '\n' + spaces(2) + '<father-place-of-birth>' + v + '</father-place-of-birth>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <mother-place-of-birth>
+  function getXml60instance1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-60-instance-1_1')) {
+    var v = encodedValueById("b-item-60-instance-1_1");
+    xml += '\n' + spaces(2) + '<mother-place-of-birth>' + v + '</mother-place-of-birth>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <language-at-home>
+  function getXml62instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-62-instance-1_1_1')) {
+    var v = encodedValueById("b-item-62-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<language-at-home>' + v + '</language-at-home>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <language-at-home-other>
+  function getXml63instance1_1() {
+
+  var xml='';
+  if (idVisible('b-repeating-enclosing-63-instance-1_1_1')) {
+    var v = encodedValueById("b-item-63-instance-1_1_1");
+    xml += '\n' + spaces(4) + '<language-at-home-other>' + v + '</language-at-home-other>';
+  }
+   return xml;
+  }
+
+  //extract xml from element <language-at-home>
+  function getXml61instance1() {
+
+    var xml = '\n' + spaces(2) + '<language-at-home>';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-61-instance-1_1')) {
+      xml += getXml62instance1_1();
+      xml += getXml63instance1_1();
+    }
+    xml += '\n' + spaces(2) + '</language-at-home>';
+    return xml;
+  }
+
+  //extract xml from element <census>
+  function getXml1instance() {
+
+    var xml = '\n' + spaces(0) + '<census xmlns="http://org.moten.david/example2">';
+    //now add sequence children for each instanceNo
+    if (idVisible('b-repeating-enclosing-1-instance-1')) {
+      xml += getXml2instance1();
+      xml += getXml10instance1();
+      xml += getXml13instance1();
+      xml += getXml14instance1();
+      xml += getXml17instance1();
+      xml += getXml18instance1();
+      xml += getXml19instance1();
+      xml += getXml30instance1();
+      xml += getXml41instance1();
+      xml += getXml52instance1();
+      xml += getXml53instance1();
+      xml += getXml59instance1();
+      xml += getXml60instance1();
+      xml += getXml61instance1();
+    }
+    xml += '\n' + spaces(0) + '</census>';
+    return xml;
+  }
+
+  
+  $("#form").submit(function () { return false; }); // so it won't submit
+  
+  
+// extra script would go here
+
+  
+});
+</script>
+<script type="text/javascript" src="js/xsd-forms-override.js"></script>
+</head>
+<body>
+<div class="form">
+
+<h2>Australian Census 2011 extract</h2>
+
+<div id="start"></div>
+<form method="POST" action="form.html" name="form">
+ 
+ 
+  <div id="b-item-enclosing-1-instance-1" class="sequence">
+    <div class="non-repeating-title">
+    </div>
+    <div id="b-repeating-enclosing-1-instance-1" class="repeating-enclosing">
+      <div class="sequence-label"></div>
+      <div id="b-sequence-1-instance-1" class="sequence-content">
+        <div id="b-item-enclosing-2-instance-1_1" class="sequence">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-2-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label">What is the address of this dwelling?</div>
+            <div id="b-sequence-2-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-3-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-3-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">3</div>
+                  <label class="item-label" for="b-item-input-3-instance-1_1_1">Apartment/Flat/Unit number</label>
+                  <div class="item-input">
+                    <input number="3" name="b-item-input-3-instance-1_1_1" id="b-item-3-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-3-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-3-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-4-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-4-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">4</div>
+                  <label class="item-label" for="b-item-input-4-instance-1_1_1">Street Number</label>
+                  <div class="item-input">
+                    <input number="4" name="b-item-input-4-instance-1_1_1" id="b-item-4-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-4-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-4-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-5-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-5-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">5</div>
+                  <label class="item-label" for="b-item-input-5-instance-1_1_1">Street Name</label>
+                  <div class="item-input">
+                    <input number="5" name="b-item-input-5-instance-1_1_1" id="b-item-5-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-5-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-5-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-6-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-6-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">6</div>
+                  <label class="item-label" for="b-item-input-6-instance-1_1_1">Suburb Locality</label>
+                  <div class="item-input">
+                    <input number="6" name="b-item-input-6-instance-1_1_1" id="b-item-6-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-6-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-6-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-7-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-7-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">7</div>
+                  <label class="item-label" for="b-item-input-7-instance-1_1_1">State</label>
+                  <div class="item-input">
+                    <select id="b-item-7-instance-1_1_1" class="select" name="b-item-input-7-instance-1_1_1" number="7">
+                      <option value="">Select one...</option>
+                      <option value="ACT">ACT</option>
+                      <option value="NSW">NSW</option>
+                      <option value="NT">NT</option>
+                      <option value="QLD">QLD</option>
+                      <option value="SA">SA</option>
+                      <option value="TAS">TAS</option>
+                      <option value="VIC">VIC</option>
+                      <option value="WA">WA</option>
+                    </select>
+                    <div id="b-item-path-7-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-7-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-8-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-8-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">8</div>
+                  <label class="item-label" for="b-item-input-8-instance-1_1_1">Postcode<em>*</em></label>
+                  <div class="item-input">
+                    <input number="8" name="b-item-input-8-instance-1_1_1" id="b-item-8-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-8-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-8-instance-1_1_1" class="item-error">Not a valid postcode</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-9-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-9-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">9</div>
+                  <label class="item-label" for="b-item-input-9-instance-1_1_1">Property Building Name</label>
+                  <div class="item-input">
+                    <input number="9" name="b-item-input-9-instance-1_1_1" id="b-item-9-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-9-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-9-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-10-instance-1_1" class="sequence">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-10-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label">Name of the person</div>
+            <div id="b-sequence-10-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-11-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-11-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">11</div>
+                  <label class="item-label" for="b-item-input-11-instance-1_1_1">First Name</label>
+                  <div class="item-input">
+                    <input number="11" name="b-item-input-11-instance-1_1_1" id="b-item-11-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-11-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-11-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-12-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-12-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">12</div>
+                  <label class="item-label" for="b-item-input-12-instance-1_1_1">Last Name</label>
+                  <div class="item-input">
+                    <input number="12" name="b-item-input-12-instance-1_1_1" id="b-item-12-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-12-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-13-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-13-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">13</div>
+            <label class="item-label" for="b-item-input-13-instance-1_1">Is the person male or female?</label>
+            <div class="item-input">
+              <select id="b-item-13-instance-1_1" class="select" name="b-item-input-13-instance-1_1" number="13">
+                <option value="">Select one...</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              <div id="b-item-path-13-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-13-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-14-instance-1_1" class="choice">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-14-instance-1_1" class="repeating-enclosing">
+            <div class="choice-label">What is the person's date of birth (or age last birthday)?</div>
+            <div id="b-div-choice-item-14-instance-1-choice-1" class="div-choice-item">
+              <input number="14" name="b-item-input-14-instance-1_1" id="b-item-14-instance-1_1-choice-1" class="choice-item" type="radio" value="number">Date of birth</input>
+            </div>
+            <div id="b-div-choice-item-14-instance-1-choice-2" class="div-choice-item">
+              <input number="14" name="b-item-input-14-instance-1_1" id="b-item-14-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Age last birthday</input>
+            </div>
+            <div id="b-choice-content-14-instance-1_1-choice-1" class="invisible">
+              <div id="b-item-enclosing-15-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-15-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">15</div>
+                  <label class="item-label" for="b-item-input-15-instance-1_1_1"><em>*</em></label>
+                  <div class="item-input">
+                    <input number="15" name="b-item-input-15-instance-1_1_1" id="b-item-15-instance-1_1_1" class="datepickerclass  item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-15-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-15-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-14-instance-1_1-choice-2" class="invisible">
+              <div id="b-item-enclosing-16-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-16-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">16</div>
+                  <label class="item-label" for="b-item-input-16-instance-1_1_1"></label>
+                  <div class="item-input">
+                    <input number="16" name="b-item-input-16-instance-1_1_1" id="b-item-16-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-16-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-16-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-17-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-17-instance-1_1" class="repeating-enclosing">
+            <div class="item-title">What is the person's current marital status?</div>
+            <div class="item-before">'Married refers to registered marriages.</div>
+            <div class="item-number">17</div>
+            <label class="item-label" for="b-item-input-17-instance-1_1">Marital Status</label>
+            <div class="item-input">
+              <select id="b-item-17-instance-1_1" class="select" name="b-item-input-17-instance-1_1" number="17">
+                <option value="">Select one...</option>
+                <option value="Never married">Never married</option>
+                <option value="Widowed">Widowed</option>
+                <option value="Divorced">Divorced</option>
+                <option value="Separated but not divorced">Separated but not divorced</option>
+                <option value="Married">Married</option>
+              </select>
+              <div id="b-item-path-17-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-17-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-18-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-18-instance-1_1" class="repeating-enclosing">
+            <div class="item-title">Is the person of Aboriginal or Torres Strait Islander origin?</div>
+            <div class="item-before">For persons of both Aboriginal and Torres Strait Islander origin, select 'Both'.</div>
+            <div class="item-number">18</div>
+            <label class="item-label" for="b-item-input-18-instance-1_1"></label>
+            <div class="item-input">
+              <select id="b-item-18-instance-1_1" class="select" name="b-item-input-18-instance-1_1" number="18">
+                <option value="">Select one...</option>
+                <option value="No">No</option>
+                <option value="Aboriginal">Aboriginal</option>
+                <option value="Torres Strait Islander">Torres Strait Islander</option>
+                <option value="Both">Both</option>
+              </select>
+              <div id="b-item-path-18-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-18-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-19-instance-1_1" class="choice">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-19-instance-1_1" class="repeating-enclosing">
+            <div class="choice-label">Where does the person usually live?</div>
+            <div id="b-div-choice-item-19-instance-1-choice-1" class="div-choice-item">
+              <input number="19" name="b-item-input-19-instance-1_1" id="b-item-19-instance-1_1-choice-1" class="choice-item" type="radio" value="number">Same as address of dwelling at top of form</input>
+            </div>
+            <div id="b-div-choice-item-19-instance-1-choice-2" class="div-choice-item">
+              <input number="19" name="b-item-input-19-instance-1_1" id="b-item-19-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
+            </div>
+            <div id="b-div-choice-item-19-instance-1-choice-3" class="div-choice-item">
+              <input number="19" name="b-item-input-19-instance-1_1" id="b-item-19-instance-1_1-choice-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
+            </div>
+            <div id="b-choice-content-19-instance-1_1-choice-1" class="invisible">
+              <div id="b-item-enclosing-20-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-20-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">20</div>
+                  <label class="item-label" for="b-item-input-20-instance-1_1_1">Same as address of dwelling at top of form<em>*</em></label>
+                  <div class="item-input">
+                    <select id="b-item-20-instance-1_1_1" class="select" name="b-item-input-20-instance-1_1_1" number="20">
+                      <option value="true">true</option>
+                    </select>
+                    <div id="b-item-path-20-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-20-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-19-instance-1_1-choice-2" class="invisible">
+              <div id="b-item-enclosing-21-instance-1_1_1" class="sequence">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-21-instance-1_1_1" class="repeating-enclosing">
+                  <div class="sequence-label"></div>
+                  <div id="b-sequence-21-instance-1" class="sequence-content">
+                    <div id="b-item-enclosing-22-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-22-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">22</div>
+                        <label class="item-label" for="b-item-input-22-instance-1_1_1_1">Apartment/Flat/Unit number</label>
+                        <div class="item-input">
+                          <input number="22" name="b-item-input-22-instance-1_1_1_1" id="b-item-22-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-22-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-22-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-23-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-23-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">23</div>
+                        <label class="item-label" for="b-item-input-23-instance-1_1_1_1">Street Number</label>
+                        <div class="item-input">
+                          <input number="23" name="b-item-input-23-instance-1_1_1_1" id="b-item-23-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-23-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-23-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-24-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-24-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">24</div>
+                        <label class="item-label" for="b-item-input-24-instance-1_1_1_1">Street Name</label>
+                        <div class="item-input">
+                          <input number="24" name="b-item-input-24-instance-1_1_1_1" id="b-item-24-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-24-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-24-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-25-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-25-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">25</div>
+                        <label class="item-label" for="b-item-input-25-instance-1_1_1_1">Suburb Locality</label>
+                        <div class="item-input">
+                          <input number="25" name="b-item-input-25-instance-1_1_1_1" id="b-item-25-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-25-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-25-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-26-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-26-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">26</div>
+                        <label class="item-label" for="b-item-input-26-instance-1_1_1_1">State</label>
+                        <div class="item-input">
+                          <select id="b-item-26-instance-1_1_1_1" class="select" name="b-item-input-26-instance-1_1_1_1" number="26">
+                            <option value="">Select one...</option>
+                            <option value="ACT">ACT</option>
+                            <option value="NSW">NSW</option>
+                            <option value="NT">NT</option>
+                            <option value="QLD">QLD</option>
+                            <option value="SA">SA</option>
+                            <option value="TAS">TAS</option>
+                            <option value="VIC">VIC</option>
+                            <option value="WA">WA</option>
+                          </select>
+                          <div id="b-item-path-26-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-26-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-27-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-27-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">27</div>
+                        <label class="item-label" for="b-item-input-27-instance-1_1_1_1">Postcode<em>*</em></label>
+                        <div class="item-input">
+                          <input number="27" name="b-item-input-27-instance-1_1_1_1" id="b-item-27-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-27-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-27-instance-1_1_1_1" class="item-error">Not a valid postcode</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-28-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-28-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">28</div>
+                        <label class="item-label" for="b-item-input-28-instance-1_1_1_1">Property Building Name</label>
+                        <div class="item-input">
+                          <input number="28" name="b-item-input-28-instance-1_1_1_1" id="b-item-28-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-28-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-28-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-19-instance-1_1-choice-3" class="invisible">
+              <div id="b-item-enclosing-29-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-29-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">29</div>
+                  <label class="item-label" for="b-item-input-29-instance-1_1_1">Other Country<em>*</em></label>
+                  <div class="item-input">
+                    <select id="b-item-29-instance-1_1_1" class="select" name="b-item-input-29-instance-1_1_1" number="29">
+                      <option value="true">true</option>
+                    </select>
+                    <div id="b-item-path-29-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-29-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-30-instance-1_1" class="choice">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-30-instance-1_1" class="repeating-enclosing">
+            <div class="choice-label">Where did the person usually live one year ago (at 9 August 2010)?</div>
+            <div id="b-div-choice-item-30-instance-1-choice-1" class="div-choice-item">
+              <input number="30" name="b-item-input-30-instance-1_1" id="b-item-30-instance-1_1-choice-1" class="choice-item" type="radio" value="number">Same as address in last question</input>
+            </div>
+            <div id="b-div-choice-item-30-instance-1-choice-2" class="div-choice-item">
+              <input number="30" name="b-item-input-30-instance-1_1" id="b-item-30-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
+            </div>
+            <div id="b-div-choice-item-30-instance-1-choice-3" class="div-choice-item">
+              <input number="30" name="b-item-input-30-instance-1_1" id="b-item-30-instance-1_1-choice-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
+            </div>
+            <div id="b-choice-content-30-instance-1_1-choice-1" class="invisible">
+              <div id="b-item-enclosing-31-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-31-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">31</div>
+                  <label class="item-label" for="b-item-input-31-instance-1_1_1">Same as address in last question<em>*</em></label>
+                  <div class="item-input">
+                    <select id="b-item-31-instance-1_1_1" class="select" name="b-item-input-31-instance-1_1_1" number="31">
+                      <option value="true">true</option>
+                    </select>
+                    <div id="b-item-path-31-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-31-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-30-instance-1_1-choice-2" class="invisible">
+              <div id="b-item-enclosing-32-instance-1_1_1" class="sequence">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-32-instance-1_1_1" class="repeating-enclosing">
+                  <div class="sequence-label"></div>
+                  <div id="b-sequence-32-instance-1" class="sequence-content">
+                    <div id="b-item-enclosing-33-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-33-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">33</div>
+                        <label class="item-label" for="b-item-input-33-instance-1_1_1_1">Apartment/Flat/Unit number</label>
+                        <div class="item-input">
+                          <input number="33" name="b-item-input-33-instance-1_1_1_1" id="b-item-33-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-33-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-33-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-34-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-34-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">34</div>
+                        <label class="item-label" for="b-item-input-34-instance-1_1_1_1">Street Number</label>
+                        <div class="item-input">
+                          <input number="34" name="b-item-input-34-instance-1_1_1_1" id="b-item-34-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-34-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-34-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-35-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-35-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">35</div>
+                        <label class="item-label" for="b-item-input-35-instance-1_1_1_1">Street Name</label>
+                        <div class="item-input">
+                          <input number="35" name="b-item-input-35-instance-1_1_1_1" id="b-item-35-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-35-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-35-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-36-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-36-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">36</div>
+                        <label class="item-label" for="b-item-input-36-instance-1_1_1_1">Suburb Locality</label>
+                        <div class="item-input">
+                          <input number="36" name="b-item-input-36-instance-1_1_1_1" id="b-item-36-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-36-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-36-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-37-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-37-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">37</div>
+                        <label class="item-label" for="b-item-input-37-instance-1_1_1_1">State</label>
+                        <div class="item-input">
+                          <select id="b-item-37-instance-1_1_1_1" class="select" name="b-item-input-37-instance-1_1_1_1" number="37">
+                            <option value="">Select one...</option>
+                            <option value="ACT">ACT</option>
+                            <option value="NSW">NSW</option>
+                            <option value="NT">NT</option>
+                            <option value="QLD">QLD</option>
+                            <option value="SA">SA</option>
+                            <option value="TAS">TAS</option>
+                            <option value="VIC">VIC</option>
+                            <option value="WA">WA</option>
+                          </select>
+                          <div id="b-item-path-37-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-37-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-38-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-38-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">38</div>
+                        <label class="item-label" for="b-item-input-38-instance-1_1_1_1">Postcode<em>*</em></label>
+                        <div class="item-input">
+                          <input number="38" name="b-item-input-38-instance-1_1_1_1" id="b-item-38-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-38-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-38-instance-1_1_1_1" class="item-error">Not a valid postcode</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-39-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-39-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">39</div>
+                        <label class="item-label" for="b-item-input-39-instance-1_1_1_1">Property Building Name</label>
+                        <div class="item-input">
+                          <input number="39" name="b-item-input-39-instance-1_1_1_1" id="b-item-39-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-39-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-39-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-30-instance-1_1-choice-3" class="invisible">
+              <div id="b-item-enclosing-40-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-40-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">40</div>
+                  <label class="item-label" for="b-item-input-40-instance-1_1_1">Other Country<em>*</em></label>
+                  <div class="item-input">
+                    <select id="b-item-40-instance-1_1_1" class="select" name="b-item-input-40-instance-1_1_1" number="40">
+                      <option value="true">true</option>
+                    </select>
+                    <div id="b-item-path-40-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-40-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-41-instance-1_1" class="choice">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-41-instance-1_1" class="repeating-enclosing">
+            <div class="choice-label">Where did the person usually live five years ago (at 9 August 2006)?</div>
+            <div id="b-div-choice-item-41-instance-1-choice-1" class="div-choice-item">
+              <input number="41" name="b-item-input-41-instance-1_1" id="b-item-41-instance-1_1-choice-1" class="choice-item" type="radio" value="number">Same as address in last question</input>
+            </div>
+            <div id="b-div-choice-item-41-instance-1-choice-2" class="div-choice-item">
+              <input number="41" name="b-item-input-41-instance-1_1" id="b-item-41-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
+            </div>
+            <div id="b-div-choice-item-41-instance-1-choice-3" class="div-choice-item">
+              <input number="41" name="b-item-input-41-instance-1_1" id="b-item-41-instance-1_1-choice-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
+            </div>
+            <div id="b-choice-content-41-instance-1_1-choice-1" class="invisible">
+              <div id="b-item-enclosing-42-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-42-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">42</div>
+                  <label class="item-label" for="b-item-input-42-instance-1_1_1">Same as address in last question<em>*</em></label>
+                  <div class="item-input">
+                    <select id="b-item-42-instance-1_1_1" class="select" name="b-item-input-42-instance-1_1_1" number="42">
+                      <option value="true">true</option>
+                    </select>
+                    <div id="b-item-path-42-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-42-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-41-instance-1_1-choice-2" class="invisible">
+              <div id="b-item-enclosing-43-instance-1_1_1" class="sequence">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-43-instance-1_1_1" class="repeating-enclosing">
+                  <div class="sequence-label"></div>
+                  <div id="b-sequence-43-instance-1" class="sequence-content">
+                    <div id="b-item-enclosing-44-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-44-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">44</div>
+                        <label class="item-label" for="b-item-input-44-instance-1_1_1_1">Apartment/Flat/Unit number</label>
+                        <div class="item-input">
+                          <input number="44" name="b-item-input-44-instance-1_1_1_1" id="b-item-44-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-44-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-44-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-45-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-45-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">45</div>
+                        <label class="item-label" for="b-item-input-45-instance-1_1_1_1">Street Number</label>
+                        <div class="item-input">
+                          <input number="45" name="b-item-input-45-instance-1_1_1_1" id="b-item-45-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-45-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-45-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-46-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-46-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">46</div>
+                        <label class="item-label" for="b-item-input-46-instance-1_1_1_1">Street Name</label>
+                        <div class="item-input">
+                          <input number="46" name="b-item-input-46-instance-1_1_1_1" id="b-item-46-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-46-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-46-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-47-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-47-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">47</div>
+                        <label class="item-label" for="b-item-input-47-instance-1_1_1_1">Suburb Locality</label>
+                        <div class="item-input">
+                          <input number="47" name="b-item-input-47-instance-1_1_1_1" id="b-item-47-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-47-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-47-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-48-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-48-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">48</div>
+                        <label class="item-label" for="b-item-input-48-instance-1_1_1_1">State</label>
+                        <div class="item-input">
+                          <select id="b-item-48-instance-1_1_1_1" class="select" name="b-item-input-48-instance-1_1_1_1" number="48">
+                            <option value="">Select one...</option>
+                            <option value="ACT">ACT</option>
+                            <option value="NSW">NSW</option>
+                            <option value="NT">NT</option>
+                            <option value="QLD">QLD</option>
+                            <option value="SA">SA</option>
+                            <option value="TAS">TAS</option>
+                            <option value="VIC">VIC</option>
+                            <option value="WA">WA</option>
+                          </select>
+                          <div id="b-item-path-48-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-48-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-49-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-49-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">49</div>
+                        <label class="item-label" for="b-item-input-49-instance-1_1_1_1">Postcode<em>*</em></label>
+                        <div class="item-input">
+                          <input number="49" name="b-item-input-49-instance-1_1_1_1" id="b-item-49-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-49-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-49-instance-1_1_1_1" class="item-error">Not a valid postcode</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-50-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-50-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">50</div>
+                        <label class="item-label" for="b-item-input-50-instance-1_1_1_1">Property Building Name</label>
+                        <div class="item-input">
+                          <input number="50" name="b-item-input-50-instance-1_1_1_1" id="b-item-50-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-50-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-50-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-41-instance-1_1-choice-3" class="invisible">
+              <div id="b-item-enclosing-51-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-51-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">51</div>
+                  <label class="item-label" for="b-item-input-51-instance-1_1_1">Other Country<em>*</em></label>
+                  <div class="item-input">
+                    <select id="b-item-51-instance-1_1_1" class="select" name="b-item-input-51-instance-1_1_1" number="51">
+                      <option value="true">true</option>
+                    </select>
+                    <div id="b-item-path-51-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-51-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-52-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-52-instance-1_1" class="repeating-enclosing">
+            <div class="item-title">Citizenship</div>
+            <div class="item-number">52</div>
+            <label class="item-label" for="b-item-input-52-instance-1_1">The person is an Australian citizen<em>*</em></label>
+            <div class="item-input">
+              <input number="52" name="b-item-input-52-instance-1_1" id="b-item-52-instance-1_1" class=" item-input-text" type="checkbox">
+              </input>
+              <div id="b-item-path-52-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-52-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-53-instance-1_1" class="choice">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-53-instance-1_1" class="repeating-enclosing">
+            <div class="choice-label">In which country was the person born?</div>
+            <div id="b-div-choice-item-53-instance-1-choice-1" class="div-choice-item">
+              <input number="53" name="b-item-input-53-instance-1_1" id="b-item-53-instance-1_1-choice-1" class="choice-item" type="radio" value="number">Australia<em>*</em></input>
+            </div>
+            <div id="b-div-choice-item-53-instance-1-choice-2" class="div-choice-item">
+              <input number="53" name="b-item-input-53-instance-1_1" id="b-item-53-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Other<em>*</em></input>
+            </div>
+            <div id="b-choice-content-53-instance-1_1-choice-1" class="invisible">
+              <div id="b-item-enclosing-54-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-54-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">54</div>
+                  <label class="item-label" for="b-item-input-54-instance-1_1_1">Australia<em>*</em></label>
+                  <div class="item-input">
+                    <select id="b-item-54-instance-1_1_1" class="select" name="b-item-input-54-instance-1_1_1" number="54">
+                      <option value="true">true</option>
+                    </select>
+                    <div id="b-item-path-54-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-54-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="b-choice-content-53-instance-1_1-choice-2" class="invisible">
+              <div id="b-item-enclosing-55-instance-1_1_1" class="sequence">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-55-instance-1_1_1" class="repeating-enclosing">
+                  <div class="sequence-label"></div>
+                  <div id="b-sequence-55-instance-1" class="sequence-content">
+                    <div id="b-item-enclosing-56-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-56-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">56</div>
+                        <label class="item-label" for="b-item-input-56-instance-1_1_1_1">Country</label>
+                        <div class="item-input">
+                          <select id="b-item-56-instance-1_1_1_1" class="select" name="b-item-input-56-instance-1_1_1_1" number="56">
+                            <option value="">Select one...</option>
+                            <option value="England">England</option>
+                            <option value="New Zealand">New Zealand</option>
+                            <option value="Italy">Italy</option>
+                            <option value="Vietnam">Vietnam</option>
+                            <option value="India">India</option>
+                            <option value="Scotland">Scotland</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <div id="b-item-path-56-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-56-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-57-instance-1_1_1_1" class="item-enclosing invisible">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-57-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">57</div>
+                        <label class="item-label" for="b-item-input-57-instance-1_1_1_1">Country</label>
+                        <div class="item-input">
+                          <input number="57" name="b-item-input-57-instance-1_1_1_1" id="b-item-57-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-57-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-57-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="b-item-enclosing-58-instance-1_1_1_1" class="item-enclosing">
+                      <div class="non-repeating-title">
+                      </div>
+                      <div id="b-repeating-enclosing-58-instance-1_1_1_1" class="repeating-enclosing">
+                        <div class="item-number">58</div>
+                        <label class="item-label" for="b-item-input-58-instance-1_1_1_1">Year Of Arrival<em>*</em></label>
+                        <div class="item-input">
+                          <input number="58" name="b-item-input-58-instance-1_1_1_1" id="b-item-58-instance-1_1_1_1" class=" item-input-text" type="text">
+                          </input>
+                          <div id="b-item-path-58-instance-1_1_1_1" class="item-path" enabled="true"></div>
+                          <div id="b-item-error-58-instance-1_1_1_1" class="item-error">Invalid</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-59-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-59-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">59</div>
+            <label class="item-label" for="b-item-input-59-instance-1_1">Was the person's father born in Australia or overseas?</label>
+            <div class="item-input">
+              <select id="b-item-59-instance-1_1" class="select" name="b-item-input-59-instance-1_1" number="59">
+                <option value="">Select one...</option>
+                <option value="Australia">Australia</option>
+                <option value="Overseas">Overseas</option>
+              </select>
+              <div id="b-item-path-59-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-59-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-60-instance-1_1" class="item-enclosing">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-60-instance-1_1" class="repeating-enclosing">
+            <div class="item-number">60</div>
+            <label class="item-label" for="b-item-input-60-instance-1_1">Was the person's mother born in Australia or overseas?</label>
+            <div class="item-input">
+              <select id="b-item-60-instance-1_1" class="select" name="b-item-input-60-instance-1_1" number="60">
+                <option value="">Select one...</option>
+                <option value="Australia">Australia</option>
+                <option value="Overseas">Overseas</option>
+              </select>
+              <div id="b-item-path-60-instance-1_1" class="item-path" enabled="true"></div>
+              <div id="b-item-error-60-instance-1_1" class="item-error">Invalid</div>
+            </div>
+          </div>
+        </div>
+        <div id="b-item-enclosing-61-instance-1_1" class="sequence">
+          <div class="non-repeating-title">
+          </div>
+          <div id="b-repeating-enclosing-61-instance-1_1" class="repeating-enclosing">
+            <div class="sequence-label">Does the person speak a language other than English at home?</div>
+            <div id="b-sequence-61-instance-1" class="sequence-content">
+              <div id="b-item-enclosing-62-instance-1_1_1" class="item-enclosing">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-62-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-before">If more than one language spoken other than English select the one that is spoken most often</div>
+                  <div class="item-number">62</div>
+                  <label class="item-label" for="b-item-input-62-instance-1_1_1">Language</label>
+                  <div class="item-input">
+                    <select id="b-item-62-instance-1_1_1" class="select" name="b-item-input-62-instance-1_1_1" number="62">
+                      <option value="">Select one...</option>
+                      <option value="English only">English only</option>
+                      <option value="Italian">Italian</option>
+                      <option value="Greek">Greek</option>
+                      <option value="Cantonese">Cantonese</option>
+                      <option value="Arabic">Arabic</option>
+                      <option value="Mandarin">Mandarin</option>
+                      <option value="Vietnamese">Vietnamese</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <div id="b-item-path-62-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-62-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div id="b-item-enclosing-63-instance-1_1_1" class="item-enclosing invisible">
+                <div class="non-repeating-title">
+                </div>
+                <div id="b-repeating-enclosing-63-instance-1_1_1" class="repeating-enclosing">
+                  <div class="item-number">63</div>
+                  <label class="item-label" for="b-item-input-63-instance-1_1_1">Other language at home</label>
+                  <div class="item-input">
+                    <input number="63" name="b-item-input-63-instance-1_1_1" id="b-item-63-instance-1_1_1" class=" item-input-text" type="text">
+                    </input>
+                    <div id="b-item-path-63-instance-1_1_1" class="item-path" enabled="true"></div>
+                    <div id="b-item-error-63-instance-1_1_1" class="item-error">Invalid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="validation-errors" class="validationErrors">The form is not yet complete. Check through the form for error messages</div>
+  <div id="submit" class="submit">Submit</div>
+  <p><div id="submit-comments"></div></p>
+
+</form>
+
+    <p>Thanks for your time.</p>
+
+</div>
+</body>
+</html>
