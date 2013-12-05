@@ -1,245 +1,269 @@
 <xs:schema targetNamespace="http://org.moten.david/example"
-	xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:i="http://moten.david.org/xsd-forms">
-	<xs:annotation i:numberItems="true" />
+  xmlns="http://org.moten.david/example" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:i="http://moten.david.org/xsd-forms">
 
-	<xs:element name="polrep" type="polrep" />
+  <xs:annotation>
+    <xs:appinfo>
+      <i:header>
+<![CDATA[
+<h3>Marine Pollution Report (POLREP)</h3>
+]]>
+      </i:header>
+      <i:footer>
+<![CDATA[
+<h4>PRIVACY STATEMENT</h4> 
+<p>The Australian Maritime Safety Authority (AMSA) is collecting the information on this form to enable it to carry out its role as managing 
+agency of the National Plan to Combat Pollution of the Sea by Oil and other Noxious and Hazardous Substances. 
+AMSA may give some or all of this information to other government bodies, non-government organisations who have responsibilities 
+under the National Plan, and law enforcement agencies.</p> 
+]]>
+      </i:footer>
+    </xs:appinfo>
+  </xs:annotation>
 
-	<xs:complexType name="polrep">
-		<xs:sequence>
-			<xs:element name="location-description" type="xs:string" />
-			<xs:element name="incident-coordinates" type="position" />
-			<xs:element name="date-of-incident" type="xs:date" />
-			<xs:element name="time-of-incident" type="xs:time"
-				minOccurs="0" />
-			<xs:element name="description" type="xs:string">
-				<xs:annotation i:text="textarea" />
-			</xs:element>
-			<xs:element name="pollution-source" type="pollution-source">
-				<xs:annotation i:addBlank="true" i:title="Pollutant" />
-			</xs:element>
-			<xs:element name="pollution-source-vessel" type="vessel"
-				minOccurs="0">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-			<xs:element name="pollutant-oil" type="yes-no"
-				minOccurs="0">
-				<xs:annotation i:label="Oil" i:addBlank="true" i:makeVisible="true->1"/>
-			</xs:element>
-			<xs:element name="pollutant-oil-types" type="pollutant-oil-types"
-				minOccurs="0">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-			<xs:element name='pollutant-chemical' type="yes-no"
-				minOccurs="0">
-				<xs:annotation i:label="Chemical" i:addBlank="true" i:makeVisible="true->1"/>
-			</xs:element>
-			<xs:element name="pollutant-chemical-details" type="pollutant-chemical-details"
-				minOccurs="0">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-			<xs:element name="pollutant-other" type="yes-no">
-				<xs:annotation i:label="Garbage, packaged, sewage, other"
-					i:addBlank="true" i:makeVisible="true->1"/>
-			</xs:element>
-			<xs:element name="pollutant-other-details" type="xs:string"
-				minOccurs="0">
-				<xs:annotation i:visible="false" i:label="Details/description" />
-			</xs:element>
-			<xs:element name="pollutant-extent" type="pollutant-extent">
-				<xs:annotation i:label="Extent" />
-			</xs:element>
+  <xs:element name="polrep" type="polrep" />
 
-			<xs:element name="discharge-stopped" type="yes-no"
-				minOccurs="0">
-				<xs:annotation i:label="Has the discharge stopped?"
-					i:title="Additional information" i:addBlank="true" />
-			</xs:element>
+  <xs:complexType name="polrep">
+    <xs:sequence>
+      <xs:element name="location-description" type="xs:string" />
+      <xs:element name="incident-coordinates" type="position" />
+      <xs:element name="date-of-incident" type="xs:date" />
+      <xs:element name="time-of-incident" type="xs:time"
+        minOccurs="0" />
+      <xs:element name="description" type="xs:string">
+        <xs:annotation i:text="textarea" />
+      </xs:element>
+      <xs:element name="pollution-source" type="pollution-source">
+        <xs:annotation i:addBlank="true" i:title="Pollutant" />
+      </xs:element>
+      <xs:element name="pollution-source-vessel" type="vessel"
+        minOccurs="0">
+        <xs:annotation i:visible="false" />
+      </xs:element>
+      <xs:element name="pollutant-oil" type="yes-no"
+        minOccurs="0">
+        <xs:annotation i:label="Oil" i:addBlank="true"
+          i:makeVisible="true->1" />
+      </xs:element>
+      <xs:element name="pollutant-oil-types" type="pollutant-oil-types"
+        minOccurs="0">
+        <xs:annotation i:visible="false" />
+      </xs:element>
+      <xs:element name='pollutant-chemical' type="yes-no"
+        minOccurs="0">
+        <xs:annotation i:label="Chemical" i:addBlank="true"
+          i:makeVisible="true->1" />
+      </xs:element>
+      <xs:element name="pollutant-chemical-details" type="pollutant-chemical-details"
+        minOccurs="0">
+        <xs:annotation i:visible="false" />
+      </xs:element>
+      <xs:element name="pollutant-other" type="yes-no">
+        <xs:annotation i:label="Garbage, packaged, sewage, other"
+          i:addBlank="true" i:makeVisible="true->1" />
+      </xs:element>
+      <xs:element name="pollutant-other-details" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:visible="false" i:label="Details/description" />
+      </xs:element>
+      <xs:element name="pollutant-extent" type="pollutant-extent">
+        <xs:annotation i:label="Extent" />
+      </xs:element>
 
-			<xs:element name="response-action-undertaken" type="yes-no"
-				minOccurs="0">
-				<xs:annotation i:label="Response action undertaken?"
-					i:addBlank="true" i:makeVisible="true->1" />
-			</xs:element>
+      <xs:element name="discharge-stopped" type="yes-no"
+        minOccurs="0">
+        <xs:annotation i:label="Has the discharge stopped?"
+          i:title="Additional information" i:addBlank="true" />
+      </xs:element>
 
-			<xs:element name="response-action-details" type="xs:string"
-				minOccurs="0">
-				<xs:annotation i:visible="false" i:label="Details"
-					i:description="Please include any environmental impact" i:text="textarea" />
-			</xs:element>
+      <xs:element name="response-action-undertaken" type="yes-no"
+        minOccurs="0">
+        <xs:annotation i:label="Response action undertaken?"
+          i:addBlank="true" i:makeVisible="true->1" />
+      </xs:element>
 
-			<xs:element name="weather-conditions-at-site" type='xs:string'
-				minOccurs="0">
-				<xs:annotation i:label="Weather conditions at site" i:width="30em" />
-			</xs:element>
+      <xs:element name="response-action-details" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:visible="false" i:label="Details"
+          i:description="Please include any environmental impact"
+          i:text="textarea" />
+      </xs:element>
 
-			<xs:element name="photos-taken" type="yes-no">
-				<xs:annotation i:addBlank="true" i:makeVisible="true->1"/>
-			</xs:element>
-			<xs:element name="photos-taken-details" type="taken-details"
-				minOccurs="0">
-				<xs:annotation i:visible="false" />
-			</xs:element>
+      <xs:element name="weather-conditions-at-site" type='xs:string'
+        minOccurs="0">
+        <xs:annotation i:label="Weather conditions at site"
+          i:width="30em" />
+      </xs:element>
 
-			<xs:element name="video-taken" type="yes-no">
-				<xs:annotation i:addBlank="true" i:makeVisible="true->1" />
-			</xs:element>
-			<xs:element name="video-taken-details" type="taken-details"
-				minOccurs="0">
-				<xs:annotation i:visible="false" />
-			</xs:element>
+      <xs:element name="photos-taken" type="yes-no">
+        <xs:annotation i:addBlank="true" i:makeVisible="true->1" />
+      </xs:element>
+      <xs:element name="photos-taken-details" type="taken-details"
+        minOccurs="0">
+        <xs:annotation i:visible="false" />
+      </xs:element>
 
-			<xs:element name="samples-taken" type="yes-no">
-				<xs:annotation i:addBlank="true"  i:makeVisible="true->1"/>
-			</xs:element>
-			<xs:element name="samples-taken-details" type="taken-details"
-				minOccurs="0">
-				<xs:annotation i:visible="false" />
-			</xs:element>
+      <xs:element name="video-taken" type="yes-no">
+        <xs:annotation i:addBlank="true" i:makeVisible="true->1" />
+      </xs:element>
+      <xs:element name="video-taken-details" type="taken-details"
+        minOccurs="0">
+        <xs:annotation i:visible="false" />
+      </xs:element>
 
-			<xs:element name="items-retrieved" type="yes-no">
-				<xs:annotation i:addBlank="true" i:makeVisible="true->1" />
-			</xs:element>
-			<xs:element name="items-retrieved-details" type="taken-details"
-				minOccurs="0">
-				<xs:annotation i:visible="false" />
-			</xs:element>
+      <xs:element name="samples-taken" type="yes-no">
+        <xs:annotation i:addBlank="true" i:makeVisible="true->1" />
+      </xs:element>
+      <xs:element name="samples-taken-details" type="taken-details"
+        minOccurs="0">
+        <xs:annotation i:visible="false" />
+      </xs:element>
 
-		</xs:sequence>
-	</xs:complexType>
+      <xs:element name="items-retrieved" type="yes-no">
+        <xs:annotation i:addBlank="true" i:makeVisible="true->1" />
+      </xs:element>
+      <xs:element name="items-retrieved-details" type="taken-details"
+        minOccurs="0">
+        <xs:annotation i:visible="false" />
+      </xs:element>
 
-	<xs:complexType name="position">
-		<xs:sequence>
-			<xs:element name="latitude" type="latitude" />
-			<xs:element name="longitude" type="longitude" />
-		</xs:sequence>
-	</xs:complexType>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:simpleType name="latitude">
-		<xs:restriction base="xs:decimal">
-			<xs:minInclusive value="-90" />
-			<xs:maxInclusive value="90" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:complexType name="position">
+    <xs:sequence>
+      <xs:element name="latitude" type="latitude" />
+      <xs:element name="longitude" type="longitude" />
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:simpleType name="longitude">
-		<xs:restriction base="xs:decimal">
-			<xs:minInclusive value="-180" />
-			<xs:maxInclusive value="180" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="latitude">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="-90" />
+      <xs:maxInclusive value="90" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:complexType name="vessel">
-		<xs:sequence>
-			<xs:element name="vessel-type" type="vessel-type">
-				<xs:annotation i:addBlank="true" />
-			</xs:element>
-			<xs:element name="vessel-type-other" type="xs:string"
-				minOccurs="0">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-			<xs:element name="name" type="xs:string" minOccurs="0" />
-			<xs:element name="flag-state" type="xs:string" minOccurs="0" />
-			<xs:element name="callsign" type="xs:string" minOccurs="0" />
-			<xs:element name="australian" type="yes-no" minOccurs="0">
-				<xs:annotation i:addBlank="true" />
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+  <xs:simpleType name="longitude">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="-180" />
+      <xs:maxInclusive value="180" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="yes-no">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="true">
-				<xs:annotation i:label="Yes" />
-			</xs:enumeration>
-			<xs:enumeration value="false">
-				<xs:annotation i:label="No" />
-			</xs:enumeration>
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:complexType name="vessel">
+    <xs:sequence>
+      <xs:element name="vessel-type" type="vessel-type">
+        <xs:annotation i:addBlank="true" />
+      </xs:element>
+      <xs:element name="vessel-type-other" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:visible="false" />
+      </xs:element>
+      <xs:element name="name" type="xs:string" minOccurs="0" />
+      <xs:element name="flag-state" type="xs:string"
+        minOccurs="0" />
+      <xs:element name="callsign" type="xs:string" minOccurs="0" />
+      <xs:element name="australian" type="yes-no" minOccurs="0">
+        <xs:annotation i:addBlank="true" />
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:simpleType name="yes-no-unknown">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="true">
-				<xs:annotation i:label="Yes" />
-			</xs:enumeration>
-			<xs:enumeration value="false">
-				<xs:annotation i:label="No" />
-			</xs:enumeration>
-			<xs:enumeration value="unknown">
-				<xs:annotation i:label="Unknown" />
-			</xs:enumeration>
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="yes-no">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="true">
+        <xs:annotation i:label="Yes" />
+      </xs:enumeration>
+      <xs:enumeration value="false">
+        <xs:annotation i:label="No" />
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="vessel-type">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Tanker" />
-			<xs:enumeration value="Container" />
-			<xs:enumeration value="Bulk Cargo" />
-			<xs:enumeration value="Fishing" />
-			<xs:enumeration value="Defence" />
-			<xs:enumeration value="Recreational" />
-			<xs:enumeration value="Other">
-				<xs:annotation i:makeVisible="1" />
-			</xs:enumeration>
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="yes-no-unknown">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="true">
+        <xs:annotation i:label="Yes" />
+      </xs:enumeration>
+      <xs:enumeration value="false">
+        <xs:annotation i:label="No" />
+      </xs:enumeration>
+      <xs:enumeration value="unknown">
+        <xs:annotation i:label="Unknown" />
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:simpleType name="pollution-source">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Vessel">
-				<xs:annotation i:makeVisible="1" />
-			</xs:enumeration>
-			<xs:enumeration value="Land" />
-			<xs:enumeration value="Other" />
-			<xs:enumeration value="Unknown" />
-		</xs:restriction>
-	</xs:simpleType>
+  <xs:simpleType name="vessel-type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Tanker" />
+      <xs:enumeration value="Container" />
+      <xs:enumeration value="Bulk Cargo" />
+      <xs:enumeration value="Fishing" />
+      <xs:enumeration value="Defence" />
+      <xs:enumeration value="Recreational" />
+      <xs:enumeration value="Other">
+        <xs:annotation i:makeVisible="1" />
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:complexType name="pollutant-oil-types">
-		<xs:sequence>
-			<xs:element name="bilge" type="xs:boolean" />
-			<xs:element name="diesel-bunker" type="xs:boolean" />
-			<xs:element name="hfo-bunker" type="xs:boolean" />
-			<xs:element name="crude" type="xs:boolean" />
-			<xs:element name="unknown" type="xs:boolean" />
-			<xs:element name="other" type="yes-no">
-				<xs:annotation i:addBlank="true" />
-			</xs:element>
-			<xs:element name="other-description" type="xs:string"
-				minOccurs="0">
-				<xs:annotation i:visible="false" />
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+  <xs:simpleType name="pollution-source">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Vessel">
+        <xs:annotation i:makeVisible="1" />
+      </xs:enumeration>
+      <xs:enumeration value="Land" />
+      <xs:enumeration value="Other" />
+      <xs:enumeration value="Unknown" />
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:complexType name="pollutant-chemical-details">
-		<xs:sequence>
-			<xs:element name="name" type="xs:string" />
-			<xs:element name="marpol-cat-un-no" type="xs:string">
-				<xs:annotation i:label="MARPOL cat/UN nos" />
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="pollutant-oil-types">
+    <xs:sequence>
+      <xs:element name="bilge" type="xs:boolean" />
+      <xs:element name="diesel-bunker" type="xs:boolean" />
+      <xs:element name="hfo-bunker" type="xs:boolean" />
+      <xs:element name="crude" type="xs:boolean" />
+      <xs:element name="unknown" type="xs:boolean" />
+      <xs:element name="other" type="yes-no">
+        <xs:annotation i:addBlank="true" />
+      </xs:element>
+      <xs:element name="other-description" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:visible="false" />
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:complexType name="pollutant-extent">
-		<xs:sequence>
-			<xs:element name="size-metres" type="xs:string" minOccurs="0">
-				<xs:annotation i:label="Size of spill (length and width in metres)" />
-			</xs:element>
-			<xs:element name="amount-litres" type="xs:string"
-				minOccurs="0">
-				<xs:annotation i:label="Amount of pollutant, if known (litres)" />
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="pollutant-chemical-details">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" />
+      <xs:element name="marpol-cat-un-no" type="xs:string">
+        <xs:annotation i:label="MARPOL cat/UN nos" />
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 
-	<xs:complexType name="taken-details">
-		<xs:sequence>
-			<xs:element name="details" type="xs:string" />
-			<xs:element name="held-by" type="xs:string" />
-		</xs:sequence>
-	</xs:complexType>
+  <xs:complexType name="pollutant-extent">
+    <xs:sequence>
+      <xs:element name="size-metres" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:label="Size of spill (length and width in metres)" />
+      </xs:element>
+      <xs:element name="amount-litres" type="xs:string"
+        minOccurs="0">
+        <xs:annotation i:label="Amount of pollutant, if known (litres)" />
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="taken-details">
+    <xs:sequence>
+      <xs:element name="details" type="xs:string" />
+      <xs:element name="held-by" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
 
 </xs:schema>
