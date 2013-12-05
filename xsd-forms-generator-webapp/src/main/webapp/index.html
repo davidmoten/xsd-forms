@@ -1,5 +1,6 @@
 <html>
 <head>
+<title>Generator</title>
 <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 
 <script type="text/javascript">
@@ -18,7 +19,9 @@ $(function() {
 </script>
 </head>
 <body style="background-color: #F5F5F5;">
-<h4>Xsd-forms Generator</h4>
+<h4>xsd-forms Generator</h4>
+<p>Documentation is <a href="https://github.com/davidmoten/xsd-forms">here</a>.</p>
+
 <form id="form" name="generate" action="generate" method="post">
 Schema:<br/>
 <textarea name="schema" style="width:100%; height:75%;font-size:80%;">
@@ -341,7 +344,7 @@ Id prefix (optional): &nbsp; <input type="text" name="idPrefix" value=""><br/>
 <input type="radio" name="action" value="view" checked="checked">view</input><br/>
 <p>Use HTTP Post or HTTP Get (schema must be small for Get to work):</p>
 <input id="get" type="radio" name="method" value="get">get</input>
-<input id="post" type="radio" name="method" value="post" checked="checked">post</input><br/>
+<input id="post" type="radio" name="method" value="post" checked="checked">post</input><br/><br/>
 <input name="submit" type="submit" value="Submit">
 
 </form> 
