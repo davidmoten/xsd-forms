@@ -233,18 +233,22 @@ processXml = function (xml) {
   var data = new Object();
   data.xml = xml;
   //disable submit button
-  $('#submit').prop('disabled', true);
+  $('#submit').hide();
   $.ajax({
   type: 'POST',
-  url: 'http://posttestserver.com/post.php',
+  url: 'http://posttestserver456.com/post.php',
   data: data,
   success: 
     function (dat,textStatus,jqXHR) {
-      alert(dat);      
       $('#submit').hide();
     },
+  error:
+    function (jqXHR,textStatus,errorThrown) {
+      alert(textStatus + '\n'+ errorThrown);
+     $('#submit').show();
+    },
   async:false
-  });
+});
 }
 ```
 
