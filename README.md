@@ -228,6 +228,10 @@ processXml = function(xml) {
 ###How do I submit the xml/json to a web server?
 Use this *extraScript*:
 ```
+processXml = postXml('http://posttestserver456.com/post.php');
+```
+Or for more control use this *extraScript* and modify it:
+```
 //submit the xml to a web service using http post
 processXml = function (xml) {
   var data = new Object();
