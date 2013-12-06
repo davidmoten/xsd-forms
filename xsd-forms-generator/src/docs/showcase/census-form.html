@@ -78,6 +78,30 @@ function toBoolean(s) {
   else 
     return "false";
 }
+
+function postXml(url) {
+  return function(xml) {
+    var data = new Object();
+    data.xml = xml;
+    //disable submit button
+    $('#submit').hide();
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+      success: 
+        function (dat,textStatus,jqXHR) {
+        $('#submit').hide();
+      },
+      error:
+        function (jqXHR,textStatus,errorThrown) {
+        alert(textStatus + '\n'+ errorThrown);
+        $('#submit').show();
+      },
+      async:false
+    });
+  };
+}
           
 $(function() {
   //run js unit tests        
