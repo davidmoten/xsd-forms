@@ -201,23 +201,50 @@ Yep. Use this *extraScript* (using [xml2json.js](https://code.google.com/p/x2js/
       alert(jsonString);
     }
 
-###How do I override the appearance/behaviour of the generated form?
+###How do I override the appearance of the generated form?
 
 Easy, just use javascript (jquery) in the *extraScript*. For instance, building on the above example:
 
 ```
-// this script will be included in the jquery on-load block
-
-//override the processXml function
-processXml = function(xml) {
-  alert(xml);
-};
-
 //override the appearance of first input box
 $('#item-6-instance-1_1_1').css("background", "aqua");
 
 //override the default value of first input box
 $('#item-6-instance-1_1_1').val("bingo");
+```
+
+An alternative is to put your own css overrides in xsd-forms-overrides.css.
+
+###How can I do my own thing with the xml?
+Use this script:
+```
+//override the processXml function
+processXml = function(xml) {
+  alert(xml);
+};
+```
+
+###How do I submit the xml/json to a web server?
+Use script like this:
+```
+//submit the xml to a web service using http post
+processXml = function (xml) {
+  var data = new Object();
+  data.xml = xml;
+  //disable submit button
+  $('#submit').prop('disabled', true);
+  $.ajax({
+  type: 'POST',
+  url: 'http://posttestserver.com/post.php',
+  data: data,
+  success: 
+    function (dat,textStatus,jqXHR) {
+      alert(dat);      
+      $('#submit').hide();
+    },
+  async:false
+  });
+}
 ```
 
 ###How do I pre-populate a form?
