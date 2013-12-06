@@ -217,16 +217,16 @@ $('#item-6-instance-1_1_1').val("bingo");
 An alternative is to put your own css overrides in xsd-forms-overrides.css.
 
 ###How can I do my own thing with the xml?
-Use this script:
+Use this *extraScript*:
 ```
 //override the processXml function
 processXml = function(xml) {
-  alert(xml);
+  //do whatever you want here!!
 };
 ```
 
 ###How do I submit the xml/json to a web server?
-Use script like this:
+Use this *extraScript*:
 ```
 //submit the xml to a web service using http post
 processXml = function (xml) {
