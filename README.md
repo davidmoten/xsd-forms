@@ -1,5 +1,4 @@
-xsd-forms
-=========
+#xsd-forms
 
 You want to make a web form that submits structured data (XML/JSON). 
 
@@ -17,8 +16,8 @@ Continuous integration with Jenkins for this project is [here](https://xuml-tool
 
 Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xsd-forms_site/site/). 
 
-Design
------------------
+##Design
+
 Xml schemas contain nearly everything we need for many web forms except for presentation information. Instead of seeking full separation of presentation from the data model (the xml schema) there are significant advantages in [annotating the xsd itself](https://github.com/davidmoten/xsd-forms/blob/master/demo-scalaxb/src/main/resources/demo.xsd) according to a [special schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-scalaxb/src/main/xsd/xsd-forms.xsd) to indicate presentation details. For one, refactoring is much easier without specialized IDE tooling that can read both our xsd and our presentation format. 
 
 <img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/diagram01.png"/>
