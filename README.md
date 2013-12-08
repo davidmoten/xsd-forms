@@ -1,5 +1,4 @@
-xsd-forms
-=========
+#xsd-forms
 
 You want to make a web form that submits structured data (XML/JSON). 
 
@@ -17,8 +16,8 @@ Continuous integration with Jenkins for this project is [here](https://xuml-tool
 
 Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xsd-forms_site/site/). 
 
-Design
------------------
+##Design
+
 Xml schemas contain nearly everything we need for many web forms except for presentation information. Instead of seeking full separation of presentation from the data model (the xml schema) there are significant advantages in [annotating the xsd itself](https://github.com/davidmoten/xsd-forms/blob/master/demo-scalaxb/src/main/resources/demo.xsd) according to a [special schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-scalaxb/src/main/xsd/xsd-forms.xsd) to indicate presentation details. For one, refactoring is much easier without specialized IDE tooling that can read both our xsd and our presentation format. 
 
 <img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/diagram01.png"/>
@@ -202,23 +201,58 @@ Yep. Use this *extraScript* (using [xml2json.js](https://code.google.com/p/x2js/
       alert(jsonString);
     }
 
-###How do I override the appearance/behaviour of the generated form?
+###How do I override the appearance of the generated form?
 
 Easy, just use javascript (jquery) in the *extraScript*. For instance, building on the above example:
 
 ```
-// this script will be included in the jquery on-load block
-
-//override the processXml function
-processXml = function(xml) {
-  alert(xml);
-};
-
 //override the appearance of first input box
 $('#item-6-instance-1_1_1').css("background", "aqua");
 
 //override the default value of first input box
 $('#item-6-instance-1_1_1').val("bingo");
+```
+
+An alternative is to put your own css overrides in xsd-forms-overrides.css.
+
+###How can I do my own thing with the xml?
+Use this *extraScript*:
+```
+//override the processXml function
+processXml = function(xml) {
+  //do whatever you want here!!
+};
+```
+
+###How do I submit the xml/json to a web server?
+Use this *extraScript*:
+```
+processXml = postXml('http://posttestserver456.com/post.php');
+```
+Or for more control use this *extraScript* and modify it:
+```
+//submit the xml to a web service using http post
+processXml = function (xml) {
+  var data = new Object();
+  data.xml = xml;
+  //disable submit button
+  $('#submit').hide();
+  $.ajax({
+  type: 'POST',
+  url: 'http://posttestserver456.com/post.php',
+  data: data,
+  success: 
+    function (dat,textStatus,jqXHR) {
+      $('#submit').hide();
+    },
+  error:
+    function (jqXHR,textStatus,errorThrown) {
+      alert(textStatus + '\n'+ errorThrown);
+     $('#submit').show();
+    },
+  async:false
+});
+}
 ```
 
 ###How do I pre-populate a form?
