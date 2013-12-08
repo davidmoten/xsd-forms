@@ -340,4 +340,5 @@ Then go to [http://localhost:8080/](http://localhost:8080/)
   * unit tests of form generation
   * unit tests of form behaviour (selenium?) including xml schema compliance
   * use templating instead of coding divs directly in scala?
+  * combine templating with css to make themes
 
