@@ -12,6 +12,8 @@
   
 	<element name="extraScript" type="string"/>
 
+	<element name="extraCss" type="string"/>
+
 	<attribute name="title" type="string">
 		<annotation>
 			<documentation>

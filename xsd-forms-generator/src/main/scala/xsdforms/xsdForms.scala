@@ -286,7 +286,7 @@ package xsdforms {
     uniqueId: String = java.util.UUID.randomUUID.toString)
 
   case class Configuration(header: Option[String], footer: Option[String],
-    extraImports: Option[String], extraScript: Option[String])
+    extraImports: Option[String], extraScript: Option[String], extraCss: Option[String])
 
   /**
    * **************************************************************
@@ -2009,6 +2009,7 @@ package xsdforms {
         .replace("<!--HEADER-->", configuration.flatMap(_.header).mkString(""))
         .replace("<!--FOOTER-->", configuration.flatMap(_.footer).mkString(""))
         .replace("<!--EXTRA_IMPORTS-->", configuration.flatMap(_.extraImports).mkString(""))
+        .replace("/* EXTRA_CSS */", configuration.flatMap(_.extraCss).mkString(""))
         .replace("<!--GENERATED_HTML-->", html.toString)
 
   }
@@ -2153,7 +2154,8 @@ package xsdforms {
       val footer = extract("footer")
       val extraImports = extract("extraImports")
       val extraScript = extract("extraScript")
-      val configuration = Configuration(header, footer, extraImports, extraScript)
+      val extraCss = extract("extraCss")
+      val configuration = Configuration(header, footer, extraImports, extraScript, extraCss)
       visitor.configuration(configuration)
     }
 
