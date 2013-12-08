@@ -780,7 +780,7 @@ package xsdforms {
       val legend = getAnnotation(e, Annotation.Legend)
       val usesFieldset = legend.isDefined
 
-      val label = getAnnotation(e, Annotation.Label).mkString
+      val label = getAnnotation(e, Annotation.Label)
 
       html
         .div(id = Some(getItemEnclosingId(number, instances add 1)),
@@ -791,10 +791,11 @@ package xsdforms {
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
-        html
-          .div(classes = List(ClassSequenceLabel), content = Some(label)).closeTag
-          .div(id = Some(idPrefix + "sequence-" + number + InstanceDelimiter + instanceNo),
-            classes = List(ClassSequenceContent))
+        if (label.isDefined)
+          html
+            .div(classes = List(ClassSequenceLabel), content = label).closeTag
+        html.div(id = Some(idPrefix + "sequence-" + number + InstanceDelimiter + instanceNo),
+          classes = List(ClassSequenceContent))
         addRemoveButton(e, instNos)
         if (usesFieldset)
           html.fieldset(legend = legend, classes = List(ClassFieldset), id =
@@ -831,11 +832,12 @@ package xsdforms {
         val particles = choice.group.particleOption3.map(_.value)
         addChoiceHideOnStartScriptlet(particles, number, instNos)
         addChoiceShowHideOnSelectionScriptlet(particles, number, instNos)
-
-        html.div(
-          classes = List(ClassChoiceLabel),
-          content = Some(getAnnotation(choice.group, Annotation.Label).mkString))
-          .closeTag
+        val label = getAnnotation(choice.group, Annotation.Label)
+        if (label.isDefined)
+          html.div(
+            classes = List(ClassChoiceLabel),
+            content = label)
+            .closeTag
         addRemoveButton(e, instNos)
 
         val forEachParticle = particles.zipWithIndex.foreach _
@@ -1223,11 +1225,13 @@ package xsdforms {
     private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
       //there's only one of these so use instanceNo = 1
       val number = elementNumber(e)
-      html
-        .div(
-          classes = List(ClassNonRepeatingTitle),
-          content = getAnnotation(e, Annotation.NonRepeatingTitle))
-        .closeTag
+      val content = getAnnotation(e, Annotation.NonRepeatingTitle)
+      if (content.isDefined)
+        html
+          .div(
+            classes = List(ClassNonRepeatingTitle),
+            content = content)
+          .closeTag
     }
 
     private def repeatButton(e: ElementWrapper, instances: Instances) {
@@ -2344,7 +2348,8 @@ package xsdforms {
     val Enabled = "enabled"
     val Checked = "checked"
     val Name = "name"
-2  }
+    2
+  }
 
   private class Html {
     import Html._
