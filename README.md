@@ -95,6 +95,9 @@ You need to make a schema using only the elements and types that are supported b
       <i:extraScript><![CDATA[
   // extra script would go here
 ]]></i:extraScript>
+      <i:extraCss><![CDATA[
+  /* extra css would go here */
+]]></i:extraCss>
     </xs:appinfo>
   </xs:annotation>
   <xs:element name="name" type="xs:string">
