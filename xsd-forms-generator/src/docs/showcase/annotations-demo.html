@@ -76,30 +76,6 @@ function toBoolean(s) {
   else 
     return "false";
 }
-
-function postXml(url) {
-  return function(xml) {
-    var data = new Object();
-    data.xml = xml;
-    //disable submit button
-    $('#submit').hide();
-    $.ajax({
-      type: 'POST',
-      url: url,
-      data: data,
-      success: 
-        function (dat,textStatus,jqXHR) {
-        $('#submit').hide();
-      },
-      error:
-        function (jqXHR,textStatus,errorThrown) {
-        alert(textStatus + '\n'+ errorThrown);
-        $('#submit').show();
-      },
-      async:false
-    });
-  };
-}
           
 $(function() {
   //run js unit tests        
@@ -346,8 +322,6 @@ $(function() {
       <div class="sequence-label">'label' for this complex element</div>
       <div id="b-sequence-1-instance-1" class="sequence-content">
         <div id="b-item-enclosing-2-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeat-button-2-instance-1" class="repeat-button white small">'repeatLabel' click to repeat question</div>
           <div id="b-repeating-enclosing-2-instance-1_1" class="repeating-enclosing">
             <div class="item-title">'title' for this question</div>

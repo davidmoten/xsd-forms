@@ -76,30 +76,6 @@ function toBoolean(s) {
   else 
     return "false";
 }
-
-function postXml(url) {
-  return function(xml) {
-    var data = new Object();
-    data.xml = xml;
-    //disable submit button
-    $('#submit').hide();
-    $.ajax({
-      type: 'POST',
-      url: url,
-      data: data,
-      success: 
-        function (dat,textStatus,jqXHR) {
-        $('#submit').hide();
-      },
-      error:
-        function (jqXHR,textStatus,errorThrown) {
-        alert(textStatus + '\n'+ errorThrown);
-        $('#submit').show();
-      },
-      async:false
-    });
-  };
-}
           
 $(function() {
   //run js unit tests        
@@ -5763,14 +5739,9 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
  
  
   <div id="b-item-enclosing-1-instance-1" class="sequence">
-    <div class="non-repeating-title">
-    </div>
     <div id="b-repeating-enclosing-1-instance-1" class="repeating-enclosing">
-      <div class="sequence-label"></div>
       <div id="b-sequence-1-instance-1" class="sequence-content">
         <div id="b-item-enclosing-2-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-2-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Demonstration of xsd-forms features</div>
             <div class="item-before">This page demonstrates the main features of generated forms using xsd-forms. The schema used to generate this form is demo.xsd.</div>
@@ -5785,8 +5756,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-3-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-3-instance-1_1" class="repeating-enclosing">
             <div class="item-number">3</div>
             <label class="item-label" for="b-item-input-3-instance-1_1">Text Element With Default</label>
@@ -5799,8 +5768,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-4-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-4-instance-1_1" class="repeating-enclosing">
             <div class="item-number">4</div>
             <label class="item-label" for="b-item-input-4-instance-1_1">Long Text</label>
@@ -5813,8 +5780,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-5-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-5-instance-1_1" class="repeating-enclosing">
             <div class="item-number">5</div>
             <label class="item-label" for="b-item-input-5-instance-1_1">Long Text With Default</label>
@@ -5827,8 +5792,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-6-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-6-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Numbers</div>
             <div class="item-number">6</div>
@@ -5842,8 +5805,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-7-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-7-instance-1_1" class="repeating-enclosing">
             <div class="item-number">7</div>
             <label class="item-label" for="b-item-input-7-instance-1_1">Decimal Element With Default<em>*</em></label>
@@ -5856,8 +5817,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-8-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-8-instance-1_1" class="repeating-enclosing">
             <div class="item-number">8</div>
             <label class="item-label" for="b-item-input-8-instance-1_1">Integer Element<em>*</em></label>
@@ -5870,8 +5829,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-9-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-9-instance-1_1" class="repeating-enclosing">
             <div class="item-number">9</div>
             <label class="item-label" for="b-item-input-9-instance-1_1">Integer Element With Default<em>*</em></label>
@@ -5884,8 +5841,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-10-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-10-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Dates and times</div>
             <div class="item-number">10</div>
@@ -5899,8 +5854,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-11-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-11-instance-1_1" class="repeating-enclosing">
             <div class="item-number">11</div>
             <label class="item-label" for="b-item-input-11-instance-1_1">Date Element With Default2<em>*</em></label>
@@ -5913,8 +5866,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-12-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-12-instance-1_1" class="repeating-enclosing">
             <div class="item-number">12</div>
             <label class="item-label" for="b-item-input-12-instance-1_1">Time Element<em>*</em></label>
@@ -5927,8 +5878,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-13-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-13-instance-1_1" class="repeating-enclosing">
             <div class="item-number">13</div>
             <label class="item-label" for="b-item-input-13-instance-1_1">Time Element With Default<em>*</em></label>
@@ -5941,8 +5890,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-14-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-14-instance-1_1" class="repeating-enclosing">
             <div class="item-number">14</div>
             <label class="item-label" for="b-item-input-14-instance-1_1">datetime element TODO<em>*</em></label>
@@ -5955,8 +5902,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-15-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-15-instance-1_1" class="repeating-enclosing">
             <div class="item-number">15</div>
             <label class="item-label" for="b-item-input-15-instance-1_1">Datetime element with default TODO<em>*</em></label>
@@ -5969,8 +5914,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-16-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-16-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Booleans</div>
             <div class="item-number">16</div>
@@ -5984,8 +5927,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-17-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-17-instance-1_1" class="repeating-enclosing">
             <div class="item-number">17</div>
             <label class="item-label" for="b-item-input-17-instance-1_1">Boolean Element With Default<em>*</em></label>
@@ -5998,8 +5939,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-18-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-18-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Enumerations</div>
             <div class="item-number">18</div>
@@ -6015,8 +5954,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-19-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-19-instance-1_1" class="repeating-enclosing">
             <div class="item-number">19</div>
             <label class="item-label" for="b-item-input-19-instance-1_1">String Enumeration Unselected</label>
@@ -6032,8 +5969,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-20-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-20-instance-1_1" class="repeating-enclosing">
             <div class="item-number">20</div>
             <label class="item-label" for="b-item-input-20-instance-1_1">String Enumeration With Labels</label>
@@ -6048,8 +5983,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-21-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-21-instance-1_1" class="repeating-enclosing">
             <div class="item-number">21</div>
             <label class="item-label" for="b-item-input-21-instance-1_1">Decimal enumeration</label>
@@ -6064,8 +5997,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-22-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-22-instance-1_1" class="repeating-enclosing">
             <div class="item-number">22</div>
             <label class="item-label" for="b-item-input-22-instance-1_1">Integer Enumeration</label>
@@ -6080,8 +6011,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-23-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-23-instance-1_1" class="repeating-enclosing">
             <div class="item-number">23</div>
             <label class="item-label" for="b-item-input-23-instance-1_1">String Enumeration Radio</label>
@@ -6094,8 +6023,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-24-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-24-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Make visible example</div>
             <div class="item-before">When Option B is selected then the next (makeVisible=1) input element will be made visible so that Further Details for Option B can be captured. The Further Details element should have i:visible=false annotation.</div>
@@ -6112,8 +6039,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-25-instance-1_1" class="item-enclosing invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-25-instance-1_1" class="repeating-enclosing">
             <div class="item-number">25</div>
             <label class="item-label" for="b-item-input-25-instance-1_1">Further Details For Option B</label>
@@ -6126,8 +6051,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-26-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-26-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Labels, before, after, title, description</div>
             <div class="item-number">26</div>
@@ -6141,8 +6064,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-27-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-27-instance-1_1" class="repeating-enclosing">
             <div class="item-title">'title' message</div>
             <div class="item-before">'before' message</div>
@@ -6159,8 +6080,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-28-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-28-instance-1_1" class="repeating-enclosing">
             <div class="item-title">CSS override of input elements</div>
             <div class="item-number">28</div>
@@ -6174,8 +6093,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-29-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-29-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Patterns validation</div>
             <div class="item-number">29</div>
@@ -6190,8 +6107,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-30-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-30-instance-1_1" class="repeating-enclosing">
             <div class="item-number">30</div>
             <label class="item-label" for="b-item-input-30-instance-1_1">String Pattern Validation Msg<em>*</em></label>
@@ -6205,8 +6120,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-31-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-31-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Multiple pattern validation</div>
             <div class="item-number">31</div>
@@ -6221,8 +6134,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-32-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-32-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Min length validation</div>
             <div class="item-number">32</div>
@@ -6237,8 +6148,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-33-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-33-instance-1_1" class="repeating-enclosing">
             <div class="item-number">33</div>
             <label class="item-label" for="b-item-input-33-instance-1_1">Integer Min Length Validation</label>
@@ -6252,8 +6161,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-34-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-34-instance-1_1" class="repeating-enclosing">
             <div class="item-number">34</div>
             <label class="item-label" for="b-item-input-34-instance-1_1">Decimal Min Length Validation</label>
@@ -6267,8 +6174,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-35-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-35-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Max length validation</div>
             <div class="item-number">35</div>
@@ -6283,8 +6188,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-36-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-36-instance-1_1" class="repeating-enclosing">
             <div class="item-number">36</div>
             <label class="item-label" for="b-item-input-36-instance-1_1">Integer Max Length Validation</label>
@@ -6298,8 +6201,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-37-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-37-instance-1_1" class="repeating-enclosing">
             <div class="item-number">37</div>
             <label class="item-label" for="b-item-input-37-instance-1_1">Decimal Max Length Validation</label>
@@ -6313,8 +6214,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-38-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-38-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Length validation</div>
             <div class="item-number">38</div>
@@ -6329,8 +6228,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-39-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-39-instance-1_1" class="repeating-enclosing">
             <div class="item-number">39</div>
             <label class="item-label" for="b-item-input-39-instance-1_1">Integer Length Validation</label>
@@ -6344,8 +6241,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-40-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-40-instance-1_1" class="repeating-enclosing">
             <div class="item-number">40</div>
             <label class="item-label" for="b-item-input-40-instance-1_1">Decimal Length Validation</label>
@@ -6359,8 +6254,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-41-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-41-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Min inclusive validation</div>
             <div class="item-number">41</div>
@@ -6375,8 +6268,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-42-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-42-instance-1_1" class="repeating-enclosing">
             <div class="item-number">42</div>
             <label class="item-label" for="b-item-input-42-instance-1_1">Decimal Min Inclusive Validation</label>
@@ -6390,8 +6281,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-43-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-43-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Max inclusive validation</div>
             <div class="item-number">43</div>
@@ -6406,8 +6295,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-44-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-44-instance-1_1" class="repeating-enclosing">
             <div class="item-number">44</div>
             <label class="item-label" for="b-item-input-44-instance-1_1">Decimal Max Inclusive Validation</label>
@@ -6421,8 +6308,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-45-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-45-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Min exclusive validation</div>
             <div class="item-number">45</div>
@@ -6437,8 +6322,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-46-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-46-instance-1_1" class="repeating-enclosing">
             <div class="item-number">46</div>
             <label class="item-label" for="b-item-input-46-instance-1_1">Decimal Min Exclusive Validation</label>
@@ -6452,8 +6335,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-47-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-47-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Max exclusive validation</div>
             <div class="item-number">47</div>
@@ -6468,8 +6349,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-48-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-48-instance-1_1" class="repeating-enclosing">
             <div class="item-number">48</div>
             <label class="item-label" for="b-item-input-48-instance-1_1">Decimal Max Exclusive Validation</label>
@@ -6483,8 +6362,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-49-instance-1_1" class="choice">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-49-instance-1_1" class="repeating-enclosing">
             <div class="choice-label">Anonymous choice, displayed after</div>
             <div id="b-div-choice-item-49-instance-1-choice-1" class="div-choice-item">
@@ -6495,8 +6372,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-49-instance-1_1-choice-1" class="invisible">
               <div id="b-item-enclosing-50-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-50-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">50</div>
                   <label class="item-label" for="b-item-input-50-instance-1_1_1"></label>
@@ -6511,8 +6386,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-49-instance-1_1-choice-2" class="invisible">
               <div id="b-item-enclosing-51-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-51-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">51</div>
                   <label class="item-label" for="b-item-input-51-instance-1_1_1"><em>*</em></label>
@@ -6729,11 +6602,8 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           <div class="non-repeating-title">Repeatable complex type</div>
           <div id="b-repeat-button-55-instance-1" class="repeat-button white small">+</div>
           <div id="b-repeating-enclosing-55-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-55-instance-1" class="sequence-content">
               <div id="b-item-enclosing-56-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-56-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">56</div>
                   <label class="item-label" for="b-item-input-56-instance-1_1_1">A</label>
@@ -6746,8 +6616,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-57-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">57</div>
                   <label class="item-label" for="b-item-input-57-instance-1_1_1">B</label>
@@ -6762,14 +6630,11 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
           </div>
           <div id="b-repeating-enclosing-55-instance-1_2" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-55-instance-2" class="sequence-content">
               <div class="remove-button-container">
                 <div id="b-remove-button-55-instance-1_2" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-56-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-56-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">56</div>
                   <label class="item-label" for="b-item-input-56-instance-1_2_1">A</label>
@@ -6782,8 +6647,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-57-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">57</div>
                   <label class="item-label" for="b-item-input-57-instance-1_2_1">B</label>
@@ -6798,14 +6661,11 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
           </div>
           <div id="b-repeating-enclosing-55-instance-1_3" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-55-instance-3" class="sequence-content">
               <div class="remove-button-container">
                 <div id="b-remove-button-55-instance-1_3" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-56-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-56-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">56</div>
                   <label class="item-label" for="b-item-input-56-instance-1_3_1">A</label>
@@ -6818,8 +6678,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-57-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">57</div>
                   <label class="item-label" for="b-item-input-57-instance-1_3_1">B</label>
@@ -6834,14 +6692,11 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
           </div>
           <div id="b-repeating-enclosing-55-instance-1_4" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-55-instance-4" class="sequence-content">
               <div class="remove-button-container">
                 <div id="b-remove-button-55-instance-1_4" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-56-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-56-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">56</div>
                   <label class="item-label" for="b-item-input-56-instance-1_4_1">A</label>
@@ -6854,8 +6709,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-57-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">57</div>
                   <label class="item-label" for="b-item-input-57-instance-1_4_1">B</label>
@@ -6870,14 +6723,11 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
           </div>
           <div id="b-repeating-enclosing-55-instance-1_5" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-55-instance-5" class="sequence-content">
               <div class="remove-button-container">
                 <div id="b-remove-button-55-instance-1_5" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-56-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-56-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">56</div>
                   <label class="item-label" for="b-item-input-56-instance-1_5_1">A</label>
@@ -6890,8 +6740,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-57-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">57</div>
                   <label class="item-label" for="b-item-input-57-instance-1_5_1">B</label>
@@ -6910,7 +6758,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           <div class="non-repeating-title">Repeatable choice</div>
           <div id="b-repeat-button-58-instance-1" class="repeat-button white small">+</div>
           <div id="b-repeating-enclosing-58-instance-1_1" class="repeating-enclosing">
-            <div class="choice-label"></div>
             <div id="b-div-choice-item-58-instance-1-choice-1" class="div-choice-item">
               <input number="58" name="b-item-input-58-instance-1_1" id="b-item-58-instance-1_1-choice-1" class="choice-item" type="radio" value="number">A</input>
             </div>
@@ -6919,8 +6766,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_1-choice-1" class="invisible">
               <div id="b-item-enclosing-59-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-59-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">59</div>
                   <label class="item-label" for="b-item-input-59-instance-1_1_1">A</label>
@@ -6935,8 +6780,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_1-choice-2" class="invisible">
               <div id="b-item-enclosing-60-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-60-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">60</div>
                   <label class="item-label" for="b-item-input-60-instance-1_1_1">B</label>
@@ -6951,7 +6794,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
           </div>
           <div id="b-repeating-enclosing-58-instance-1_2" class="repeating-enclosing">
-            <div class="choice-label"></div>
             <div class="remove-button-container">
               <div id="b-remove-button-58-instance-1_2" class="remove-button white small">-</div>
             </div>
@@ -6963,8 +6805,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_2-choice-1" class="invisible">
               <div id="b-item-enclosing-59-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-59-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">59</div>
                   <label class="item-label" for="b-item-input-59-instance-1_2_1">A</label>
@@ -6979,8 +6819,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_2-choice-2" class="invisible">
               <div id="b-item-enclosing-60-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-60-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">60</div>
                   <label class="item-label" for="b-item-input-60-instance-1_2_1">B</label>
@@ -6995,7 +6833,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
           </div>
           <div id="b-repeating-enclosing-58-instance-1_3" class="repeating-enclosing">
-            <div class="choice-label"></div>
             <div class="remove-button-container">
               <div id="b-remove-button-58-instance-1_3" class="remove-button white small">-</div>
             </div>
@@ -7007,8 +6844,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_3-choice-1" class="invisible">
               <div id="b-item-enclosing-59-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-59-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">59</div>
                   <label class="item-label" for="b-item-input-59-instance-1_3_1">A</label>
@@ -7023,8 +6858,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_3-choice-2" class="invisible">
               <div id="b-item-enclosing-60-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-60-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">60</div>
                   <label class="item-label" for="b-item-input-60-instance-1_3_1">B</label>
@@ -7039,7 +6872,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
           </div>
           <div id="b-repeating-enclosing-58-instance-1_4" class="repeating-enclosing">
-            <div class="choice-label"></div>
             <div class="remove-button-container">
               <div id="b-remove-button-58-instance-1_4" class="remove-button white small">-</div>
             </div>
@@ -7051,8 +6883,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_4-choice-1" class="invisible">
               <div id="b-item-enclosing-59-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-59-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">59</div>
                   <label class="item-label" for="b-item-input-59-instance-1_4_1">A</label>
@@ -7067,8 +6897,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_4-choice-2" class="invisible">
               <div id="b-item-enclosing-60-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-60-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">60</div>
                   <label class="item-label" for="b-item-input-60-instance-1_4_1">B</label>
@@ -7083,7 +6911,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
           </div>
           <div id="b-repeating-enclosing-58-instance-1_5" class="repeating-enclosing">
-            <div class="choice-label"></div>
             <div class="remove-button-container">
               <div id="b-remove-button-58-instance-1_5" class="remove-button white small">-</div>
             </div>
@@ -7095,8 +6922,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_5-choice-1" class="invisible">
               <div id="b-item-enclosing-59-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-59-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">59</div>
                   <label class="item-label" for="b-item-input-59-instance-1_5_1">A</label>
@@ -7111,8 +6936,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </div>
             <div id="b-choice-content-58-instance-1_5-choice-2" class="invisible">
               <div id="b-item-enclosing-60-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-60-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">60</div>
                   <label class="item-label" for="b-item-input-60-instance-1_5_1">B</label>
@@ -7134,8 +6957,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             <div class="sequence-label">Two items</div>
             <div id="b-sequence-61-instance-1" class="sequence-content">
               <div id="b-item-enclosing-62-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-62-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">62</div>
                   <label class="item-label" for="b-item-input-62-instance-1_1_1">A</label>
@@ -7148,8 +6969,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-63-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">63</div>
                   <label class="item-label" for="b-item-input-63-instance-1_1_1">B</label>
@@ -7170,8 +6989,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 <div id="b-remove-button-61-instance-1_2" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-62-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-62-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">62</div>
                   <label class="item-label" for="b-item-input-62-instance-1_2_1">A</label>
@@ -7184,8 +7001,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-63-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">63</div>
                   <label class="item-label" for="b-item-input-63-instance-1_2_1">B</label>
@@ -7206,8 +7021,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 <div id="b-remove-button-61-instance-1_3" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-62-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-62-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">62</div>
                   <label class="item-label" for="b-item-input-62-instance-1_3_1">A</label>
@@ -7220,8 +7033,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-63-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">63</div>
                   <label class="item-label" for="b-item-input-63-instance-1_3_1">B</label>
@@ -7242,8 +7053,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 <div id="b-remove-button-61-instance-1_4" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-62-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-62-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">62</div>
                   <label class="item-label" for="b-item-input-62-instance-1_4_1">A</label>
@@ -7256,8 +7065,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-63-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">63</div>
                   <label class="item-label" for="b-item-input-63-instance-1_4_1">B</label>
@@ -7278,8 +7085,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 <div id="b-remove-button-61-instance-1_5" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-62-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-62-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">62</div>
                   <label class="item-label" for="b-item-input-62-instance-1_5_1">A</label>
@@ -7292,8 +7097,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-63-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">63</div>
                   <label class="item-label" for="b-item-input-63-instance-1_5_1">B</label>
@@ -7309,8 +7112,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-64-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-64-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Optional elements</div>
             <div class="item-before">Setting minOccurs=0 on an element means that if the entry is left blank at submit then the xml element will be excluded from the final xml.</div>
@@ -7325,8 +7126,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-65-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-65-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Anonymous simple type</div>
             <div class="item-number">65</div>
@@ -7340,14 +7139,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-66-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-66-instance-1_1" class="repeating-enclosing">
             <div class="sequence-label">Named complex type</div>
             <div id="b-sequence-66-instance-1" class="sequence-content">
               <div id="b-item-enclosing-67-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-67-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">67</div>
                   <label class="item-label" for="b-item-input-67-instance-1_1_1">First</label>
@@ -7360,8 +7155,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-68-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-68-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">68</div>
                   <label class="item-label" for="b-item-input-68-instance-1_1_1">Second</label>
@@ -7374,14 +7167,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-69-instance-1_1_1" class="sequence">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-69-instance-1_1_1" class="repeating-enclosing">
                   <div class="sequence-label">Nested named complex type</div>
                   <div id="b-sequence-69-instance-1" class="sequence-content">
                     <div id="b-item-enclosing-70-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="b-repeating-enclosing-70-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">70</div>
                         <label class="item-label" for="b-item-input-70-instance-1_1_1_1">A</label>
@@ -7394,8 +7183,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                       </div>
                     </div>
                     <div id="b-item-enclosing-71-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="b-repeating-enclosing-71-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">71</div>
                         <label class="item-label" for="b-item-input-71-instance-1_1_1_1">B</label>
@@ -7408,8 +7195,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                       </div>
                     </div>
                     <div id="b-item-enclosing-72-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="b-repeating-enclosing-72-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">72</div>
                         <label class="item-label" for="b-item-input-72-instance-1_1_1_1">C<em>*</em></label>
@@ -7422,8 +7207,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                       </div>
                     </div>
                     <div id="b-item-enclosing-73-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="b-repeating-enclosing-73-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">73</div>
                         <label class="item-label" for="b-item-input-73-instance-1_1_1_1">Option</label>
@@ -7444,14 +7227,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-74-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-74-instance-1_1" class="repeating-enclosing">
             <div class="sequence-label">Anonymous complex type</div>
             <div id="b-sequence-74-instance-1" class="sequence-content">
               <div id="b-item-enclosing-75-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-75-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">75</div>
                   <label class="item-label" for="b-item-input-75-instance-1_1_1">Value</label>
@@ -7467,14 +7246,9 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-76-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-76-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-76-instance-1" class="sequence-content">
               <div id="b-item-enclosing-77-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeat-button-77-instance-1_1" class="repeat-button white small">+</div>
                 <div id="b-repeating-enclosing-77-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">77</div>
@@ -7543,15 +7317,11 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-78-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeat-button-78-instance-1" class="repeat-button white small">+</div>
           <div id="b-repeating-enclosing-78-instance-1_1" class="repeating-enclosing">
             <div class="sequence-label">Named complex type with repeat TODO</div>
             <div id="b-sequence-78-instance-1" class="sequence-content">
               <div id="b-item-enclosing-79-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-79-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">79</div>
                   <label class="item-label" for="b-item-input-79-instance-1_1_1">A</label>
@@ -7564,8 +7334,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-80-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">80</div>
                   <label class="item-label" for="b-item-input-80-instance-1_1_1">B</label>
@@ -7578,8 +7346,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-81-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">81</div>
                   <label class="item-label" for="b-item-input-81-instance-1_1_1">C<em>*</em></label>
@@ -7592,8 +7358,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-82-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
                   <label class="item-label" for="b-item-input-82-instance-1_1_1">Option</label>
@@ -7616,8 +7380,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 <div id="b-remove-button-78-instance-1_2" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-79-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-79-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">79</div>
                   <label class="item-label" for="b-item-input-79-instance-1_2_1">A</label>
@@ -7630,8 +7392,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-80-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">80</div>
                   <label class="item-label" for="b-item-input-80-instance-1_2_1">B</label>
@@ -7644,8 +7404,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-81-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">81</div>
                   <label class="item-label" for="b-item-input-81-instance-1_2_1">C<em>*</em></label>
@@ -7658,8 +7416,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_2_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-82-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
                   <label class="item-label" for="b-item-input-82-instance-1_2_1">Option</label>
@@ -7682,8 +7438,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 <div id="b-remove-button-78-instance-1_3" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-79-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-79-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">79</div>
                   <label class="item-label" for="b-item-input-79-instance-1_3_1">A</label>
@@ -7696,8 +7450,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-80-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">80</div>
                   <label class="item-label" for="b-item-input-80-instance-1_3_1">B</label>
@@ -7710,8 +7462,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-81-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">81</div>
                   <label class="item-label" for="b-item-input-81-instance-1_3_1">C<em>*</em></label>
@@ -7724,8 +7474,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_3_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-82-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
                   <label class="item-label" for="b-item-input-82-instance-1_3_1">Option</label>
@@ -7748,8 +7496,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 <div id="b-remove-button-78-instance-1_4" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-79-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-79-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">79</div>
                   <label class="item-label" for="b-item-input-79-instance-1_4_1">A</label>
@@ -7762,8 +7508,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-80-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">80</div>
                   <label class="item-label" for="b-item-input-80-instance-1_4_1">B</label>
@@ -7776,8 +7520,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-81-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">81</div>
                   <label class="item-label" for="b-item-input-81-instance-1_4_1">C<em>*</em></label>
@@ -7790,8 +7532,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_4_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-82-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
                   <label class="item-label" for="b-item-input-82-instance-1_4_1">Option</label>
@@ -7814,8 +7554,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 <div id="b-remove-button-78-instance-1_5" class="remove-button white small">-</div>
               </div>
               <div id="b-item-enclosing-79-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-79-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">79</div>
                   <label class="item-label" for="b-item-input-79-instance-1_5_1">A</label>
@@ -7828,8 +7566,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-80-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">80</div>
                   <label class="item-label" for="b-item-input-80-instance-1_5_1">B</label>
@@ -7842,8 +7578,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-81-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">81</div>
                   <label class="item-label" for="b-item-input-81-instance-1_5_1">C<em>*</em></label>
@@ -7856,8 +7590,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_5_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-82-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
                   <label class="item-label" for="b-item-input-82-instance-1_5_1">Option</label>
@@ -7875,16 +7607,11 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-83-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-83-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-83-instance-1" class="sequence-content">
               <fieldset id="b-fieldset-83-instance-1" class="fieldset">
                 <legend >Fieldset example</legend>
                 <div id="b-item-enclosing-84-instance-1_1_1" class="item-enclosing">
-                  <div class="non-repeating-title">
-                  </div>
                   <div id="b-repeating-enclosing-84-instance-1_1_1" class="repeating-enclosing">
                     <div class="item-number">84</div>
                     <label class="item-label" for="b-item-input-84-instance-1_1_1">A</label>
@@ -7897,8 +7624,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                   </div>
                 </div>
                 <div id="b-item-enclosing-85-instance-1_1_1" class="item-enclosing">
-                  <div class="non-repeating-title">
-                  </div>
                   <div id="b-repeating-enclosing-85-instance-1_1_1" class="repeating-enclosing">
                     <div class="item-number">85</div>
                     <label class="item-label" for="b-item-input-85-instance-1_1_1">B</label>
@@ -7911,8 +7636,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                   </div>
                 </div>
                 <div id="b-item-enclosing-86-instance-1_1_1" class="item-enclosing">
-                  <div class="non-repeating-title">
-                  </div>
                   <div id="b-repeating-enclosing-86-instance-1_1_1" class="repeating-enclosing">
                     <div class="item-number">86</div>
                     <label class="item-label" for="b-item-input-86-instance-1_1_1">C<em>*</em></label>
@@ -7925,8 +7648,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                   </div>
                 </div>
                 <div id="b-item-enclosing-87-instance-1_1_1" class="item-enclosing">
-                  <div class="non-repeating-title">
-                  </div>
                   <div id="b-repeating-enclosing-87-instance-1_1_1" class="repeating-enclosing">
                     <div class="item-number">87</div>
                     <label class="item-label" for="b-item-input-87-instance-1_1_1">Option</label>
@@ -7945,8 +7666,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-88-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-88-instance-1_1" class="repeating-enclosing">
             <div class="item-before">No buttons visible for addition/removal because minOccurs=maxOccurs=3</div>
             <div class="item-number">88</div>
@@ -7989,11 +7708,8 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             </input>
           </div>
           <div id="b-repeating-enclosing-89-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-89-instance-1" class="sequence-content">
               <div id="b-item-enclosing-90-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-90-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">90</div>
                   <label class="item-label" for="b-item-input-90-instance-1_1_1">First</label>
@@ -8006,8 +7722,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-91-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-91-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">91</div>
                   <label class="item-label" for="b-item-input-91-instance-1_1_1">Second</label>
@@ -8020,14 +7734,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-92-instance-1_1_1" class="sequence">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-92-instance-1_1_1" class="repeating-enclosing">
                   <div class="sequence-label">Nested named complex type</div>
                   <div id="b-sequence-92-instance-1" class="sequence-content">
                     <div id="b-item-enclosing-93-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="b-repeating-enclosing-93-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">93</div>
                         <label class="item-label" for="b-item-input-93-instance-1_1_1_1">A</label>
@@ -8040,8 +7750,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                       </div>
                     </div>
                     <div id="b-item-enclosing-94-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="b-repeating-enclosing-94-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">94</div>
                         <label class="item-label" for="b-item-input-94-instance-1_1_1_1">B</label>
@@ -8054,8 +7762,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                       </div>
                     </div>
                     <div id="b-item-enclosing-95-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="b-repeating-enclosing-95-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">95</div>
                         <label class="item-label" for="b-item-input-95-instance-1_1_1_1">C<em>*</em></label>
@@ -8068,8 +7774,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                       </div>
                     </div>
                     <div id="b-item-enclosing-96-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="b-repeating-enclosing-96-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">96</div>
                         <label class="item-label" for="b-item-input-96-instance-1_1_1_1">Option</label>
@@ -8090,8 +7794,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-97-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-97-instance-1_1" class="repeating-enclosing">
             <div class="item-number">97</div>
             <label class="item-label" for="b-item-input-97-instance-1_1">Datatype Int<em>*</em></label>
@@ -8104,8 +7806,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-98-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-98-instance-1_1" class="repeating-enclosing">
             <div class="item-number">98</div>
             <label class="item-label" for="b-item-input-98-instance-1_1">Datatype Long<em>*</em></label>
@@ -8118,8 +7818,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-99-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-99-instance-1_1" class="repeating-enclosing">
             <div class="item-number">99</div>
             <label class="item-label" for="b-item-input-99-instance-1_1">Datatype Short<em>*</em></label>
@@ -8132,8 +7830,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-100-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-100-instance-1_1" class="repeating-enclosing">
             <div class="item-number">100</div>
             <label class="item-label" for="b-item-input-100-instance-1_1">Datatype Positive Integer<em>*</em></label>
@@ -8146,8 +7842,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-101-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-101-instance-1_1" class="repeating-enclosing">
             <div class="item-number">101</div>
             <label class="item-label" for="b-item-input-101-instance-1_1">Datatype Negative Integer<em>*</em></label>
@@ -8160,8 +7854,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-102-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-102-instance-1_1" class="repeating-enclosing">
             <div class="item-number">102</div>
             <label class="item-label" for="b-item-input-102-instance-1_1">Datatype Non Negative Integer<em>*</em></label>
@@ -8174,8 +7866,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-103-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-103-instance-1_1" class="repeating-enclosing">
             <div class="item-number">103</div>
             <label class="item-label" for="b-item-input-103-instance-1_1">Datatype Non Positive Integer<em>*</em></label>
@@ -8188,14 +7878,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
           </div>
         </div>
         <div id="b-item-enclosing-104-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-104-instance-1_1" class="repeating-enclosing">
             <div class="sequence-label">Extension example using sequences</div>
             <div id="b-sequence-104-instance-1" class="sequence-content">
               <div id="b-item-enclosing-105-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-105-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">105</div>
                   <label class="item-label" for="b-item-input-105-instance-1_1_1">Name</label>
@@ -8208,8 +7894,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-106-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-106-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">106</div>
                   <label class="item-label" for="b-item-input-106-instance-1_1_1">Value</label>
@@ -8222,8 +7906,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-107-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-107-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">107</div>
                   <label class="item-label" for="b-item-input-107-instance-1_1_1">Group</label>
@@ -8236,8 +7918,6 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 </div>
               </div>
               <div id="b-item-enclosing-108-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-108-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">108</div>
                   <label class="item-label" for="b-item-input-108-instance-1_1_1">Category</label>

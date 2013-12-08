@@ -76,30 +76,6 @@ function toBoolean(s) {
   else 
     return "false";
 }
-
-function postXml(url) {
-  return function(xml) {
-    var data = new Object();
-    data.xml = xml;
-    //disable submit button
-    $('#submit').hide();
-    $.ajax({
-      type: 'POST',
-      url: url,
-      data: data,
-      success: 
-        function (dat,textStatus,jqXHR) {
-        $('#submit').hide();
-      },
-      error:
-        function (jqXHR,textStatus,errorThrown) {
-        alert(textStatus + '\n'+ errorThrown);
-        $('#submit').show();
-      },
-      async:false
-    });
-  };
-}
           
 $(function() {
   //run js unit tests        
@@ -770,14 +746,10 @@ $(function() {
  
  
   <div id="a-item-enclosing-1-instance-1" class="sequence">
-    <div class="non-repeating-title">
-    </div>
     <div id="a-repeating-enclosing-1-instance-1" class="repeating-enclosing">
       <div class="sequence-label">Personal details</div>
       <div id="a-sequence-1-instance-1" class="sequence-content">
         <div id="a-item-enclosing-2-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="a-repeat-button-2-instance-1" class="repeat-button white small">+</div>
           <div id="a-repeating-enclosing-2-instance-1_1" class="repeating-enclosing">
             <div class="item-number">2</div>
@@ -843,14 +815,10 @@ $(function() {
           </div>
         </div>
         <div id="a-item-enclosing-3-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="a-repeating-enclosing-3-instance-1_1" class="repeating-enclosing">
             <div class="sequence-label">Extension example sequence</div>
             <div id="a-sequence-3-instance-1" class="sequence-content">
               <div id="a-item-enclosing-4-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="a-repeating-enclosing-4-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">4</div>
                   <label class="item-label" for="a-item-input-4-instance-1_1_1">Name</label>
@@ -863,8 +831,6 @@ $(function() {
                 </div>
               </div>
               <div id="a-item-enclosing-5-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="a-repeating-enclosing-5-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">5</div>
                   <label class="item-label" for="a-item-input-5-instance-1_1_1">Value</label>
@@ -877,8 +843,6 @@ $(function() {
                 </div>
               </div>
               <div id="a-item-enclosing-6-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="a-repeating-enclosing-6-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">6</div>
                   <label class="item-label" for="a-item-input-6-instance-1_1_1">Group</label>
@@ -891,8 +855,6 @@ $(function() {
                 </div>
               </div>
               <div id="a-item-enclosing-7-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="a-repeating-enclosing-7-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">7</div>
                   <label class="item-label" for="a-item-input-7-instance-1_1_1">Category</label>
@@ -908,16 +870,11 @@ $(function() {
           </div>
         </div>
         <div id="a-item-enclosing-8-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="a-repeating-enclosing-8-instance-1_1" class="repeating-enclosing">
             <div class="sequence-label">Extension example sequence</div>
             <div id="a-sequence-8-instance-1" class="sequence-content">
               <div id="a-item-enclosing-9-instance-1_1_1" class="choice">
-                <div class="non-repeating-title">
-                </div>
                 <div id="a-repeating-enclosing-9-instance-1_1_1" class="repeating-enclosing">
-                  <div class="choice-label"></div>
                   <div id="a-div-choice-item-9-instance-1-choice-1" class="div-choice-item">
                     <input number="9" name="a-item-input-9-instance-1_1_1" id="a-item-9-instance-1_1_1-choice-1" class="choice-item" type="radio" value="number">Name</input>
                   </div>
@@ -926,8 +883,6 @@ $(function() {
                   </div>
                   <div id="a-choice-content-9-instance-1_1_1-choice-1" class="invisible">
                     <div id="a-item-enclosing-10-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="a-repeating-enclosing-10-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">10</div>
                         <label class="item-label" for="a-item-input-10-instance-1_1_1_1">Name</label>
@@ -942,8 +897,6 @@ $(function() {
                   </div>
                   <div id="a-choice-content-9-instance-1_1_1-choice-2" class="invisible">
                     <div id="a-item-enclosing-11-instance-1_1_1_1" class="item-enclosing">
-                      <div class="non-repeating-title">
-                      </div>
                       <div id="a-repeating-enclosing-11-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">11</div>
                         <label class="item-label" for="a-item-input-11-instance-1_1_1_1">Value</label>
@@ -959,8 +912,6 @@ $(function() {
                 </div>
               </div>
               <div id="a-item-enclosing-12-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="a-repeating-enclosing-12-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">12</div>
                   <label class="item-label" for="a-item-input-12-instance-1_1_1">Group</label>
@@ -976,14 +927,9 @@ $(function() {
           </div>
         </div>
         <div id="a-item-enclosing-13-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="a-repeating-enclosing-13-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="a-sequence-13-instance-1" class="sequence-content">
               <div id="a-item-enclosing-14-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="a-repeating-enclosing-14-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">14</div>
                   <label class="item-label" for="a-item-input-14-instance-1_1_1">Age<em>*</em></label>
@@ -996,8 +942,6 @@ $(function() {
                 </div>
               </div>
               <div id="a-item-enclosing-15-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="a-repeating-enclosing-15-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">15</div>
                   <label class="item-label" for="a-item-input-15-instance-1_1_1">HeightInCm<em>*</em></label>
@@ -1013,8 +957,6 @@ $(function() {
           </div>
         </div>
         <div id="a-item-enclosing-16-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="a-repeating-enclosing-16-instance-1_1" class="repeating-enclosing">
             <div class="item-number">16</div>
             <label class="item-label" for="a-item-input-16-instance-1_1">Simple Content<em>*</em></label>

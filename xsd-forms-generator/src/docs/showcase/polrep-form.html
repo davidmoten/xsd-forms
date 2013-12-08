@@ -76,30 +76,6 @@ function toBoolean(s) {
   else 
     return "false";
 }
-
-function postXml(url) {
-  return function(xml) {
-    var data = new Object();
-    data.xml = xml;
-    //disable submit button
-    $('#submit').hide();
-    $.ajax({
-      type: 'POST',
-      url: url,
-      data: data,
-      success: 
-        function (dat,textStatus,jqXHR) {
-        $('#submit').hide();
-      },
-      error:
-        function (jqXHR,textStatus,errorThrown) {
-        alert(textStatus + '\n'+ errorThrown);
-        $('#submit').show();
-      },
-      async:false
-    });
-  };
-}
           
 $(function() {
   //run js unit tests        
@@ -1944,14 +1920,9 @@ $(function() {
  
  
   <div id="b-item-enclosing-1-instance-1" class="sequence">
-    <div class="non-repeating-title">
-    </div>
     <div id="b-repeating-enclosing-1-instance-1" class="repeating-enclosing">
-      <div class="sequence-label"></div>
       <div id="b-sequence-1-instance-1" class="sequence-content">
         <div id="b-item-enclosing-2-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-2-instance-1_1" class="repeating-enclosing">
             <div class="item-number">2</div>
             <label class="item-label" for="b-item-input-2-instance-1_1">Location Description</label>
@@ -1964,14 +1935,9 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-3-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-3-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-3-instance-1" class="sequence-content">
               <div id="b-item-enclosing-4-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-4-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">4</div>
                   <label class="item-label" for="b-item-input-4-instance-1_1_1">Latitude</label>
@@ -1984,8 +1950,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-5-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-5-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">5</div>
                   <label class="item-label" for="b-item-input-5-instance-1_1_1">Longitude</label>
@@ -2001,8 +1965,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-6-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-6-instance-1_1" class="repeating-enclosing">
             <div class="item-number">6</div>
             <label class="item-label" for="b-item-input-6-instance-1_1">Date Of Incident<em>*</em></label>
@@ -2015,8 +1977,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-7-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-7-instance-1_1" class="repeating-enclosing">
             <div class="item-number">7</div>
             <label class="item-label" for="b-item-input-7-instance-1_1">Time Of Incident</label>
@@ -2029,8 +1989,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-8-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-8-instance-1_1" class="repeating-enclosing">
             <div class="item-number">8</div>
             <label class="item-label" for="b-item-input-8-instance-1_1">Description</label>
@@ -2043,8 +2001,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-9-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-9-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Pollutant</div>
             <div class="item-number">9</div>
@@ -2063,14 +2019,9 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-10-instance-1_1" class="sequence invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-10-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-10-instance-1" class="sequence-content">
               <div id="b-item-enclosing-11-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-11-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">11</div>
                   <label class="item-label" for="b-item-input-11-instance-1_1_1">Vessel Type</label>
@@ -2091,8 +2042,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-12-instance-1_1_1" class="item-enclosing invisible">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-12-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">12</div>
                   <label class="item-label" for="b-item-input-12-instance-1_1_1">Vessel Type Other</label>
@@ -2105,8 +2054,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-13-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-13-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">13</div>
                   <label class="item-label" for="b-item-input-13-instance-1_1_1">Name</label>
@@ -2119,8 +2066,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-14-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-14-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">14</div>
                   <label class="item-label" for="b-item-input-14-instance-1_1_1">Flag State</label>
@@ -2133,8 +2078,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-15-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-15-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">15</div>
                   <label class="item-label" for="b-item-input-15-instance-1_1_1">Callsign</label>
@@ -2147,8 +2090,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-16-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-16-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">16</div>
                   <label class="item-label" for="b-item-input-16-instance-1_1_1">Australian</label>
@@ -2167,8 +2108,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-17-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-17-instance-1_1" class="repeating-enclosing">
             <div class="item-number">17</div>
             <label class="item-label" for="b-item-input-17-instance-1_1">Oil</label>
@@ -2184,14 +2123,9 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-18-instance-1_1" class="sequence invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-18-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-18-instance-1" class="sequence-content">
               <div id="b-item-enclosing-19-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-19-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">19</div>
                   <label class="item-label" for="b-item-input-19-instance-1_1_1">Bilge<em>*</em></label>
@@ -2204,8 +2138,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-20-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-20-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">20</div>
                   <label class="item-label" for="b-item-input-20-instance-1_1_1">Diesel Bunker<em>*</em></label>
@@ -2218,8 +2150,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-21-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-21-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">21</div>
                   <label class="item-label" for="b-item-input-21-instance-1_1_1">Hfo Bunker<em>*</em></label>
@@ -2232,8 +2162,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-22-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-22-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">22</div>
                   <label class="item-label" for="b-item-input-22-instance-1_1_1">Crude<em>*</em></label>
@@ -2246,8 +2174,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-23-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-23-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">23</div>
                   <label class="item-label" for="b-item-input-23-instance-1_1_1">Unknown<em>*</em></label>
@@ -2260,8 +2186,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-24-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-24-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">24</div>
                   <label class="item-label" for="b-item-input-24-instance-1_1_1">Other</label>
@@ -2277,8 +2201,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-25-instance-1_1_1" class="item-enclosing invisible">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-25-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">25</div>
                   <label class="item-label" for="b-item-input-25-instance-1_1_1">Other Description</label>
@@ -2294,8 +2216,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-26-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-26-instance-1_1" class="repeating-enclosing">
             <div class="item-number">26</div>
             <label class="item-label" for="b-item-input-26-instance-1_1">Chemical</label>
@@ -2311,14 +2231,9 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-27-instance-1_1" class="sequence invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-27-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-27-instance-1" class="sequence-content">
               <div id="b-item-enclosing-28-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-28-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">28</div>
                   <label class="item-label" for="b-item-input-28-instance-1_1_1">Name</label>
@@ -2331,8 +2246,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-29-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-29-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">29</div>
                   <label class="item-label" for="b-item-input-29-instance-1_1_1">MARPOL cat/UN nos</label>
@@ -2348,8 +2261,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-30-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-30-instance-1_1" class="repeating-enclosing">
             <div class="item-number">30</div>
             <label class="item-label" for="b-item-input-30-instance-1_1">Garbage, packaged, sewage, other</label>
@@ -2365,8 +2276,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-31-instance-1_1" class="item-enclosing invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-31-instance-1_1" class="repeating-enclosing">
             <div class="item-number">31</div>
             <label class="item-label" for="b-item-input-31-instance-1_1">Details/description</label>
@@ -2379,14 +2288,10 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-32-instance-1_1" class="sequence">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-32-instance-1_1" class="repeating-enclosing">
             <div class="sequence-label">Extent</div>
             <div id="b-sequence-32-instance-1" class="sequence-content">
               <div id="b-item-enclosing-33-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-33-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">33</div>
                   <label class="item-label" for="b-item-input-33-instance-1_1_1">Size of spill (length and width in metres)</label>
@@ -2399,8 +2304,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-34-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-34-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">34</div>
                   <label class="item-label" for="b-item-input-34-instance-1_1_1">Amount of pollutant, if known (litres)</label>
@@ -2416,8 +2319,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-35-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-35-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Additional information</div>
             <div class="item-number">35</div>
@@ -2434,8 +2335,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-36-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-36-instance-1_1" class="repeating-enclosing">
             <div class="item-number">36</div>
             <label class="item-label" for="b-item-input-36-instance-1_1">Response action undertaken?</label>
@@ -2451,8 +2350,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-37-instance-1_1" class="item-enclosing invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-37-instance-1_1" class="repeating-enclosing">
             <div class="item-number">37</div>
             <label class="item-label" for="b-item-input-37-instance-1_1">Details</label>
@@ -2466,8 +2363,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-38-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-38-instance-1_1" class="repeating-enclosing">
             <div class="item-number">38</div>
             <label class="item-label" for="b-item-input-38-instance-1_1">Weather conditions at site</label>
@@ -2480,8 +2375,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-39-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-39-instance-1_1" class="repeating-enclosing">
             <div class="item-number">39</div>
             <label class="item-label" for="b-item-input-39-instance-1_1">Photos Taken</label>
@@ -2497,14 +2390,9 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-40-instance-1_1" class="sequence invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-40-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-40-instance-1" class="sequence-content">
               <div id="b-item-enclosing-41-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-41-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">41</div>
                   <label class="item-label" for="b-item-input-41-instance-1_1_1">Details</label>
@@ -2517,8 +2405,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-42-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-42-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">42</div>
                   <label class="item-label" for="b-item-input-42-instance-1_1_1">Held By</label>
@@ -2534,8 +2420,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-43-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-43-instance-1_1" class="repeating-enclosing">
             <div class="item-number">43</div>
             <label class="item-label" for="b-item-input-43-instance-1_1">Video Taken</label>
@@ -2551,14 +2435,9 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-44-instance-1_1" class="sequence invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-44-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-44-instance-1" class="sequence-content">
               <div id="b-item-enclosing-45-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-45-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">45</div>
                   <label class="item-label" for="b-item-input-45-instance-1_1_1">Details</label>
@@ -2571,8 +2450,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-46-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-46-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">46</div>
                   <label class="item-label" for="b-item-input-46-instance-1_1_1">Held By</label>
@@ -2588,8 +2465,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-47-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-47-instance-1_1" class="repeating-enclosing">
             <div class="item-number">47</div>
             <label class="item-label" for="b-item-input-47-instance-1_1">Samples Taken</label>
@@ -2605,14 +2480,9 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-48-instance-1_1" class="sequence invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-48-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-48-instance-1" class="sequence-content">
               <div id="b-item-enclosing-49-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-49-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">49</div>
                   <label class="item-label" for="b-item-input-49-instance-1_1_1">Details</label>
@@ -2625,8 +2495,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-50-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-50-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">50</div>
                   <label class="item-label" for="b-item-input-50-instance-1_1_1">Held By</label>
@@ -2642,8 +2510,6 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-51-instance-1_1" class="item-enclosing">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-51-instance-1_1" class="repeating-enclosing">
             <div class="item-number">51</div>
             <label class="item-label" for="b-item-input-51-instance-1_1">Items Retrieved</label>
@@ -2659,14 +2525,9 @@ $(function() {
           </div>
         </div>
         <div id="b-item-enclosing-52-instance-1_1" class="sequence invisible">
-          <div class="non-repeating-title">
-          </div>
           <div id="b-repeating-enclosing-52-instance-1_1" class="repeating-enclosing">
-            <div class="sequence-label"></div>
             <div id="b-sequence-52-instance-1" class="sequence-content">
               <div id="b-item-enclosing-53-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-53-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">53</div>
                   <label class="item-label" for="b-item-input-53-instance-1_1_1">Details</label>
@@ -2679,8 +2540,6 @@ $(function() {
                 </div>
               </div>
               <div id="b-item-enclosing-54-instance-1_1_1" class="item-enclosing">
-                <div class="non-repeating-title">
-                </div>
                 <div id="b-repeating-enclosing-54-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">54</div>
                   <label class="item-label" for="b-item-input-54-instance-1_1_1">Held By</label>
