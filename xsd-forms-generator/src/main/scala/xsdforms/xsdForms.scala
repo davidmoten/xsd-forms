@@ -116,12 +116,27 @@ package xsdforms {
     val Help = XsdFormsAnnotation("help")
 
     /**
-     * On a named element, set annotation makeVisible="value1->n1,value2->n2" where
-     * value1,value2 are enumerated values and n1,n2 integers are the relative indexes (1
-     * equates to the following element at the same level) of the element that is to be
-     * made visible on selection of that value. On an enumeration element set annotation
-     *  makeVisible='n' where n is an integer only. The element that is to be made visible
-     * should be annotated with visible='false'.
+     * On a named element with an enumeration type, set annotation 
+     * {{{
+     * makeVisible="value1->n1,value2->n2"
+     * }}} 
+     * where value1,value2 are enumerated values and n1,n2 integers are the relative 
+     * indexes (1 equates to the following element at the same level) of the element
+     * that is to be made visible on selection of that value.
+     * You can also set makeVisible on a specific member of the enumeration using 
+     * {{{
+     * makeVisible="n""
+     * }}}where n is an integer only. 
+     *
+     * The element that is to be made visible should be annotated with visible='false'.
+     *
+     * Make sure you set minOccurs=0 on the element that may be invisible.
+     * 
+     * This annotation also works with boolean types. Use 
+     * {{{
+     * makeVisible="true->1"
+     * }}}
+     * to make the following element become visible when ticked (and invisible when unticked).
      */
     val MakeVisible = XsdFormsAnnotation("makeVisible")
 
@@ -1386,6 +1401,35 @@ package xsdforms {
           .closeTag
         addScript(JS().line("  $('#%s').prop('checked',%s);",
           itemId, isChecked + "").line)
+        if (inputType == Checkbox) {
+          val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
+          val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
+          println(e.name + ",makeVisibleMap="+makeVisibleMapOnElement)
+		  for (value <- List("true","false")) {
+            //get the makeVisible annotation from the named element or the
+            // enumeration element in that order.
+            val makeVisible = makeVisibleMapOnElement.get(value)
+            makeVisible match {
+              case Some(y: Int) => {
+                val refersTo = number + y
+                val js = JS()
+                  .line("  $('#%s').change( function() {",
+                    getItemId(number, instances))
+                  .line("    var v = $('#%s');", getItemId(number, instances))
+                  .line("    var refersTo = $('#%s');",
+                    getItemEnclosingId(refersTo, instances))
+                  .line("    if (%s v.is(':checked'))", if (value == "true") "" else "!")
+                  .line("      refersTo.show();")
+                  .line("    else")
+                  .line("      refersTo.hide();")
+                  .line("  });")
+                  .line
+                addScript(js)
+              }
+              case _ =>
+            }
+          }
+        }
       }
 
     }

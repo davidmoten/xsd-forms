@@ -95,32 +95,32 @@ under the National Plan, and law enforcement agencies.</p>
           i:width="30em" />
       </xs:element>
 
-      <xs:element name="photos-taken" type="yes-no">
-        <xs:annotation i:addBlank="true" i:makeVisible="true->1" />
+      <xs:element name="photos-taken" type="xs:boolean">
+        <xs:annotation i:makeVisible="true->1" />
       </xs:element>
       <xs:element name="photos-taken-details" type="taken-details"
         minOccurs="0">
         <xs:annotation i:visible="false" />
       </xs:element>
 
-      <xs:element name="video-taken" type="yes-no">
-        <xs:annotation i:addBlank="true" i:makeVisible="true->1" />
+      <xs:element name="video-taken" type="xs:boolean">
+        <xs:annotation i:makeVisible="true->1" />
       </xs:element>
       <xs:element name="video-taken-details" type="taken-details"
         minOccurs="0">
         <xs:annotation i:visible="false" />
       </xs:element>
 
-      <xs:element name="samples-taken" type="yes-no">
-        <xs:annotation i:addBlank="true" i:makeVisible="true->1" />
+      <xs:element name="samples-taken" type="xs:boolean">
+        <xs:annotation i:makeVisible="true->1" />
       </xs:element>
       <xs:element name="samples-taken-details" type="taken-details"
         minOccurs="0">
         <xs:annotation i:visible="false" />
       </xs:element>
 
-      <xs:element name="items-retrieved" type="yes-no">
-        <xs:annotation i:addBlank="true" i:makeVisible="true->1" />
+      <xs:element name="items-retrieved" type="xs:boolean">
+        <xs:annotation i:makeVisible="true->1" />
       </xs:element>
       <xs:element name="items-retrieved-details" type="taken-details"
         minOccurs="0">
