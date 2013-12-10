@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
 <link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<style type="text/css">
+
+</style>
 <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
@@ -75,6 +78,30 @@ function toBoolean(s) {
     return "true";
   else 
     return "false";
+}
+
+function postXml(url) {
+  return function(xml) {
+    var data = new Object();
+    data.xml = xml;
+    //disable submit button
+    $('#submit').hide();
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+      success: 
+        function (dat,textStatus,jqXHR) {
+        $('#submit').hide();
+      },
+      error:
+        function (jqXHR,textStatus,errorThrown) {
+        alert(textStatus + '\n'+ errorThrown);
+        $('#submit').show();
+      },
+      async:false
+    });
+  };
 }
           
 $(function() {
@@ -960,10 +987,12 @@ $(function() {
     $('#b-repeating-enclosing-39-instance-1_1').hide();
   });
 
+  $('#b-item-39-instance-1_1').prop('checked',false);
+
   $('#b-item-39-instance-1_1').change( function() {
     var v = $('#b-item-39-instance-1_1');
     var refersTo = $('#b-item-enclosing-40-instance-1_1');
-    if ('true' == v.val())
+    if ( v.is(':checked'))
       refersTo.show();
     else
       refersTo.hide();
@@ -974,8 +1003,6 @@ $(function() {
     var ok = true;
     var v = $('#b-item-39-instance-1_1');
     var pathDiv = $('#b-item-path-39-instance-1_1');
-    //enumeration test
-    if ($.trim(v.val()).length ==0) ok = false;
     return ok;
   }
   
@@ -1030,10 +1057,12 @@ $(function() {
     $('#b-repeating-enclosing-43-instance-1_1').hide();
   });
 
+  $('#b-item-43-instance-1_1').prop('checked',false);
+
   $('#b-item-43-instance-1_1').change( function() {
     var v = $('#b-item-43-instance-1_1');
     var refersTo = $('#b-item-enclosing-44-instance-1_1');
-    if ('true' == v.val())
+    if ( v.is(':checked'))
       refersTo.show();
     else
       refersTo.hide();
@@ -1044,8 +1073,6 @@ $(function() {
     var ok = true;
     var v = $('#b-item-43-instance-1_1');
     var pathDiv = $('#b-item-path-43-instance-1_1');
-    //enumeration test
-    if ($.trim(v.val()).length ==0) ok = false;
     return ok;
   }
   
@@ -1100,10 +1127,12 @@ $(function() {
     $('#b-repeating-enclosing-47-instance-1_1').hide();
   });
 
+  $('#b-item-47-instance-1_1').prop('checked',false);
+
   $('#b-item-47-instance-1_1').change( function() {
     var v = $('#b-item-47-instance-1_1');
     var refersTo = $('#b-item-enclosing-48-instance-1_1');
-    if ('true' == v.val())
+    if ( v.is(':checked'))
       refersTo.show();
     else
       refersTo.hide();
@@ -1114,8 +1143,6 @@ $(function() {
     var ok = true;
     var v = $('#b-item-47-instance-1_1');
     var pathDiv = $('#b-item-path-47-instance-1_1');
-    //enumeration test
-    if ($.trim(v.val()).length ==0) ok = false;
     return ok;
   }
   
@@ -1170,10 +1197,12 @@ $(function() {
     $('#b-repeating-enclosing-51-instance-1_1').hide();
   });
 
+  $('#b-item-51-instance-1_1').prop('checked',false);
+
   $('#b-item-51-instance-1_1').change( function() {
     var v = $('#b-item-51-instance-1_1');
     var refersTo = $('#b-item-enclosing-52-instance-1_1');
-    if ('true' == v.val())
+    if ( v.is(':checked'))
       refersTo.show();
     else
       refersTo.hide();
@@ -1184,8 +1213,6 @@ $(function() {
     var ok = true;
     var v = $('#b-item-51-instance-1_1');
     var pathDiv = $('#b-item-path-51-instance-1_1');
-    //enumeration test
-    if ($.trim(v.val()).length ==0) ok = false;
     return ok;
   }
   
@@ -1683,8 +1710,8 @@ $(function() {
 
   var xml='';
   if (idVisible('b-repeating-enclosing-39-instance-1_1')) {
-    var v = encodedValueById("b-item-39-instance-1_1");
-    xml += '\n' + spaces(2) + '<photos-taken>' + v + '</photos-taken>';
+    var v = $('#b-item-39-instance-1_1').is(':checked');
+    xml += '\n' + spaces(2) + '<photos-taken>' + toBoolean(v) + '</photos-taken>';
   }
    return xml;
   }
@@ -1729,8 +1756,8 @@ $(function() {
 
   var xml='';
   if (idVisible('b-repeating-enclosing-43-instance-1_1')) {
-    var v = encodedValueById("b-item-43-instance-1_1");
-    xml += '\n' + spaces(2) + '<video-taken>' + v + '</video-taken>';
+    var v = $('#b-item-43-instance-1_1').is(':checked');
+    xml += '\n' + spaces(2) + '<video-taken>' + toBoolean(v) + '</video-taken>';
   }
    return xml;
   }
@@ -1775,8 +1802,8 @@ $(function() {
 
   var xml='';
   if (idVisible('b-repeating-enclosing-47-instance-1_1')) {
-    var v = encodedValueById("b-item-47-instance-1_1");
-    xml += '\n' + spaces(2) + '<samples-taken>' + v + '</samples-taken>';
+    var v = $('#b-item-47-instance-1_1').is(':checked');
+    xml += '\n' + spaces(2) + '<samples-taken>' + toBoolean(v) + '</samples-taken>';
   }
    return xml;
   }
@@ -1821,8 +1848,8 @@ $(function() {
 
   var xml='';
   if (idVisible('b-repeating-enclosing-51-instance-1_1')) {
-    var v = encodedValueById("b-item-51-instance-1_1");
-    xml += '\n' + spaces(2) + '<items-retrieved>' + v + '</items-retrieved>';
+    var v = $('#b-item-51-instance-1_1').is(':checked');
+    xml += '\n' + spaces(2) + '<items-retrieved>' + toBoolean(v) + '</items-retrieved>';
   }
    return xml;
   }
@@ -2377,13 +2404,10 @@ $(function() {
         <div id="b-item-enclosing-39-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-39-instance-1_1" class="repeating-enclosing">
             <div class="item-number">39</div>
-            <label class="item-label" for="b-item-input-39-instance-1_1">Photos Taken</label>
+            <label class="item-label" for="b-item-input-39-instance-1_1">Photos Taken<em>*</em></label>
             <div class="item-input">
-              <select id="b-item-39-instance-1_1" class="select" name="b-item-input-39-instance-1_1" number="39">
-                <option value="">Select one...</option>
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-              </select>
+              <input number="39" name="b-item-input-39-instance-1_1" id="b-item-39-instance-1_1" class=" item-input-text" type="checkbox">
+              </input>
               <div id="b-item-path-39-instance-1_1" class="item-path" enabled="true"></div>
               <div id="b-item-error-39-instance-1_1" class="item-error">Invalid</div>
             </div>
@@ -2422,13 +2446,10 @@ $(function() {
         <div id="b-item-enclosing-43-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-43-instance-1_1" class="repeating-enclosing">
             <div class="item-number">43</div>
-            <label class="item-label" for="b-item-input-43-instance-1_1">Video Taken</label>
+            <label class="item-label" for="b-item-input-43-instance-1_1">Video Taken<em>*</em></label>
             <div class="item-input">
-              <select id="b-item-43-instance-1_1" class="select" name="b-item-input-43-instance-1_1" number="43">
-                <option value="">Select one...</option>
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-              </select>
+              <input number="43" name="b-item-input-43-instance-1_1" id="b-item-43-instance-1_1" class=" item-input-text" type="checkbox">
+              </input>
               <div id="b-item-path-43-instance-1_1" class="item-path" enabled="true"></div>
               <div id="b-item-error-43-instance-1_1" class="item-error">Invalid</div>
             </div>
@@ -2467,13 +2488,10 @@ $(function() {
         <div id="b-item-enclosing-47-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-47-instance-1_1" class="repeating-enclosing">
             <div class="item-number">47</div>
-            <label class="item-label" for="b-item-input-47-instance-1_1">Samples Taken</label>
+            <label class="item-label" for="b-item-input-47-instance-1_1">Samples Taken<em>*</em></label>
             <div class="item-input">
-              <select id="b-item-47-instance-1_1" class="select" name="b-item-input-47-instance-1_1" number="47">
-                <option value="">Select one...</option>
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-              </select>
+              <input number="47" name="b-item-input-47-instance-1_1" id="b-item-47-instance-1_1" class=" item-input-text" type="checkbox">
+              </input>
               <div id="b-item-path-47-instance-1_1" class="item-path" enabled="true"></div>
               <div id="b-item-error-47-instance-1_1" class="item-error">Invalid</div>
             </div>
@@ -2512,13 +2530,10 @@ $(function() {
         <div id="b-item-enclosing-51-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-51-instance-1_1" class="repeating-enclosing">
             <div class="item-number">51</div>
-            <label class="item-label" for="b-item-input-51-instance-1_1">Items Retrieved</label>
+            <label class="item-label" for="b-item-input-51-instance-1_1">Items Retrieved<em>*</em></label>
             <div class="item-input">
-              <select id="b-item-51-instance-1_1" class="select" name="b-item-input-51-instance-1_1" number="51">
-                <option value="">Select one...</option>
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-              </select>
+              <input number="51" name="b-item-input-51-instance-1_1" id="b-item-51-instance-1_1" class=" item-input-text" type="checkbox">
+              </input>
               <div id="b-item-path-51-instance-1_1" class="item-path" enabled="true"></div>
               <div id="b-item-error-51-instance-1_1" class="item-error">Invalid</div>
             </div>

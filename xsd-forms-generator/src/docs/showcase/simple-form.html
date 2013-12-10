@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="css/xsd-forms-style-override.css" type="text/css"/>
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />	
 <link type="text/css" href="css/timepicker.css" rel="stylesheet" />	
+<style type="text/css">
+
+</style>
 <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
@@ -75,6 +78,30 @@ function toBoolean(s) {
     return "true";
   else 
     return "false";
+}
+
+function postXml(url) {
+  return function(xml) {
+    var data = new Object();
+    data.xml = xml;
+    //disable submit button
+    $('#submit').hide();
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+      success: 
+        function (dat,textStatus,jqXHR) {
+        $('#submit').hide();
+      },
+      error:
+        function (jqXHR,textStatus,errorThrown) {
+        alert(textStatus + '\n'+ errorThrown);
+        $('#submit').show();
+      },
+      async:false
+    });
+  };
 }
           
 $(function() {
