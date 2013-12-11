@@ -424,6 +424,27 @@
       <xs:element name="extension" type="extension2">
         <xs:annotation i:label="Extension example using sequences" />
       </xs:element>
+
+      <xs:element name="boolean-make-visible-on-true" type="xs:boolean">
+        <xs:annotation i:makeVisible="true->1"/>
+      </xs:element>
+      <xs:element name="boolean-make-visible-on-true-details" type="xs:string" minOccurs="0">
+        <xs:annotation i:visible="false"/>
+      </xs:element>
+
+      <xs:element name="boolean-make-visible-on-true-default-true" type="xs:boolean" default="true">
+        <xs:annotation i:makeVisible="true->1"/>
+      </xs:element>
+      <xs:element name="boolean-make-visible-on-true-default-true-details" type="xs:string" minOccurs="0">
+        <xs:annotation i:visible="true" i:label="Details"/>
+      </xs:element>
+
+      <xs:element name="boolean-make-visible-on-false" type="xs:boolean">
+        <xs:annotation i:makeVisible="false->1"/>
+      </xs:element>
+      <xs:element name="boolean-make-visible-on-false-details" type="xs:string" minOccurs="0">
+        <xs:annotation i:visible="true" i:label="Details"/>
+      </xs:element>
       
     </xs:sequence>
   </xs:complexType>

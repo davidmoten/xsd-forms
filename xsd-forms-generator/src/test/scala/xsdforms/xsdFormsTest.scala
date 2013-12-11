@@ -239,7 +239,8 @@ package xsdforms {
         
         //TODO test boolean restriction to one value means error shown if not that value
         //TODO test minOccurs=0 for missing optional element
-        
+
+        testBooleanMakeVisible(driver,109)        
         testSubmission(driver)
         driver.close
         //now need to ensure that any driver executable (e.g. chromedriver)
@@ -551,6 +552,40 @@ package xsdforms {
       //TODO 
       val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo, instanceNos add 1)))
       assertTrue(input1.isDisplayed)
+    }
+    
+    private def testBooleanMakeVisible(driver: WebDriver, itemNo:Int) {
+      val instanceNos = Instances(List(1))
+      
+      //test boolean make visible on true
+      val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo, instanceNos add 1)))
+      val input1plus1 = driver.findElement(By.id(getItemId(idPrefix, itemNo + 1, instanceNos add 1)))
+      //TODO check that input1 is not selected
+      assertFalse(input1plus1.isDisplayed)
+      input1.click
+      assertTrue(input1plus1.isDisplayed)
+      input1.click
+      assertFalse(input1plus1.isDisplayed)
+      
+      //test boolean make visible on true default true
+      val input2 = driver.findElement(By.id(getItemId(idPrefix, itemNo+2, instanceNos add 1)))
+      //TODO check that input2 is selected
+      val input2plus1 = driver.findElement(By.id(getItemId(idPrefix, itemNo + 3, instanceNos add 1)))
+      assertTrue(input2plus1.isDisplayed)
+      input2.click
+      assertFalse(input2plus1.isDisplayed)
+      input2.click
+      assertTrue(input2plus1.isDisplayed)
+      
+      //test boolean make visible on false
+      val input3 = driver.findElement(By.id(getItemId(idPrefix, itemNo+4, instanceNos add 1)))
+      //TODO check that input3 is not selected
+      val input3plus1 = driver.findElement(By.id(getItemId(idPrefix, itemNo + 5, instanceNos add 1)))
+      assertTrue(input3plus1.isDisplayed)
+      input3.click
+      assertFalse(input3plus1.isDisplayed)
+      input3.click
+      assertTrue(input3plus1.isDisplayed)
     }
 
     private def checkDisplayedById(driver: WebDriver, id: String) {

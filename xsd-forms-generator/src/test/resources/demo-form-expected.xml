@@ -120,4 +120,7 @@
     <group>group1</group>
     <category>category1</category>
   </extension>
+  <boolean-make-visible-on-true>false</boolean-make-visible-on-true>
+  <boolean-make-visible-on-true-default-true>true</boolean-make-visible-on-true-default-true>
+  <boolean-make-visible-on-false>false</boolean-make-visible-on-false>
 </main>
