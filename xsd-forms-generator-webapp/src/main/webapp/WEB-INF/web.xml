@@ -4,7 +4,7 @@
 
 	<servlet>
 		<servlet-name>Generator</servlet-name>
-		<servlet-class>xsdforms.servlet.GeneratorServlet</servlet-class>
+		<servlet-class>com.github.davidmoten.xsdforms.servlet.GeneratorServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

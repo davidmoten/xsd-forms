@@ -1,4 +1,4 @@
-package xsdforms {
+package com.github.davidmoten.xsdforms {
 
   import xsd._
   import xsd.ComplexTypeModelSequence1

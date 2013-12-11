@@ -1,4 +1,4 @@
-package org.moten.david.xsdforms.maven;
+package com.github.davidmoten.xsdforms.maven;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
@@ -19,7 +19,6 @@ package org.moten.david.xsdforms.maven;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -27,10 +26,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.codehaus.plexus.util.IOUtil;
 
 import scala.Option;
-import xsdforms.Generator;
+
+import com.github.davidmoten.xsdforms.Generator;
 
 /**
  * Goal which generates form and dependent files.

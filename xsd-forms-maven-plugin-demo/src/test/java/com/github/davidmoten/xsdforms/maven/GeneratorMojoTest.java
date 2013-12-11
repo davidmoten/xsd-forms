@@ -1,4 +1,4 @@
-package org.moten.david.xsdforms.maven;
+package com.github.davidmoten.xsdforms.maven;
 
 import static org.junit.Assert.assertTrue;
 

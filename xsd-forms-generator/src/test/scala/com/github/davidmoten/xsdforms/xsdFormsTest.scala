@@ -1,10 +1,10 @@
-package xsdforms {
+package com.github.davidmoten.xsdforms {
+
   import org.junit.Test
   import org.junit.Before
   import xsd.Schema
   import org.junit.runners.BlockJUnit4ClassRunner
   import org.junit.runner.notification.Failure
-
   import java.io.File
   import java.io.InputStream
 
@@ -55,8 +55,11 @@ package xsdforms {
   class GeneratorTest {
 
     import org.apache.commons.io._
+
     import TstUtil._
+
     import java.io._
+
     import org.junit.Assert._
 
     @Before
@@ -133,6 +136,7 @@ package xsdforms {
 
       import java.util.zip._
       val zipFile = new ZipFile(out)
+
       import scala.collection.JavaConversions._
       val names = enumerationAsScalaIterator(zipFile.entries()).map(_.getName).toSet
 
@@ -170,8 +174,10 @@ package xsdforms {
     import org.junit.Assert._
     import org.junit.matchers.JUnitMatchers._
     import org.apache.commons.io._
+
     import TstUtil._
     import TreeToHtmlConverter._
+
     import com.gargoylesoftware.htmlunit._
 
     private val uri = new File("target/generated-webapp/demo-form.html").toURI().toString()
@@ -236,11 +242,11 @@ package xsdforms {
         //testRepeatWhenMinOccursIsZero(driver, 53)
         //TODO reenable 
         //testChoiceRepeat(driver,58)
-        
+
         //TODO test boolean restriction to one value means error shown if not that value
         //TODO test minOccurs=0 for missing optional element
 
-        testBooleanMakeVisible(driver,109)        
+        testBooleanMakeVisible(driver, 109)
         testSubmission(driver)
         driver.close
         //now need to ensure that any driver executable (e.g. chromedriver)
@@ -553,10 +559,10 @@ package xsdforms {
       val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo, instanceNos add 1)))
       assertTrue(input1.isDisplayed)
     }
-    
-    private def testBooleanMakeVisible(driver: WebDriver, itemNo:Int) {
+
+    private def testBooleanMakeVisible(driver: WebDriver, itemNo: Int) {
       val instanceNos = Instances(List(1))
-      
+
       //test boolean make visible on true
       val input1 = driver.findElement(By.id(getItemId(idPrefix, itemNo, instanceNos add 1)))
       val input1plus1 = driver.findElement(By.id(getItemId(idPrefix, itemNo + 1, instanceNos add 1)))
@@ -566,9 +572,9 @@ package xsdforms {
       assertTrue(input1plus1.isDisplayed)
       input1.click
       assertFalse(input1plus1.isDisplayed)
-      
+
       //test boolean make visible on true default true
-      val input2 = driver.findElement(By.id(getItemId(idPrefix, itemNo+2, instanceNos add 1)))
+      val input2 = driver.findElement(By.id(getItemId(idPrefix, itemNo + 2, instanceNos add 1)))
       //TODO check that input2 is selected
       val input2plus1 = driver.findElement(By.id(getItemId(idPrefix, itemNo + 3, instanceNos add 1)))
       assertTrue(input2plus1.isDisplayed)
@@ -576,9 +582,9 @@ package xsdforms {
       assertFalse(input2plus1.isDisplayed)
       input2.click
       assertTrue(input2plus1.isDisplayed)
-      
+
       //test boolean make visible on false
-      val input3 = driver.findElement(By.id(getItemId(idPrefix, itemNo+4, instanceNos add 1)))
+      val input3 = driver.findElement(By.id(getItemId(idPrefix, itemNo + 4, instanceNos add 1)))
       //TODO check that input3 is not selected
       val input3plus1 = driver.findElement(By.id(getItemId(idPrefix, itemNo + 5, instanceNos add 1)))
       assertTrue(input3plus1.isDisplayed)
@@ -674,12 +680,16 @@ package xsdforms {
     }
 
     private def validateAgainstSchema(xml: String, xsdPath: String) {
+      import Generator._
+      import TreeToHtmlConverter._
+
       import javax.xml.validation._
       import javax.xml._
       import javax.xml.transform.stream._
+
       import java.io._
       val factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-      val schema = factory.newSchema(new StreamSource(getClass.getResourceAsStream(xsdPath)))
+      val schema = factory.newSchema(new StreamSource(this.getClass.getResourceAsStream(xsdPath)))
       val validator = schema.newValidator
       validator.validate(new StreamSource(new StringReader(xml)))
     }
@@ -708,20 +718,21 @@ function logit(doc,name) {
   @Test
   class TreeToHtmlConverterTest {
     import org.junit.Assert._
+
     import TreeToHtmlConverter._
 
     @Test
     def testParseSingle {
       assertEquals(
-          Map("true" -> 1),
-          parseMakeVisibleMap(Some("true->1")))
+        Map("true" -> 1),
+        parseMakeVisibleMap(Some("true->1")))
     }
 
     @Test
     def testParseThree {
       assertEquals(
-          Map("true" -> 1, "yes" -> 2, "boo" -> 3),
-          parseMakeVisibleMap(Some("true->1,yes->2,boo->3")))
+        Map("true" -> 1, "yes" -> 2, "boo" -> 3),
+        parseMakeVisibleMap(Some("true->1,yes->2,boo->3")))
     }
 
     @Test

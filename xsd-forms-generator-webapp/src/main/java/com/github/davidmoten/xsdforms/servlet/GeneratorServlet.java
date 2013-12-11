@@ -1,4 +1,4 @@
-package xsdforms.servlet;
+package com.github.davidmoten.xsdforms.servlet;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import scala.Option;
-import xsdforms.Generator;
+
+import com.github.davidmoten.xsdforms.Generator;
 
 public class GeneratorServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -1329200353122439077L;
-	private static final String PARAMETER_EXTRA_SCRIPT = "extraScript";
 	private static final String PARAMETER_ROOT_ELEMENT = "rootElement";
 	private static final String PARAMETER_ID_PREFIX = "idPrefix";
 	private static final String ACTION_ZIP = "zip";
