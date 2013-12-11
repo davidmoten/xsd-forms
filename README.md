@@ -10,13 +10,9 @@ The form is javascript/html only and performs all validation using javascript.
 
 This project is written in Scala with a small amount of Java. 
 
-**Status:** pre-alpha. 
-
-Alpha release planned for 8 December 2013 and is on schedule as of Nov 21 2013. UI elements mostly done, a major rewrite was merged to master on 15 Nov 2013 to use an abstract syntax tree and to handle element repetition in a simplistic way. Lots of bits and pieces to chase down but many simple forms will be correctly generated now (try it and see or wait for alpha and report issues).
+**Status:** alpha. 
 
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
-
-Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xsd-forms_site/site/). 
 
 ##Design
 
