@@ -4,7 +4,7 @@
 
 You want to make a web form that submits structured data (XML/JSON). 
 
-*xsd-forms* generates one for you based on an xml schema (XSD) that has been annotated with some presentation information. 
+*xsd-forms* generates a web form for you based on an xml schema (XSD) that has been annotated with some presentation information. 
 
 *xsd-forms* has been deployed to a freely available [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) for your convenience and immediate testing.
 
