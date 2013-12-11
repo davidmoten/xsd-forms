@@ -111,7 +111,9 @@ package xsdforms {
     val Validation = XsdFormsAnnotation("validation")
 
     /**
-     * Help to display as tooltip if user clicks/hovers input.
+     * Help to display as tooltip if user clicks/hovers input. Not a 
+     * great way of displaying help as it hides whatever is underneath 
+     * it even if temporarily.
      */
     val Help = XsdFormsAnnotation("help")
 
