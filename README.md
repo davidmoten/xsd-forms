@@ -39,6 +39,8 @@ The features of javascript libraries like [http://jquery.com](JQuery) mean that 
 
 Note that the examples are not fully working and are still in development. The examples look ok in the *Chrome* and *Firefox* browsers (other browsers not tested yet). Many features like schema sourced validation are working, and xml generation is working (click Submit on a form). 
 
+12 Dec 2013: Tested in IE 9 and works but appearance is a bit different with many inputs being pushed to the next line.
+
 FAQ
 -------------------
 
