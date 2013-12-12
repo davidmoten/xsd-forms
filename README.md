@@ -37,7 +37,7 @@ The features of javascript libraries like [http://jquery.com](JQuery) mean that 
 [Australian Census 2011](http://htmlpreview.github.io/?https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/docs/showcase/census-form.html)|[schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/australian-census-2011.xsd)|Based on the 2011 Australian Census form ([pdf](http://www.abs.gov.au/ausstats/abs@.nsf/Lookup/2901.0Main%20Features802011))
 [AMSA Pollution report](http://htmlpreview.github.io/?https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/docs/showcase/polrep-form.html)|[schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/polrep.xsd)|([pdf](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/docs/showcase/Appendix7.pdf?raw=true))
 
-Note. The examples look fine in the *Chrome* and *Firefox* browsers (other browsers not tested yet). IE 9 will not display the above demos because they are sourced from htmlpreview.github.io which does not furnish the js with the appropriate mime-type. You can use the web service to display the demos succesfully for IE 9 though many inputs are being pushed to the next line (Issue #7).
+Note. The examples work fine in the *Chrome*, *Firefox* and *Internet Explorer 9* browsers (other browsers not tested yet). IE 9 will not display the above demos because they are sourced from htmlpreview.github.io which does not furnish the js with the appropriate mime-type. You can use the web service to display the demos succesfully for IE 9. IE is not being selenium tested yet but a SauceConnect job may be set up for that soon.
 
 FAQ
 -------------------
