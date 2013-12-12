@@ -502,6 +502,7 @@ package com.github.davidmoten.xsdforms {
     val ClassChoice = "choice"
     val ClassWhite = "white"
     val ClassSmall = "small"
+    val ClassClear = "clr"
     val ClassItemDescription = "item-description"
     val ClassTimePicker = "timepickerclass"
     val ClassDatePicker = "datepickerclass"
@@ -1253,12 +1254,14 @@ package com.github.davidmoten.xsdforms {
 
     private def repeatButton(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
-      if (hasButton(e))
+      if (hasButton(e)) {
         html.div(
           id = Some(getRepeatButtonId(number, instances)),
           classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
           content = Some(getAnnotation(e, Annotation.RepeatLabel)
             .getOrElse("+"))).closeTag
+        html.div(classes=List(ClassClear)).closeTag
+      }
     }
 
     private def repeatingEnclosing(e: ElementWrapper, instances: Instances) {
