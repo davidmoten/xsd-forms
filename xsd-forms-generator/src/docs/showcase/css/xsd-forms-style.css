@@ -131,7 +131,7 @@ body {
 }
 
 .item-input {
-    
+    float:left;
 }
 
 .item-input-text {
@@ -155,7 +155,7 @@ body {
 }
 
 .item-description {
-	margin-left:150px;
+	margin-left:4em;
 	margin-bottom:10px;
 	font-size:85%;
 }
@@ -391,4 +391,8 @@ em {
 .min-occurs-zero-label {
      float:left;
      margin-right:1em;   
+}
+
+.clr {
+  clear:left;
 }
