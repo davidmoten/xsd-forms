@@ -1,4 +1,4 @@
-#xsd-forms
+# xsd-forms
 
 <img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/diagram01.png"/>
 
@@ -16,7 +16,7 @@ This project is written in Scala with a small amount of Java.
 
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
-##Design
+## Design
 
 Xml schemas contain nearly everything we need for many web forms except for presentation information. Instead of seeking full separation of presentation from the data model (the xml schema) there are significant advantages in [annotating the xsd itself](https://github.com/davidmoten/xsd-forms/blob/master/demo-scalaxb/src/main/resources/demo.xsd) according to a [special schema](https://github.com/davidmoten/xsd-forms/blob/master/xsd-scalaxb/src/main/xsd/xsd-forms.xsd) to indicate presentation details. For one, refactoring is much easier without specialized IDE tooling that can read both our xsd and our presentation format. 
 
@@ -29,7 +29,7 @@ As the submitted xml is compliant with a schema, the xml can be unmarshalled by 
 
 The features of javascript libraries like [http://jquery.com](JQuery) mean that generating an html/javascript form that on submit posts xml that is compliant with the schema is a viable approach. The resultant css/html/javascript can be plugged in to any web server and presentation aspects can be overriden using annotations on the schema, css overrides and custom jquery script (the ability to separate script from structure is a nice feature of jquery in this instance).
 
-*Examples:*
+## Examples
 
 *Generated Form* | *Annotated schema* | *Comment* 
 ---------------- | ------------------ | ---------
