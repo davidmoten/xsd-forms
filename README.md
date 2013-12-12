@@ -195,11 +195,9 @@ Yep. Use this *extraScript* (using [xml2json.js](https://code.google.com/p/x2js/
 
     //for example, display json in an alert box
     processXml = function (xml) {
-      var x2js = new X2JS(); 
-      var json = x2js.xml_str2json(xml);
-      var jsonString = JSON.stringify(json);
+      var result = toJson(xml);
       //alert or you could do a jquery ajax call to submit to a web server
-      alert(jsonString);
+      alert(result);
     }
 
 ###How do I override the appearance of the generated form?
