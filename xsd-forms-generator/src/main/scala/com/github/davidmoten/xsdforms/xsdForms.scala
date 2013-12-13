@@ -1692,7 +1692,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def createMandatoryTestScriptlet(node: NodeBasic) = {
-      if (isMandatory(node, restriction(node)))
+      if (isMandatory(node, restriction(node)) && !isEnum(restriction(node)))
         JS()
           .line("  // mandatory test")
           .line("  if ((v.val() == null) || (v.val().length==0))")
@@ -1975,12 +1975,17 @@ package com.github.davidmoten.xsdforms {
           case b: NodeBasic => getPatterns(b)
           case _ => getPatterns(r)
         }
-      val isEnum = r.simpleRestrictionModelSequence3.facetsOption2.filter(x => toQName(x) == qn("enumeration")).size > 0
       getInputType(r) == TextBox &&
         e.minOccurs.intValue == 1 &&
         ((patterns.size > 0 &&
-          !patterns.exists(java.util.regex.Pattern.matches(_, ""))) | isEnum)
+          !patterns.exists(java.util.regex.Pattern.matches(_, ""))) || isEnum(r))
     }
+
+    private def isEnum(r: Restriction) = 
+      r.simpleRestrictionModelSequence3
+       .facetsOption2
+       .filter(x => toQName(x) == qn("enumeration"))
+       .size > 0
 
     private def restriction(node: NodeBasic): Restriction =
       node match {
