@@ -105,6 +105,12 @@ function postXml(url) {
     });
   };
 }
+
+function toJson(xml) {
+  var x2js = new X2JS(); 
+  var json = x2js.xml_str2json(xml);
+  return JSON.stringify(json);
+}
           
 $(function() {
   //run js unit tests        
@@ -311,6 +317,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-7-instance-1_1_1');
     var pathDiv = $('#b-item-path-7-instance-1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -426,6 +435,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-13-instance-1_1');
     var pathDiv = $('#b-item-path-13-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -476,6 +488,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-15-instance-1_1_1');
     var pathDiv = $('#b-item-path-15-instance-1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     var patternMatched =false;
     patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\d$/);
     if (!(patternMatched))
@@ -523,6 +538,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-17-instance-1_1');
     var pathDiv = $('#b-item-path-17-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -542,6 +560,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-18-instance-1_1');
     var pathDiv = $('#b-item-path-18-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -720,6 +741,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-26-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-26-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -969,6 +993,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-37-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-37-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -1218,6 +1245,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-48-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-48-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -1388,6 +1418,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-56-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-56-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -1446,6 +1479,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-59-instance-1_1');
     var pathDiv = $('#b-item-path-59-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -1465,6 +1501,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-60-instance-1_1');
     var pathDiv = $('#b-item-path-60-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -1497,6 +1536,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-62-instance-1_1_1');
     var pathDiv = $('#b-item-path-62-instance-1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -2340,8 +2382,10 @@ $(function() {
                     <input number="3" name="b-item-input-3-instance-1_1_1" id="b-item-3-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-3-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-3-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-3-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-4-instance-1_1_1" class="item-enclosing">
@@ -2352,8 +2396,10 @@ $(function() {
                     <input number="4" name="b-item-input-4-instance-1_1_1" id="b-item-4-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-4-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-4-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-4-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-5-instance-1_1_1" class="item-enclosing">
@@ -2364,8 +2410,10 @@ $(function() {
                     <input number="5" name="b-item-input-5-instance-1_1_1" id="b-item-5-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-5-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-5-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-5-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-6-instance-1_1_1" class="item-enclosing">
@@ -2376,14 +2424,16 @@ $(function() {
                     <input number="6" name="b-item-input-6-instance-1_1_1" id="b-item-6-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-6-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-6-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-6-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-7-instance-1_1_1" class="item-enclosing">
                 <div id="b-repeating-enclosing-7-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">7</div>
-                  <label class="item-label" for="b-item-input-7-instance-1_1_1">State</label>
+                  <label class="item-label" for="b-item-input-7-instance-1_1_1">State<em>*</em></label>
                   <div class="item-input">
                     <select id="b-item-7-instance-1_1_1" class="select" name="b-item-input-7-instance-1_1_1" number="7">
                       <option value="">Select one...</option>
@@ -2397,8 +2447,10 @@ $(function() {
                       <option value="WA">WA</option>
                     </select>
                     <div id="b-item-path-7-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-7-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-7-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-8-instance-1_1_1" class="item-enclosing">
@@ -2409,8 +2461,10 @@ $(function() {
                     <input number="8" name="b-item-input-8-instance-1_1_1" id="b-item-8-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-8-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-8-instance-1_1_1" class="item-error">Not a valid postcode</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-8-instance-1_1_1" class="item-error">Not a valid postcode</div>
                 </div>
               </div>
               <div id="b-item-enclosing-9-instance-1_1_1" class="item-enclosing">
@@ -2421,8 +2475,10 @@ $(function() {
                     <input number="9" name="b-item-input-9-instance-1_1_1" id="b-item-9-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-9-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-9-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-9-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2440,8 +2496,10 @@ $(function() {
                     <input number="11" name="b-item-input-11-instance-1_1_1" id="b-item-11-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-11-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-11-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-11-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-12-instance-1_1_1" class="item-enclosing">
@@ -2452,8 +2510,10 @@ $(function() {
                     <input number="12" name="b-item-input-12-instance-1_1_1" id="b-item-12-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-12-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2462,7 +2522,7 @@ $(function() {
         <div id="b-item-enclosing-13-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-13-instance-1_1" class="repeating-enclosing">
             <div class="item-number">13</div>
-            <label class="item-label" for="b-item-input-13-instance-1_1">Is the person male or female?</label>
+            <label class="item-label" for="b-item-input-13-instance-1_1">Is the person male or female?<em>*</em></label>
             <div class="item-input">
               <select id="b-item-13-instance-1_1" class="select" name="b-item-input-13-instance-1_1" number="13">
                 <option value="">Select one...</option>
@@ -2470,8 +2530,10 @@ $(function() {
                 <option value="Female">Female</option>
               </select>
               <div id="b-item-path-13-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-13-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-13-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-14-instance-1_1" class="choice">
@@ -2492,8 +2554,10 @@ $(function() {
                     <input number="15" name="b-item-input-15-instance-1_1_1" id="b-item-15-instance-1_1_1" class="datepickerclass  item-input-text" type="text">
                     </input>
                     <div id="b-item-path-15-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-15-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-15-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2506,8 +2570,10 @@ $(function() {
                     <input number="16" name="b-item-input-16-instance-1_1_1" id="b-item-16-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-16-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-16-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-16-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2518,7 +2584,7 @@ $(function() {
             <div class="item-title">What is the person's current marital status?</div>
             <div class="item-before">'Married refers to registered marriages.</div>
             <div class="item-number">17</div>
-            <label class="item-label" for="b-item-input-17-instance-1_1">Marital Status</label>
+            <label class="item-label" for="b-item-input-17-instance-1_1">Marital Status<em>*</em></label>
             <div class="item-input">
               <select id="b-item-17-instance-1_1" class="select" name="b-item-input-17-instance-1_1" number="17">
                 <option value="">Select one...</option>
@@ -2529,8 +2595,10 @@ $(function() {
                 <option value="Married">Married</option>
               </select>
               <div id="b-item-path-17-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-17-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-17-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-18-instance-1_1" class="item-enclosing">
@@ -2538,7 +2606,7 @@ $(function() {
             <div class="item-title">Is the person of Aboriginal or Torres Strait Islander origin?</div>
             <div class="item-before">For persons of both Aboriginal and Torres Strait Islander origin, select 'Both'.</div>
             <div class="item-number">18</div>
-            <label class="item-label" for="b-item-input-18-instance-1_1"></label>
+            <label class="item-label" for="b-item-input-18-instance-1_1"><em>*</em></label>
             <div class="item-input">
               <select id="b-item-18-instance-1_1" class="select" name="b-item-input-18-instance-1_1" number="18">
                 <option value="">Select one...</option>
@@ -2548,8 +2616,10 @@ $(function() {
                 <option value="Both">Both</option>
               </select>
               <div id="b-item-path-18-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-18-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-18-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-19-instance-1_1" class="choice">
@@ -2562,7 +2632,7 @@ $(function() {
               <input number="19" name="b-item-input-19-instance-1_1" id="b-item-19-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
             </div>
             <div id="b-div-choice-item-19-instance-1-choice-3" class="div-choice-item">
-              <input number="19" name="b-item-input-19-instance-1_1" id="b-item-19-instance-1_1-choice-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
+              <input number="19" name="b-item-input-19-instance-1_1" id="b-item-19-instance-1_1-choice-3" class="choice-item" type="radio" value="number">Other Country</input>
             </div>
             <div id="b-choice-content-19-instance-1_1-choice-1" class="invisible">
               <div id="b-item-enclosing-20-instance-1_1_1" class="item-enclosing invisible">
@@ -2574,8 +2644,10 @@ $(function() {
                       <option value="true">true</option>
                     </select>
                     <div id="b-item-path-20-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-20-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-20-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2591,8 +2663,10 @@ $(function() {
                           <input number="22" name="b-item-input-22-instance-1_1_1_1" id="b-item-22-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-22-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-22-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-22-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-23-instance-1_1_1_1" class="item-enclosing">
@@ -2603,8 +2677,10 @@ $(function() {
                           <input number="23" name="b-item-input-23-instance-1_1_1_1" id="b-item-23-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-23-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-23-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-23-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-24-instance-1_1_1_1" class="item-enclosing">
@@ -2615,8 +2691,10 @@ $(function() {
                           <input number="24" name="b-item-input-24-instance-1_1_1_1" id="b-item-24-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-24-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-24-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-24-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-25-instance-1_1_1_1" class="item-enclosing">
@@ -2627,14 +2705,16 @@ $(function() {
                           <input number="25" name="b-item-input-25-instance-1_1_1_1" id="b-item-25-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-25-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-25-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-25-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-26-instance-1_1_1_1" class="item-enclosing">
                       <div id="b-repeating-enclosing-26-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">26</div>
-                        <label class="item-label" for="b-item-input-26-instance-1_1_1_1">State</label>
+                        <label class="item-label" for="b-item-input-26-instance-1_1_1_1">State<em>*</em></label>
                         <div class="item-input">
                           <select id="b-item-26-instance-1_1_1_1" class="select" name="b-item-input-26-instance-1_1_1_1" number="26">
                             <option value="">Select one...</option>
@@ -2648,8 +2728,10 @@ $(function() {
                             <option value="WA">WA</option>
                           </select>
                           <div id="b-item-path-26-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-26-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-26-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-27-instance-1_1_1_1" class="item-enclosing">
@@ -2660,8 +2742,10 @@ $(function() {
                           <input number="27" name="b-item-input-27-instance-1_1_1_1" id="b-item-27-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-27-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-27-instance-1_1_1_1" class="item-error">Not a valid postcode</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-27-instance-1_1_1_1" class="item-error">Not a valid postcode</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-28-instance-1_1_1_1" class="item-enclosing">
@@ -2672,8 +2756,10 @@ $(function() {
                           <input number="28" name="b-item-input-28-instance-1_1_1_1" id="b-item-28-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-28-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-28-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-28-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -2690,8 +2776,10 @@ $(function() {
                       <option value="true">true</option>
                     </select>
                     <div id="b-item-path-29-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-29-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-29-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2707,7 +2795,7 @@ $(function() {
               <input number="30" name="b-item-input-30-instance-1_1" id="b-item-30-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
             </div>
             <div id="b-div-choice-item-30-instance-1-choice-3" class="div-choice-item">
-              <input number="30" name="b-item-input-30-instance-1_1" id="b-item-30-instance-1_1-choice-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
+              <input number="30" name="b-item-input-30-instance-1_1" id="b-item-30-instance-1_1-choice-3" class="choice-item" type="radio" value="number">Other Country</input>
             </div>
             <div id="b-choice-content-30-instance-1_1-choice-1" class="invisible">
               <div id="b-item-enclosing-31-instance-1_1_1" class="item-enclosing invisible">
@@ -2719,8 +2807,10 @@ $(function() {
                       <option value="true">true</option>
                     </select>
                     <div id="b-item-path-31-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-31-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-31-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2736,8 +2826,10 @@ $(function() {
                           <input number="33" name="b-item-input-33-instance-1_1_1_1" id="b-item-33-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-33-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-33-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-33-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-34-instance-1_1_1_1" class="item-enclosing">
@@ -2748,8 +2840,10 @@ $(function() {
                           <input number="34" name="b-item-input-34-instance-1_1_1_1" id="b-item-34-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-34-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-34-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-34-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-35-instance-1_1_1_1" class="item-enclosing">
@@ -2760,8 +2854,10 @@ $(function() {
                           <input number="35" name="b-item-input-35-instance-1_1_1_1" id="b-item-35-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-35-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-35-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-35-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-36-instance-1_1_1_1" class="item-enclosing">
@@ -2772,14 +2868,16 @@ $(function() {
                           <input number="36" name="b-item-input-36-instance-1_1_1_1" id="b-item-36-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-36-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-36-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-36-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-37-instance-1_1_1_1" class="item-enclosing">
                       <div id="b-repeating-enclosing-37-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">37</div>
-                        <label class="item-label" for="b-item-input-37-instance-1_1_1_1">State</label>
+                        <label class="item-label" for="b-item-input-37-instance-1_1_1_1">State<em>*</em></label>
                         <div class="item-input">
                           <select id="b-item-37-instance-1_1_1_1" class="select" name="b-item-input-37-instance-1_1_1_1" number="37">
                             <option value="">Select one...</option>
@@ -2793,8 +2891,10 @@ $(function() {
                             <option value="WA">WA</option>
                           </select>
                           <div id="b-item-path-37-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-37-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-37-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-38-instance-1_1_1_1" class="item-enclosing">
@@ -2805,8 +2905,10 @@ $(function() {
                           <input number="38" name="b-item-input-38-instance-1_1_1_1" id="b-item-38-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-38-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-38-instance-1_1_1_1" class="item-error">Not a valid postcode</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-38-instance-1_1_1_1" class="item-error">Not a valid postcode</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-39-instance-1_1_1_1" class="item-enclosing">
@@ -2817,8 +2919,10 @@ $(function() {
                           <input number="39" name="b-item-input-39-instance-1_1_1_1" id="b-item-39-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-39-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-39-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-39-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -2835,8 +2939,10 @@ $(function() {
                       <option value="true">true</option>
                     </select>
                     <div id="b-item-path-40-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-40-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-40-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2852,7 +2958,7 @@ $(function() {
               <input number="41" name="b-item-input-41-instance-1_1" id="b-item-41-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Elsewhere in Australia</input>
             </div>
             <div id="b-div-choice-item-41-instance-1-choice-3" class="div-choice-item">
-              <input number="41" name="b-item-input-41-instance-1_1" id="b-item-41-instance-1_1-choice-3" class="choice-item" type="radio" value="number">Other Country<em>*</em></input>
+              <input number="41" name="b-item-input-41-instance-1_1" id="b-item-41-instance-1_1-choice-3" class="choice-item" type="radio" value="number">Other Country</input>
             </div>
             <div id="b-choice-content-41-instance-1_1-choice-1" class="invisible">
               <div id="b-item-enclosing-42-instance-1_1_1" class="item-enclosing invisible">
@@ -2864,8 +2970,10 @@ $(function() {
                       <option value="true">true</option>
                     </select>
                     <div id="b-item-path-42-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-42-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-42-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2881,8 +2989,10 @@ $(function() {
                           <input number="44" name="b-item-input-44-instance-1_1_1_1" id="b-item-44-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-44-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-44-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-44-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-45-instance-1_1_1_1" class="item-enclosing">
@@ -2893,8 +3003,10 @@ $(function() {
                           <input number="45" name="b-item-input-45-instance-1_1_1_1" id="b-item-45-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-45-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-45-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-45-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-46-instance-1_1_1_1" class="item-enclosing">
@@ -2905,8 +3017,10 @@ $(function() {
                           <input number="46" name="b-item-input-46-instance-1_1_1_1" id="b-item-46-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-46-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-46-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-46-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-47-instance-1_1_1_1" class="item-enclosing">
@@ -2917,14 +3031,16 @@ $(function() {
                           <input number="47" name="b-item-input-47-instance-1_1_1_1" id="b-item-47-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-47-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-47-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-47-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-48-instance-1_1_1_1" class="item-enclosing">
                       <div id="b-repeating-enclosing-48-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">48</div>
-                        <label class="item-label" for="b-item-input-48-instance-1_1_1_1">State</label>
+                        <label class="item-label" for="b-item-input-48-instance-1_1_1_1">State<em>*</em></label>
                         <div class="item-input">
                           <select id="b-item-48-instance-1_1_1_1" class="select" name="b-item-input-48-instance-1_1_1_1" number="48">
                             <option value="">Select one...</option>
@@ -2938,8 +3054,10 @@ $(function() {
                             <option value="WA">WA</option>
                           </select>
                           <div id="b-item-path-48-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-48-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-48-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-49-instance-1_1_1_1" class="item-enclosing">
@@ -2950,8 +3068,10 @@ $(function() {
                           <input number="49" name="b-item-input-49-instance-1_1_1_1" id="b-item-49-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-49-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-49-instance-1_1_1_1" class="item-error">Not a valid postcode</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-49-instance-1_1_1_1" class="item-error">Not a valid postcode</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-50-instance-1_1_1_1" class="item-enclosing">
@@ -2962,8 +3082,10 @@ $(function() {
                           <input number="50" name="b-item-input-50-instance-1_1_1_1" id="b-item-50-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-50-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-50-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-50-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -2980,8 +3102,10 @@ $(function() {
                       <option value="true">true</option>
                     </select>
                     <div id="b-item-path-51-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-51-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-51-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2996,18 +3120,20 @@ $(function() {
               <input number="52" name="b-item-input-52-instance-1_1" id="b-item-52-instance-1_1" class=" item-input-text" type="checkbox">
               </input>
               <div id="b-item-path-52-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-52-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-52-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-53-instance-1_1" class="choice">
           <div id="b-repeating-enclosing-53-instance-1_1" class="repeating-enclosing">
             <div class="choice-label">In which country was the person born?</div>
             <div id="b-div-choice-item-53-instance-1-choice-1" class="div-choice-item">
-              <input number="53" name="b-item-input-53-instance-1_1" id="b-item-53-instance-1_1-choice-1" class="choice-item" type="radio" value="number">Australia<em>*</em></input>
+              <input number="53" name="b-item-input-53-instance-1_1" id="b-item-53-instance-1_1-choice-1" class="choice-item" type="radio" value="number">Australia</input>
             </div>
             <div id="b-div-choice-item-53-instance-1-choice-2" class="div-choice-item">
-              <input number="53" name="b-item-input-53-instance-1_1" id="b-item-53-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Other<em>*</em></input>
+              <input number="53" name="b-item-input-53-instance-1_1" id="b-item-53-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Other</input>
             </div>
             <div id="b-choice-content-53-instance-1_1-choice-1" class="invisible">
               <div id="b-item-enclosing-54-instance-1_1_1" class="item-enclosing invisible">
@@ -3019,8 +3145,10 @@ $(function() {
                       <option value="true">true</option>
                     </select>
                     <div id="b-item-path-54-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-54-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-54-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -3031,7 +3159,7 @@ $(function() {
                     <div id="b-item-enclosing-56-instance-1_1_1_1" class="item-enclosing">
                       <div id="b-repeating-enclosing-56-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">56</div>
-                        <label class="item-label" for="b-item-input-56-instance-1_1_1_1">Country</label>
+                        <label class="item-label" for="b-item-input-56-instance-1_1_1_1">Country<em>*</em></label>
                         <div class="item-input">
                           <select id="b-item-56-instance-1_1_1_1" class="select" name="b-item-input-56-instance-1_1_1_1" number="56">
                             <option value="">Select one...</option>
@@ -3044,8 +3172,10 @@ $(function() {
                             <option value="Other">Other</option>
                           </select>
                           <div id="b-item-path-56-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-56-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-56-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-57-instance-1_1_1_1" class="item-enclosing invisible">
@@ -3056,8 +3186,10 @@ $(function() {
                           <input number="57" name="b-item-input-57-instance-1_1_1_1" id="b-item-57-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-57-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-57-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-57-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-58-instance-1_1_1_1" class="item-enclosing">
@@ -3068,8 +3200,10 @@ $(function() {
                           <input number="58" name="b-item-input-58-instance-1_1_1_1" id="b-item-58-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-58-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-58-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-58-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -3081,7 +3215,7 @@ $(function() {
         <div id="b-item-enclosing-59-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-59-instance-1_1" class="repeating-enclosing">
             <div class="item-number">59</div>
-            <label class="item-label" for="b-item-input-59-instance-1_1">Was the person's father born in Australia or overseas?</label>
+            <label class="item-label" for="b-item-input-59-instance-1_1">Was the person's father born in Australia or overseas?<em>*</em></label>
             <div class="item-input">
               <select id="b-item-59-instance-1_1" class="select" name="b-item-input-59-instance-1_1" number="59">
                 <option value="">Select one...</option>
@@ -3089,14 +3223,16 @@ $(function() {
                 <option value="Overseas">Overseas</option>
               </select>
               <div id="b-item-path-59-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-59-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-59-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-60-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-60-instance-1_1" class="repeating-enclosing">
             <div class="item-number">60</div>
-            <label class="item-label" for="b-item-input-60-instance-1_1">Was the person's mother born in Australia or overseas?</label>
+            <label class="item-label" for="b-item-input-60-instance-1_1">Was the person's mother born in Australia or overseas?<em>*</em></label>
             <div class="item-input">
               <select id="b-item-60-instance-1_1" class="select" name="b-item-input-60-instance-1_1" number="60">
                 <option value="">Select one...</option>
@@ -3104,8 +3240,10 @@ $(function() {
                 <option value="Overseas">Overseas</option>
               </select>
               <div id="b-item-path-60-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-60-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-60-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-61-instance-1_1" class="sequence">
@@ -3116,7 +3254,7 @@ $(function() {
                 <div id="b-repeating-enclosing-62-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-before">If more than one language spoken other than English select the one that is spoken most often</div>
                   <div class="item-number">62</div>
-                  <label class="item-label" for="b-item-input-62-instance-1_1_1">Language</label>
+                  <label class="item-label" for="b-item-input-62-instance-1_1_1">Language<em>*</em></label>
                   <div class="item-input">
                     <select id="b-item-62-instance-1_1_1" class="select" name="b-item-input-62-instance-1_1_1" number="62">
                       <option value="">Select one...</option>
@@ -3130,8 +3268,10 @@ $(function() {
                       <option value="Other">Other</option>
                     </select>
                     <div id="b-item-path-62-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-62-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-62-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_1_1" class="item-enclosing invisible">
@@ -3142,8 +3282,10 @@ $(function() {
                     <input number="63" name="b-item-input-63-instance-1_1_1" id="b-item-63-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-63-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-63-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-63-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>

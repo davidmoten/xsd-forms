@@ -103,6 +103,12 @@ function postXml(url) {
     });
   };
 }
+
+function toJson(xml) {
+  var x2js = new X2JS(); 
+  var json = x2js.xml_str2json(xml);
+  return JSON.stringify(json);
+}
           
 $(function() {
   //run js unit tests        
@@ -254,6 +260,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-4-instance-1_1');
     var pathDiv = $('#a-item-path-4-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     var patternMatched =false;
     patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\d$/);
     if (!(patternMatched))
@@ -335,6 +344,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-7-instance-1_1');
     var pathDiv = $('#a-item-path-7-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     var radioInput=$('input:radio[name=a-item-input-7-instance-1_1]');
     if (! radioInput.is(':checked')) ok = false;
@@ -383,6 +395,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-9-instance-1_1');
     var pathDiv = $('#a-item-path-9-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -403,6 +418,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-9-instance-1_2');
     var pathDiv = $('#a-item-path-9-instance-1_2');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -423,6 +441,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-9-instance-1_3');
     var pathDiv = $('#a-item-path-9-instance-1_3');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -443,6 +464,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-9-instance-1_4');
     var pathDiv = $('#a-item-path-9-instance-1_4');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -463,6 +487,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-9-instance-1_5');
     var pathDiv = $('#a-item-path-9-instance-1_5');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -546,8 +573,6 @@ $(function() {
     $('#a-repeating-enclosing-12-instance-1_1_1').hide();
   });
 
-  $('#a-item-12-instance-1_1_1').prop('checked',false);
-
   // address
   var validate12instance1_1_1 = function () {
     var ok = true;
@@ -603,6 +628,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-15-instance-1_1_1_1');
     var pathDiv = $('#a-item-path-15-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -653,6 +681,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-15-instance-1_1_2_1');
     var pathDiv = $('#a-item-path-15-instance-1_1_2_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -703,6 +734,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-15-instance-1_1_3_1');
     var pathDiv = $('#a-item-path-15-instance-1_1_3_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -753,6 +787,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-15-instance-1_1_4_1');
     var pathDiv = $('#a-item-path-15-instance-1_1_4_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -803,6 +840,9 @@ $(function() {
     var ok = true;
     var v = $('#a-item-15-instance-1_1_5_1');
     var pathDiv = $('#a-item-path-15-instance-1_1_5_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -862,8 +902,6 @@ $(function() {
   $('#a-remove-button-17-instance-1_1').click(function() {
     $('#a-repeating-enclosing-17-instance-1_1').hide();
   });
-
-  $('#a-item-17-instance-1_1').prop('checked',false);
 
   // story
   var validate17instance1_1 = function () {
@@ -1332,8 +1370,10 @@ $(function() {
               <input number="2" name="a-item-input-2-instance-1_1" id="a-item-2-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="a-item-path-2-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-2-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-2-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="a-item-enclosing-3-instance-1_1" class="item-enclosing">
@@ -1344,9 +1384,11 @@ $(function() {
               <input number="3" name="a-item-input-3-instance-1_1" id="a-item-3-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="a-item-path-3-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-3-instance-1_1" class="item-error">Invalid email format</div>
               <div class="item-after">If you have concerns about privacy please see our <a href="http://google.com">privacy statement<a></div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-3-instance-1_1" class="item-error">Invalid email format</div>
           </div>
         </div>
         <div id="a-item-enclosing-4-instance-1_1" class="item-enclosing">
@@ -1359,9 +1401,11 @@ $(function() {
               </input>
               <div class="item-description">dd/mm/yyyy (dd=day, mm=month, yyyy=year)</div>
               <div id="a-item-path-4-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-4-instance-1_1" class="item-error">This field must of the form dd/mm/yyyy. For example, 12 March 2011 is 12/03/2011</div>
               <div class="item-after">If you have concerns about privacy please see our <a href="http://google.com">privacy statement<a></div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-4-instance-1_1" class="item-error">This field must of the form dd/mm/yyyy. For example, 12 March 2011 is 12/03/2011</div>
           </div>
         </div>
         <div id="a-item-enclosing-5-instance-1_1" class="item-enclosing">
@@ -1374,9 +1418,11 @@ $(function() {
               </input>
               <div class="item-description">hh:mm (hh=hour, mm=minute)</div>
               <div id="a-item-path-5-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-5-instance-1_1" class="item-error">This field must of the form hh:mm. For example, 2pm is 14:30</div>
               <div class="item-after">If you have concerns about privacy please see our <a href="http://google.com">privacy statement<a></div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-5-instance-1_1" class="item-error">This field must of the form hh:mm. For example, 2pm is 14:30</div>
           </div>
         </div>
         <div id="a-item-enclosing-6-instance-1_1" class="item-enclosing">
@@ -1388,20 +1434,24 @@ $(function() {
               </input>
               <div class="item-description">L followed by digits</div>
               <div id="a-item-path-6-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-6-instance-1_1" class="item-error">This field must start with an L and then follow with 3 to 7 digits only</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-6-instance-1_1" class="item-error">This field must start with an L and then follow with 3 to 7 digits only</div>
           </div>
         </div>
         <div id="a-item-enclosing-7-instance-1_1" class="item-enclosing">
           <div id="a-repeating-enclosing-7-instance-1_1" class="repeating-enclosing">
             <div class="item-number">7</div>
-            <label class="item-label" for="a-item-input-7-instance-1_1">Permanent Resident</label>
+            <label class="item-label" for="a-item-input-7-instance-1_1">Permanent Resident<em>*</em></label>
             <div class="item-input">
               <input number="7" name="a-item-input-7-instance-1_1" id="a-item-7-instance-1_1-0" class="select" type="radio" value="yes">yes</input>
               <input number="7" name="a-item-input-7-instance-1_1" id="a-item-7-instance-1_1-1" class="select" type="radio" value="no">no</input>
               <div id="a-item-path-7-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-7-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-7-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="a-item-enclosing-8-instance-1_1" class="item-enclosing">
@@ -1412,8 +1462,10 @@ $(function() {
               <input number="8" name="a-item-input-8-instance-1_1" id="a-item-8-instance-1_1" class="datepickerclass  item-input-text" type="text">
               </input>
               <div id="a-item-path-8-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-8-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-8-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="a-item-enclosing-9-instance-1_1" class="item-enclosing">
@@ -1422,7 +1474,7 @@ $(function() {
           </div>
           <div id="a-repeating-enclosing-9-instance-1_1" class="repeating-enclosing">
             <div class="item-number">9</div>
-            <label class="item-label" for="a-item-input-9-instance-1_1">Lived In</label>
+            <label class="item-label" for="a-item-input-9-instance-1_1">Lived In<em>*</em></label>
             <div class="item-input">
               <select id="a-item-9-instance-1_1" class="select" name="a-item-input-9-instance-1_1" number="9">
                 <option value="Afghanistan">Afghanistan</option>
@@ -1623,15 +1675,17 @@ $(function() {
               </select>
               <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
               <div id="a-item-path-9-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-9-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-9-instance-1_1" class="item-error">Invalid</div>
           </div>
           <div id="a-repeating-enclosing-9-instance-1_2" class="repeating-enclosing">
             <div class="remove-button-container">
               <div id="a-remove-button-9-instance-1_2" class="remove-button white small">-</div>
             </div>
             <div class="item-number">9</div>
-            <label class="item-label" for="a-item-input-9-instance-1_2">Lived In</label>
+            <label class="item-label" for="a-item-input-9-instance-1_2">Lived In<em>*</em></label>
             <div class="item-input">
               <select id="a-item-9-instance-1_2" class="select" name="a-item-input-9-instance-1_2" number="9">
                 <option value="Afghanistan">Afghanistan</option>
@@ -1832,15 +1886,17 @@ $(function() {
               </select>
               <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
               <div id="a-item-path-9-instance-1_2" class="item-path" enabled="true"></div>
-              <div id="a-item-error-9-instance-1_2" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-9-instance-1_2" class="item-error">Invalid</div>
           </div>
           <div id="a-repeating-enclosing-9-instance-1_3" class="repeating-enclosing">
             <div class="remove-button-container">
               <div id="a-remove-button-9-instance-1_3" class="remove-button white small">-</div>
             </div>
             <div class="item-number">9</div>
-            <label class="item-label" for="a-item-input-9-instance-1_3">Lived In</label>
+            <label class="item-label" for="a-item-input-9-instance-1_3">Lived In<em>*</em></label>
             <div class="item-input">
               <select id="a-item-9-instance-1_3" class="select" name="a-item-input-9-instance-1_3" number="9">
                 <option value="Afghanistan">Afghanistan</option>
@@ -2041,15 +2097,17 @@ $(function() {
               </select>
               <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
               <div id="a-item-path-9-instance-1_3" class="item-path" enabled="true"></div>
-              <div id="a-item-error-9-instance-1_3" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-9-instance-1_3" class="item-error">Invalid</div>
           </div>
           <div id="a-repeating-enclosing-9-instance-1_4" class="repeating-enclosing">
             <div class="remove-button-container">
               <div id="a-remove-button-9-instance-1_4" class="remove-button white small">-</div>
             </div>
             <div class="item-number">9</div>
-            <label class="item-label" for="a-item-input-9-instance-1_4">Lived In</label>
+            <label class="item-label" for="a-item-input-9-instance-1_4">Lived In<em>*</em></label>
             <div class="item-input">
               <select id="a-item-9-instance-1_4" class="select" name="a-item-input-9-instance-1_4" number="9">
                 <option value="Afghanistan">Afghanistan</option>
@@ -2250,15 +2308,17 @@ $(function() {
               </select>
               <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
               <div id="a-item-path-9-instance-1_4" class="item-path" enabled="true"></div>
-              <div id="a-item-error-9-instance-1_4" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-9-instance-1_4" class="item-error">Invalid</div>
           </div>
           <div id="a-repeating-enclosing-9-instance-1_5" class="repeating-enclosing">
             <div class="remove-button-container">
               <div id="a-remove-button-9-instance-1_5" class="remove-button white small">-</div>
             </div>
             <div class="item-number">9</div>
-            <label class="item-label" for="a-item-input-9-instance-1_5">Lived In</label>
+            <label class="item-label" for="a-item-input-9-instance-1_5">Lived In<em>*</em></label>
             <div class="item-input">
               <select id="a-item-9-instance-1_5" class="select" name="a-item-input-9-instance-1_5" number="9">
                 <option value="Afghanistan">Afghanistan</option>
@@ -2459,8 +2519,10 @@ $(function() {
               </select>
               <div class="item-description">Select the current country name for the location you lived in. You may select multiple locations by clicking on the Add button.</div>
               <div id="a-item-path-9-instance-1_5" class="item-path" enabled="true"></div>
-              <div id="a-item-error-9-instance-1_5" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-9-instance-1_5" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="a-item-enclosing-10-instance-1_1" class="item-enclosing">
@@ -2471,8 +2533,10 @@ $(function() {
               <input number="10" name="a-item-input-10-instance-1_1" id="a-item-10-instance-1_1" class=" item-input-text" type="text" value="0">
               </input>
               <div id="a-item-path-10-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-10-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-10-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="a-item-enclosing-11-instance-1_1" class="choice">
@@ -2482,7 +2546,7 @@ $(function() {
               <input number="11" name="a-item-input-11-instance-1_1" id="a-item-11-instance-1_1-choice-1" class="choice-item" type="radio" value="number">Address</input>
             </div>
             <div id="a-div-choice-item-11-instance-1-choice-2" class="div-choice-item">
-              <input number="11" name="a-item-input-11-instance-1_1" id="a-item-11-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Phone<em>*</em></input>
+              <input number="11" name="a-item-input-11-instance-1_1" id="a-item-11-instance-1_1-choice-2" class="choice-item" type="radio" value="number">Phone</input>
             </div>
             <div id="a-choice-content-11-instance-1_1-choice-1" class="invisible">
               <div id="a-item-enclosing-12-instance-1_1_1" class="item-enclosing">
@@ -2490,11 +2554,12 @@ $(function() {
                   <div class="item-number">12</div>
                   <label class="item-label" for="a-item-input-12-instance-1_1_1">Address</label>
                   <div class="item-input">
-                    <input number="12" name="a-item-input-12-instance-1_1_1" id="a-item-12-instance-1_1_1" class=" item-input-text" type="text">
-                    </input>
+                    <textarea id="a-item-12-instance-1_1_1" class=" item-input-textarea" name="a-item-input-12-instance-1_1_1" number="12"></textarea>
                     <div id="a-item-path-12-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="a-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="a-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -2513,14 +2578,16 @@ $(function() {
                           <input number="14" name="a-item-input-14-instance-1_1_1_1" id="a-item-14-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="a-item-path-14-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-14-instance-1_1_1_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-14-instance-1_1_1_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                       </div>
                     </div>
                     <div id="a-item-enclosing-15-instance-1_1_1_1" class="item-enclosing">
                       <div id="a-repeating-enclosing-15-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">15</div>
-                        <label class="item-label" for="a-item-input-15-instance-1_1_1_1">Type</label>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_1_1">Type<em>*</em></label>
                         <div class="item-input">
                           <select id="a-item-15-instance-1_1_1_1" class="select" name="a-item-input-15-instance-1_1_1_1" number="15">
                             <option value="home">home</option>
@@ -2528,8 +2595,10 @@ $(function() {
                             <option value="mobile">mobile</option>
                           </select>
                           <div id="a-item-path-15-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-15-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-15-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -2547,14 +2616,16 @@ $(function() {
                           <input number="14" name="a-item-input-14-instance-1_1_2_1" id="a-item-14-instance-1_1_2_1" class=" item-input-text" type="text">
                           </input>
                           <div id="a-item-path-14-instance-1_1_2_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-14-instance-1_1_2_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-14-instance-1_1_2_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                       </div>
                     </div>
                     <div id="a-item-enclosing-15-instance-1_1_2_1" class="item-enclosing">
                       <div id="a-repeating-enclosing-15-instance-1_1_2_1" class="repeating-enclosing">
                         <div class="item-number">15</div>
-                        <label class="item-label" for="a-item-input-15-instance-1_1_2_1">Type</label>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_2_1">Type<em>*</em></label>
                         <div class="item-input">
                           <select id="a-item-15-instance-1_1_2_1" class="select" name="a-item-input-15-instance-1_1_2_1" number="15">
                             <option value="home">home</option>
@@ -2562,8 +2633,10 @@ $(function() {
                             <option value="mobile">mobile</option>
                           </select>
                           <div id="a-item-path-15-instance-1_1_2_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-15-instance-1_1_2_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-15-instance-1_1_2_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -2581,14 +2654,16 @@ $(function() {
                           <input number="14" name="a-item-input-14-instance-1_1_3_1" id="a-item-14-instance-1_1_3_1" class=" item-input-text" type="text">
                           </input>
                           <div id="a-item-path-14-instance-1_1_3_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-14-instance-1_1_3_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-14-instance-1_1_3_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                       </div>
                     </div>
                     <div id="a-item-enclosing-15-instance-1_1_3_1" class="item-enclosing">
                       <div id="a-repeating-enclosing-15-instance-1_1_3_1" class="repeating-enclosing">
                         <div class="item-number">15</div>
-                        <label class="item-label" for="a-item-input-15-instance-1_1_3_1">Type</label>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_3_1">Type<em>*</em></label>
                         <div class="item-input">
                           <select id="a-item-15-instance-1_1_3_1" class="select" name="a-item-input-15-instance-1_1_3_1" number="15">
                             <option value="home">home</option>
@@ -2596,8 +2671,10 @@ $(function() {
                             <option value="mobile">mobile</option>
                           </select>
                           <div id="a-item-path-15-instance-1_1_3_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-15-instance-1_1_3_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-15-instance-1_1_3_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -2615,14 +2692,16 @@ $(function() {
                           <input number="14" name="a-item-input-14-instance-1_1_4_1" id="a-item-14-instance-1_1_4_1" class=" item-input-text" type="text">
                           </input>
                           <div id="a-item-path-14-instance-1_1_4_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-14-instance-1_1_4_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-14-instance-1_1_4_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                       </div>
                     </div>
                     <div id="a-item-enclosing-15-instance-1_1_4_1" class="item-enclosing">
                       <div id="a-repeating-enclosing-15-instance-1_1_4_1" class="repeating-enclosing">
                         <div class="item-number">15</div>
-                        <label class="item-label" for="a-item-input-15-instance-1_1_4_1">Type</label>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_4_1">Type<em>*</em></label>
                         <div class="item-input">
                           <select id="a-item-15-instance-1_1_4_1" class="select" name="a-item-input-15-instance-1_1_4_1" number="15">
                             <option value="home">home</option>
@@ -2630,8 +2709,10 @@ $(function() {
                             <option value="mobile">mobile</option>
                           </select>
                           <div id="a-item-path-15-instance-1_1_4_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-15-instance-1_1_4_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-15-instance-1_1_4_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -2649,14 +2730,16 @@ $(function() {
                           <input number="14" name="a-item-input-14-instance-1_1_5_1" id="a-item-14-instance-1_1_5_1" class=" item-input-text" type="text">
                           </input>
                           <div id="a-item-path-14-instance-1_1_5_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-14-instance-1_1_5_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-14-instance-1_1_5_1" class="item-error">Must contain a minimum of three digits. Other characters accepted but will be stripped apart from single leading + and single x (extension) which must have digits following to be included.</div>
                       </div>
                     </div>
                     <div id="a-item-enclosing-15-instance-1_1_5_1" class="item-enclosing">
                       <div id="a-repeating-enclosing-15-instance-1_1_5_1" class="repeating-enclosing">
                         <div class="item-number">15</div>
-                        <label class="item-label" for="a-item-input-15-instance-1_1_5_1">Type</label>
+                        <label class="item-label" for="a-item-input-15-instance-1_1_5_1">Type<em>*</em></label>
                         <div class="item-input">
                           <select id="a-item-15-instance-1_1_5_1" class="select" name="a-item-input-15-instance-1_1_5_1" number="15">
                             <option value="home">home</option>
@@ -2664,8 +2747,10 @@ $(function() {
                             <option value="mobile">mobile</option>
                           </select>
                           <div id="a-item-path-15-instance-1_1_5_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-15-instance-1_1_5_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-15-instance-1_1_5_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -2683,8 +2768,10 @@ $(function() {
               </input>
               <div class="item-description">Between 10 and 20</div>
               <div id="a-item-path-16-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-16-instance-1_1" class="item-error">This field must be a whole number between 10 and 20 inclusive</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-16-instance-1_1" class="item-error">This field must be a whole number between 10 and 20 inclusive</div>
           </div>
         </div>
         <div id="a-item-enclosing-17-instance-1_1" class="item-enclosing">
@@ -2692,11 +2779,12 @@ $(function() {
             <div class="item-number">17</div>
             <label class="item-label" for="a-item-input-17-instance-1_1">Story</label>
             <div class="item-input">
-              <input number="17" name="a-item-input-17-instance-1_1" id="a-item-17-instance-1_1" class=" item-input-text" type="text">
-              </input>
+              <textarea id="a-item-17-instance-1_1" class=" item-input-textarea" name="a-item-input-17-instance-1_1" number="17"></textarea>
               <div id="a-item-path-17-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-17-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-17-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="a-item-enclosing-18-instance-1_1" class="item-enclosing">
@@ -2707,8 +2795,10 @@ $(function() {
               <input number="18" name="a-item-input-18-instance-1_1" id="a-item-18-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="a-item-path-18-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-18-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-18-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="a-item-enclosing-19-instance-1_1" class="item-enclosing">
@@ -2719,8 +2809,10 @@ $(function() {
               <input number="19" name="a-item-input-19-instance-1_1" id="a-item-19-instance-1_1" class=" item-input-text" type="checkbox">
               </input>
               <div id="a-item-path-19-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-19-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-19-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="a-item-enclosing-20-instance-1_1" class="item-enclosing">
@@ -2731,8 +2823,10 @@ $(function() {
               <input number="20" name="a-item-input-20-instance-1_1" id="a-item-20-instance-1_1" class=" item-input-text" type="checkbox">
               </input>
               <div id="a-item-path-20-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-20-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-20-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
       </div>

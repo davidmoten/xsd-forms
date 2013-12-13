@@ -103,6 +103,12 @@ function postXml(url) {
     });
   };
 }
+
+function toJson(xml) {
+  var x2js = new X2JS(); 
+  var json = x2js.xml_str2json(xml);
+  return JSON.stringify(json);
+}
           
 $(function() {
   //run js unit tests        
@@ -240,8 +246,6 @@ $(function() {
     $('#b-repeating-enclosing-4-instance-1_1').hide();
   });
 
-  $('#b-item-4-instance-1_1').prop('checked',false);
-
   // long-text
   var validate4instance1_1 = function () {
     var ok = true;
@@ -258,8 +262,6 @@ $(function() {
   $('#b-remove-button-5-instance-1_1').click(function() {
     $('#b-repeating-enclosing-5-instance-1_1').hide();
   });
-
-  $('#b-item-5-instance-1_1').prop('checked',false);
 
   // long-text-with-default
   var validate5instance1_1 = function () {
@@ -365,6 +367,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-10-instance-1_1');
     var pathDiv = $('#b-item-path-10-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     var patternMatched =false;
     patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\d$/);
     if (!(patternMatched))
@@ -388,6 +393,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-11-instance-1_1');
     var pathDiv = $('#b-item-path-11-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     var patternMatched =false;
     patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\d$/);
     if (!(patternMatched))
@@ -411,6 +419,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-12-instance-1_1');
     var pathDiv = $('#b-item-path-12-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     var patternMatched =false;
     patternMatched |= matchesPattern(v,/^\d\d:\d\d *$/);
     if (!(patternMatched))
@@ -434,6 +445,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-13-instance-1_1');
     var pathDiv = $('#b-item-path-13-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     var patternMatched =false;
     patternMatched |= matchesPattern(v,/^\d\d:\d\d *$/);
     if (!(patternMatched))
@@ -457,6 +471,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-14-instance-1_1');
     var pathDiv = $('#b-item-path-14-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     var patternMatched =false;
     patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d$/);
     if (!(patternMatched))
@@ -480,6 +497,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-15-instance-1_1');
     var pathDiv = $('#b-item-path-15-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     var patternMatched =false;
     patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d$/);
     if (!(patternMatched))
@@ -539,6 +559,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-18-instance-1_1');
     var pathDiv = $('#b-item-path-18-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -558,6 +581,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-19-instance-1_1');
     var pathDiv = $('#b-item-path-19-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -577,6 +603,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-20-instance-1_1');
     var pathDiv = $('#b-item-path-20-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -596,6 +625,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-21-instance-1_1');
     var pathDiv = $('#b-item-path-21-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     ok &= matchesPattern(v,/^-?\d+(\.\d*)?$/);
@@ -616,6 +648,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-22-instance-1_1');
     var pathDiv = $('#b-item-path-22-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -635,6 +670,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-23-instance-1_1');
     var pathDiv = $('#b-item-path-23-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     var radioInput=$('input:radio[name=b-item-input-23-instance-1_1]');
     if (! radioInput.is(':checked')) ok = false;
@@ -664,6 +702,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-24-instance-1_1');
     var pathDiv = $('#b-item-path-24-instance-1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -741,8 +782,6 @@ $(function() {
   $('#b-remove-button-28-instance-1_1').click(function() {
     $('#b-repeating-enclosing-28-instance-1_1').hide();
   });
-
-  $('#b-item-28-instance-1_1').prop('checked',false);
 
   $('#b-item-28-instance-1_1').css('color','white');
   $('#b-item-28-instance-1_1').css('height','12em');
@@ -1287,6 +1326,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-51-instance-1_1_1');
     var pathDiv = $('#b-item-path-51-instance-1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     var patternMatched =false;
     patternMatched |= matchesPattern(v,/^\d\d\d\d-\d\d-\d\d$/);
     if (!(patternMatched))
@@ -2673,6 +2715,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-73-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-73-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -2899,6 +2944,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-82-instance-1_1_1');
     var pathDiv = $('#b-item-path-82-instance-1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -2980,6 +3028,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-82-instance-1_2_1');
     var pathDiv = $('#b-item-path-82-instance-1_2_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -3061,6 +3112,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-82-instance-1_3_1');
     var pathDiv = $('#b-item-path-82-instance-1_3_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -3142,6 +3196,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-82-instance-1_4_1');
     var pathDiv = $('#b-item-path-82-instance-1_4_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -3223,6 +3280,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-82-instance-1_5_1');
     var pathDiv = $('#b-item-path-82-instance-1_5_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -3323,6 +3383,9 @@ $(function() {
     var ok = true;
     var v = $('#b-item-87-instance-1_1_1');
     var pathDiv = $('#b-item-path-87-instance-1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -3521,6 +3584,9 @@ $('#b-min-occurs-zero-89-instance-1').change();
     var ok = true;
     var v = $('#b-item-96-instance-1_1_1_1');
     var pathDiv = $('#b-item-path-96-instance-1_1_1_1');
+    // mandatory test
+    if ((v.val() == null) || (v.val().length==0))
+      ok=false;
     //enumeration test
     if ($.trim(v.val()).length ==0) ok = false;
     return ok;
@@ -6009,8 +6075,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="2" name="b-item-input-2-instance-1_1" id="b-item-2-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-2-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-2-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-2-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-3-instance-1_1" class="item-enclosing">
@@ -6021,8 +6089,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="3" name="b-item-input-3-instance-1_1" id="b-item-3-instance-1_1" class=" item-input-text" type="text" value="default">
               </input>
               <div id="b-item-path-3-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-3-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-3-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-4-instance-1_1" class="item-enclosing">
@@ -6030,11 +6100,12 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             <div class="item-number">4</div>
             <label class="item-label" for="b-item-input-4-instance-1_1">Long Text</label>
             <div class="item-input">
-              <input number="4" name="b-item-input-4-instance-1_1" id="b-item-4-instance-1_1" class=" item-input-text" type="text">
-              </input>
+              <textarea id="b-item-4-instance-1_1" class=" item-input-textarea" name="b-item-input-4-instance-1_1" number="4"></textarea>
               <div id="b-item-path-4-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-4-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-4-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-5-instance-1_1" class="item-enclosing">
@@ -6042,11 +6113,12 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             <div class="item-number">5</div>
             <label class="item-label" for="b-item-input-5-instance-1_1">Long Text With Default</label>
             <div class="item-input">
-              <input number="5" name="b-item-input-5-instance-1_1" id="b-item-5-instance-1_1" class=" item-input-text" type="text" value="default">
-              </input>
+              <textarea id="b-item-5-instance-1_1" class=" item-input-textarea" name="b-item-input-5-instance-1_1" number="5">default</textarea>
               <div id="b-item-path-5-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-5-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-5-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-6-instance-1_1" class="item-enclosing">
@@ -6058,8 +6130,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="6" name="b-item-input-6-instance-1_1" id="b-item-6-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-6-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-6-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-6-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-7-instance-1_1" class="item-enclosing">
@@ -6070,8 +6144,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="7" name="b-item-input-7-instance-1_1" id="b-item-7-instance-1_1" class=" item-input-text" type="text" value="10.0435">
               </input>
               <div id="b-item-path-7-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-7-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-7-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-8-instance-1_1" class="item-enclosing">
@@ -6082,8 +6158,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="8" name="b-item-input-8-instance-1_1" id="b-item-8-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-8-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-8-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-8-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-9-instance-1_1" class="item-enclosing">
@@ -6094,8 +6172,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="9" name="b-item-input-9-instance-1_1" id="b-item-9-instance-1_1" class=" item-input-text" type="text" value="123">
               </input>
               <div id="b-item-path-9-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-9-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-9-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-10-instance-1_1" class="item-enclosing">
@@ -6107,8 +6187,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="10" name="b-item-input-10-instance-1_1" id="b-item-10-instance-1_1" class="datepickerclass  item-input-text" type="text">
               </input>
               <div id="b-item-path-10-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-10-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-10-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-11-instance-1_1" class="item-enclosing">
@@ -6119,8 +6201,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="11" name="b-item-input-11-instance-1_1" id="b-item-11-instance-1_1" class="datepickerclass  item-input-text" type="text" value="1973-06-12">
               </input>
               <div id="b-item-path-11-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-11-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-11-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-12-instance-1_1" class="item-enclosing">
@@ -6131,8 +6215,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="12" name="b-item-input-12-instance-1_1" id="b-item-12-instance-1_1" class="timepickerclass  item-input-text" type="text">
               </input>
               <div id="b-item-path-12-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-12-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-12-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-13-instance-1_1" class="item-enclosing">
@@ -6143,8 +6229,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="13" name="b-item-input-13-instance-1_1" id="b-item-13-instance-1_1" class="timepickerclass  item-input-text" type="text" value="21:55">
               </input>
               <div id="b-item-path-13-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-13-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-13-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-14-instance-1_1" class="item-enclosing">
@@ -6155,8 +6243,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="14" name="b-item-input-14-instance-1_1" id="b-item-14-instance-1_1" class="datetimepickerclass  item-input-text" type="text">
               </input>
               <div id="b-item-path-14-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-14-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-14-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-15-instance-1_1" class="item-enclosing">
@@ -6167,8 +6257,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="15" name="b-item-input-15-instance-1_1" id="b-item-15-instance-1_1" class="datetimepickerclass  item-input-text" type="text" value="2002-05-30T09:30">
               </input>
               <div id="b-item-path-15-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-15-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-15-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-16-instance-1_1" class="item-enclosing">
@@ -6180,8 +6272,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="16" name="b-item-input-16-instance-1_1" id="b-item-16-instance-1_1" class=" item-input-text" type="checkbox">
               </input>
               <div id="b-item-path-16-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-16-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-16-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-17-instance-1_1" class="item-enclosing">
@@ -6192,29 +6286,33 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="17" name="b-item-input-17-instance-1_1" id="b-item-17-instance-1_1" class=" item-input-text" type="checkbox">
               </input>
               <div id="b-item-path-17-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-17-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-17-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-18-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-18-instance-1_1" class="repeating-enclosing">
             <div class="item-title">Enumerations</div>
             <div class="item-number">18</div>
-            <label class="item-label" for="b-item-input-18-instance-1_1">String Enumeration</label>
+            <label class="item-label" for="b-item-input-18-instance-1_1">String Enumeration<em>*</em></label>
             <div class="item-input">
               <select id="b-item-18-instance-1_1" class="select" name="b-item-input-18-instance-1_1" number="18">
                 <option value="option-1">option-1</option>
                 <option value="option-2">option-2</option>
               </select>
               <div id="b-item-path-18-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-18-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-18-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-19-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-19-instance-1_1" class="repeating-enclosing">
             <div class="item-number">19</div>
-            <label class="item-label" for="b-item-input-19-instance-1_1">String Enumeration Unselected</label>
+            <label class="item-label" for="b-item-input-19-instance-1_1">String Enumeration Unselected<em>*</em></label>
             <div class="item-input">
               <select id="b-item-19-instance-1_1" class="select" name="b-item-input-19-instance-1_1" number="19">
                 <option value="">Select one...</option>
@@ -6222,62 +6320,72 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                 <option value="option-2">option-2</option>
               </select>
               <div id="b-item-path-19-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-19-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-19-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-20-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-20-instance-1_1" class="repeating-enclosing">
             <div class="item-number">20</div>
-            <label class="item-label" for="b-item-input-20-instance-1_1">String Enumeration With Labels</label>
+            <label class="item-label" for="b-item-input-20-instance-1_1">String Enumeration With Labels<em>*</em></label>
             <div class="item-input">
               <select id="b-item-20-instance-1_1" class="select" name="b-item-input-20-instance-1_1" number="20">
                 <option value="A">Option A</option>
                 <option value="B">Option B</option>
               </select>
               <div id="b-item-path-20-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-20-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-20-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-21-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-21-instance-1_1" class="repeating-enclosing">
             <div class="item-number">21</div>
-            <label class="item-label" for="b-item-input-21-instance-1_1">Decimal enumeration</label>
+            <label class="item-label" for="b-item-input-21-instance-1_1">Decimal enumeration<em>*</em></label>
             <div class="item-input">
               <select id="b-item-21-instance-1_1" class="select" name="b-item-input-21-instance-1_1" number="21">
                 <option value="1.5">One Point Five</option>
                 <option value="2.0">Two Point Zero</option>
               </select>
               <div id="b-item-path-21-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-21-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-21-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-22-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-22-instance-1_1" class="repeating-enclosing">
             <div class="item-number">22</div>
-            <label class="item-label" for="b-item-input-22-instance-1_1">Integer Enumeration</label>
+            <label class="item-label" for="b-item-input-22-instance-1_1">Integer Enumeration<em>*</em></label>
             <div class="item-input">
               <select id="b-item-22-instance-1_1" class="select" name="b-item-input-22-instance-1_1" number="22">
                 <option value="1">1</option>
                 <option value="2">2</option>
               </select>
               <div id="b-item-path-22-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-22-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-22-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-23-instance-1_1" class="item-enclosing">
           <div id="b-repeating-enclosing-23-instance-1_1" class="repeating-enclosing">
             <div class="item-number">23</div>
-            <label class="item-label" for="b-item-input-23-instance-1_1">String Enumeration Radio</label>
+            <label class="item-label" for="b-item-input-23-instance-1_1">String Enumeration Radio<em>*</em></label>
             <div class="item-input">
               <input number="23" name="b-item-input-23-instance-1_1" id="b-item-23-instance-1_1-0" class="select" type="radio" value="A">Option A</input>
               <input number="23" name="b-item-input-23-instance-1_1" id="b-item-23-instance-1_1-1" class="select" type="radio" value="B">Option B</input>
               <div id="b-item-path-23-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-23-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-23-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-24-instance-1_1" class="item-enclosing">
@@ -6285,15 +6393,17 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             <div class="item-title">Make visible example</div>
             <div class="item-before">When Option B is selected then the next (makeVisible=1) input element will be made visible so that Further Details for Option B can be captured. The Further Details element should have i:visible=false annotation.</div>
             <div class="item-number">24</div>
-            <label class="item-label" for="b-item-input-24-instance-1_1">Make Visible Example</label>
+            <label class="item-label" for="b-item-input-24-instance-1_1">Make Visible Example<em>*</em></label>
             <div class="item-input">
               <select id="b-item-24-instance-1_1" class="select" name="b-item-input-24-instance-1_1" number="24">
                 <option value="A">Option A</option>
                 <option value="B">Option B</option>
               </select>
               <div id="b-item-path-24-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-24-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-24-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-25-instance-1_1" class="item-enclosing invisible">
@@ -6304,8 +6414,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="25" name="b-item-input-25-instance-1_1" id="b-item-25-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-25-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-25-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-25-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-26-instance-1_1" class="item-enclosing">
@@ -6317,8 +6429,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="26" name="b-item-input-26-instance-1_1" id="b-item-26-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-26-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-26-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-26-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-27-instance-1_1" class="item-enclosing">
@@ -6332,9 +6446,11 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">description of the field here</div>
               <div id="b-item-path-27-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-27-instance-1_1" class="item-error">Invalid format, must start with a,b or c and be followed by 3 digits.</div>
               <div class="item-after">'after' message</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-27-instance-1_1" class="item-error">Invalid format, must start with a,b or c and be followed by 3 digits.</div>
           </div>
         </div>
         <div id="b-item-enclosing-28-instance-1_1" class="item-enclosing">
@@ -6343,11 +6459,12 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
             <div class="item-number">28</div>
             <label class="item-label" for="b-item-input-28-instance-1_1">Css Override</label>
             <div class="item-input">
-              <input number="28" name="b-item-input-28-instance-1_1" id="b-item-28-instance-1_1" class=" item-input-text" type="text">
-              </input>
+              <textarea id="b-item-28-instance-1_1" class=" item-input-textarea" name="b-item-input-28-instance-1_1" number="28"></textarea>
               <div id="b-item-path-28-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-28-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-28-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-29-instance-1_1" class="item-enclosing">
@@ -6360,8 +6477,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">a,b, or c followed by 3 digits</div>
               <div id="b-item-path-29-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-29-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-29-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-30-instance-1_1" class="item-enclosing">
@@ -6373,8 +6492,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">a,b, or c followed by 3 digits</div>
               <div id="b-item-path-30-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-30-instance-1_1" class="item-error">Invalid format, must start with a,b or c and be followed by 3 digits.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-30-instance-1_1" class="item-error">Invalid format, must start with a,b or c and be followed by 3 digits.</div>
           </div>
         </div>
         <div id="b-item-enclosing-31-instance-1_1" class="item-enclosing">
@@ -6387,8 +6508,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">AB or CD (multiple patterns is logical OR)</div>
               <div id="b-item-path-31-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-31-instance-1_1" class="item-error">Invalid format, must be AB or CD.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-31-instance-1_1" class="item-error">Invalid format, must be AB or CD.</div>
           </div>
         </div>
         <div id="b-item-enclosing-32-instance-1_1" class="item-enclosing">
@@ -6401,8 +6524,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">minimum 3 characters</div>
               <div id="b-item-path-32-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-32-instance-1_1" class="item-error">Invalid format, must have a minimum of 3 characters.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-32-instance-1_1" class="item-error">Invalid format, must have a minimum of 3 characters.</div>
           </div>
         </div>
         <div id="b-item-enclosing-33-instance-1_1" class="item-enclosing">
@@ -6414,8 +6539,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">minimum 3 digits</div>
               <div id="b-item-path-33-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-33-instance-1_1" class="item-error">Invalid format, must have a minimum of 3 digits.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-33-instance-1_1" class="item-error">Invalid format, must have a minimum of 3 digits.</div>
           </div>
         </div>
         <div id="b-item-enclosing-34-instance-1_1" class="item-enclosing">
@@ -6427,8 +6554,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">minimum 3 characters</div>
               <div id="b-item-path-34-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-34-instance-1_1" class="item-error">Invalid format, must have a minimum of 3 characters.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-34-instance-1_1" class="item-error">Invalid format, must have a minimum of 3 characters.</div>
           </div>
         </div>
         <div id="b-item-enclosing-35-instance-1_1" class="item-enclosing">
@@ -6441,8 +6570,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">maximum 4 characters</div>
               <div id="b-item-path-35-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-35-instance-1_1" class="item-error">Invalid format, must have a maximum of 4 characters.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-35-instance-1_1" class="item-error">Invalid format, must have a maximum of 4 characters.</div>
           </div>
         </div>
         <div id="b-item-enclosing-36-instance-1_1" class="item-enclosing">
@@ -6454,8 +6585,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">maximum 4 digits</div>
               <div id="b-item-path-36-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-36-instance-1_1" class="item-error">Invalid format, must have a maximum of 4 digits.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-36-instance-1_1" class="item-error">Invalid format, must have a maximum of 4 digits.</div>
           </div>
         </div>
         <div id="b-item-enclosing-37-instance-1_1" class="item-enclosing">
@@ -6467,8 +6600,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">maximum 4 characters</div>
               <div id="b-item-path-37-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-37-instance-1_1" class="item-error">Invalid format, must have a maximum of 4 characters.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-37-instance-1_1" class="item-error">Invalid format, must have a maximum of 4 characters.</div>
           </div>
         </div>
         <div id="b-item-enclosing-38-instance-1_1" class="item-enclosing">
@@ -6481,8 +6616,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">exactly 4 characters</div>
               <div id="b-item-path-38-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-38-instance-1_1" class="item-error">Invalid format, must have exactly 4 characters.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-38-instance-1_1" class="item-error">Invalid format, must have exactly 4 characters.</div>
           </div>
         </div>
         <div id="b-item-enclosing-39-instance-1_1" class="item-enclosing">
@@ -6494,8 +6631,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">exactly 4 digits</div>
               <div id="b-item-path-39-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-39-instance-1_1" class="item-error">Invalid format, must have exactly 4 digits.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-39-instance-1_1" class="item-error">Invalid format, must have exactly 4 digits.</div>
           </div>
         </div>
         <div id="b-item-enclosing-40-instance-1_1" class="item-enclosing">
@@ -6507,8 +6646,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">exactly 4 characters</div>
               <div id="b-item-path-40-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-40-instance-1_1" class="item-error">Invalid format, must be a decimal value with exactly 4 characters.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-40-instance-1_1" class="item-error">Invalid format, must be a decimal value with exactly 4 characters.</div>
           </div>
         </div>
         <div id="b-item-enclosing-41-instance-1_1" class="item-enclosing">
@@ -6521,8 +6662,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">5 or more</div>
               <div id="b-item-path-41-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-41-instance-1_1" class="item-error">Invalid format, must be greater than or equal to 5.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-41-instance-1_1" class="item-error">Invalid format, must be greater than or equal to 5.</div>
           </div>
         </div>
         <div id="b-item-enclosing-42-instance-1_1" class="item-enclosing">
@@ -6534,8 +6677,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">5 or more</div>
               <div id="b-item-path-42-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-42-instance-1_1" class="item-error">Invalid format, must be greater than or equal to 5.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-42-instance-1_1" class="item-error">Invalid format, must be greater than or equal to 5.</div>
           </div>
         </div>
         <div id="b-item-enclosing-43-instance-1_1" class="item-enclosing">
@@ -6548,8 +6693,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">maximum value of 10</div>
               <div id="b-item-path-43-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-43-instance-1_1" class="item-error">Invalid format, must less than or equal to 10.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-43-instance-1_1" class="item-error">Invalid format, must less than or equal to 10.</div>
           </div>
         </div>
         <div id="b-item-enclosing-44-instance-1_1" class="item-enclosing">
@@ -6561,8 +6708,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">maximum value of 10</div>
               <div id="b-item-path-44-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-44-instance-1_1" class="item-error">Invalid format, must less than or equal to 10.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-44-instance-1_1" class="item-error">Invalid format, must less than or equal to 10.</div>
           </div>
         </div>
         <div id="b-item-enclosing-45-instance-1_1" class="item-enclosing">
@@ -6575,8 +6724,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">greater than 5</div>
               <div id="b-item-path-45-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-45-instance-1_1" class="item-error">Invalid format, must be greater than 5.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-45-instance-1_1" class="item-error">Invalid format, must be greater than 5.</div>
           </div>
         </div>
         <div id="b-item-enclosing-46-instance-1_1" class="item-enclosing">
@@ -6588,8 +6739,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">greater than 5</div>
               <div id="b-item-path-46-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-46-instance-1_1" class="item-error">Invalid format, must be greater than 5.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-46-instance-1_1" class="item-error">Invalid format, must be greater than 5.</div>
           </div>
         </div>
         <div id="b-item-enclosing-47-instance-1_1" class="item-enclosing">
@@ -6602,8 +6755,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">less than 10</div>
               <div id="b-item-path-47-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-47-instance-1_1" class="item-error">Invalid format, must be an integer less than 10.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-47-instance-1_1" class="item-error">Invalid format, must be an integer less than 10.</div>
           </div>
         </div>
         <div id="b-item-enclosing-48-instance-1_1" class="item-enclosing">
@@ -6615,8 +6770,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               </input>
               <div class="item-description">less than 10</div>
               <div id="b-item-path-48-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-48-instance-1_1" class="item-error">Invalid format, must be less than 10.</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-48-instance-1_1" class="item-error">Invalid format, must be less than 10.</div>
           </div>
         </div>
         <div id="b-item-enclosing-49-instance-1_1" class="choice">
@@ -6637,8 +6794,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="50" name="b-item-input-50-instance-1_1_1" id="b-item-50-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-50-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-50-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-50-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -6651,8 +6810,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="51" name="b-item-input-51-instance-1_1_1" id="b-item-51-instance-1_1_1" class="datepickerclass  item-input-text" type="text">
                     </input>
                     <div id="b-item-path-51-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-51-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-51-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -6670,8 +6831,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="52" name="b-item-input-52-instance-1_1" id="b-item-52-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-52-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-52-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-52-instance-1_1" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-52-instance-1_2" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6683,8 +6846,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="52" name="b-item-input-52-instance-1_2" id="b-item-52-instance-1_2" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-52-instance-1_2" class="item-path" enabled="true"></div>
-              <div id="b-item-error-52-instance-1_2" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-52-instance-1_2" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-52-instance-1_3" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6696,8 +6861,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="52" name="b-item-input-52-instance-1_3" id="b-item-52-instance-1_3" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-52-instance-1_3" class="item-path" enabled="true"></div>
-              <div id="b-item-error-52-instance-1_3" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-52-instance-1_3" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-52-instance-1_4" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6709,8 +6876,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="52" name="b-item-input-52-instance-1_4" id="b-item-52-instance-1_4" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-52-instance-1_4" class="item-path" enabled="true"></div>
-              <div id="b-item-error-52-instance-1_4" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-52-instance-1_4" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-52-instance-1_5" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6722,8 +6891,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="52" name="b-item-input-52-instance-1_5" id="b-item-52-instance-1_5" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-52-instance-1_5" class="item-path" enabled="true"></div>
-              <div id="b-item-error-52-instance-1_5" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-52-instance-1_5" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-53-instance-1_1" class="item-enclosing">
@@ -6738,8 +6909,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="53" name="b-item-input-53-instance-1_1" id="b-item-53-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-53-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-53-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-53-instance-1_1" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-53-instance-1_2" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6751,8 +6924,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="53" name="b-item-input-53-instance-1_2" id="b-item-53-instance-1_2" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-53-instance-1_2" class="item-path" enabled="true"></div>
-              <div id="b-item-error-53-instance-1_2" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-53-instance-1_2" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-53-instance-1_3" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6764,8 +6939,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="53" name="b-item-input-53-instance-1_3" id="b-item-53-instance-1_3" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-53-instance-1_3" class="item-path" enabled="true"></div>
-              <div id="b-item-error-53-instance-1_3" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-53-instance-1_3" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-53-instance-1_4" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6777,8 +6954,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="53" name="b-item-input-53-instance-1_4" id="b-item-53-instance-1_4" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-53-instance-1_4" class="item-path" enabled="true"></div>
-              <div id="b-item-error-53-instance-1_4" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-53-instance-1_4" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-53-instance-1_5" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6790,8 +6969,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="53" name="b-item-input-53-instance-1_5" id="b-item-53-instance-1_5" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-53-instance-1_5" class="item-path" enabled="true"></div>
-              <div id="b-item-error-53-instance-1_5" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-53-instance-1_5" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-54-instance-1_1" class="item-enclosing">
@@ -6806,8 +6987,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="54" name="b-item-input-54-instance-1_1" id="b-item-54-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-54-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-54-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-54-instance-1_1" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-54-instance-1_2" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6819,8 +7002,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="54" name="b-item-input-54-instance-1_2" id="b-item-54-instance-1_2" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-54-instance-1_2" class="item-path" enabled="true"></div>
-              <div id="b-item-error-54-instance-1_2" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-54-instance-1_2" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-54-instance-1_3" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6832,8 +7017,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="54" name="b-item-input-54-instance-1_3" id="b-item-54-instance-1_3" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-54-instance-1_3" class="item-path" enabled="true"></div>
-              <div id="b-item-error-54-instance-1_3" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-54-instance-1_3" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-54-instance-1_4" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6845,8 +7032,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="54" name="b-item-input-54-instance-1_4" id="b-item-54-instance-1_4" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-54-instance-1_4" class="item-path" enabled="true"></div>
-              <div id="b-item-error-54-instance-1_4" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-54-instance-1_4" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-54-instance-1_5" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -6858,8 +7047,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="54" name="b-item-input-54-instance-1_5" id="b-item-54-instance-1_5" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-54-instance-1_5" class="item-path" enabled="true"></div>
-              <div id="b-item-error-54-instance-1_5" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-54-instance-1_5" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-55-instance-1_1" class="sequence">
@@ -6877,8 +7068,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="56" name="b-item-input-56-instance-1_1_1" id="b-item-56-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-56-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-56-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-56-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_1_1" class="item-enclosing">
@@ -6889,8 +7082,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="57" name="b-item-input-57-instance-1_1_1" id="b-item-57-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-57-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-57-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-57-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -6908,8 +7103,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="56" name="b-item-input-56-instance-1_2_1" id="b-item-56-instance-1_2_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-56-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-56-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-56-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_2_1" class="item-enclosing">
@@ -6920,8 +7117,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="57" name="b-item-input-57-instance-1_2_1" id="b-item-57-instance-1_2_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-57-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-57-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-57-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -6939,8 +7138,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="56" name="b-item-input-56-instance-1_3_1" id="b-item-56-instance-1_3_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-56-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-56-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-56-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_3_1" class="item-enclosing">
@@ -6951,8 +7152,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="57" name="b-item-input-57-instance-1_3_1" id="b-item-57-instance-1_3_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-57-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-57-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-57-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -6970,8 +7173,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="56" name="b-item-input-56-instance-1_4_1" id="b-item-56-instance-1_4_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-56-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-56-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-56-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_4_1" class="item-enclosing">
@@ -6982,8 +7187,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="57" name="b-item-input-57-instance-1_4_1" id="b-item-57-instance-1_4_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-57-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-57-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-57-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7001,8 +7208,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="56" name="b-item-input-56-instance-1_5_1" id="b-item-56-instance-1_5_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-56-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-56-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-56-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-57-instance-1_5_1" class="item-enclosing">
@@ -7013,8 +7222,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="57" name="b-item-input-57-instance-1_5_1" id="b-item-57-instance-1_5_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-57-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-57-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-57-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7041,8 +7252,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="59" name="b-item-input-59-instance-1_1_1" id="b-item-59-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-59-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-59-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-59-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7055,8 +7268,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="60" name="b-item-input-60-instance-1_1_1" id="b-item-60-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-60-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-60-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-60-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7080,8 +7295,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="59" name="b-item-input-59-instance-1_2_1" id="b-item-59-instance-1_2_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-59-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-59-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-59-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7094,8 +7311,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="60" name="b-item-input-60-instance-1_2_1" id="b-item-60-instance-1_2_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-60-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-60-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-60-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7119,8 +7338,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="59" name="b-item-input-59-instance-1_3_1" id="b-item-59-instance-1_3_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-59-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-59-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-59-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7133,8 +7354,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="60" name="b-item-input-60-instance-1_3_1" id="b-item-60-instance-1_3_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-60-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-60-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-60-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7158,8 +7381,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="59" name="b-item-input-59-instance-1_4_1" id="b-item-59-instance-1_4_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-59-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-59-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-59-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7172,8 +7397,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="60" name="b-item-input-60-instance-1_4_1" id="b-item-60-instance-1_4_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-60-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-60-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-60-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7197,8 +7424,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="59" name="b-item-input-59-instance-1_5_1" id="b-item-59-instance-1_5_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-59-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-59-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-59-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7211,8 +7440,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="60" name="b-item-input-60-instance-1_5_1" id="b-item-60-instance-1_5_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-60-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-60-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-60-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7234,8 +7465,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="62" name="b-item-input-62-instance-1_1_1" id="b-item-62-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-62-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-62-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-62-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_1_1" class="item-enclosing">
@@ -7246,8 +7479,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="63" name="b-item-input-63-instance-1_1_1" id="b-item-63-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-63-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-63-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-63-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7266,8 +7501,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="62" name="b-item-input-62-instance-1_2_1" id="b-item-62-instance-1_2_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-62-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-62-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-62-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_2_1" class="item-enclosing">
@@ -7278,8 +7515,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="63" name="b-item-input-63-instance-1_2_1" id="b-item-63-instance-1_2_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-63-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-63-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-63-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7298,8 +7537,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="62" name="b-item-input-62-instance-1_3_1" id="b-item-62-instance-1_3_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-62-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-62-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-62-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_3_1" class="item-enclosing">
@@ -7310,8 +7551,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="63" name="b-item-input-63-instance-1_3_1" id="b-item-63-instance-1_3_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-63-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-63-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-63-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7330,8 +7573,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="62" name="b-item-input-62-instance-1_4_1" id="b-item-62-instance-1_4_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-62-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-62-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-62-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_4_1" class="item-enclosing">
@@ -7342,8 +7587,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="63" name="b-item-input-63-instance-1_4_1" id="b-item-63-instance-1_4_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-63-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-63-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-63-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7362,8 +7609,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="62" name="b-item-input-62-instance-1_5_1" id="b-item-62-instance-1_5_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-62-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-62-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-62-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-63-instance-1_5_1" class="item-enclosing">
@@ -7374,8 +7623,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="63" name="b-item-input-63-instance-1_5_1" id="b-item-63-instance-1_5_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-63-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-63-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-63-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7391,8 +7642,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="64" name="b-item-input-64-instance-1_1" id="b-item-64-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-64-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-64-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-64-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-65-instance-1_1" class="item-enclosing">
@@ -7404,8 +7657,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="65" name="b-item-input-65-instance-1_1" id="b-item-65-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-65-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-65-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-65-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-66-instance-1_1" class="sequence">
@@ -7420,8 +7675,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="67" name="b-item-input-67-instance-1_1_1" id="b-item-67-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-67-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-67-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-67-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-68-instance-1_1_1" class="item-enclosing">
@@ -7432,8 +7689,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="68" name="b-item-input-68-instance-1_1_1" id="b-item-68-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-68-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-68-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-68-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-69-instance-1_1_1" class="sequence">
@@ -7448,8 +7707,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                           <input number="70" name="b-item-input-70-instance-1_1_1_1" id="b-item-70-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-70-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-70-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-70-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-71-instance-1_1_1_1" class="item-enclosing">
@@ -7460,8 +7721,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                           <input number="71" name="b-item-input-71-instance-1_1_1_1" id="b-item-71-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-71-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-71-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-71-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-72-instance-1_1_1_1" class="item-enclosing">
@@ -7472,22 +7735,26 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                           <input number="72" name="b-item-input-72-instance-1_1_1_1" id="b-item-72-instance-1_1_1_1" class=" item-input-text" type="checkbox">
                           </input>
                           <div id="b-item-path-72-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-72-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-72-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-73-instance-1_1_1_1" class="item-enclosing">
                       <div id="b-repeating-enclosing-73-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">73</div>
-                        <label class="item-label" for="b-item-input-73-instance-1_1_1_1">Option</label>
+                        <label class="item-label" for="b-item-input-73-instance-1_1_1_1">Option<em>*</em></label>
                         <div class="item-input">
                           <select id="b-item-73-instance-1_1_1_1" class="select" name="b-item-input-73-instance-1_1_1_1" number="73">
                             <option value="option-1">option-1</option>
                             <option value="option-2">option-2</option>
                           </select>
                           <div id="b-item-path-73-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-73-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-73-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -7508,8 +7775,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="75" name="b-item-input-75-instance-1_1_1" id="b-item-75-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-75-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-75-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-75-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7529,8 +7798,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="77" name="b-item-input-77-instance-1_1_1" id="b-item-77-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-77-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-77-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-77-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
                 <div id="b-repeating-enclosing-77-instance-1_1_2" class="repeating-enclosing">
                   <div class="remove-button-container">
@@ -7542,8 +7813,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="77" name="b-item-input-77-instance-1_1_2" id="b-item-77-instance-1_1_2" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-77-instance-1_1_2" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-77-instance-1_1_2" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-77-instance-1_1_2" class="item-error">Invalid</div>
                 </div>
                 <div id="b-repeating-enclosing-77-instance-1_1_3" class="repeating-enclosing">
                   <div class="remove-button-container">
@@ -7555,8 +7828,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="77" name="b-item-input-77-instance-1_1_3" id="b-item-77-instance-1_1_3" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-77-instance-1_1_3" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-77-instance-1_1_3" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-77-instance-1_1_3" class="item-error">Invalid</div>
                 </div>
                 <div id="b-repeating-enclosing-77-instance-1_1_4" class="repeating-enclosing">
                   <div class="remove-button-container">
@@ -7568,8 +7843,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="77" name="b-item-input-77-instance-1_1_4" id="b-item-77-instance-1_1_4" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-77-instance-1_1_4" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-77-instance-1_1_4" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-77-instance-1_1_4" class="item-error">Invalid</div>
                 </div>
                 <div id="b-repeating-enclosing-77-instance-1_1_5" class="repeating-enclosing">
                   <div class="remove-button-container">
@@ -7581,8 +7858,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="77" name="b-item-input-77-instance-1_1_5" id="b-item-77-instance-1_1_5" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-77-instance-1_1_5" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-77-instance-1_1_5" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-77-instance-1_1_5" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7603,8 +7882,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="79" name="b-item-input-79-instance-1_1_1" id="b-item-79-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-79-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-79-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-79-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_1_1" class="item-enclosing">
@@ -7615,8 +7896,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="80" name="b-item-input-80-instance-1_1_1" id="b-item-80-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-80-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-80-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-80-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_1_1" class="item-enclosing">
@@ -7627,22 +7910,26 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="81" name="b-item-input-81-instance-1_1_1" id="b-item-81-instance-1_1_1" class=" item-input-text" type="checkbox">
                     </input>
                     <div id="b-item-path-81-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-81-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-81-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_1_1" class="item-enclosing">
                 <div id="b-repeating-enclosing-82-instance-1_1_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
-                  <label class="item-label" for="b-item-input-82-instance-1_1_1">Option</label>
+                  <label class="item-label" for="b-item-input-82-instance-1_1_1">Option<em>*</em></label>
                   <div class="item-input">
                     <select id="b-item-82-instance-1_1_1" class="select" name="b-item-input-82-instance-1_1_1" number="82">
                       <option value="option-1">option-1</option>
                       <option value="option-2">option-2</option>
                     </select>
                     <div id="b-item-path-82-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-82-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-82-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7661,8 +7948,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="79" name="b-item-input-79-instance-1_2_1" id="b-item-79-instance-1_2_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-79-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-79-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-79-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_2_1" class="item-enclosing">
@@ -7673,8 +7962,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="80" name="b-item-input-80-instance-1_2_1" id="b-item-80-instance-1_2_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-80-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-80-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-80-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_2_1" class="item-enclosing">
@@ -7685,22 +7976,26 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="81" name="b-item-input-81-instance-1_2_1" id="b-item-81-instance-1_2_1" class=" item-input-text" type="checkbox">
                     </input>
                     <div id="b-item-path-81-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-81-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-81-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_2_1" class="item-enclosing">
                 <div id="b-repeating-enclosing-82-instance-1_2_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
-                  <label class="item-label" for="b-item-input-82-instance-1_2_1">Option</label>
+                  <label class="item-label" for="b-item-input-82-instance-1_2_1">Option<em>*</em></label>
                   <div class="item-input">
                     <select id="b-item-82-instance-1_2_1" class="select" name="b-item-input-82-instance-1_2_1" number="82">
                       <option value="option-1">option-1</option>
                       <option value="option-2">option-2</option>
                     </select>
                     <div id="b-item-path-82-instance-1_2_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-82-instance-1_2_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-82-instance-1_2_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7719,8 +8014,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="79" name="b-item-input-79-instance-1_3_1" id="b-item-79-instance-1_3_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-79-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-79-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-79-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_3_1" class="item-enclosing">
@@ -7731,8 +8028,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="80" name="b-item-input-80-instance-1_3_1" id="b-item-80-instance-1_3_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-80-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-80-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-80-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_3_1" class="item-enclosing">
@@ -7743,22 +8042,26 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="81" name="b-item-input-81-instance-1_3_1" id="b-item-81-instance-1_3_1" class=" item-input-text" type="checkbox">
                     </input>
                     <div id="b-item-path-81-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-81-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-81-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_3_1" class="item-enclosing">
                 <div id="b-repeating-enclosing-82-instance-1_3_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
-                  <label class="item-label" for="b-item-input-82-instance-1_3_1">Option</label>
+                  <label class="item-label" for="b-item-input-82-instance-1_3_1">Option<em>*</em></label>
                   <div class="item-input">
                     <select id="b-item-82-instance-1_3_1" class="select" name="b-item-input-82-instance-1_3_1" number="82">
                       <option value="option-1">option-1</option>
                       <option value="option-2">option-2</option>
                     </select>
                     <div id="b-item-path-82-instance-1_3_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-82-instance-1_3_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-82-instance-1_3_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7777,8 +8080,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="79" name="b-item-input-79-instance-1_4_1" id="b-item-79-instance-1_4_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-79-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-79-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-79-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_4_1" class="item-enclosing">
@@ -7789,8 +8094,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="80" name="b-item-input-80-instance-1_4_1" id="b-item-80-instance-1_4_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-80-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-80-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-80-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_4_1" class="item-enclosing">
@@ -7801,22 +8108,26 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="81" name="b-item-input-81-instance-1_4_1" id="b-item-81-instance-1_4_1" class=" item-input-text" type="checkbox">
                     </input>
                     <div id="b-item-path-81-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-81-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-81-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_4_1" class="item-enclosing">
                 <div id="b-repeating-enclosing-82-instance-1_4_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
-                  <label class="item-label" for="b-item-input-82-instance-1_4_1">Option</label>
+                  <label class="item-label" for="b-item-input-82-instance-1_4_1">Option<em>*</em></label>
                   <div class="item-input">
                     <select id="b-item-82-instance-1_4_1" class="select" name="b-item-input-82-instance-1_4_1" number="82">
                       <option value="option-1">option-1</option>
                       <option value="option-2">option-2</option>
                     </select>
                     <div id="b-item-path-82-instance-1_4_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-82-instance-1_4_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-82-instance-1_4_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7835,8 +8146,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="79" name="b-item-input-79-instance-1_5_1" id="b-item-79-instance-1_5_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-79-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-79-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-79-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-80-instance-1_5_1" class="item-enclosing">
@@ -7847,8 +8160,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="80" name="b-item-input-80-instance-1_5_1" id="b-item-80-instance-1_5_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-80-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-80-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-80-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-81-instance-1_5_1" class="item-enclosing">
@@ -7859,22 +8174,26 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="81" name="b-item-input-81-instance-1_5_1" id="b-item-81-instance-1_5_1" class=" item-input-text" type="checkbox">
                     </input>
                     <div id="b-item-path-81-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-81-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-81-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-82-instance-1_5_1" class="item-enclosing">
                 <div id="b-repeating-enclosing-82-instance-1_5_1" class="repeating-enclosing">
                   <div class="item-number">82</div>
-                  <label class="item-label" for="b-item-input-82-instance-1_5_1">Option</label>
+                  <label class="item-label" for="b-item-input-82-instance-1_5_1">Option<em>*</em></label>
                   <div class="item-input">
                     <select id="b-item-82-instance-1_5_1" class="select" name="b-item-input-82-instance-1_5_1" number="82">
                       <option value="option-1">option-1</option>
                       <option value="option-2">option-2</option>
                     </select>
                     <div id="b-item-path-82-instance-1_5_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-82-instance-1_5_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-82-instance-1_5_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -7893,8 +8212,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                       <input number="84" name="b-item-input-84-instance-1_1_1" id="b-item-84-instance-1_1_1" class=" item-input-text" type="text">
                       </input>
                       <div id="b-item-path-84-instance-1_1_1" class="item-path" enabled="true"></div>
-                      <div id="b-item-error-84-instance-1_1_1" class="item-error">Invalid</div>
                     </div>
+                    <div class="clr">
+                    </div>
+                    <div id="b-item-error-84-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
                 </div>
                 <div id="b-item-enclosing-85-instance-1_1_1" class="item-enclosing">
@@ -7905,8 +8226,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                       <input number="85" name="b-item-input-85-instance-1_1_1" id="b-item-85-instance-1_1_1" class=" item-input-text" type="text">
                       </input>
                       <div id="b-item-path-85-instance-1_1_1" class="item-path" enabled="true"></div>
-                      <div id="b-item-error-85-instance-1_1_1" class="item-error">Invalid</div>
                     </div>
+                    <div class="clr">
+                    </div>
+                    <div id="b-item-error-85-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
                 </div>
                 <div id="b-item-enclosing-86-instance-1_1_1" class="item-enclosing">
@@ -7917,22 +8240,26 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                       <input number="86" name="b-item-input-86-instance-1_1_1" id="b-item-86-instance-1_1_1" class=" item-input-text" type="checkbox">
                       </input>
                       <div id="b-item-path-86-instance-1_1_1" class="item-path" enabled="true"></div>
-                      <div id="b-item-error-86-instance-1_1_1" class="item-error">Invalid</div>
                     </div>
+                    <div class="clr">
+                    </div>
+                    <div id="b-item-error-86-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
                 </div>
                 <div id="b-item-enclosing-87-instance-1_1_1" class="item-enclosing">
                   <div id="b-repeating-enclosing-87-instance-1_1_1" class="repeating-enclosing">
                     <div class="item-number">87</div>
-                    <label class="item-label" for="b-item-input-87-instance-1_1_1">Option</label>
+                    <label class="item-label" for="b-item-input-87-instance-1_1_1">Option<em>*</em></label>
                     <div class="item-input">
                       <select id="b-item-87-instance-1_1_1" class="select" name="b-item-input-87-instance-1_1_1" number="87">
                         <option value="option-1">option-1</option>
                         <option value="option-2">option-2</option>
                       </select>
                       <div id="b-item-path-87-instance-1_1_1" class="item-path" enabled="true"></div>
-                      <div id="b-item-error-87-instance-1_1_1" class="item-error">Invalid</div>
                     </div>
+                    <div class="clr">
+                    </div>
+                    <div id="b-item-error-87-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
                 </div>
               </fieldset>
@@ -7948,8 +8275,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="88" name="b-item-input-88-instance-1_1" id="b-item-88-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-88-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-88-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-88-instance-1_1" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-88-instance-1_2" class="repeating-enclosing">
             <div class="item-before">No buttons visible for addition/removal because minOccurs=maxOccurs=3</div>
@@ -7959,8 +8288,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="88" name="b-item-input-88-instance-1_2" id="b-item-88-instance-1_2" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-88-instance-1_2" class="item-path" enabled="true"></div>
-              <div id="b-item-error-88-instance-1_2" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-88-instance-1_2" class="item-error">Invalid</div>
           </div>
           <div id="b-repeating-enclosing-88-instance-1_3" class="repeating-enclosing">
             <div class="item-before">No buttons visible for addition/removal because minOccurs=maxOccurs=3</div>
@@ -7970,8 +8301,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="88" name="b-item-input-88-instance-1_3" id="b-item-88-instance-1_3" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-88-instance-1_3" class="item-path" enabled="true"></div>
-              <div id="b-item-error-88-instance-1_3" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-88-instance-1_3" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-89-instance-1_1" class="sequence">
@@ -7991,8 +8324,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="90" name="b-item-input-90-instance-1_1_1" id="b-item-90-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-90-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-90-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-90-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-91-instance-1_1_1" class="item-enclosing">
@@ -8003,8 +8338,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="91" name="b-item-input-91-instance-1_1_1" id="b-item-91-instance-1_1_1" class=" item-input-text" type="text">
                     </input>
                     <div id="b-item-path-91-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-91-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-91-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-92-instance-1_1_1" class="sequence">
@@ -8019,8 +8356,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                           <input number="93" name="b-item-input-93-instance-1_1_1_1" id="b-item-93-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-93-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-93-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-93-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-94-instance-1_1_1_1" class="item-enclosing">
@@ -8031,8 +8370,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                           <input number="94" name="b-item-input-94-instance-1_1_1_1" id="b-item-94-instance-1_1_1_1" class=" item-input-text" type="text">
                           </input>
                           <div id="b-item-path-94-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-94-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-94-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-95-instance-1_1_1_1" class="item-enclosing">
@@ -8043,22 +8384,26 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                           <input number="95" name="b-item-input-95-instance-1_1_1_1" id="b-item-95-instance-1_1_1_1" class=" item-input-text" type="checkbox">
                           </input>
                           <div id="b-item-path-95-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-95-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-95-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                     <div id="b-item-enclosing-96-instance-1_1_1_1" class="item-enclosing">
                       <div id="b-repeating-enclosing-96-instance-1_1_1_1" class="repeating-enclosing">
                         <div class="item-number">96</div>
-                        <label class="item-label" for="b-item-input-96-instance-1_1_1_1">Option</label>
+                        <label class="item-label" for="b-item-input-96-instance-1_1_1_1">Option<em>*</em></label>
                         <div class="item-input">
                           <select id="b-item-96-instance-1_1_1_1" class="select" name="b-item-input-96-instance-1_1_1_1" number="96">
                             <option value="option-1">option-1</option>
                             <option value="option-2">option-2</option>
                           </select>
                           <div id="b-item-path-96-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="b-item-error-96-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="b-item-error-96-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -8075,8 +8420,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="97" name="b-item-input-97-instance-1_1" id="b-item-97-instance-1_1" class=" item-input-text" type="text" value="-123">
               </input>
               <div id="b-item-path-97-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-97-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-97-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-98-instance-1_1" class="item-enclosing">
@@ -8087,8 +8434,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="98" name="b-item-input-98-instance-1_1" id="b-item-98-instance-1_1" class=" item-input-text" type="text" value="-1234">
               </input>
               <div id="b-item-path-98-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-98-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-98-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-99-instance-1_1" class="item-enclosing">
@@ -8099,8 +8448,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="99" name="b-item-input-99-instance-1_1" id="b-item-99-instance-1_1" class=" item-input-text" type="text" value="12">
               </input>
               <div id="b-item-path-99-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-99-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-99-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-100-instance-1_1" class="item-enclosing">
@@ -8111,8 +8462,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="100" name="b-item-input-100-instance-1_1" id="b-item-100-instance-1_1" class=" item-input-text" type="text" value="12345">
               </input>
               <div id="b-item-path-100-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-100-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-100-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-101-instance-1_1" class="item-enclosing">
@@ -8123,8 +8476,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="101" name="b-item-input-101-instance-1_1" id="b-item-101-instance-1_1" class=" item-input-text" type="text" value="-12345">
               </input>
               <div id="b-item-path-101-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-101-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-101-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-102-instance-1_1" class="item-enclosing">
@@ -8135,8 +8490,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="102" name="b-item-input-102-instance-1_1" id="b-item-102-instance-1_1" class=" item-input-text" type="text" value="123456">
               </input>
               <div id="b-item-path-102-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-102-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-102-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-103-instance-1_1" class="item-enclosing">
@@ -8147,8 +8504,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="103" name="b-item-input-103-instance-1_1" id="b-item-103-instance-1_1" class=" item-input-text" type="text" value="0">
               </input>
               <div id="b-item-path-103-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-103-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-103-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-104-instance-1_1" class="sequence">
@@ -8163,8 +8522,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="105" name="b-item-input-105-instance-1_1_1" id="b-item-105-instance-1_1_1" class=" item-input-text" type="text" value="name1">
                     </input>
                     <div id="b-item-path-105-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-105-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-105-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-106-instance-1_1_1" class="item-enclosing">
@@ -8175,8 +8536,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="106" name="b-item-input-106-instance-1_1_1" id="b-item-106-instance-1_1_1" class=" item-input-text" type="text" value="value1">
                     </input>
                     <div id="b-item-path-106-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-106-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-106-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-107-instance-1_1_1" class="item-enclosing">
@@ -8187,8 +8550,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="107" name="b-item-input-107-instance-1_1_1" id="b-item-107-instance-1_1_1" class=" item-input-text" type="text" value="group1">
                     </input>
                     <div id="b-item-path-107-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-107-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-107-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="b-item-enclosing-108-instance-1_1_1" class="item-enclosing">
@@ -8199,8 +8564,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
                     <input number="108" name="b-item-input-108-instance-1_1_1" id="b-item-108-instance-1_1_1" class=" item-input-text" type="text" value="category1">
                     </input>
                     <div id="b-item-path-108-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="b-item-error-108-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="b-item-error-108-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -8214,8 +8581,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="109" name="b-item-input-109-instance-1_1" id="b-item-109-instance-1_1" class=" item-input-text" type="checkbox">
               </input>
               <div id="b-item-path-109-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-109-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-109-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-110-instance-1_1" class="item-enclosing invisible">
@@ -8226,8 +8595,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="110" name="b-item-input-110-instance-1_1" id="b-item-110-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-110-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-110-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-110-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-111-instance-1_1" class="item-enclosing">
@@ -8238,8 +8609,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="111" name="b-item-input-111-instance-1_1" id="b-item-111-instance-1_1" class=" item-input-text" type="checkbox">
               </input>
               <div id="b-item-path-111-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-111-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-111-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-112-instance-1_1" class="item-enclosing">
@@ -8250,8 +8623,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="112" name="b-item-input-112-instance-1_1" id="b-item-112-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-112-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-112-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-112-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-113-instance-1_1" class="item-enclosing">
@@ -8262,8 +8637,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="113" name="b-item-input-113-instance-1_1" id="b-item-113-instance-1_1" class=" item-input-text" type="checkbox">
               </input>
               <div id="b-item-path-113-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-113-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-113-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="b-item-enclosing-114-instance-1_1" class="item-enclosing">
@@ -8274,8 +8651,10 @@ if (!$('#b-min-occurs-zero-89-instance-1').is(':checked')) return '';
               <input number="114" name="b-item-input-114-instance-1_1" id="b-item-114-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="b-item-path-114-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-114-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-114-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
       </div>

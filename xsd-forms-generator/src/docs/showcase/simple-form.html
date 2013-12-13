@@ -103,6 +103,12 @@ function postXml(url) {
     });
   };
 }
+
+function toJson(xml) {
+  var x2js = new X2JS(); 
+  var json = x2js.xml_str2json(xml);
+  return JSON.stringify(json);
+}
           
 $(function() {
   //run js unit tests        
@@ -787,8 +793,10 @@ $(function() {
               <input number="2" name="a-item-input-2-instance-1_1" id="a-item-2-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="a-item-path-2-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-2-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-2-instance-1_1" class="item-error">Invalid</div>
           </div>
           <div id="a-repeating-enclosing-2-instance-1_2" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -800,8 +808,10 @@ $(function() {
               <input number="2" name="a-item-input-2-instance-1_2" id="a-item-2-instance-1_2" class=" item-input-text" type="text">
               </input>
               <div id="a-item-path-2-instance-1_2" class="item-path" enabled="true"></div>
-              <div id="a-item-error-2-instance-1_2" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-2-instance-1_2" class="item-error">Invalid</div>
           </div>
           <div id="a-repeating-enclosing-2-instance-1_3" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -813,8 +823,10 @@ $(function() {
               <input number="2" name="a-item-input-2-instance-1_3" id="a-item-2-instance-1_3" class=" item-input-text" type="text">
               </input>
               <div id="a-item-path-2-instance-1_3" class="item-path" enabled="true"></div>
-              <div id="a-item-error-2-instance-1_3" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-2-instance-1_3" class="item-error">Invalid</div>
           </div>
           <div id="a-repeating-enclosing-2-instance-1_4" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -826,8 +838,10 @@ $(function() {
               <input number="2" name="a-item-input-2-instance-1_4" id="a-item-2-instance-1_4" class=" item-input-text" type="text">
               </input>
               <div id="a-item-path-2-instance-1_4" class="item-path" enabled="true"></div>
-              <div id="a-item-error-2-instance-1_4" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-2-instance-1_4" class="item-error">Invalid</div>
           </div>
           <div id="a-repeating-enclosing-2-instance-1_5" class="repeating-enclosing">
             <div class="remove-button-container">
@@ -839,8 +853,10 @@ $(function() {
               <input number="2" name="a-item-input-2-instance-1_5" id="a-item-2-instance-1_5" class=" item-input-text" type="text">
               </input>
               <div id="a-item-path-2-instance-1_5" class="item-path" enabled="true"></div>
-              <div id="a-item-error-2-instance-1_5" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-2-instance-1_5" class="item-error">Invalid</div>
           </div>
         </div>
         <div id="a-item-enclosing-3-instance-1_1" class="sequence">
@@ -855,8 +871,10 @@ $(function() {
                     <input number="4" name="a-item-input-4-instance-1_1_1" id="a-item-4-instance-1_1_1" class=" item-input-text" type="text" value="name1">
                     </input>
                     <div id="a-item-path-4-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="a-item-error-4-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="a-item-error-4-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="a-item-enclosing-5-instance-1_1_1" class="item-enclosing">
@@ -867,8 +885,10 @@ $(function() {
                     <input number="5" name="a-item-input-5-instance-1_1_1" id="a-item-5-instance-1_1_1" class=" item-input-text" type="text" value="value1">
                     </input>
                     <div id="a-item-path-5-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="a-item-error-5-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="a-item-error-5-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="a-item-enclosing-6-instance-1_1_1" class="item-enclosing">
@@ -879,8 +899,10 @@ $(function() {
                     <input number="6" name="a-item-input-6-instance-1_1_1" id="a-item-6-instance-1_1_1" class=" item-input-text" type="text" value="group1">
                     </input>
                     <div id="a-item-path-6-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="a-item-error-6-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="a-item-error-6-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="a-item-enclosing-7-instance-1_1_1" class="item-enclosing">
@@ -891,8 +913,10 @@ $(function() {
                     <input number="7" name="a-item-input-7-instance-1_1_1" id="a-item-7-instance-1_1_1" class=" item-input-text" type="text" value="category1">
                     </input>
                     <div id="a-item-path-7-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="a-item-error-7-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="a-item-error-7-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -919,8 +943,10 @@ $(function() {
                           <input number="10" name="a-item-input-10-instance-1_1_1_1" id="a-item-10-instance-1_1_1_1" class=" item-input-text" type="text" value="name1">
                           </input>
                           <div id="a-item-path-10-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-10-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-10-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -933,8 +959,10 @@ $(function() {
                           <input number="11" name="a-item-input-11-instance-1_1_1_1" id="a-item-11-instance-1_1_1_1" class=" item-input-text" type="text" value="value1">
                           </input>
                           <div id="a-item-path-11-instance-1_1_1_1" class="item-path" enabled="true"></div>
-                          <div id="a-item-error-11-instance-1_1_1_1" class="item-error">Invalid</div>
                         </div>
+                        <div class="clr">
+                        </div>
+                        <div id="a-item-error-11-instance-1_1_1_1" class="item-error">Invalid</div>
                       </div>
                     </div>
                   </div>
@@ -948,8 +976,10 @@ $(function() {
                     <input number="12" name="a-item-input-12-instance-1_1_1" id="a-item-12-instance-1_1_1" class=" item-input-text" type="text" value="group1">
                     </input>
                     <div id="a-item-path-12-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="a-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="a-item-error-12-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -966,8 +996,10 @@ $(function() {
                     <input number="14" name="a-item-input-14-instance-1_1_1" id="a-item-14-instance-1_1_1" class=" item-input-text" type="text" value="23">
                     </input>
                     <div id="a-item-path-14-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="a-item-error-14-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="a-item-error-14-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
               <div id="a-item-enclosing-15-instance-1_1_1" class="item-enclosing">
@@ -978,8 +1010,10 @@ $(function() {
                     <input number="15" name="a-item-input-15-instance-1_1_1" id="a-item-15-instance-1_1_1" class=" item-input-text" type="text" value="183">
                     </input>
                     <div id="a-item-path-15-instance-1_1_1" class="item-path" enabled="true"></div>
-                    <div id="a-item-error-15-instance-1_1_1" class="item-error">Invalid</div>
                   </div>
+                  <div class="clr">
+                  </div>
+                  <div id="a-item-error-15-instance-1_1_1" class="item-error">Invalid</div>
                 </div>
               </div>
             </div>
@@ -993,8 +1027,10 @@ $(function() {
               <input number="16" name="a-item-input-16-instance-1_1" id="a-item-16-instance-1_1" class=" item-input-text" type="text">
               </input>
               <div id="a-item-path-16-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="a-item-error-16-instance-1_1" class="item-error">Invalid</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="a-item-error-16-instance-1_1" class="item-error">Invalid</div>
           </div>
         </div>
       </div>

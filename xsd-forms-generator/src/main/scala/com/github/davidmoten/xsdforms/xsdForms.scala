@@ -193,6 +193,8 @@ package com.github.davidmoten.xsdforms {
   object XsdUtil {
     val Xsd = "http://www.w3.org/2001/XMLSchema"
     val AppInfoSchema = "http://moten.david.org/xsd-forms"
+    def toQName[T](d: DataRecord[T]) =
+      new QName(d.namespace.getOrElse(null), d.key.getOrElse(null))
     def qn(namespaceUri: String, localPart: String) = new QName(namespaceUri, localPart)
     def qn(localPart: String): QName = new QName(Xsd, localPart)
     def qn(datatype: XsdDatatype): QName = qn(Xsd, datatype.name)
@@ -873,7 +875,7 @@ package com.github.davidmoten.xsdforms {
             classes = List(ClassChoiceItem),
             typ = Some("radio"),
             value = Some("number"),
-            content = Some(getChoiceLabel(e, particle)),
+            content = Some(getChoiceLabel(particle)),
             number = Some(number))
           html.closeTag(2)
         })
@@ -912,7 +914,7 @@ package com.github.davidmoten.xsdforms {
         html.div(classes = List(ClassItemNumber),
           content = Some(number.toString)).closeTag
           .label(forInputName = getItemName(number, instNos),
-            classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
+            classes = List(ClassItemLabel), content = Some(getLabel(node, t))).closeTag
           .div(classes = List(ClassItemInput))
 
         simpleType(node, instNos)
@@ -940,7 +942,7 @@ package com.github.davidmoten.xsdforms {
         html.div(classes = List(ClassItemNumber),
           content = Some(number.toString)).closeTag
           .label(forInputName = getItemName(number, instNos),
-            classes = List(ClassItemLabel), content = Some(getLabel(e, t))).closeTag
+            classes = List(ClassItemLabel), content = Some(getLabel(node, t))).closeTag
           .div(classes = List(ClassItemInput))
         simpleType(node, instNos)
         html
@@ -1220,13 +1222,14 @@ package com.github.davidmoten.xsdforms {
 
     }
 
-    private def getChoiceLabel(e: Element, p: ParticleOption): String = {
+    private def getChoiceLabel(p: ParticleOption): String = {
+
       val labels =
         p match {
           case x: Element => {
             getAnnotation(x, Annotation.ChoiceLabel) ++
               getAnnotation(x, Annotation.Label) ++
-              Some(getLabel(x, None))
+              Some(getLabelFromNameOrAnnotation(x))
           }
           case _ => unexpected
         }
@@ -1689,7 +1692,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def createMandatoryTestScriptlet(node: NodeBasic) = {
-      if (isMandatory(node.element, restriction(node)))
+      if (isMandatory(node, restriction(node)))
         JS()
           .line("  // mandatory test")
           .line("  if ((v.val() == null) || (v.val().length==0))")
@@ -1920,13 +1923,18 @@ package com.github.davidmoten.xsdforms {
         case None => None
       }
 
-    private def getLabel(e: Element, typ: Option[SimpleType]) =
+    private def getLabelFromNameOrAnnotation(e: Element): String = {
+      val name = getLabelFromName(e)
+      getAnnotation(e, Annotation.Label) match {
+        case Some(x: String) => x
+        case _ => name
+      }
+    }
+
+    private def getLabel(node: Node, typ: Option[SimpleType]) =
       {
-        val name = getLabelFromName(e)
-        val label = getAnnotation(e, Annotation.Label) match {
-          case Some(x) => x
-          case _ => name
-        }
+        val e = node.element
+        val label = getLabelFromNameOrAnnotation(e)
 
         val mustOccur = e.minOccurs.intValue > 0
         val isText = e.typeValue match {
@@ -1938,7 +1946,10 @@ package com.github.davidmoten.xsdforms {
           case Some(x) => (
             x.simpleDerivationOption3.value match {
               case y: Restriction =>
-                (getInputType(y) != TextBox) || isMandatory(e, y)
+                (getInputType(y) match {
+                  case Checkbox => true
+                  case TextBox => isMandatory(node, y)
+                })
               case _ =>
                 !isText
             })
@@ -1957,12 +1968,18 @@ package com.github.davidmoten.xsdforms {
             + s.substring(1, s.length))
         .mkString(" ")
 
-    private def isMandatory(e: Element, r: Restriction): Boolean = {
-      val patterns = getPatterns(r)
+    private def isMandatory(node: Node, r: Restriction): Boolean = {
+      val e = node.element
+      val patterns =
+        node match {
+          case b: NodeBasic => getPatterns(b)
+          case _ => getPatterns(r)
+        }
+      val isEnum = r.simpleRestrictionModelSequence3.facetsOption2.filter(x => toQName(x) == qn("enumeration")).size > 0
       getInputType(r) == TextBox &&
         e.minOccurs.intValue == 1 &&
-        patterns.size > 0 &&
-        !patterns.exists(java.util.regex.Pattern.matches(_, ""))
+        ((patterns.size > 0 &&
+          !patterns.exists(java.util.regex.Pattern.matches(_, ""))) | isEnum)
     }
 
     private def restriction(node: NodeBasic): Restriction =
@@ -2148,9 +2165,6 @@ package com.github.davidmoten.xsdforms {
           else unexpected("unrecognized type: " + q)
       }
     }
-
-    private def toQName[T](d: DataRecord[T]) =
-      new QName(d.namespace.getOrElse(null), d.key.getOrElse(null))
 
     private def matches[T](d: DataRecord[T], q: QName) =
       toQName(d).equals(q)

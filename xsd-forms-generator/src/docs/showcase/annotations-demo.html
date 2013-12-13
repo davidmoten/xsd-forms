@@ -107,6 +107,12 @@ function postXml(url) {
     });
   };
 }
+
+function toJson(xml) {
+  var x2js = new X2JS(); 
+  var json = x2js.xml_str2json(xml);
+  return JSON.stringify(json);
+}
           
 $(function() {
   //run js unit tests        
@@ -366,9 +372,11 @@ $(function() {
               </input>
               <div class="item-description">'description' goes here to describe the input format for example</div>
               <div id="b-item-path-2-instance-1_1" class="item-path" enabled="true"></div>
-              <div id="b-item-error-2-instance-1_1" class="item-error">'validation' is the message to indicate an invalid response'</div>
               <div class="item-after">'after' might be used for some informative remarks about the topic and appears after the validation message</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-2-instance-1_1" class="item-error">'validation' is the message to indicate an invalid response'</div>
           </div>
           <div id="b-repeating-enclosing-2-instance-1_2" class="repeating-enclosing">
             <div class="item-title">'title' for this question</div>
@@ -383,9 +391,11 @@ $(function() {
               </input>
               <div class="item-description">'description' goes here to describe the input format for example</div>
               <div id="b-item-path-2-instance-1_2" class="item-path" enabled="true"></div>
-              <div id="b-item-error-2-instance-1_2" class="item-error">'validation' is the message to indicate an invalid response'</div>
               <div class="item-after">'after' might be used for some informative remarks about the topic and appears after the validation message</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-2-instance-1_2" class="item-error">'validation' is the message to indicate an invalid response'</div>
           </div>
           <div id="b-repeating-enclosing-2-instance-1_3" class="repeating-enclosing">
             <div class="item-title">'title' for this question</div>
@@ -400,9 +410,11 @@ $(function() {
               </input>
               <div class="item-description">'description' goes here to describe the input format for example</div>
               <div id="b-item-path-2-instance-1_3" class="item-path" enabled="true"></div>
-              <div id="b-item-error-2-instance-1_3" class="item-error">'validation' is the message to indicate an invalid response'</div>
               <div class="item-after">'after' might be used for some informative remarks about the topic and appears after the validation message</div>
             </div>
+            <div class="clr">
+            </div>
+            <div id="b-item-error-2-instance-1_3" class="item-error">'validation' is the message to indicate an invalid response'</div>
           </div>
         </div>
       </div>

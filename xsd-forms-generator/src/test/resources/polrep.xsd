@@ -42,8 +42,7 @@ under the National Plan, and law enforcement agencies.</p>
         minOccurs="0">
         <xs:annotation i:visible="false" />
       </xs:element>
-      <xs:element name="pollutant-oil" type="yes-no"
-        minOccurs="0">
+      <xs:element name="pollutant-oil" type="yes-no">
         <xs:annotation i:label="Oil" i:addBlank="true"
           i:makeVisible="true->1" />
       </xs:element>
@@ -51,8 +50,7 @@ under the National Plan, and law enforcement agencies.</p>
         minOccurs="0">
         <xs:annotation i:visible="false" />
       </xs:element>
-      <xs:element name='pollutant-chemical' type="yes-no"
-        minOccurs="0">
+      <xs:element name='pollutant-chemical' type="yes-no">
         <xs:annotation i:label="Chemical" i:addBlank="true"
           i:makeVisible="true->1" />
       </xs:element>
@@ -64,7 +62,7 @@ under the National Plan, and law enforcement agencies.</p>
         <xs:annotation i:label="Garbage, packaged, sewage, other"
           i:addBlank="true" i:makeVisible="true->1" />
       </xs:element>
-      <xs:element name="pollutant-other-details" type="xs:string"
+      <xs:element name="pollutant-other-details" type="non-blank-string"
         minOccurs="0">
         <xs:annotation i:visible="false" i:label="Details/description" i:text="textarea" />
       </xs:element>
@@ -72,20 +70,17 @@ under the National Plan, and law enforcement agencies.</p>
         <xs:annotation i:label="Extent" />
       </xs:element>
 
-      <xs:element name="discharge-stopped" type="yes-no"
-        minOccurs="0">
+      <xs:element name="discharge-stopped" type="yes-no">
         <xs:annotation i:label="Has the discharge stopped?"
           i:title="Additional information" i:addBlank="true" />
       </xs:element>
 
-      <xs:element name="response-action-undertaken" type="yes-no"
-        minOccurs="0">
+      <xs:element name="response-action-undertaken" type="yes-no">
         <xs:annotation i:label="Response action undertaken?"
           i:addBlank="true" i:makeVisible="true->1" />
       </xs:element>
 
-      <xs:element name="response-action-details" type="xs:string"
-        minOccurs="0">
+      <xs:element name="response-action-details" type="non-blank-string">
         <xs:annotation i:visible="false" i:label="Details"
           i:description="Please include any environmental impact"
           i:text="textarea" />
@@ -247,7 +242,7 @@ under the National Plan, and law enforcement agencies.</p>
 
   <xs:complexType name="pollutant-chemical-details">
     <xs:sequence>
-      <xs:element name="name" type="xs:string" />
+      <xs:element name="name" type="non-blank-string" />
       <xs:element name="marpol-cat-un-no" type="xs:string">
         <xs:annotation i:label="MARPOL cat/UN nos" />
       </xs:element>
@@ -269,14 +264,14 @@ under the National Plan, and law enforcement agencies.</p>
 
   <xs:complexType name="taken-details">
     <xs:sequence>
-      <xs:element name="details" type="xs:string" />
-      <xs:element name="held-by" type="xs:string" />
+      <xs:element name="details" type="non-blank-string" />
+      <xs:element name="held-by" type="non-blank-string" />
     </xs:sequence>
   </xs:complexType>
 
   <xs:simpleType name="non-blank-string">
   	<xs:restriction base="xs:string">
-  		<xs:minLength value="1"/>
+  		<xs:pattern value="\S.*"/>
   	</xs:restriction>
   </xs:simpleType>
 
