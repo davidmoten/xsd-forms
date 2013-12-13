@@ -916,8 +916,9 @@ package com.github.davidmoten.xsdforms {
           .div(classes = List(ClassItemInput))
 
         simpleType(node, instNos)
-
-        html closeTag 2
+        html.closeTag
+        addError(e, instNos)
+        html closeTag
       }
       html closeTag;
       addMaxOccursScriptlet(e, instances)
@@ -1330,7 +1331,7 @@ package com.github.davidmoten.xsdforms {
 
       addPath(e, instances)
 
-      addError(e, instances)
+      //addError(e, instances)
 
       addHelp(e)
 
@@ -1613,6 +1614,7 @@ package com.github.davidmoten.xsdforms {
 
     private def addError(e: ElementWrapper, instances: Instances) {
       val itemErrorId = getItemErrorId(elementNumber(e), instances)
+      html.div(classes=List(ClassClear)).closeTag
       html.div(
         id = Some(itemErrorId),
         classes = List(ClassItemError),
