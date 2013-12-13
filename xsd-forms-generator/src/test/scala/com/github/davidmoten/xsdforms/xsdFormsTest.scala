@@ -220,6 +220,7 @@ package com.github.davidmoten.xsdforms {
 
         //TODO enable
         //testDateDefaultSet(driver, 11)
+        testTextAreaUsed(driver, 4)
         testMakeVisible(driver, 24)
         testPatternValidation(driver, 29)
         testMultiplePatternValidation(driver, 31)
@@ -272,6 +273,11 @@ package com.github.davidmoten.xsdforms {
       val name = getItemName(idPrefix, itemNo, Instances(List(1, 1)))
       val input = driver.findElement(By.name(name))
       assertEquals("1973-06-12", input.getText)
+    }
+    
+    private def testTextAreaUsed(driver: WebDriver, itemNo: Int) {
+      val input = getInput(driver, itemNo)
+      assertEquals("textarea",input.getTagName)
     }
 
     private def testMakeVisible(driver: WebDriver, itemNo: Int) {

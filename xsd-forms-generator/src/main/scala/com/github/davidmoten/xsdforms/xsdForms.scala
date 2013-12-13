@@ -111,30 +111,30 @@ package com.github.davidmoten.xsdforms {
     val Validation = XsdFormsAnnotation("validation")
 
     /**
-     * Help to display as tooltip if user clicks/hovers input. Not a 
-     * great way of displaying help as it hides whatever is underneath 
+     * Help to display as tooltip if user clicks/hovers input. Not a
+     * great way of displaying help as it hides whatever is underneath
      * it even if temporarily.
      */
     val Help = XsdFormsAnnotation("help")
 
     /**
-     * On a named element with an enumeration type, set annotation 
+     * On a named element with an enumeration type, set annotation
      * {{{
      * makeVisible="value1->n1,value2->n2"
-     * }}} 
-     * where value1,value2 are enumerated values and n1,n2 integers are the relative 
+     * }}}
+     * where value1,value2 are enumerated values and n1,n2 integers are the relative
      * indexes (1 equates to the following element at the same level) of the element
      * that is to be made visible on selection of that value.
-     * You can also set makeVisible on a specific member of the enumeration using 
+     * You can also set makeVisible on a specific member of the enumeration using
      * {{{
      * makeVisible="n""
-     * }}}where n is an integer only. 
+     * }}}where n is an integer only.
      *
      * The element that is to be made visible should be annotated with visible='false'.
      *
      * Make sure you set minOccurs=0 on the element that may be invisible.
-     * 
-     * This annotation also works with boolean types. Use 
+     *
+     * This annotation also works with boolean types. Use
      * {{{
      * makeVisible="true->1"
      * }}}
@@ -944,7 +944,9 @@ package com.github.davidmoten.xsdforms {
           .div(classes = List(ClassItemInput))
         simpleType(node, instNos)
         html
-          .closeTag(2)
+          .closeTag
+        addError(e, instNos)
+        html.closeTag
       }
       html.closeTag
       addMaxOccursScriptlet(e, instances)
@@ -1261,7 +1263,7 @@ package com.github.davidmoten.xsdforms {
           classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
           content = Some(getAnnotation(e, Annotation.RepeatLabel)
             .getOrElse("+"))).closeTag
-        html.div(classes=List(ClassClear)).closeTag
+        html.div(classes = List(ClassClear)).closeTag
       }
     }
 
@@ -1316,7 +1318,10 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def isTextArea(e: Element) =
-      getAnnotation(e, Annotation.Text) == "textarea"
+      getAnnotation(e, Annotation.Text) match {
+        case Some(t) if (t == "textarea") => true
+        case _ => false
+      }
 
     private def simpleType(node: NodeBasic, instances: Instances) {
       val e = node.element
@@ -1410,8 +1415,8 @@ package com.github.davidmoten.xsdforms {
         if (inputType == Checkbox) {
           val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
           val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
-          println(e.name + ",makeVisibleMap="+makeVisibleMapOnElement)
-		  for (value <- List("true","false")) {
+          println(e.name + ",makeVisibleMap=" + makeVisibleMapOnElement)
+          for (value <- List("true", "false")) {
             //get the makeVisible annotation from the named element or the
             // enumeration element in that order.
             val makeVisible = makeVisibleMapOnElement.get(value)
@@ -1614,7 +1619,7 @@ package com.github.davidmoten.xsdforms {
 
     private def addError(e: ElementWrapper, instances: Instances) {
       val itemErrorId = getItemErrorId(elementNumber(e), instances)
-      html.div(classes=List(ClassClear)).closeTag
+      html.div(classes = List(ClassClear)).closeTag
       html.div(
         id = Some(itemErrorId),
         classes = List(ClassItemError),

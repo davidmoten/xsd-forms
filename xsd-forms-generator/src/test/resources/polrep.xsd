@@ -25,7 +25,9 @@ under the National Plan, and law enforcement agencies.</p>
 
   <xs:complexType name="polrep">
     <xs:sequence>
-      <xs:element name="location-description" type="xs:string" />
+      <xs:element name="location-description" type="non-blank-string" >
+      	<xs:annotation i:width="30em"/>
+      </xs:element>
       <xs:element name="incident-coordinates" type="position" />
       <xs:element name="date-of-incident" type="xs:date" />
       <xs:element name="time-of-incident" type="xs:time"
@@ -64,7 +66,7 @@ under the National Plan, and law enforcement agencies.</p>
       </xs:element>
       <xs:element name="pollutant-other-details" type="xs:string"
         minOccurs="0">
-        <xs:annotation i:visible="false" i:label="Details/description" />
+        <xs:annotation i:visible="false" i:label="Details/description" i:text="textarea" />
       </xs:element>
       <xs:element name="pollutant-extent" type="pollutant-extent">
         <xs:annotation i:label="Extent" />
@@ -100,7 +102,7 @@ under the National Plan, and law enforcement agencies.</p>
       </xs:element>
       <xs:element name="photos-taken-details" type="taken-details"
         minOccurs="0">
-        <xs:annotation i:visible="false" />
+        <xs:annotation i:visible="false" i:text="textarea" />
       </xs:element>
 
       <xs:element name="video-taken" type="xs:boolean">
@@ -108,7 +110,7 @@ under the National Plan, and law enforcement agencies.</p>
       </xs:element>
       <xs:element name="video-taken-details" type="taken-details"
         minOccurs="0">
-        <xs:annotation i:visible="false" />
+        <xs:annotation i:visible="false" i:text="textarea"  />
       </xs:element>
 
       <xs:element name="samples-taken" type="xs:boolean">
@@ -116,7 +118,7 @@ under the National Plan, and law enforcement agencies.</p>
       </xs:element>
       <xs:element name="samples-taken-details" type="taken-details"
         minOccurs="0">
-        <xs:annotation i:visible="false" />
+        <xs:annotation i:visible="false" i:text="textarea"  />
       </xs:element>
 
       <xs:element name="items-retrieved" type="xs:boolean">
@@ -124,7 +126,7 @@ under the National Plan, and law enforcement agencies.</p>
       </xs:element>
       <xs:element name="items-retrieved-details" type="taken-details"
         minOccurs="0">
-        <xs:annotation i:visible="false" />
+        <xs:annotation i:visible="false" i:text="textarea" />
       </xs:element>
 
     </xs:sequence>
@@ -132,8 +134,12 @@ under the National Plan, and law enforcement agencies.</p>
 
   <xs:complexType name="position">
     <xs:sequence>
-      <xs:element name="latitude" type="latitude" />
-      <xs:element name="longitude" type="longitude" />
+      <xs:element name="latitude" type="latitude" >
+        <xs:annotation i:description="decimal value between -90 and 90 (&lt;0 means South)"/>
+      </xs:element>
+      <xs:element name="longitude" type="longitude" >
+      <xs:annotation i:description="decimal value between -180 and 180 (&lt;0 means West)"/>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 
@@ -160,7 +166,9 @@ under the National Plan, and law enforcement agencies.</p>
         minOccurs="0">
         <xs:annotation i:visible="false" />
       </xs:element>
-      <xs:element name="name" type="xs:string" minOccurs="0" />
+      <xs:element name="name" type="xs:string" minOccurs="0" >
+      	<xs:annotation i:width="20em"/>
+      </xs:element>
       <xs:element name="flag-state" type="xs:string"
         minOccurs="0" />
       <xs:element name="callsign" type="xs:string" minOccurs="0" />
@@ -265,5 +273,11 @@ under the National Plan, and law enforcement agencies.</p>
       <xs:element name="held-by" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
+
+  <xs:simpleType name="non-blank-string">
+  	<xs:restriction base="xs:string">
+  		<xs:minLength value="1"/>
+  	</xs:restriction>
+  </xs:simpleType>
 
 </xs:schema>
