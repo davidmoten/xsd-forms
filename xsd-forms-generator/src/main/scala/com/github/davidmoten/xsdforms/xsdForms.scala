@@ -2380,7 +2380,7 @@ package com.github.davidmoten.xsdforms {
       if (wrapWithSequence)
         visitor.endSequence
     }
-
+    
     private def process(e: Element, q: QName, x: ParticleOption) {
       if (q == qn("element")) {
         x match {
@@ -2392,7 +2392,7 @@ package com.github.davidmoten.xsdforms {
           case y: ExplicitGroupable => process(e, Choice(y))
           case _ => unexpected
         }
-      } else if (q == qn("sequence")) {
+      } else if (q == qn("sequence")||(q == qn("all"))) {
         x match {
           case y: ExplicitGroupable => process(MyElement(), Sequence(y))
           case _ => unexpected
