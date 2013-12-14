@@ -54,7 +54,7 @@ Probably not! *xsd-forms* only supports a subset of xsd features. It was enough 
 These xsd features are supported:
 
   * elements only, *not* attributes
-  * sequence, choice, all
+  * sequence, choice
   * minOccurs, maxOccurs on elements or anonymous complex types
   * extension of complex types
   * restrictions by regex pattern, enumerations, ranges on numerics, maxLength, minLength, length

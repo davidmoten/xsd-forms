@@ -2392,7 +2392,7 @@ package com.github.davidmoten.xsdforms {
           case y: ExplicitGroupable => process(e, Choice(y))
           case _ => unexpected
         }
-      } else if (q == qn("sequence")||(q == qn("all"))) {
+      } else if (q == qn("sequence")) {
         x match {
           case y: ExplicitGroupable => process(MyElement(), Sequence(y))
           case _ => unexpected
