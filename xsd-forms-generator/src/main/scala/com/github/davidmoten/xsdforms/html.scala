@@ -1,6 +1,6 @@
 package com.github.davidmoten.xsdforms {
 
-    /**
+  /**
    * **************************************************************
    *
    *   Html
@@ -171,5 +171,5 @@ package com.github.davidmoten.xsdforms {
     override def toString = s.toString
 
   }
-  
+
 }

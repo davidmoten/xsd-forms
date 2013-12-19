@@ -1,5 +1,5 @@
 package com.github.davidmoten.xsdforms {
-  
+
   object Css {
     val ClassInvisible = "invisible"
     val ClassSequence = "sequence"

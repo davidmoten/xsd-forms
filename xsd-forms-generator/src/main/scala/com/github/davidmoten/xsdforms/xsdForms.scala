@@ -1431,7 +1431,7 @@ package com.github.davidmoten.xsdforms {
 
     private def toQN(r: Restriction): QN = toQN(r.base.get)
 
-    private implicit def toQN(qName: QName): QN =
+    private def toQN(qName: QName): QN =
       QN(qName.getNamespaceURI(), qName.getLocalPart())
 
     def template = io.Source.fromInputStream(
@@ -1448,29 +1448,6 @@ package com.github.davidmoten.xsdforms {
         .replace("<!--GENERATED_HTML-->", html.toString)
 
   }
-
-  case class MyElement(name: Option[String] = None,
-    default: Option[String] = None, minOccurs: BigInt = BigInt(1),
-    maxOccurs: String = "1") extends Element {
-    val annotation: Option[xsd.Annotation] = None
-    val elementoption: Option[scalaxb.DataRecord[xsd.ElementOption]] = None
-    val identityConstraintOption4: Seq[scalaxb.DataRecord[xsd.IdentityConstraintOption]] = Nil
-    val id: Option[String] = None
-
-    val ref: Option[javax.xml.namespace.QName] = None
-    val typeValue: Option[javax.xml.namespace.QName] = None
-    val substitutionGroup: Option[javax.xml.namespace.QName] = None
-
-    val fixed: Option[String] = None
-    val nillable: Boolean = false
-    val abstractValue: Boolean = false
-    val finalValue: Option[String] = None
-    val block: Option[String] = None
-    val form: Option[xsd.FormChoice] = None
-    val attributes: Map[String, scalaxb.DataRecord[Any]] = Map()
-  }
-
- 
 
 }
 

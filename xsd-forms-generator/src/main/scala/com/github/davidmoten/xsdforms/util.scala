@@ -1,15 +1,14 @@
 package com.github.davidmoten.xsdforms {
 
-    import xsd._
+  import xsd._
   import xsd.ComplexTypeModelSequence1
 
   import javax.xml.namespace.QName
 
   import scalaxb._
 
-  
   /**
-   ****************************************************************
+   * ***************************************************************
    *
    *   Util
    *
@@ -269,8 +268,6 @@ package com.github.davidmoten.xsdforms {
     def indentCount = heirarchy.size + indentsDelta
   }
 
-
-
   /**
    * **************************************************************
    *
@@ -302,6 +299,4 @@ package com.github.davidmoten.xsdforms {
     override def toString = b.toString
   }
 
-
-  
 }
