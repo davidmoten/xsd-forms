@@ -139,10 +139,10 @@ package com.github.davidmoten.xsdforms {
 
       import scala.collection.JavaConversions._
       val names = enumerationAsScalaIterator(zipFile.entries()).map(_.getName).toSet
-
+println(names.mkString("\n"))
       assertTrue(names.contains("form.html"))
-      assertTrue(names.contains("css/"))
-      assertTrue(names.contains("js/"))
+      assertTrue(names.contains("css/xsd-forms-style.css"))
+      assertTrue(names.contains("js/xsd-forms-override.js"))
 
       Option.empty
     }

@@ -19,7 +19,7 @@ public class FileListerTest {
 	public void testWithoutPrefix() {
 		String s = FileLister.listFiles("", new File("src/test/resources"));
 		System.out.println(s);
-		assertEquals("/a\n/b\n/c/d\n/c/e/g\n/c/e/h",s);
+		assertEquals("a\nb\nc/d\nc/e/g\nc/e/h",s);
 	}
 	
 }

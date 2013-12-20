@@ -46,7 +46,6 @@
 					</webAppConfig>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -62,38 +61,16 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>${project.parent.groupId}</groupId>
-									<artifactId>xsd-forms-generator</artifactId>
+									<artifactId>xsd-forms-html-js</artifactId>
 									<version>${project.parent.version}</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
-									<outputDirectory>${project.build.directory}/zips</outputDirectory>
-									<includes>xsd-forms-js-css.zip</includes>
+									<outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}</outputDirectory>
 								</artifactItem>
 							</artifactItems>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<id>unzip-js-css</id>
-						<phase>test</phase>
-						<configuration>
-							<target>
-								<!-- Create a zip file. -->
-								<unzip src="${project.build.directory}/zips/xsd-forms-js-css.zip" 
-									dest="${project.build.directory}/${project.artifactId}-${project.version}" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>
