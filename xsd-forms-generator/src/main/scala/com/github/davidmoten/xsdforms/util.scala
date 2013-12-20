@@ -264,7 +264,6 @@ package com.github.davidmoten.xsdforms {
       Instances(heirarchy :+ instance, indentsDelta - (if (suppressIndent) 1 else 0))
     override def toString = heirarchy.mkString("_")
     def last = heirarchy.last
-    def size = heirarchy.size
     def indentCount = heirarchy.size + indentsDelta
   }
 

@@ -311,9 +311,9 @@ package com.github.davidmoten.xsdforms {
 
     import scala.collection.mutable.MutableList
 
-    private def doNodes(nodes: MutableList[Node], instances: Instances) {
-      nodes.foreach(doNode(_, instances))
-    }
+//    private def doNodes(nodes: MutableList[Node], instances: Instances) {
+//      nodes.foreach(doNode(_, instances))
+//    }
 
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
@@ -448,7 +448,6 @@ package com.github.davidmoten.xsdforms {
           .line)
     }
 
-    private def refById(id: String) = "$(\"#" + id + "\")"
     private def valById(id: String) = "encodedValueById(\"" + id + "\")"
     private def namespace(node: Node) =
       if (elementNumber(node.element) == 1)
@@ -473,8 +472,6 @@ package com.github.davidmoten.xsdforms {
     private def spaces(instances: Instances) =
       if (instances.indentCount == 0) "'\\n' + "
       else "'\\n' + spaces(" + ((instances.indentCount - 1) * 2) + ") + "
-
-    override def toString = text
 
     private def addScript(s: String) {
       script.append(s)
@@ -774,41 +771,41 @@ package com.github.davidmoten.xsdforms {
         addScript(JS().line("  $('#%s').prop('checked',%s);",
           itemId, isChecked + "").line)
         if (inputType == Checkbox) {
-          addCheckboxScript(e,instances)
+          addCheckboxScript(e, instances)
         }
       }
 
     }
-    
-    private def addCheckboxScript(e:ElementWrapper,instances:Instances) {
-      val number= elementNumber(e)
+
+    private def addCheckboxScript(e: ElementWrapper, instances: Instances) {
+      val number = elementNumber(e)
       val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
-          val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
-          println(e.name + ",makeVisibleMap=" + makeVisibleMapOnElement)
-          for (value <- List("true", "false")) {
-            //get the makeVisible annotation from the named element or the
-            // enumeration element in that order.
-            val makeVisible = makeVisibleMapOnElement.get(value)
-            makeVisible match {
-              case Some(y: Int) => {
-                val refersTo = number + y
-                val js = JS()
-                  .line("  $('#%s').change( function() {",
-                    getItemId(number, instances))
-                  .line("    var v = $('#%s');", getItemId(number, instances))
-                  .line("    var refersTo = $('#%s');",
-                    getItemEnclosingId(refersTo, instances))
-                  .line("    if (%s v.is(':checked'))", if (value == "true") "" else "!")
-                  .line("      refersTo.show();")
-                  .line("    else")
-                  .line("      refersTo.hide();")
-                  .line("  });")
-                  .line
-                addScript(js)
-              }
-              case _ =>
-            }
+      val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
+      println(e.name + ",makeVisibleMap=" + makeVisibleMapOnElement)
+      for (value <- List("true", "false")) {
+        //get the makeVisible annotation from the named element or the
+        // enumeration element in that order.
+        val makeVisible = makeVisibleMapOnElement.get(value)
+        makeVisible match {
+          case Some(y: Int) => {
+            val refersTo = number + y
+            val js = JS()
+              .line("  $('#%s').change( function() {",
+                getItemId(number, instances))
+              .line("    var v = $('#%s');", getItemId(number, instances))
+              .line("    var refersTo = $('#%s');",
+                getItemEnclosingId(refersTo, instances))
+              .line("    if (%s v.is(':checked'))", if (value == "true") "" else "!")
+              .line("      refersTo.show();")
+              .line("    else")
+              .line("      refersTo.hide();")
+              .line("  });")
+              .line
+            addScript(js)
           }
+          case _ =>
+        }
+      }
     }
 
     private def defaultValue(value: Option[String], r: Restriction): Option[String] = {
