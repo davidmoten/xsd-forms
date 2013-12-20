@@ -752,7 +752,7 @@ function logit(doc,name) {
         assertTrue(parseMakeVisibleMap(Some("")).isEmpty)
         fail
       } catch {
-        case _ =>
+        case _:Throwable =>
       }
     }
 
