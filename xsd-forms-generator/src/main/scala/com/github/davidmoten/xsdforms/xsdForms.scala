@@ -90,7 +90,7 @@ package com.github.davidmoten.xsdforms {
     import Util._
     private val script = new StringBuilder
 
-    private var number = 0
+    private var _number = 0
     val margin = "  "
     private val Plus = " + "
 
@@ -440,7 +440,8 @@ package com.github.davidmoten.xsdforms {
       instances: Instances) {
       val functionName = xmlFunctionName(node, instances)
       addScript(
-        JS().line("  //extract xml from element <%s>", node.element.name.getOrElse("?"))
+        JS()
+          .line("  //extract xml from element <%s>", node.element.name.getOrElse("?"))
           .line("  function %s() {", functionName)
           .line(functionBody)
           .line("  }")
@@ -773,7 +774,15 @@ package com.github.davidmoten.xsdforms {
         addScript(JS().line("  $('#%s').prop('checked',%s);",
           itemId, isChecked + "").line)
         if (inputType == Checkbox) {
-          val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
+          addCheckboxScript(e,instances)
+        }
+      }
+
+    }
+    
+    private def addCheckboxScript(e:ElementWrapper,instances:Instances) {
+      val number= elementNumber(e)
+      val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
           val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
           println(e.name + ",makeVisibleMap=" + makeVisibleMapOnElement)
           for (value <- List("true", "false")) {
@@ -800,9 +809,6 @@ package com.github.davidmoten.xsdforms {
               case _ =>
             }
           }
-        }
-      }
-
     }
 
     private def defaultValue(value: Option[String], r: Restriction): Option[String] = {
@@ -1423,8 +1429,8 @@ package com.github.davidmoten.xsdforms {
       idPrefix + "item-path-" + number + InstanceDelimiter + instances
 
     private def nextNumber: Int = {
-      number += 1
-      number
+      _number += 1
+      _number
     }
 
     private case class QN(namespace: String, localPart: String)
