@@ -154,6 +154,7 @@ package com.github.davidmoten.xsdforms {
   case class Configuration(header: Option[String], footer: Option[String],
     extraImports: Option[String], extraScript: Option[String], extraCss: Option[String])
 
+    
   /**
    * **************************************************************
    *

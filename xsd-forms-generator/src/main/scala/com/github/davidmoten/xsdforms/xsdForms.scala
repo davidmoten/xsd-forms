@@ -73,6 +73,8 @@ package com.github.davidmoten.xsdforms {
     }
   }
 
+  case class ElementWithNumber(element: ElementWrapper, number: Int)
+
   /**
    * **************************************************************
    *
@@ -82,7 +84,7 @@ package com.github.davidmoten.xsdforms {
    * **************************************************************
    */
 
-  class TreeToHtmlConverter(options:Options,
+  class TreeToHtmlConverter(options: Options,
     configuration: Option[Configuration], tree: Node) {
 
     import TreeToHtmlConverter._
@@ -90,7 +92,7 @@ package com.github.davidmoten.xsdforms {
     import Util._
     private val script = new StringBuilder
     private val idPrefix = options.idPrefix
-    
+
     private val margin = "  "
     private val Plus = " + "
 
@@ -105,7 +107,10 @@ package com.github.davidmoten.xsdforms {
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
     //traverse children left to right before siblings
-    val elementNumbers = new ElementNumbersAssigner(tree).assignments 
+    val elementNumbers = new ElementNumbersAssigner(tree).assignments
+
+    implicit def toElementWithNumber(element: ElementWrapper): ElementWithNumber = ElementWithNumber(element, elementNumber(element))
+    implicit def toElementWithNumber(node: Node): ElementWithNumber = toElementWithNumber(node.element)
 
     //process the abstract syntax tree
     doNode(tree, new Instances)
@@ -137,7 +142,7 @@ package com.github.davidmoten.xsdforms {
 
     private def doNode(node: NodeSequence, instances: Instances) {
       val e = node.element
-      val number = elementNumber(node)
+      val number = node.number
       val legend = getAnnotation(e, Annotation.Legend)
       val usesFieldset = legend.isDefined
 
@@ -180,7 +185,7 @@ package com.github.davidmoten.xsdforms {
       val e = node.element
       val choiceInline = displayChoiceInline(choice)
 
-      val number = elementNumber(e)
+      val number = e.number
 
       html.div(id = Some(getItemEnclosingId(number, instances add 1)),
         classes = List(ClassChoice) ++ getVisibility(e))
@@ -245,7 +250,7 @@ package com.github.davidmoten.xsdforms {
       nonRepeatingSimpleType(e, instances)
       repeatButton(e, instances)
       val t = Some(typ)
-      val number = elementNumber(e)
+      val number = e.number
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
@@ -273,7 +278,7 @@ package com.github.davidmoten.xsdforms {
       nonRepeatingSimpleType(e, instances)
       repeatButton(e, instances)
       val t = None
-      val number = elementNumber(e)
+      val number = e.number
       for (instanceNo <- repeats(e)) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
@@ -300,7 +305,7 @@ package com.github.davidmoten.xsdforms {
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
         val js = JS()
-        val number = elementNumber(node)
+        val number = node.number
         if (isMinOccursZero(node.element)) {
           js.line("if (!$('#%s').is(':checked')) return '';",
             getMinOccursZeroId(number, instances))
@@ -367,7 +372,7 @@ package com.github.davidmoten.xsdforms {
 
     private def addXmlExtractScriptletForSimpleOrBase(node: NodeBasic,
       instances: Instances) {
-      val number = elementNumber(node)
+      val number = node.number
       val js = JS().line("  var xml='';")
       for (instanceNo <- repeats(node)) {
         val instNos = instances add instanceNo
@@ -397,7 +402,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def xmlFunctionName(node: Node, instances: Instances) = {
-      val number = elementNumber(node.element)
+      val number = node.element.number
       "getXml" + number + "instance" + instances
     }
 
@@ -431,7 +436,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def namespace(node: Node) =
-      if (elementNumber(node.element) == 1)
+      if (node.element.number == 1)
         " xmlns=\"" + options.targetNamespace + "\""
       else
         ""
@@ -445,7 +450,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
-      val number = elementNumber(e)
+      val number = e.number
       if (isMinOccursZero(e)) {
         html.div(classes = List(ClassMinOccursZeroContainer))
         html
@@ -483,7 +488,7 @@ package com.github.davidmoten.xsdforms {
 
     private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
       //there's only one of these so use instanceNo = 1
-      val number = elementNumber(e)
+      val number = e.number
       val content = getAnnotation(e, Annotation.NonRepeatingTitle)
       if (content.isDefined)
         html
@@ -494,7 +499,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def repeatButton(e: ElementWrapper, instances: Instances) {
-      val number = elementNumber(e)
+      val number = e.number
       if (hasButton(e)) {
         html.div(
           id = Some(getRepeatButtonId(number, instances)),
@@ -506,7 +511,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def repeatingEnclosing(e: ElementWrapper, instances: Instances) {
-      val number = elementNumber(e)
+      val number = e.number
       val id = getRepeatingEnclosingId(number, instances)
       html.div(
         id = Some(id),
@@ -516,7 +521,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def nonRepeatingSimpleType(e: ElementWrapper, instances: Instances) {
-      val number = elementNumber(e)
+      val number = e.number
       html
         .div(
           classes = List(ClassItemEnclosing) ++ getVisibility(e),
@@ -524,7 +529,7 @@ package com.github.davidmoten.xsdforms {
       nonRepeatingTitle(e, instances)
     }
 
-    private def elementNumber(node: Node): Int = elementNumber(node.element)
+    private def elementNumber(node: Node): Int = node.element.number
 
     private def elementNumber(e: ElementWrapper): Int = {
       elementNumbers.get(e).get;
@@ -570,7 +575,7 @@ package com.github.davidmoten.xsdforms {
     private def addInput(e: ElementWrapper, qn: QN, r: Restriction,
       instances: Instances) {
 
-      val number = elementNumber(e)
+      val number = e.number
 
       if (isEnumeration(r))
         addEnumeration(e, r, instances)
@@ -592,7 +597,7 @@ package com.github.davidmoten.xsdforms {
     private def addTextField(
       e: ElementWrapper, r: Restriction,
       extraClasses: String, instances: Instances) {
-      val number = elementNumber(e)
+      val number = e.number
       val inputType = getInputType(r)
       val itemId = getItemId(number, instances)
       if (isTextArea(e)) {
@@ -627,7 +632,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def addCheckboxScript(e: ElementWrapper, instances: Instances) {
-      val number = elementNumber(e)
+      val number = e.number
       val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
       val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
       println(e.name + ",makeVisibleMap=" + makeVisibleMapOnElement)
@@ -685,7 +690,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def addRemoveButton(e: ElementWrapper, instances: Instances) {
-      val number = elementNumber(e)
+      val number = e.number
       val removeButtonId = getRemoveButtonId(number, instances)
       val canRemove =
         (instances.last != 1 && e.maxOccurs != e.minOccurs.toString)
@@ -823,7 +828,7 @@ package com.github.davidmoten.xsdforms {
 
     private def addEnumeration(e: ElementWrapper, r: Restriction,
       instances: Instances) {
-      val number = elementNumber(e)
+      val number = e.number
       val en = getEnumeration(r)
 
       val initializeBlank = getAnnotation(e, Annotation.AddBlank) match {
@@ -834,7 +839,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def addError(e: ElementWrapper, instances: Instances) {
-      val itemErrorId = getItemErrorId(elementNumber(e), instances)
+      val itemErrorId = getItemErrorId(e.number, instances)
       html.div(classes = List(ClassClear)).closeTag
       html.div(
         id = Some(itemErrorId),
@@ -848,7 +853,7 @@ package com.github.davidmoten.xsdforms {
     private def addPath(e: ElementWrapper, instances: Instances) {
       html.div(
         classes = List("item-path"),
-        id = Some(getPathId(elementNumber(e), instances)),
+        id = Some(getPathId(e.number, instances)),
         enabledAttr = Some("true"),
         content = Some(""))
         .closeTag
@@ -874,7 +879,7 @@ package com.github.davidmoten.xsdforms {
 
     private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
       instances: Instances) = {
-      val number = elementNumber(e)
+      val number = e.number
       val itemId = getItemId(number, instances)
       JS()
         .line("// %s", e.name.get)
@@ -893,7 +898,7 @@ package com.github.davidmoten.xsdforms {
         js.line("  //enumeration test")
         if (isRadio(node.element))
           js.line("  var radioInput=$('input:radio[name=%s]');",
-            getItemName(elementNumber(node), instances))
+            getItemName(node.number, instances))
             .line("  if (! radioInput.is(':checked')) ok = false;")
         else
           js.line("  if ($.trim(v.val()).length ==0) ok = false;")
@@ -903,13 +908,13 @@ package com.github.davidmoten.xsdforms {
 
     private def changeReference(e: ElementWrapper, instances: Instances) =
       if (isRadio(e))
-        "input:radio[name=" + getItemName(elementNumber(e), instances) + "]"
+        "input:radio[name=" + getItemName(e.number, instances) + "]"
       else
-        "#" + getItemId(elementNumber(e), instances)
+        "#" + getItemId(e.number, instances)
 
     private def createClosingScriptlet(e: ElementWrapper,
       qn: QN, instances: Instances) = {
-      val number = elementNumber(e)
+      val number = e.number
       val changeMethod = "change("
       val js = JS()
         .line("  return ok;")
@@ -931,7 +936,7 @@ package com.github.davidmoten.xsdforms {
 
     private def addMaxOccursScriptlet(e: ElementWrapper,
       instances: Instances) {
-      val number = elementNumber(e)
+      val number = e.number
       if (isMultiple(e)) {
         val repeatButtonId = getRepeatButtonId(number, instances)
         val js = JS()
@@ -963,7 +968,6 @@ package com.github.davidmoten.xsdforms {
         .replace("<!--GENERATED_HTML-->", html.toString)
 
     <!-- move to object -->
-
 
     private def valById(id: String) = "encodedValueById(\"" + id + "\")"
 
@@ -1371,16 +1375,16 @@ package com.github.davidmoten.xsdforms {
     private def getRepeatingEnclosingId(element: ElementWrapper,
       instances: Instances): String =
       TreeToHtmlConverter.getRepeatingEnclosingId(
-        idPrefix, elementNumber(element), instances)
+        idPrefix, element.number, instances)
     private def getChoiceItemName(node: Node, instances: Instances): String =
-      getChoiceItemName(elementNumber(node.element), instances)
+      getChoiceItemName(node.element.number, instances)
     private def getChoiceItemId(node: Node, index: Int,
       instances: Instances): String =
-      getChoiceItemId(elementNumber(node.element), index, instances)
+      getChoiceItemId(node.element.number, index, instances)
     private def getItemId(node: Node, instances: Instances): String =
-      getItemId(elementNumber(node.element), instances)
+      getItemId(node.element.number, instances)
     private def getItemId(element: ElementWrapper, instances: Instances): String =
-      getItemId(elementNumber(element), instances)
+      getItemId(element.number, instances)
 
     private def choiceContentId(idPrefix: String, number: Int, index: Int,
       instances: Instances) =
