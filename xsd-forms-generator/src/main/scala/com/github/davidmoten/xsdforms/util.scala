@@ -26,7 +26,9 @@ package com.github.davidmoten.xsdforms {
   }
 
   case class XsdDatatype(name: String, pattern: Option[String] = None)
-
+  case class XsdElement(name:String) 
+ 
+  
   /**
    * Utility methods and constants for XML Schemas (XSD).
    */
@@ -39,6 +41,12 @@ package com.github.davidmoten.xsdforms {
     def qn(localPart: String): QName = new QName(Xsd, localPart)
     def qn(datatype: XsdDatatype): QName = qn(Xsd, datatype.name)
 
+    val QnXsdExtension = qn("extension")
+    val QnXsdSequence = qn("sequence")
+    val QnXsdChoice= qn("choice")
+    val QnXsdAppInfo = qn("appinfo")
+    val QnXsdElement = qn("element")
+    
     //TODO use enumeration
     val XsdDateTime = XsdDatatype("dateTime")
     val XsdDate = XsdDatatype("date")

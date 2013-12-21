@@ -99,7 +99,7 @@ package com.github.davidmoten.xsdforms {
         })
         .map(_.annotationoption)
         .flatten
-        .filter(toQName(_) == qn("appinfo"))
+        .filter(toQName(_) == QnXsdAppInfo)
         .map(_.value)
         .map(x => x match {
           case y: Appinfo => y
@@ -116,11 +116,11 @@ package com.github.davidmoten.xsdforms {
           .map(x => scala.xml.XML.loadString(x.toString))
           .map(x => x.text).headOption
 
-      val header = extract("header")
-      val footer = extract("footer")
-      val extraImports = extract("extraImports")
-      val extraScript = extract("extraScript")
-      val extraCss = extract("extraCss")
+      val header = extract(Annotation.Header.name)
+      val footer = extract(Annotation.Footer.name)
+      val extraImports = extract(Annotation.ExtraImports.name)
+      val extraScript = extract(Annotation.ExtraScript.name)
+      val extraCss = extract(Annotation.ExtraCss.name)
       val configuration = Configuration(header, footer, extraImports, extraScript, extraCss)
       visitor.configuration(configuration)
     }
@@ -162,7 +162,7 @@ package com.github.davidmoten.xsdforms {
           process(e, x)
         case x: SimpleContent => {
           val q = toQName(x.simplecontentoption)
-          if (qn("extension") == q) {
+          if (QnXsdExtension == q) {
             x.simplecontentoption.value match {
               case t: SimpleExtensionType =>
                 process(e, t)
@@ -182,9 +182,9 @@ package com.github.davidmoten.xsdforms {
         case y: GroupRef =>
           unexpected
         case y: ExplicitGroupable =>
-          if (matches(x, qn("sequence")))
+          if (matches(x, QnXsdSequence))
             process(e, Sequence(y))
-          else if (matches(x, qn("choice")))
+          else if (matches(x, QnXsdChoice))
             process(e, Choice(y))
           else unexpected
         case _ => unexpected
@@ -196,7 +196,7 @@ package com.github.davidmoten.xsdforms {
 
       val value = cc.complexcontentoption.value
       println("cc " + q + "=" + value)
-      if (qn("extension") == q)
+      if (QnXsdExtension == q)
         value match {
           case et: ExtensionType => {
             process(e, et)
@@ -273,17 +273,17 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def process(e: Element, q: QName, x: ParticleOption) {
-      if (q == qn("element")) {
+      if (q == QnXsdElement) {
         x match {
           case y: LocalElementable => process(y)
           case _ => unexpected
         }
-      } else if (q == qn("choice")) {
+      } else if (q == QnXsdChoice) {
         x match {
           case y: ExplicitGroupable => process(e, Choice(y))
           case _ => unexpected
         }
-      } else if (q == qn("sequence")) {
+      } else if (q == QnXsdSequence) {
         x match {
           case y: ExplicitGroupable => process(MyElement(), Sequence(y))
           case _ => unexpected
