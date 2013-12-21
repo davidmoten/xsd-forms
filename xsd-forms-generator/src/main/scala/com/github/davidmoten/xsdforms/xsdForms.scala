@@ -73,6 +73,10 @@ package com.github.davidmoten.xsdforms {
     }
   }
 
+  object ConverterUtil {
+
+  }
+
   /**
    * **************************************************************
    *
@@ -86,12 +90,13 @@ package com.github.davidmoten.xsdforms {
     configuration: Option[Configuration], tree: Node) {
 
     import TreeToHtmlConverter._
+    import ConverterUtil._
     import XsdUtil._
     import Util._
     private val script = new StringBuilder
 
     private var _number = 0
-    val margin = "  "
+    private val margin = "  "
     private val Plus = " + "
 
     private sealed trait Entry
@@ -311,10 +316,6 @@ package com.github.davidmoten.xsdforms {
 
     import scala.collection.mutable.MutableList
 
-//    private def doNodes(nodes: MutableList[Node], instances: Instances) {
-//      nodes.foreach(doNode(_, instances))
-//    }
-
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
         val js = JS()
@@ -414,23 +415,6 @@ package com.github.davidmoten.xsdforms {
       addXmlExtractScriptlet(node, js.toString, instances);
     }
 
-    private def transformToXmlValue(node: NodeBasic, value: String): String =
-      node match {
-        case n: NodeSimpleType => transformToXmlValue(restriction(n), value)
-        case n: NodeBaseType => transformToXmlValue(restriction(n), value)
-      }
-
-    private def transformToXmlValue(r: Restriction, value: String): String = {
-      val qn = toQN(r)
-      qn match {
-        case QN(xs, XsdDate.name) => "toXmlDate(" + value + ")"
-        case QN(xs, XsdDateTime.name) => "toXmlDateTime(" + value + ")"
-        case QN(xs, XsdTime.name) => "toXmlTime(" + value + ")"
-        case QN(xs, XsdBoolean.name) => "toBoolean(" + value + ")"
-        case _ => value
-      }
-    }
-
     private def xmlFunctionName(node: Node, instances: Instances) = {
       val number = elementNumber(node.element)
       "getXml" + number + "instance" + instances
@@ -448,30 +432,28 @@ package com.github.davidmoten.xsdforms {
           .line)
     }
 
-    private def valById(id: String) = "encodedValueById(\"" + id + "\")"
+    private def transformToXmlValue(node: NodeBasic, value: String): String =
+      node match {
+        case n: NodeSimpleType => transformToXmlValue(restriction(n), value)
+        case n: NodeBaseType => transformToXmlValue(restriction(n), value)
+      }
+
+    private def transformToXmlValue(r: Restriction, value: String): String = {
+      val qn = toQN(r)
+      qn match {
+        case QN(xs, XsdDate.name) => "toXmlDate(" + value + ")"
+        case QN(xs, XsdDateTime.name) => "toXmlDateTime(" + value + ")"
+        case QN(xs, XsdTime.name) => "toXmlTime(" + value + ")"
+        case QN(xs, XsdBoolean.name) => "toBoolean(" + value + ")"
+        case _ => value
+      }
+    }
+    
     private def namespace(node: Node) =
       if (elementNumber(node.element) == 1)
         " xmlns=\"" + targetNamespace + "\""
       else
         ""
-    private def xmlStart(node: Node) =
-      node.element.name match {
-        case Some(name) => "'<" + name + namespace(node) + ">'"
-        case _ => "''"
-      }
-
-    private def xmlEnd(node: Node) =
-      node.element.name match {
-        case Some(name) => "'</" + name + ">'"
-        case _ => "''"
-      }
-
-    private def xml(node: Node, value: String) =
-      xmlStart(node) + Plus + value + Plus + xmlEnd(node)
-
-    private def spaces(instances: Instances) =
-      if (instances.indentCount == 0) "'\\n' + "
-      else "'\\n' + spaces(" + ((instances.indentCount - 1) * 2) + ") + "
 
     private def addScript(s: String) {
       script.append(s)
@@ -480,10 +462,7 @@ package com.github.davidmoten.xsdforms {
     private def addScript(js: JS) {
       addScript(js.toString)
     }
-
-    private def isMinOccursZero(e: ElementWrapper) =
-      e.minOccurs.intValue == 0 && getAnnotation(e, Annotation.Visible) != Some("false")
-
+    
     private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       if (isMinOccursZero(e)) {
@@ -520,88 +499,8 @@ package com.github.davidmoten.xsdforms {
         addScript(js)
       }
     }
-
-    private def displayChoiceInline(choice: Choice) =
-      "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
-
-    private def addChoiceHideOnStartScriptlet(
-      particles: Seq[ParticleOption], number: Int, instances: Instances) {
-
-      val forEachParticle = particles.zipWithIndex.foreach _
-
-      forEachParticle(x => {
-        val index = x._2 + 1
-        addScript(
-          JS().line("  $('#%s').hide();",
-            choiceContentId(idPrefix, number, index, instances)))
-      })
-    }
-
-    private def addChoiceShowHideOnSelectionScriptlet(
-      particles: Seq[ParticleOption], number: Int, instances: Instances) {
-
-      val forEachParticle = particles.zipWithIndex.foreach _
-
-      val choiceChangeFunction = "choiceChange" + number +
-        "instance" + instances;
-
-      val js = JS()
-      js.line("  var %s = function addChoiceChange%sinstance%s() {",
-        choiceChangeFunction, number.toString, instances)
-        .line("    $(':input[@name=%s]').change(function() {",
-          getChoiceItemName(number, instances))
-        .line("      var checked = $(':input[name=%s]:checked').attr('id');",
-          getChoiceItemName(number, instances))
-
-      forEachParticle(x => {
-        val index = x._2 + 1
-        val ccId =
-          choiceContentId(idPrefix, number, index, instances)
-        js.line("      if (checked == '%s') {",
-          getChoiceItemId(number, index, instances))
-          .line("        $('#%s').show();", ccId)
-          .line("        $('#%s').find('.item-path').attr('enabled','true');", ccId)
-          .line("      }")
-          .line("      else {")
-          .line("        $('#%s').hide();", ccId)
-          .line("        $('#%s').find('.item-path').attr('enabled','false');", ccId)
-          .line("      }")
-
-      })
-      js.line("    });")
-        .line("  }")
-        .line
-        .line("  %s();", choiceChangeFunction)
-
-      addScript(js)
-
-    }
-
-    private def getChoiceLabel(p: ParticleOption): String = {
-
-      val labels =
-        p match {
-          case x: Element => {
-            getAnnotation(x, Annotation.ChoiceLabel) ++
-              getAnnotation(x, Annotation.Label) ++
-              Some(getLabelFromNameOrAnnotation(x))
-          }
-          case _ => unexpected
-        }
-      labels.head
-    }
-
-    private class MyRestriction(qName: QName)
-      extends Restriction(None, SimpleRestrictionModelSequence(),
-        None, Some(qName), Map())
-
-    private def getVisibility(e: Element) =
-      getAnnotation(e, Annotation.Visible) match {
-        case Some("false") => Some(ClassInvisible)
-        case _ => None
-      }
-
-    private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
+    
+private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
       //there's only one of these so use instanceNo = 1
       val number = elementNumber(e)
       val content = getAnnotation(e, Annotation.NonRepeatingTitle)
@@ -612,7 +511,7 @@ package com.github.davidmoten.xsdforms {
             content = content)
           .closeTag
     }
-
+    
     private def repeatButton(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       if (hasButton(e)) {
@@ -643,25 +542,7 @@ package com.github.davidmoten.xsdforms {
           id = Some(getItemEnclosingId(number, instances add 1)))
       nonRepeatingTitle(e, instances)
     }
-
-    private def itemTitle(e: Element) {
-      getAnnotation(e, Annotation.Title) match {
-        case Some(x) =>
-          html.div(classes = List(ClassItemTitle),
-            content = Some(x)).closeTag
-        case _ =>
-      }
-    }
-
-    private def itemBefore(e: Element) {
-      getAnnotation(e, Annotation.Before) match {
-        case Some(x) =>
-          html.div(classes = List(ClassItemBefore),
-            content = Some(x)).closeTag
-        case _ =>
-      }
-    }
-
+    
     private def elementNumber(node: Node): Int = elementNumber(node.element)
 
     private def elementNumber(e: ElementWrapper): Int = {
@@ -674,12 +555,6 @@ package com.github.davidmoten.xsdforms {
         newNumber
       }
     }
-
-    private def isTextArea(e: Element) =
-      getAnnotation(e, Annotation.Text) match {
-        case Some(t) if (t == "textarea") => true
-        case _ => false
-      }
 
     private def simpleType(node: NodeBasic, instances: Instances) {
       val e = node.element
@@ -808,20 +683,6 @@ package com.github.davidmoten.xsdforms {
       }
     }
 
-    private def defaultValue(value: Option[String], r: Restriction): Option[String] = {
-      value match {
-        case Some(v) => {
-          toQN(r) match {
-            // drop the seconds off the time so js timepicker is happy
-            case QN(xs, XsdTime.name) => Some(v.substring(0, 5))
-            case QN(xs, XsdDateTime.name) => Some(v.substring(0, 16))
-            case _ => value
-          }
-        }
-        case None => value
-      }
-    }
-
     private def addWidthScript(e: ElementWrapper, instances: Instances) {
       val itemId = getItemId(e, instances)
       getAnnotation(e, Annotation.Width) match {
@@ -874,40 +735,58 @@ package com.github.davidmoten.xsdforms {
       addScript(js)
     }
 
-    private def isEnumeration(r: Restriction) =
-      !getEnumeration(r).isEmpty
+    private def addChoiceHideOnStartScriptlet(
+      particles: Seq[ParticleOption], number: Int, instances: Instances) {
 
-    private def addEnumeration(e: ElementWrapper, r: Restriction,
-      instances: Instances) {
-      val number = elementNumber(e)
-      val en = getEnumeration(r)
+      val forEachParticle = particles.zipWithIndex.foreach _
 
-      val initializeBlank = getAnnotation(e, Annotation.AddBlank) match {
-        case Some("true") => true
-        case _ => false
-      }
-      enumeration(e, en, number, isRadio(e), initializeBlank, instances)
+      forEachParticle(x => {
+        val index = x._2 + 1
+        addScript(
+          JS().line("  $('#%s').hide();",
+            choiceContentId(idPrefix, number, index, instances)))
+      })
     }
 
-    private def isRadio(e: ElementWrapper) =
-      //TODO add check is enumeration as well  
-      getAnnotation(e, Annotation.Selector) match {
-        case Some("radio") => true
-        case _ => false
-      }
+    private def addChoiceShowHideOnSelectionScriptlet(
+      particles: Seq[ParticleOption], number: Int, instances: Instances) {
 
-    private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
-      r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
-        _.value match {
-          case y: NoFixedFacet => {
-            val label = getAnnotation(y, Annotation.Label) match {
-              case Some(x) => x
-              case None => y.valueAttribute
-            }
-            Some((label, y))
-          }
-          case _ => None
-        }).flatten
+      val forEachParticle = particles.zipWithIndex.foreach _
+
+      val choiceChangeFunction = "choiceChange" + number +
+        "instance" + instances;
+
+      val js = JS()
+      js.line("  var %s = function addChoiceChange%sinstance%s() {",
+        choiceChangeFunction, number.toString, instances)
+        .line("    $(':input[@name=%s]').change(function() {",
+          getChoiceItemName(number, instances))
+        .line("      var checked = $(':input[name=%s]:checked').attr('id');",
+          getChoiceItemName(number, instances))
+
+      forEachParticle(x => {
+        val index = x._2 + 1
+        val ccId =
+          choiceContentId(idPrefix, number, index, instances)
+        js.line("      if (checked == '%s') {",
+          getChoiceItemId(number, index, instances))
+          .line("        $('#%s').show();", ccId)
+          .line("        $('#%s').find('.item-path').attr('enabled','true');", ccId)
+          .line("      }")
+          .line("      else {")
+          .line("        $('#%s').hide();", ccId)
+          .line("        $('#%s').find('.item-path').attr('enabled','false');", ccId)
+          .line("      }")
+
+      })
+      js.line("    });")
+        .line("  }")
+        .line
+        .line("  %s();", choiceChangeFunction)
+
+      addScript(js)
+    }
+
 
     private def enumeration(e: ElementWrapper,
       en: Seq[(String, NoFixedFacet)],
@@ -969,18 +848,7 @@ package com.github.davidmoten.xsdforms {
       }
     }
 
-    private def addDescription(e: Element) {
-      getAnnotation(e, Annotation.Description) match {
-        case Some(x) =>
-          html.div(
-            classes = List(ClassItemDescription),
-            content = Some(x))
-            .closeTag
-        case None =>
-      }
-    }
-
-    private def addError(e: ElementWrapper, instances: Instances) {
+private def addError(e: ElementWrapper, instances: Instances) {
       val itemErrorId = getItemErrorId(elementNumber(e), instances)
       html.div(classes = List(ClassClear)).closeTag
       html.div(
@@ -1019,6 +887,231 @@ package com.github.davidmoten.xsdforms {
       }
     }
 
+private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
+      instances: Instances) = {
+      val number = elementNumber(e)
+      val itemId = getItemId(number, instances)
+      JS()
+        .line("// %s", e.name.get)
+        .line("var validate%sinstance%s = function () {",
+          number.toString, instances)
+        .line("  var ok = true;")
+        .line("  var v = $('#%s');", itemId)
+        .line("  var pathDiv = $('#%s');", getPathId(number, instances))
+        .toString
+    }
+
+
+    private def createEnumerationTestScriptlet(node: NodeBasic,
+      instances: Instances) = {
+      val js = JS()
+      if (isEnumeration(restriction(node))) {
+        js.line("  //enumeration test")
+        if (isRadio(node.element))
+          js.line("  var radioInput=$('input:radio[name=%s]');",
+            getItemName(elementNumber(node), instances))
+            .line("  if (! radioInput.is(':checked')) ok = false;")
+        else
+          js.line("  if ($.trim(v.val()).length ==0) ok = false;")
+      }
+      js.toString
+    }
+
+    private def changeReference(e: ElementWrapper, instances: Instances) =
+      if (isRadio(e))
+        "input:radio[name=" + getItemName(elementNumber(e), instances) + "]"
+      else
+        "#" + getItemId(elementNumber(e), instances)
+
+    private def createClosingScriptlet(e: ElementWrapper,
+      qn: QN, instances: Instances) = {
+      val number = elementNumber(e)
+      val changeMethod = "change("
+      val js = JS()
+        .line("  return ok;")
+        .line("}")
+        .line
+        .line("$('%s').change( function() {",
+          changeReference(e, instances))
+        .line("  var ok = validate%sinstance%s();",
+          number.toString, instances)
+        .line("  showError('%s',ok);", getItemErrorId(number, instances))
+        .line("});")
+        .line
+      if (e.minOccurs.intValue == 0 && e.default.isEmpty)
+        js.line("//disable item-path due to minOccurs=0 and default is empty")
+          .line("$('#%s').attr('enabled','false');",
+            getPathId(number, instances))
+      js.toString
+    }
+
+    private def addMaxOccursScriptlet(e: ElementWrapper,
+      instances: Instances) {
+      val number = elementNumber(e)
+      if (isMultiple(e)) {
+        val repeatButtonId = getRepeatButtonId(number, instances)
+        val js = JS()
+          .line("  $('#%s').click( function() {", repeatButtonId)
+          .line("    // loop through all repeats until find first nonInvisible repeat and make it visible")
+          .line("    var elem;")
+        repeatingEnclosingIds(e, instances)
+          .foreach(id => {
+            js.line("    elem = $('#%s');", id)
+              .line("    if (!elemVisible(elem))")
+              .line("      { elem.show(); return; }")
+          })
+        js
+          .line("  })")
+          .line
+
+        addScript(js)
+      }
+    }
+
+    <!-- move to object -->
+
+    private def addEnumeration(e: ElementWrapper, r: Restriction,
+      instances: Instances) {
+      val number = elementNumber(e)
+      val en = getEnumeration(r)
+
+      val initializeBlank = getAnnotation(e, Annotation.AddBlank) match {
+        case Some("true") => true
+        case _ => false
+      }
+      enumeration(e, en, number, isRadio(e), initializeBlank, instances)
+    }
+
+    private def valById(id: String) = "encodedValueById(\"" + id + "\")"
+    
+    private def xmlStart(node: Node) =
+      node.element.name match {
+        case Some(name) => "'<" + name + namespace(node) + ">'"
+        case _ => "''"
+      }
+
+    private def xmlEnd(node: Node) =
+      node.element.name match {
+        case Some(name) => "'</" + name + ">'"
+        case _ => "''"
+      }
+
+    private def xml(node: Node, value: String) =
+      xmlStart(node) + Plus + value + Plus + xmlEnd(node)
+
+    private def spaces(instances: Instances) =
+      if (instances.indentCount == 0) "'\\n' + "
+      else "'\\n' + spaces(" + ((instances.indentCount - 1) * 2) + ") + "
+
+
+
+    private def isMinOccursZero(e: ElementWrapper) =
+      e.minOccurs.intValue == 0 && getAnnotation(e, Annotation.Visible) != Some("false")
+
+    
+    private def displayChoiceInline(choice: Choice) =
+      "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
+
+
+    private def getChoiceLabel(p: ParticleOption): String = {
+
+      val labels =
+        p match {
+          case x: Element => {
+            getAnnotation(x, Annotation.ChoiceLabel) ++
+              getAnnotation(x, Annotation.Label) ++
+              Some(getLabelFromNameOrAnnotation(x))
+          }
+          case _ => unexpected
+        }
+      labels.head
+    }
+
+    private class MyRestriction(qName: QName)
+      extends Restriction(None, SimpleRestrictionModelSequence(),
+        None, Some(qName), Map())
+
+    private def getVisibility(e: Element) =
+      getAnnotation(e, Annotation.Visible) match {
+        case Some("false") => Some(ClassInvisible)
+        case _ => None
+      }
+
+    private def itemTitle(e: Element) {
+      getAnnotation(e, Annotation.Title) match {
+        case Some(x) =>
+          html.div(classes = List(ClassItemTitle),
+            content = Some(x)).closeTag
+        case _ =>
+      }
+    }
+
+    private def itemBefore(e: Element) {
+      getAnnotation(e, Annotation.Before) match {
+        case Some(x) =>
+          html.div(classes = List(ClassItemBefore),
+            content = Some(x)).closeTag
+        case _ =>
+      }
+    }
+
+    private def isTextArea(e: Element) =
+      getAnnotation(e, Annotation.Text) match {
+        case Some(t) if (t == "textarea") => true
+        case _ => false
+      }
+
+    private def defaultValue(value: Option[String], r: Restriction): Option[String] = {
+      value match {
+        case Some(v) => {
+          toQN(r) match {
+            // drop the seconds off the time so js timepicker is happy
+            case QN(xs, XsdTime.name) => Some(v.substring(0, 5))
+            case QN(xs, XsdDateTime.name) => Some(v.substring(0, 16))
+            case _ => value
+          }
+        }
+        case None => value
+      }
+    }
+
+    private def isEnumeration(r: Restriction) =
+      !getEnumeration(r).isEmpty
+
+    private def isRadio(e: ElementWrapper) =
+      //TODO add check is enumeration as well  
+      getAnnotation(e, Annotation.Selector) match {
+        case Some("radio") => true
+        case _ => false
+      }
+
+    private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
+      r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
+        _.value match {
+          case y: NoFixedFacet => {
+            val label = getAnnotation(y, Annotation.Label) match {
+              case Some(x) => x
+              case None => y.valueAttribute
+            }
+            Some((label, y))
+          }
+          case _ => None
+        }).flatten
+
+
+
+    private def addDescription(e: Element) {
+      getAnnotation(e, Annotation.Description) match {
+        case Some(x) =>
+          html.div(
+            classes = List(ClassItemDescription),
+            content = Some(x))
+            .closeTag
+        case None =>
+      }
+    }
+
+    
     private def getBasePattern(qn: QN) = {
 
       qn match {
@@ -1037,20 +1130,6 @@ package com.github.davidmoten.xsdforms {
       }
     }
 
-    private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
-      instances: Instances) = {
-      val number = elementNumber(e)
-      val itemId = getItemId(number, instances)
-      JS()
-        .line("// %s", e.name.get)
-        .line("var validate%sinstance%s = function () {",
-          number.toString, instances)
-        .line("  var ok = true;")
-        .line("  var v = $('#%s');", itemId)
-        .line("  var pathDiv = $('#%s');", getPathId(number, instances))
-        .toString
-    }
-
     private def createMandatoryTestScriptlet(node: NodeBasic) = {
       if (isMandatory(node, restriction(node)) && !isEnum(restriction(node)))
         JS()
@@ -1060,6 +1139,7 @@ package com.github.davidmoten.xsdforms {
           .toString
       else ""
     }
+
 
     private def createLengthTestScriptlet(r: Restriction) = {
       r.simpleRestrictionModelSequence3
@@ -1123,20 +1203,6 @@ package com.github.davidmoten.xsdforms {
           .toString
       else ""
 
-    private def createEnumerationTestScriptlet(node: NodeBasic,
-      instances: Instances) = {
-      val js = JS()
-      if (isEnumeration(restriction(node))) {
-        js.line("  //enumeration test")
-        if (isRadio(node.element))
-          js.line("  var radioInput=$('input:radio[name=%s]');",
-            getItemName(elementNumber(node), instances))
-            .line("  if (! radioInput.is(':checked')) ok = false;")
-        else
-          js.line("  if ($.trim(v.val()).length ==0) ok = false;")
-      }
-      js.toString
-    }
 
     private def createPatternScriptlet(x: (String, Int)) =
       JS()
@@ -1154,33 +1220,7 @@ package com.github.davidmoten.xsdforms {
       js.toString
     }
 
-    private def changeReference(e: ElementWrapper, instances: Instances) =
-      if (isRadio(e))
-        "input:radio[name=" + getItemName(elementNumber(e), instances) + "]"
-      else
-        "#" + getItemId(elementNumber(e), instances)
 
-    private def createClosingScriptlet(e: ElementWrapper,
-      qn: QN, instances: Instances) = {
-      val number = elementNumber(e)
-      val changeMethod = "change("
-      val js = JS()
-        .line("  return ok;")
-        .line("}")
-        .line
-        .line("$('%s').change( function() {",
-          changeReference(e, instances))
-        .line("  var ok = validate%sinstance%s();",
-          number.toString, instances)
-        .line("  showError('%s',ok);", getItemErrorId(number, instances))
-        .line("});")
-        .line
-      if (e.minOccurs.intValue == 0 && e.default.isEmpty)
-        js.line("//disable item-path due to minOccurs=0 and default is empty")
-          .line("$('#%s').attr('enabled','false');",
-            getPathId(number, instances))
-      js.toString
-    }
 
     private def getPatterns(r: Restriction): Seq[String] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
@@ -1248,29 +1288,6 @@ package com.github.davidmoten.xsdforms {
     private def repeatingEnclosingIds(e: ElementWrapper,
       instances: Instances) =
       repeats(e).map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
-
-    private def addMaxOccursScriptlet(e: ElementWrapper,
-      instances: Instances) {
-      val number = elementNumber(e)
-      if (isMultiple(e)) {
-        val repeatButtonId = getRepeatButtonId(number, instances)
-        val js = JS()
-          .line("  $('#%s').click( function() {", repeatButtonId)
-          .line("    // loop through all repeats until find first nonInvisible repeat and make it visible")
-          .line("    var elem;")
-        repeatingEnclosingIds(e, instances)
-          .foreach(id => {
-            js.line("    elem = $('#%s');", id)
-              .line("    if (!elemVisible(elem))")
-              .line("      { elem.show(); return; }")
-          })
-        js
-          .line("  })")
-          .line
-
-        addScript(js)
-      }
-    }
 
     private def getAnnotation(e: Annotatedable,
       key: XsdFormsAnnotation): Option[String] =
