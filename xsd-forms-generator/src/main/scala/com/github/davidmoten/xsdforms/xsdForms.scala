@@ -448,7 +448,7 @@ package com.github.davidmoten.xsdforms {
         case _ => value
       }
     }
-    
+
     private def namespace(node: Node) =
       if (elementNumber(node.element) == 1)
         " xmlns=\"" + targetNamespace + "\""
@@ -462,7 +462,7 @@ package com.github.davidmoten.xsdforms {
     private def addScript(js: JS) {
       addScript(js.toString)
     }
-    
+
     private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       if (isMinOccursZero(e)) {
@@ -499,8 +499,8 @@ package com.github.davidmoten.xsdforms {
         addScript(js)
       }
     }
-    
-private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
+
+    private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
       //there's only one of these so use instanceNo = 1
       val number = elementNumber(e)
       val content = getAnnotation(e, Annotation.NonRepeatingTitle)
@@ -511,7 +511,7 @@ private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
             content = content)
           .closeTag
     }
-    
+
     private def repeatButton(e: ElementWrapper, instances: Instances) {
       val number = elementNumber(e)
       if (hasButton(e)) {
@@ -542,7 +542,7 @@ private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
           id = Some(getItemEnclosingId(number, instances add 1)))
       nonRepeatingTitle(e, instances)
     }
-    
+
     private def elementNumber(node: Node): Int = elementNumber(node.element)
 
     private def elementNumber(e: ElementWrapper): Int = {
@@ -787,7 +787,6 @@ private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
       addScript(js)
     }
 
-
     private def enumeration(e: ElementWrapper,
       en: Seq[(String, NoFixedFacet)],
       number: Int, isRadio: Boolean, initializeBlank: Boolean,
@@ -848,7 +847,19 @@ private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
       }
     }
 
-private def addError(e: ElementWrapper, instances: Instances) {
+    private def addEnumeration(e: ElementWrapper, r: Restriction,
+      instances: Instances) {
+      val number = elementNumber(e)
+      val en = getEnumeration(r)
+
+      val initializeBlank = getAnnotation(e, Annotation.AddBlank) match {
+        case Some("true") => true
+        case _ => false
+      }
+      enumeration(e, en, number, isRadio(e), initializeBlank, instances)
+    }
+
+    private def addError(e: ElementWrapper, instances: Instances) {
       val itemErrorId = getItemErrorId(elementNumber(e), instances)
       html.div(classes = List(ClassClear)).closeTag
       html.div(
@@ -887,7 +898,7 @@ private def addError(e: ElementWrapper, instances: Instances) {
       }
     }
 
-private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
+    private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
       instances: Instances) = {
       val number = elementNumber(e)
       val itemId = getItemId(number, instances)
@@ -900,7 +911,6 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
         .line("  var pathDiv = $('#%s');", getPathId(number, instances))
         .toString
     }
-
 
     private def createEnumerationTestScriptlet(node: NodeBasic,
       instances: Instances) = {
@@ -968,22 +978,26 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
       }
     }
 
-    <!-- move to object -->
-
-    private def addEnumeration(e: ElementWrapper, r: Restriction,
-      instances: Instances) {
-      val number = elementNumber(e)
-      val en = getEnumeration(r)
-
-      val initializeBlank = getAnnotation(e, Annotation.AddBlank) match {
-        case Some("true") => true
-        case _ => false
-      }
-      enumeration(e, en, number, isRadio(e), initializeBlank, instances)
+    private def nextNumber: Int = {
+      _number += 1
+      _number
     }
 
+    def text =
+      template
+        .replace("//GENERATED_SCRIPT", script.toString)
+        .replace("//EXTRA_SCRIPT", configuration.flatMap(_.extraScript).mkString(""))
+        .replace("<!--HEADER-->", configuration.flatMap(_.header).mkString(""))
+        .replace("<!--FOOTER-->", configuration.flatMap(_.footer).mkString(""))
+        .replace("<!--EXTRA_IMPORTS-->", configuration.flatMap(_.extraImports).mkString(""))
+        .replace("/* EXTRA_CSS */", configuration.flatMap(_.extraCss).mkString(""))
+        .replace("<!--GENERATED_HTML-->", html.toString)
+
+    <!-- move to object -->
+
+
     private def valById(id: String) = "encodedValueById(\"" + id + "\")"
-    
+
     private def xmlStart(node: Node) =
       node.element.name match {
         case Some(name) => "'<" + name + namespace(node) + ">'"
@@ -1003,15 +1017,11 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
       if (instances.indentCount == 0) "'\\n' + "
       else "'\\n' + spaces(" + ((instances.indentCount - 1) * 2) + ") + "
 
-
-
     private def isMinOccursZero(e: ElementWrapper) =
       e.minOccurs.intValue == 0 && getAnnotation(e, Annotation.Visible) != Some("false")
 
-    
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
-
 
     private def getChoiceLabel(p: ParticleOption): String = {
 
@@ -1098,8 +1108,6 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
           case _ => None
         }).flatten
 
-
-
     private def addDescription(e: Element) {
       getAnnotation(e, Annotation.Description) match {
         case Some(x) =>
@@ -1111,7 +1119,6 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
       }
     }
 
-    
     private def getBasePattern(qn: QN) = {
 
       qn match {
@@ -1139,7 +1146,6 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
           .toString
       else ""
     }
-
 
     private def createLengthTestScriptlet(r: Restriction) = {
       r.simpleRestrictionModelSequence3
@@ -1203,7 +1209,6 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
           .toString
       else ""
 
-
     private def createPatternScriptlet(x: (String, Int)) =
       JS()
         .line("  patternMatched |= matchesPattern(v,/^%s$/);", x._1)
@@ -1219,8 +1224,6 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
       }
       js.toString
     }
-
-
 
     private def getPatterns(r: Restriction): Seq[String] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
@@ -1396,6 +1399,20 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
 
     private def repeats(e: ElementWrapper): Range = 1 to numInstances(e)
 
+    private def getRepeatingEnclosingId(element: ElementWrapper,
+      instances: Instances): String =
+      TreeToHtmlConverter.getRepeatingEnclosingId(
+        idPrefix, elementNumber(element), instances)
+    private def getChoiceItemName(node: Node, instances: Instances): String =
+      getChoiceItemName(elementNumber(node.element), instances)
+    private def getChoiceItemId(node: Node, index: Int,
+      instances: Instances): String =
+      getChoiceItemId(elementNumber(node.element), index, instances)
+    private def getItemId(node: Node, instances: Instances): String =
+      getItemId(elementNumber(node.element), instances)
+    private def getItemId(element: ElementWrapper, instances: Instances): String =
+      getItemId(elementNumber(element), instances)
+
     private def choiceContentId(idPrefix: String, number: Int, index: Int,
       instances: Instances) =
       idPrefix + "choice-content-" + number + InstanceDelimiter +
@@ -1408,26 +1425,13 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
       TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instances)
     private def getRemoveButtonId(number: Int, instances: Instances) =
       TreeToHtmlConverter.getRemoveButtonId(idPrefix, number, instances)
-    private def getRepeatingEnclosingId(element: ElementWrapper,
-      instances: Instances): String =
-      TreeToHtmlConverter.getRepeatingEnclosingId(
-        idPrefix, elementNumber(element), instances)
     private def getRepeatingEnclosingId(number: Int, instances: Instances) =
       TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instances)
-    private def getChoiceItemName(node: Node, instances: Instances): String =
-      getChoiceItemName(elementNumber(node.element), instances)
     private def getChoiceItemName(number: Int, instances: Instances): String =
       TreeToHtmlConverter.getChoiceItemName(idPrefix, number, instances)
-    private def getChoiceItemId(node: Node, index: Int,
-      instances: Instances): String =
-      getChoiceItemId(elementNumber(node.element), index, instances)
     private def getChoiceItemId(number: Int, index: Int,
       instances: Instances): String =
       TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instances)
-    private def getItemId(node: Node, instances: Instances): String =
-      getItemId(elementNumber(node.element), instances)
-    private def getItemId(element: ElementWrapper, instances: Instances): String =
-      getItemId(elementNumber(element), instances)
     private def getItemId(number: Int, instances: Instances): String =
       TreeToHtmlConverter.getItemId(idPrefix, number, instances)
     private def getItemId(number: Int, enumeration: Integer,
@@ -1442,11 +1446,6 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
     private def getPathId(number: Int, instances: Instances) =
       idPrefix + "item-path-" + number + InstanceDelimiter + instances
 
-    private def nextNumber: Int = {
-      _number += 1
-      _number
-    }
-
     private case class QN(namespace: String, localPart: String)
 
     private def toQN(r: Restriction): QN = toQN(r.base.get)
@@ -1456,16 +1455,6 @@ private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
 
     def template = io.Source.fromInputStream(
       getClass.getResourceAsStream("/template.html")).mkString
-
-    def text =
-      template
-        .replace("//GENERATED_SCRIPT", script.toString)
-        .replace("//EXTRA_SCRIPT", configuration.flatMap(_.extraScript).mkString(""))
-        .replace("<!--HEADER-->", configuration.flatMap(_.header).mkString(""))
-        .replace("<!--FOOTER-->", configuration.flatMap(_.footer).mkString(""))
-        .replace("<!--EXTRA_IMPORTS-->", configuration.flatMap(_.extraImports).mkString(""))
-        .replace("/* EXTRA_CSS */", configuration.flatMap(_.extraCss).mkString(""))
-        .replace("<!--GENERATED_HTML-->", html.toString)
 
   }
 

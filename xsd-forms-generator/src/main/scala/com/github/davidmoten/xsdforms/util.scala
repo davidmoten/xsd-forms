@@ -106,7 +106,6 @@ package com.github.davidmoten.xsdforms {
   sealed trait Node {
     val element: ElementWrapper
     def isAnonymous = element.name.isEmpty
-
   }
 
   sealed trait NodeGroup extends Node {
@@ -116,7 +115,7 @@ package com.github.davidmoten.xsdforms {
   // immutable would be preferrable but should be safe because not changed after tree created
   sealed trait NodeBasic extends Node
 
-  trait BasicType
+  sealed trait BasicType
   case class BasicTypeSimple(typ: SimpleType) extends BasicType
   case class BasicTypeBase(typ: BaseType) extends BasicType
 
