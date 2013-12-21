@@ -142,7 +142,7 @@ package com.github.davidmoten.xsdforms {
       new SchemaTraversor(schemaXb, rootElement, visitor).traverse
       println("tree:\n" + visitor)
 
-      new TreeToHtmlConverter(ns, idPrefix,
+      new TreeToHtmlConverter(Options(ns, idPrefix),
         visitor.configuration,
         visitor.rootNode).text
     }

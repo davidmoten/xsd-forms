@@ -73,10 +73,6 @@ package com.github.davidmoten.xsdforms {
     }
   }
 
-  object ConverterUtil {
-
-  }
-
   /**
    * **************************************************************
    *
@@ -86,16 +82,15 @@ package com.github.davidmoten.xsdforms {
    * **************************************************************
    */
 
-  class TreeToHtmlConverter(targetNamespace: String, idPrefix: String,
+  class TreeToHtmlConverter(options:Options,
     configuration: Option[Configuration], tree: Node) {
 
     import TreeToHtmlConverter._
-    import ConverterUtil._
     import XsdUtil._
     import Util._
     private val script = new StringBuilder
-
-    private var _number = 0
+    private val idPrefix = options.idPrefix
+    
     private val margin = "  "
     private val Plus = " + "
 
@@ -106,30 +101,16 @@ package com.github.davidmoten.xsdforms {
     private val NumInstancesForMultiple = 5
 
     import scala.collection.mutable.HashMap
-    private val elementNumbers = new HashMap[ElementWrapper, Int]()
 
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
     //traverse children left to right before siblings
-    assignElementNumbers(tree)
+    val elementNumbers = new ElementNumbersAssigner(tree).assignments 
 
     //process the abstract syntax tree
     doNode(tree, new Instances)
 
     addXmlExtractScriptlet(tree, new Instances)
-
-    /**
-     * Traverse children before siblings to provide element
-     * numbers matching page display order.
-     * @param node
-     */
-    private def assignElementNumbers(node: Node) {
-      elementNumber(node)
-      node match {
-        case n: NodeGroup => n.children.foreach { assignElementNumbers(_) }
-        case _ => ;
-      }
-    }
 
     private def doNode(node: Node, instances: Instances) {
       node match {
@@ -451,7 +432,7 @@ package com.github.davidmoten.xsdforms {
 
     private def namespace(node: Node) =
       if (elementNumber(node.element) == 1)
-        " xmlns=\"" + targetNamespace + "\""
+        " xmlns=\"" + options.targetNamespace + "\""
       else
         ""
 
@@ -546,14 +527,7 @@ package com.github.davidmoten.xsdforms {
     private def elementNumber(node: Node): Int = elementNumber(node.element)
 
     private def elementNumber(e: ElementWrapper): Int = {
-      val n = elementNumbers.get(e);
-      if (n.isDefined)
-        n.get
-      else {
-        val newNumber = nextNumber
-        elementNumbers(e) = newNumber
-        newNumber
-      }
+      elementNumbers.get(e).get;
     }
 
     private def simpleType(node: NodeBasic, instances: Instances) {
@@ -976,11 +950,6 @@ package com.github.davidmoten.xsdforms {
 
         addScript(js)
       }
-    }
-
-    private def nextNumber: Int = {
-      _number += 1
-      _number
     }
 
     def text =

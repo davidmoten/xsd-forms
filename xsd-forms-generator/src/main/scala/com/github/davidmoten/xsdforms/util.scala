@@ -305,4 +305,6 @@ package com.github.davidmoten.xsdforms {
     override def toString = b.toString
   }
 
+  case class Options(targetNamespace:String, idPrefix:String)
+  
 }
