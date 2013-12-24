@@ -1,4 +1,4 @@
-package com.github.davidmoten.xsdforms {
+package com.github.davidmoten.xsdforms.html {
 
   /**
    * **************************************************************
@@ -26,7 +26,7 @@ package com.github.davidmoten.xsdforms {
     val Name = "name"
   }
 
-  private class Html {
+  class Html {
     import Html._
     private case class HtmlElement(name: String, hasContent: Boolean)
     private val stack = new scala.collection.mutable.Stack[HtmlElement]

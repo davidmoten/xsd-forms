@@ -1,5 +1,6 @@
 package com.github.davidmoten.xsdforms {
   import xsd._
+  import tree._
 
   /**
    * **************************************************************

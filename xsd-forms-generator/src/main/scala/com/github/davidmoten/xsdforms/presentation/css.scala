@@ -1,4 +1,4 @@
-package com.github.davidmoten.xsdforms {
+package com.github.davidmoten.xsdforms.presentation {
 
   object Css {
     val ClassInvisible = "invisible"

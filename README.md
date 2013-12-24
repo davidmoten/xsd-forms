@@ -112,7 +112,7 @@ Every element in your schema optionally can have a contained &lt;xs:annotation/&
 
 [annotations-demo.xsd](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/test/resources/annotations-demo.xsd) ---> [form](http://htmlpreview.github.io/?https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/showcase/annotations-demo.html)
 
-For a full list of annotations and their meanings see the top of the file [xsdForms.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/com/github/davidmoten/xsdforms/annotation.scala).
+For a full list of annotations and their meanings see the top of the file [annotation.scala](https://github.com/davidmoten/xsd-forms/blob/master/xsd-forms-generator/src/main/scala/com/github/davidmoten/xsdforms/presentation/annotation.scala).
 
 This is what the form from annotations-demo.xsd looks like:
 

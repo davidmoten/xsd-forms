@@ -7,6 +7,7 @@ package com.github.davidmoten.xsdforms {
   import org.junit.runner.notification.Failure
   import java.io.File
   import java.io.InputStream
+  import tree._
 
   object TstUtil {
 

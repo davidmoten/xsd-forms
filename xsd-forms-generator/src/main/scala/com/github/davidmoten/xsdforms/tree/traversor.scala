@@ -1,4 +1,4 @@
-package com.github.davidmoten.xsdforms {
+package com.github.davidmoten.xsdforms.tree {
 
   import xsd._
   import javax.xml.namespace.QName
@@ -16,7 +16,8 @@ package com.github.davidmoten.xsdforms {
   class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) {
     import Util._
     import XsdUtil._
-
+    import com.github.davidmoten.xsdforms.presentation._
+    
     val extensionStack = new scala.collection.mutable.Stack[ExtensionTypable]
     val extensionsIncludedInBaseSequence = new scala.collection.mutable.Stack[Boolean]
 

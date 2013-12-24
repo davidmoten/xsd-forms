@@ -1,9 +1,11 @@
-package com.github.davidmoten.xsdforms {
+package com.github.davidmoten.xsdforms.tree {
 
-  import xsd._
+//  import xsd._
   import javax.xml.namespace.QName
   import scalaxb._
+  import com.github.davidmoten.xsdforms.presentation._
   import Css._
+  import com.github.davidmoten.xsdforms.html._
 
   /**
    * **************************************************************
@@ -87,6 +89,17 @@ package com.github.davidmoten.xsdforms {
   class TreeToHtmlConverter(options: Options,
     configuration: Option[Configuration], tree: Node) {
 
+    import xsd.Element
+    import xsd.Restriction
+    import xsd.ParticleOption
+    import xsd.NoFixedFacet
+    import xsd.SimpleRestrictionModelSequence
+    import xsd.NumFacet
+    import xsd.Pattern
+    import xsd.Annotatedable
+    import xsd.SimpleType
+    import xsd.Facet
+    
     import TreeToHtmlConverter._
     import XsdUtil._
     import Util._

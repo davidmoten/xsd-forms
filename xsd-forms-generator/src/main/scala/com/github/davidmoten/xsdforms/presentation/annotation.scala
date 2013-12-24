@@ -1,4 +1,4 @@
-package com.github.davidmoten.xsdforms {
+package com.github.davidmoten.xsdforms.presentation {
   object Annotation {
     //TODO document each of the annotations in scaladoc
 
