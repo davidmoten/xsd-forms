@@ -162,7 +162,7 @@ or
 
 ```
 <plugin>
-  <groupId>${project.parent.groupId}</groupId>
+  <groupId>com.github.davidmoten.xsdforms</groupId>
   <artifactId>xsd-forms-maven-plugin</artifactId>
   <version>${project.parent.version}</version>
   <executions>
