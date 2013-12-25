@@ -74,9 +74,10 @@ package com.github.davidmoten.xsdforms.tree {
 
     }
   }
+  
+  protected case class ElementWithNumber(element: ElementWrapper, number: Int)
 
-  case class ElementWithNumber(element: ElementWrapper, number: Int)
-
+  
   /**
    * **************************************************************
    *
@@ -115,7 +116,8 @@ package com.github.davidmoten.xsdforms.tree {
 
     private val NumInstancesForMultiple = 5
 
-    import scala.collection.mutable.HashMap
+
+
 
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
