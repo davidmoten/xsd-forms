@@ -19,6 +19,8 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 
 		<cobertura.version>2.6</cobertura.version>
+		<cobertura.skip>false</cobertura.skip>
+
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<checkstyle.version>2.10</checkstyle.version>
 		<findbugs.version>2.5.2</findbugs.version>
@@ -122,6 +124,7 @@
 							<version>${cobertura.version}</version>
 							<configuration>
 								<aggregate>false</aggregate>
+								<skip>${cobertura.skip}</skip>
 							</configuration>
 						</plugin>
 						<plugin>
