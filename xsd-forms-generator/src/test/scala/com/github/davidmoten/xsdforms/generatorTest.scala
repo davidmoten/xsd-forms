@@ -177,7 +177,7 @@ println(names.mkString("\n"))
     import org.apache.commons.io._
 
     import TstUtil._
-    import TreeToHtmlConverter._
+    import Ids._
 
     import com.gargoylesoftware.htmlunit._
 
@@ -665,7 +665,7 @@ println(names.mkString("\n"))
       elem.click
       assertTrue(elem.isSelected())
 
-      driver.findElement(By.id(TreeToHtmlConverter.getMinOccursZeroId(idPrefix, 89, Instances(List(1))))).click
+      driver.findElement(By.id(Ids.getMinOccursZeroId(idPrefix, 89, Instances(List(1))))).click
 
       submit.click
       submit.click
@@ -687,8 +687,6 @@ println(names.mkString("\n"))
     }
 
     private def validateAgainstSchema(xml: String, xsdPath: String) {
-      import Generator._
-      import TreeToHtmlConverter._
 
       import javax.xml.validation._
       import javax.xml._
@@ -726,7 +724,7 @@ function logit(doc,name) {
   class TreeToHtmlConverterTest {
     import org.junit.Assert._
 
-    import TreeToHtmlConverter._
+    import Ids._
 
     @Test
     def testParseSingle {

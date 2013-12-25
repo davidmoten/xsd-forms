@@ -1,7 +1,6 @@
 package com.github.davidmoten.xsdforms.tree {
 
   import xsd._
-  import xsd.ComplexTypeModelSequence1
 
   import javax.xml.namespace.QName
 

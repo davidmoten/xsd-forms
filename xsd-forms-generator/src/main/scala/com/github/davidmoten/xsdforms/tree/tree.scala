@@ -16,7 +16,7 @@ package com.github.davidmoten.xsdforms.tree {
    * **************************************************************
    */
 
-  object TreeToHtmlConverter {
+  object Ids {
 
     val InstanceDelimiter = "-instance-"
     val ChoiceIndexDelimiter = "-choice-"
@@ -100,8 +100,9 @@ package com.github.davidmoten.xsdforms.tree {
     import xsd.Annotatedable
     import xsd.SimpleType
     import xsd.Facet
+    import Ids.ChoiceIndexDelimiter
+    import Ids.InstanceDelimiter
     
-    import TreeToHtmlConverter._
     import XsdUtil._
     import Util._
     private val script = new StringBuilder
@@ -117,12 +118,10 @@ package com.github.davidmoten.xsdforms.tree {
     private val NumInstancesForMultiple = 5
 
 
-
-
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
     //traverse children left to right before siblings
-    val elementNumbers = new ElementNumbersAssigner(tree).assignments
+    private val elementNumbers = new ElementNumbersAssigner(tree).assignments
 
     implicit def toElementWithNumber(element: ElementWrapper): ElementWithNumber = ElementWithNumber(element, elementNumber(element))
     implicit def toElementWithNumber(node: Node): ElementWithNumber = toElementWithNumber(node.element)
@@ -649,7 +648,7 @@ package com.github.davidmoten.xsdforms.tree {
     private def addCheckboxScript(e: ElementWrapper, instances: Instances) {
       val number = e.number
       val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
-      val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
+      val makeVisibleMapOnElement = Ids.parseMakeVisibleMap(makeVisibleString)
       println(e.name + ",makeVisibleMap=" + makeVisibleMapOnElement)
       for (value <- List("true", "false")) {
         //get the makeVisible annotation from the named element or the
@@ -807,7 +806,7 @@ package com.github.davidmoten.xsdforms.tree {
           html.option(content = Some("Select one..."), value = "")
             .closeTag
         val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
-        val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
+        val makeVisibleMapOnElement = Ids.parseMakeVisibleMap(makeVisibleString)
         en.foreach { x =>
           val value = x._2.valueAttribute
 
@@ -1389,7 +1388,7 @@ package com.github.davidmoten.xsdforms.tree {
 
     private def getRepeatingEnclosingId(element: ElementWrapper,
       instances: Instances): String =
-      TreeToHtmlConverter.getRepeatingEnclosingId(
+      Ids.getRepeatingEnclosingId(
         idPrefix, element.number, instances)
     private def getChoiceItemName(node: Node, instances: Instances): String =
       getChoiceItemName(node.element.number, instances)
@@ -1406,31 +1405,31 @@ package com.github.davidmoten.xsdforms.tree {
       idPrefix + "choice-content-" + number + InstanceDelimiter +
         instances + ChoiceIndexDelimiter + index
     private def getMinOccursZeroId(number: Int, instances: Instances) =
-      TreeToHtmlConverter.getMinOccursZeroId(idPrefix, number, instances)
+      Ids.getMinOccursZeroId(idPrefix, number, instances)
     private def getMinOccursZeroName(number: Int, instances: Instances) =
-      TreeToHtmlConverter.getMinOccursZeroName(idPrefix, number, instances)
+      Ids.getMinOccursZeroName(idPrefix, number, instances)
     private def getRepeatButtonId(number: Int, instances: Instances) =
-      TreeToHtmlConverter.getRepeatButtonId(idPrefix, number, instances)
+      Ids.getRepeatButtonId(idPrefix, number, instances)
     private def getRemoveButtonId(number: Int, instances: Instances) =
-      TreeToHtmlConverter.getRemoveButtonId(idPrefix, number, instances)
+      Ids.getRemoveButtonId(idPrefix, number, instances)
     private def getRepeatingEnclosingId(number: Int, instances: Instances) =
-      TreeToHtmlConverter.getRepeatingEnclosingId(idPrefix, number, instances)
+      Ids.getRepeatingEnclosingId(idPrefix, number, instances)
     private def getChoiceItemName(number: Int, instances: Instances): String =
-      TreeToHtmlConverter.getChoiceItemName(idPrefix, number, instances)
+      Ids.getChoiceItemName(idPrefix, number, instances)
     private def getChoiceItemId(number: Int, index: Int,
       instances: Instances): String =
-      TreeToHtmlConverter.getChoiceItemId(idPrefix, number, index, instances)
+      Ids.getChoiceItemId(idPrefix, number, index, instances)
     private def getItemId(number: Int, instances: Instances): String =
-      TreeToHtmlConverter.getItemId(idPrefix, number, instances)
+      Ids.getItemId(idPrefix, number, instances)
     private def getItemId(number: Int, enumeration: Integer,
       instances: Instances): String =
       getItemId(number, instances) + "-" + enumeration
     private def getItemName(number: Int, instances: Instances) =
-      TreeToHtmlConverter.getItemName(idPrefix, number, instances)
+      Ids.getItemName(idPrefix, number, instances)
     private def getItemEnclosingId(number: Int, instances: Instances) =
       idPrefix + "item-enclosing-" + number + InstanceDelimiter + instances
     private def getItemErrorId(number: Int, instances: Instances) =
-      TreeToHtmlConverter.getItemErrorId(idPrefix, number, instances)
+      Ids.getItemErrorId(idPrefix, number, instances)
     private def getPathId(number: Int, instances: Instances) =
       idPrefix + "item-path-" + number + InstanceDelimiter + instances
 
