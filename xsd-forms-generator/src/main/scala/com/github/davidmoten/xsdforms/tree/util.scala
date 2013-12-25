@@ -133,22 +133,6 @@ package com.github.davidmoten.xsdforms.tree {
   case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic
   case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
 
-  /**
-   * **************************************************************
-   *
-   *   ElementWrapper
-   *
-   *
-   * **************************************************************
-   */
-
-  object ElementWrapper {
-    implicit def unwrap(wrapped: ElementWrapper): Element = wrapped.element
-  }
-
-  case class ElementWrapper(element: Element,
-    uniqueId: String = java.util.UUID.randomUUID.toString)
-
   case class Configuration(header: Option[String], footer: Option[String],
     extraImports: Option[String], extraScript: Option[String], extraCss: Option[String])
 

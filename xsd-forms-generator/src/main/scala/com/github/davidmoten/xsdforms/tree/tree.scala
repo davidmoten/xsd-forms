@@ -60,16 +60,6 @@ package com.github.davidmoten.xsdforms.tree {
     import xsd.Annotatedable
     import XsdUtil.AppInfoSchema
 
-    def getAnnotation(e: Annotatedable,
-      key: XsdFormsAnnotation): Option[String] =
-      e.annotation match {
-        case Some(x) =>
-          x.attributes.get("@{" + AppInfoSchema + "}" + key.name) match {
-            case Some(y) => Some(y.value.toString)
-            case None => None
-          }
-        case None => None
-      }
     def parseMakeVisibleMap(value: Option[String]): Map[String, Int] = {
       import Util._
 
@@ -91,18 +81,7 @@ package com.github.davidmoten.xsdforms.tree {
     }
 
   }
-  protected case class ElementWithNumber(element: ElementWrapper, number: Int) {
-    def get(key: XsdFormsAnnotation) = {
-      element.annotation match {
-        case Some(x) =>
-          x.attributes.get("@{" + XsdUtil.AppInfoSchema + "}" + key.name) match {
-            case Some(y) => Some(y.value.toString)
-            case None => None
-          }
-        case None => None
-      }
-    }
-  }
+  protected case class ElementWithNumber(element: ElementWrapper, number: Int) 
 
   /**
    * **************************************************************
@@ -132,6 +111,7 @@ package com.github.davidmoten.xsdforms.tree {
     import XsdUtil._
     import Util._
     import TreeUtil._
+    import ElementWrapper._
     private val script = new StringBuilder
     private val idPrefix = options.idPrefix
 
@@ -177,8 +157,7 @@ package com.github.davidmoten.xsdforms.tree {
       }
     }
 
-    private def hasButton(e: Element) =
-      e.maxOccurs != "1" && e.minOccurs.toString != e.maxOccurs
+   
 
     private def doNode(node: NodeSequence, instances: Instances) {
       val e = node.element
@@ -190,7 +169,7 @@ package com.github.davidmoten.xsdforms.tree {
 
       html
         .div(id = Some(getItemEnclosingId(number, instances add 1)),
-          classes = List(ClassSequence) ++ getVisibility(e))
+          classes = List(ClassSequence) ++ e.visibility)
       nonRepeatingTitle(e, instances)
       minOccursZeroCheckbox(e, instances)
       repeatButton(e, instances)
@@ -228,7 +207,7 @@ package com.github.davidmoten.xsdforms.tree {
       val number = e.number
 
       html.div(id = Some(getItemEnclosingId(number, instances add 1)),
-        classes = List(ClassChoice) ++ getVisibility(e))
+        classes = List(ClassChoice) ++ e.visibility)
       nonRepeatingTitle(e, instances)
       minOccursZeroCheckbox(e, instances)
       repeatButton(e, instances)
@@ -238,7 +217,7 @@ package com.github.davidmoten.xsdforms.tree {
         val particles = choice.group.particleOption3.map(_.value)
         addChoiceHideOnStartScriptlet(particles, number, instNos)
         addChoiceShowHideOnSelectionScriptlet(particles, number, instNos)
-        val label = getAnnotation(choice.group, Annotation.Label)
+        val label = getAnnotation(choice.group, Annotation.Label) 
         if (label.isDefined)
           html.div(
             classes = List(ClassChoiceLabel),
@@ -346,7 +325,7 @@ package com.github.davidmoten.xsdforms.tree {
       {
         val js = JS()
         val number = node.number
-        if (isMinOccursZero(node.element)) {
+        if (node.element.isMinOccursZero) {
           js.line("if (!$('#%s').is(':checked')) return '';",
             getMinOccursZeroId(number, instances))
         }
@@ -418,7 +397,7 @@ package com.github.davidmoten.xsdforms.tree {
         val instNos = instances add instanceNo
         js
           .line("  if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
-        if (isRadio(node.element))
+        if (node.element.isRadio)
           js.line("    var v = encodeHTML($('input[name=%s]:radio:checked').val());",
             getItemName(number, instNos))
         else if (isCheckbox(node))
@@ -491,7 +470,7 @@ package com.github.davidmoten.xsdforms.tree {
 
     private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
       val number = e.number
-      if (isMinOccursZero(e)) {
+      if (e.isMinOccursZero) {
         html.div(classes = List(ClassMinOccursZeroContainer))
         html
           .div(
@@ -540,7 +519,7 @@ package com.github.davidmoten.xsdforms.tree {
 
     private def repeatButton(e: ElementWrapper, instances: Instances) {
       val number = e.number
-      if (hasButton(e)) {
+      if (e.hasButton) {
         html.div(
           id = Some(getRepeatButtonId(number, instances)),
           classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
@@ -564,7 +543,7 @@ package com.github.davidmoten.xsdforms.tree {
       val number = e.number
       html
         .div(
-          classes = List(ClassItemEnclosing) ++ getVisibility(e),
+          classes = List(ClassItemEnclosing) ++ e.visibility,
           id = Some(getItemEnclosingId(number, instances add 1)))
       nonRepeatingTitle(e, instances)
     }
@@ -640,7 +619,7 @@ package com.github.davidmoten.xsdforms.tree {
       val number = e.number
       val inputType = getInputType(r)
       val itemId = getItemId(number, instances)
-      if (isTextArea(e)) {
+      if (e.isTextArea) {
         html.textarea(
           id = Some(itemId),
           name = getItemName(number, instances),
@@ -875,7 +854,7 @@ package com.github.davidmoten.xsdforms.tree {
         case Some("true") => true
         case _ => false
       }
-      enumeration(e, en, number, isRadio(e), initializeBlank, instances)
+      enumeration(e, en, number, e.isRadio, initializeBlank, instances)
     }
 
     private def addError(e: ElementWrapper, instances: Instances) {
@@ -936,7 +915,7 @@ package com.github.davidmoten.xsdforms.tree {
       val js = JS()
       if (isEnumeration(restriction(node))) {
         js.line("  //enumeration test")
-        if (isRadio(node.element))
+        if (node.element.isRadio)
           js.line("  var radioInput=$('input:radio[name=%s]');",
             getItemName(node.number, instances))
             .line("  if (! radioInput.is(':checked')) ok = false;")
@@ -947,7 +926,7 @@ package com.github.davidmoten.xsdforms.tree {
     }
 
     private def changeReference(e: ElementWrapper, instances: Instances) =
-      if (isRadio(e))
+      if (e.isRadio)
         "input:radio[name=" + getItemName(e.number, instances) + "]"
       else
         "#" + getItemId(e.number, instances)
@@ -977,7 +956,7 @@ package com.github.davidmoten.xsdforms.tree {
     private def addMaxOccursScriptlet(e: ElementWrapper,
       instances: Instances) {
       val number = e.number
-      if (isMultiple(e)) {
+      if (e.isMultiple) {
         val repeatButtonId = getRepeatButtonId(number, instances)
         val js = JS()
           .line("  $('#%s').click( function() {", repeatButtonId)
@@ -1009,7 +988,7 @@ package com.github.davidmoten.xsdforms.tree {
 
     <!-- move to object -->
 
-    private def valById(id: String) = "encodedValueById(\"" + id + "\")"
+   
 
     private def xmlStart(node: Node) =
       node.element.name match {
@@ -1030,9 +1009,7 @@ package com.github.davidmoten.xsdforms.tree {
       if (instances.indentCount == 0) "'\\n' + "
       else "'\\n' + spaces(" + ((instances.indentCount - 1) * 2) + ") + "
 
-    private def isMinOccursZero(e: ElementWrapper) =
-      e.minOccurs.intValue == 0 && e.get(Annotation.Visible) != Some("false")
-
+    
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
 
@@ -1054,11 +1031,6 @@ package com.github.davidmoten.xsdforms.tree {
       extends Restriction(None, SimpleRestrictionModelSequence(),
         None, Some(qName), Map())
 
-    private def getVisibility(e: Element) =
-      getAnnotation(e, Annotation.Visible) match {
-        case Some("false") => Some(ClassInvisible)
-        case _ => None
-      }
 
     private def itemTitle(e: ElementWrapper) {
       e.get(Annotation.Title) match {
@@ -1078,12 +1050,6 @@ package com.github.davidmoten.xsdforms.tree {
       }
     }
 
-    private def isTextArea(e: ElementWrapper) =
-      e.get(Annotation.Text) match {
-        case Some(t) if (t == "textarea") => true
-        case _ => false
-      }
-
     private def defaultValue(value: Option[String], r: Restriction): Option[String] = {
       value match {
         case Some(v) => {
@@ -1101,13 +1067,7 @@ package com.github.davidmoten.xsdforms.tree {
     private def isEnumeration(r: Restriction) =
       !getEnumeration(r).isEmpty
 
-    private def isRadio(e: ElementWrapper) =
-      //TODO add check is enumeration as well  
-      e.get(Annotation.Selector) match {
-        case Some("radio") => true
-        case _ => false
-      }
-
+    
     private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
       r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
         _.value match {
@@ -1296,10 +1256,7 @@ package com.github.davidmoten.xsdforms.tree {
       s.stripMargin.replaceAll("\n", "\n" + margin)
 
     private def isMultiple(node: Node): Boolean =
-      isMultiple(node.element)
-
-    private def isMultiple(e: ElementWrapper): Boolean =
-      return (e.maxOccurs == "unbounded" || e.maxOccurs.toInt > 1)
+      node.element.isMultiple
 
     private def repeatingEnclosingIds(e: ElementWrapper,
       instances: Instances) =
