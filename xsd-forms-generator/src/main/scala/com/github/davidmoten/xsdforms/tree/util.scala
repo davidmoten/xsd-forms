@@ -25,9 +25,8 @@ package com.github.davidmoten.xsdforms.tree {
   }
 
   case class XsdDatatype(name: String, pattern: Option[String] = None)
-  case class XsdElement(name:String) 
- 
-  
+  case class XsdElement(name: String)
+
   /**
    * Utility methods and constants for XML Schemas (XSD).
    */
@@ -42,10 +41,10 @@ package com.github.davidmoten.xsdforms.tree {
 
     val QnXsdExtension = qn("extension")
     val QnXsdSequence = qn("sequence")
-    val QnXsdChoice= qn("choice")
+    val QnXsdChoice = qn("choice")
     val QnXsdAppInfo = qn("appinfo")
     val QnXsdElement = qn("element")
-    
+
     //TODO use enumeration
     val XsdDateTime = XsdDatatype("dateTime")
     val XsdDate = XsdDatatype("date")
@@ -153,7 +152,6 @@ package com.github.davidmoten.xsdforms.tree {
   case class Configuration(header: Option[String], footer: Option[String],
     extraImports: Option[String], extraScript: Option[String], extraCss: Option[String])
 
-    
   /**
    * **************************************************************
    *
@@ -305,6 +303,6 @@ package com.github.davidmoten.xsdforms.tree {
     override def toString = b.toString
   }
 
-  case class Options(targetNamespace:String, idPrefix:String)
-  
+  case class Options(targetNamespace: String, idPrefix: String)
+
 }

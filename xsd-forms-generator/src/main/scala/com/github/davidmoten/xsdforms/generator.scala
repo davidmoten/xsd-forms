@@ -82,7 +82,7 @@ package com.github.davidmoten.xsdforms {
     }
 
     import scala.io.Source
-    
+
     private def copyJsCssAndGeneratedForm(
       schema: InputStream,
       action: (Array[Byte], String, Boolean) => Unit,
@@ -91,9 +91,9 @@ package com.github.davidmoten.xsdforms {
       val text = generateHtmlAsString(schema, idPrefix, rootElement)
 
       val list = Source.fromInputStream(getClass.getResourceAsStream("/file-list.txt"))
-      list.getLines.foreach{ path =>
-        val bytes = IOUtils.toByteArray(getClass.getResourceAsStream("/"+path))
-        action(bytes,path,false)
+      list.getLines.foreach { path =>
+        val bytes = IOUtils.toByteArray(getClass.getResourceAsStream("/" + path))
+        action(bytes, path, false)
       }
 
       val name = "form.html"

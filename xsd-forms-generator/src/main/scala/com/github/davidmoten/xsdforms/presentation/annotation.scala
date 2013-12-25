@@ -157,13 +157,13 @@ package com.github.davidmoten.xsdforms.presentation {
      * be them hidden).
      */
     val MaxRepeats = XsdFormsAnnotation("maxRepeats")
-    
+
     val Header = XsdFormsAnnotation("header")
-    
+
     val Footer = XsdFormsAnnotation("footer")
     val ExtraCss = XsdFormsAnnotation("extraCss")
     val ExtraImports = XsdFormsAnnotation("extraImports")
-    val ExtraScript= XsdFormsAnnotation("extraScript")
+    val ExtraScript = XsdFormsAnnotation("extraScript")
   }
 
   case class XsdFormsAnnotation(name: String)

@@ -17,7 +17,7 @@ package com.github.davidmoten.xsdforms.tree {
     import Util._
     import XsdUtil._
     import com.github.davidmoten.xsdforms.presentation._
-    
+
     val extensionStack = new scala.collection.mutable.Stack[ExtensionTypable]
     val extensionsIncludedInBaseSequence = new scala.collection.mutable.Stack[Boolean]
 

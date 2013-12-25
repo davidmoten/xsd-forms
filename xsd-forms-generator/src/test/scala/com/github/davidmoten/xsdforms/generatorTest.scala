@@ -724,7 +724,7 @@ function logit(doc,name) {
   class TreeToHtmlConverterTest {
     import org.junit.Assert._
 
-    import Ids._
+    import TreeUtil._
 
     @Test
     def testParseSingle {

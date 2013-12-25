@@ -1,6 +1,6 @@
 package com.github.davidmoten.xsdforms.tree {
 
-//  import xsd._
+  //  import xsd._
   import javax.xml.namespace.QName
   import scalaxb._
   import com.github.davidmoten.xsdforms.presentation._
@@ -54,6 +54,22 @@ package com.github.davidmoten.xsdforms.tree {
       instances: Instances): String =
       idPrefix + "min-occurs-zero-name" + number + InstanceDelimiter + instances
 
+  }
+
+  object TreeUtil {
+    import xsd.Annotatedable
+    import XsdUtil.AppInfoSchema
+
+    def getAnnotation(e: Annotatedable,
+      key: XsdFormsAnnotation): Option[String] =
+      e.annotation match {
+        case Some(x) =>
+          x.attributes.get("@{" + AppInfoSchema + "}" + key.name) match {
+            case Some(y) => Some(y.value.toString)
+            case None => None
+          }
+        case None => None
+      }
     def parseMakeVisibleMap(value: Option[String]): Map[String, Int] = {
       import Util._
 
@@ -73,11 +89,21 @@ package com.github.davidmoten.xsdforms.tree {
       }
 
     }
-  }
-  
-  protected case class ElementWithNumber(element: ElementWrapper, number: Int)
 
-  
+  }
+  protected case class ElementWithNumber(element: ElementWrapper, number: Int) {
+    def get(key: XsdFormsAnnotation) = {
+      element.annotation match {
+        case Some(x) =>
+          x.attributes.get("@{" + XsdUtil.AppInfoSchema + "}" + key.name) match {
+            case Some(y) => Some(y.value.toString)
+            case None => None
+          }
+        case None => None
+      }
+    }
+  }
+
   /**
    * **************************************************************
    *
@@ -102,9 +128,10 @@ package com.github.davidmoten.xsdforms.tree {
     import xsd.Facet
     import Ids.ChoiceIndexDelimiter
     import Ids.InstanceDelimiter
-    
+
     import XsdUtil._
     import Util._
+    import TreeUtil._
     private val script = new StringBuilder
     private val idPrefix = options.idPrefix
 
@@ -116,7 +143,6 @@ package com.github.davidmoten.xsdforms.tree {
     private val html = new Html
 
     private val NumInstancesForMultiple = 5
-
 
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
@@ -157,10 +183,10 @@ package com.github.davidmoten.xsdforms.tree {
     private def doNode(node: NodeSequence, instances: Instances) {
       val e = node.element
       val number = node.number
-      val legend = getAnnotation(e, Annotation.Legend)
+      val legend = e.get(Annotation.Legend)
       val usesFieldset = legend.isDefined
 
-      val label = getAnnotation(e, Annotation.Label)
+      val label = e.get(Annotation.Label)
 
       html
         .div(id = Some(getItemEnclosingId(number, instances add 1)),
@@ -470,7 +496,7 @@ package com.github.davidmoten.xsdforms.tree {
         html
           .div(
             classes = List(ClassMinOccursZeroLabel),
-            content = Some(getAnnotation(e, Annotation.MinOccursZeroLabel)
+            content = Some(e.get(Annotation.MinOccursZeroLabel)
               .getOrElse("Click to enable")))
           .closeTag
         html.input(
@@ -503,7 +529,7 @@ package com.github.davidmoten.xsdforms.tree {
     private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
       //there's only one of these so use instanceNo = 1
       val number = e.number
-      val content = getAnnotation(e, Annotation.NonRepeatingTitle)
+      val content = e.get(Annotation.NonRepeatingTitle)
       if (content.isDefined)
         html
           .div(
@@ -518,7 +544,7 @@ package com.github.davidmoten.xsdforms.tree {
         html.div(
           id = Some(getRepeatButtonId(number, instances)),
           classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
-          content = Some(getAnnotation(e, Annotation.RepeatLabel)
+          content = Some(e.get(Annotation.RepeatLabel)
             .getOrElse("+"))).closeTag
         html.div(classes = List(ClassClear)).closeTag
       }
@@ -647,8 +673,8 @@ package com.github.davidmoten.xsdforms.tree {
 
     private def addCheckboxScript(e: ElementWrapper, instances: Instances) {
       val number = e.number
-      val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
-      val makeVisibleMapOnElement = Ids.parseMakeVisibleMap(makeVisibleString)
+      val makeVisibleString = e.get(Annotation.MakeVisible);
+      val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
       println(e.name + ",makeVisibleMap=" + makeVisibleMapOnElement)
       for (value <- List("true", "false")) {
         //get the makeVisible annotation from the named element or the
@@ -678,7 +704,7 @@ package com.github.davidmoten.xsdforms.tree {
 
     private def addWidthScript(e: ElementWrapper, instances: Instances) {
       val itemId = getItemId(e, instances)
-      getAnnotation(e, Annotation.Width) match {
+      e.get(Annotation.Width) match {
         case Some(x) =>
           addScript(JS().line("  $('#%s').width('%s');", itemId, x))
         case None =>
@@ -687,7 +713,7 @@ package com.github.davidmoten.xsdforms.tree {
 
     private def addCssScript(e: ElementWrapper, instances: Instances) {
       val itemId = getItemId(e, instances)
-      getAnnotation(e, Annotation.Css) match {
+      e.get(Annotation.Css) match {
         case Some(x) => {
           val items = x.split(';')
             .foreach(
@@ -714,7 +740,7 @@ package com.github.davidmoten.xsdforms.tree {
           .div(
             id = Some(getRemoveButtonId(number, instances)),
             classes = List(ClassRemoveButton, ClassWhite, ClassSmall),
-            content = Some(getAnnotation(e, Annotation.RemoveLabel)
+            content = Some(e.get(Annotation.RemoveLabel)
               .getOrElse("-")))
           .closeTag
           .closeTag
@@ -805,8 +831,8 @@ package com.github.davidmoten.xsdforms.tree {
         if (initializeBlank)
           html.option(content = Some("Select one..."), value = "")
             .closeTag
-        val makeVisibleString = getAnnotation(e, Annotation.MakeVisible);
-        val makeVisibleMapOnElement = Ids.parseMakeVisibleMap(makeVisibleString)
+        val makeVisibleString = e.get(Annotation.MakeVisible);
+        val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
         en.foreach { x =>
           val value = x._2.valueAttribute
 
@@ -845,7 +871,7 @@ package com.github.davidmoten.xsdforms.tree {
       val number = e.number
       val en = getEnumeration(r)
 
-      val initializeBlank = getAnnotation(e, Annotation.AddBlank) match {
+      val initializeBlank = e.get(Annotation.AddBlank) match {
         case Some("true") => true
         case _ => false
       }
@@ -858,7 +884,7 @@ package com.github.davidmoten.xsdforms.tree {
       html.div(
         id = Some(itemErrorId),
         classes = List(ClassItemError),
-        content = Some(getAnnotation(e, Annotation.Validation)
+        content = Some(e.get(Annotation.Validation)
           .getOrElse("Invalid")))
         .closeTag
 
@@ -873,8 +899,8 @@ package com.github.davidmoten.xsdforms.tree {
         .closeTag
     }
 
-    private def addHelp(e: Element) {
-      getAnnotation(e, Annotation.Help) match {
+    private def addHelp(e: ElementWrapper) {
+      e.get(Annotation.Help) match {
         case Some(x) =>
           html.div(classes = List(ClassItemHelp),
             content = Some(x)).closeTag
@@ -882,8 +908,8 @@ package com.github.davidmoten.xsdforms.tree {
       }
     }
 
-    private def addAfter(e: Element) {
-      getAnnotation(e, Annotation.After) match {
+    private def addAfter(e: ElementWrapper) {
+      e.get(Annotation.After) match {
         case Some(x) =>
           html.div(classes = List(ClassItemAfter),
             content = Some(x)).closeTag
@@ -1005,7 +1031,7 @@ package com.github.davidmoten.xsdforms.tree {
       else "'\\n' + spaces(" + ((instances.indentCount - 1) * 2) + ") + "
 
     private def isMinOccursZero(e: ElementWrapper) =
-      e.minOccurs.intValue == 0 && getAnnotation(e, Annotation.Visible) != Some("false")
+      e.minOccurs.intValue == 0 && e.get(Annotation.Visible) != Some("false")
 
     private def displayChoiceInline(choice: Choice) =
       "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
@@ -1034,8 +1060,8 @@ package com.github.davidmoten.xsdforms.tree {
         case _ => None
       }
 
-    private def itemTitle(e: Element) {
-      getAnnotation(e, Annotation.Title) match {
+    private def itemTitle(e: ElementWrapper) {
+      e.get(Annotation.Title) match {
         case Some(x) =>
           html.div(classes = List(ClassItemTitle),
             content = Some(x)).closeTag
@@ -1043,8 +1069,8 @@ package com.github.davidmoten.xsdforms.tree {
       }
     }
 
-    private def itemBefore(e: Element) {
-      getAnnotation(e, Annotation.Before) match {
+    private def itemBefore(e: ElementWrapper) {
+      e.get(Annotation.Before) match {
         case Some(x) =>
           html.div(classes = List(ClassItemBefore),
             content = Some(x)).closeTag
@@ -1052,8 +1078,8 @@ package com.github.davidmoten.xsdforms.tree {
       }
     }
 
-    private def isTextArea(e: Element) =
-      getAnnotation(e, Annotation.Text) match {
+    private def isTextArea(e: ElementWrapper) =
+      e.get(Annotation.Text) match {
         case Some(t) if (t == "textarea") => true
         case _ => false
       }
@@ -1077,7 +1103,7 @@ package com.github.davidmoten.xsdforms.tree {
 
     private def isRadio(e: ElementWrapper) =
       //TODO add check is enumeration as well  
-      getAnnotation(e, Annotation.Selector) match {
+      e.get(Annotation.Selector) match {
         case Some("radio") => true
         case _ => false
       }
@@ -1095,8 +1121,8 @@ package com.github.davidmoten.xsdforms.tree {
           case _ => None
         }).flatten
 
-    private def addDescription(e: Element) {
-      getAnnotation(e, Annotation.Description) match {
+    private def addDescription(e: ElementWrapper) {
+      e.get(Annotation.Description) match {
         case Some(x) =>
           html.div(
             classes = List(ClassItemDescription),
@@ -1279,17 +1305,6 @@ package com.github.davidmoten.xsdforms.tree {
       instances: Instances) =
       repeats(e).map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
 
-    private def getAnnotation(e: Annotatedable,
-      key: XsdFormsAnnotation): Option[String] =
-      e.annotation match {
-        case Some(x) =>
-          x.attributes.get("@{" + AppInfoSchema + "}" + key.name) match {
-            case Some(y) => Some(y.value.toString)
-            case None => None
-          }
-        case None => None
-      }
-
     private def getLabelFromNameOrAnnotation(e: Element): String = {
       val name = getLabelFromName(e)
       getAnnotation(e, Annotation.Label) match {
@@ -1376,7 +1391,7 @@ package com.github.davidmoten.xsdforms.tree {
       else
         e.maxOccurs.toInt
 
-      getAnnotation(e, Annotation.MaxRepeats) match {
+      e.get(Annotation.MaxRepeats) match {
         case Some(m) => Math.min(n, m.toInt)
         case _ => n
       }
