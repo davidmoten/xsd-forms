@@ -588,8 +588,6 @@ package com.github.davidmoten.xsdforms.tree {
     private def addInput(e: ElementWrapper, qn: QN, r: Restriction,
       instances: Instances) {
 
-      val number = e.number
-
       if (isEnumeration(r))
         addEnumeration(e, r, instances)
       else

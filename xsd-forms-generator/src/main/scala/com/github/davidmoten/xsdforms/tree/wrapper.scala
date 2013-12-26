@@ -85,6 +85,7 @@ package com.github.davidmoten.xsdforms.tree {
     }
 
   }
+  
   protected case class QN(namespace: String, localPart: String)
 
   protected sealed trait InputType {
