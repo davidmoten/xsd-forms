@@ -122,7 +122,7 @@ package com.github.davidmoten.xsdforms.tree {
     private sealed trait StackEntry
     private val html = new Html
 
-    private val NumInstancesForMultiple = 5
+    
 
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
@@ -173,7 +173,7 @@ package com.github.davidmoten.xsdforms.tree {
       nonRepeatingTitle(e, instances)
       minOccursZeroCheckbox(e, instances)
       repeatButton(e, instances)
-      for (instanceNo <- repeats(e)) {
+      for (instanceNo <- e.repeats) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         if (label.isDefined)
@@ -211,7 +211,7 @@ package com.github.davidmoten.xsdforms.tree {
       nonRepeatingTitle(e, instances)
       minOccursZeroCheckbox(e, instances)
       repeatButton(e, instances)
-      for (instanceNo <- repeats(e)) {
+      for (instanceNo <- e.repeats) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         val particles = choice.group.particleOption3.map(_.value)
@@ -270,7 +270,7 @@ package com.github.davidmoten.xsdforms.tree {
       repeatButton(e, instances)
       val t = Some(typ)
       val number = e.number
-      for (instanceNo <- repeats(e)) {
+      for (instanceNo <- e.repeats) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         itemTitle(e)
@@ -298,7 +298,7 @@ package com.github.davidmoten.xsdforms.tree {
       repeatButton(e, instances)
       val t = None
       val number = e.number
-      for (instanceNo <- repeats(e)) {
+      for (instanceNo <- e.repeats) {
         val instNos = instances add instanceNo
         repeatingEnclosing(e, instNos)
         itemTitle(e)
@@ -491,7 +491,7 @@ package com.github.davidmoten.xsdforms.tree {
         val js = JS()
           .line("$('#%s').change( function () {",
             getMinOccursZeroId(number, instances))
-        for (instanceNo <- repeats(e)) {
+        for (instanceNo <- e.repeats) {
           js
             .line("  changeMinOccursZeroCheckbox($(this),$('#%s'));",
               getRepeatingEnclosingId(number, instances add instanceNo))
@@ -1020,7 +1020,7 @@ package com.github.davidmoten.xsdforms.tree {
           case x: Element => {
             getAnnotation(x, Annotation.ChoiceLabel) ++
               getAnnotation(x, Annotation.Label) ++
-              Some(getLabelFromNameOrAnnotation(x))
+              Some(getLabelFromNameOrAnnotation(ElementWrapper(x)))
           }
           case _ => unexpected
         }
@@ -1050,37 +1050,7 @@ package com.github.davidmoten.xsdforms.tree {
       }
     }
 
-    private def defaultValue(value: Option[String], r: Restriction): Option[String] = {
-      value match {
-        case Some(v) => {
-          toQN(r) match {
-            // drop the seconds off the time so js timepicker is happy
-            case QN(xs, XsdTime.name) => Some(v.substring(0, 5))
-            case QN(xs, XsdDateTime.name) => Some(v.substring(0, 16))
-            case _ => value
-          }
-        }
-        case None => value
-      }
-    }
-
-    private def isEnumeration(r: Restriction) =
-      !getEnumeration(r).isEmpty
-
     
-    private def getEnumeration(r: Restriction): Seq[(String, NoFixedFacet)] =
-      r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
-        _.value match {
-          case y: NoFixedFacet => {
-            val label = getAnnotation(y, Annotation.Label) match {
-              case Some(x) => x
-              case None => y.valueAttribute
-            }
-            Some((label, y))
-          }
-          case _ => None
-        }).flatten
-
     private def addDescription(e: ElementWrapper) {
       e.get(Annotation.Description) match {
         case Some(x) =>
@@ -1089,24 +1059,6 @@ package com.github.davidmoten.xsdforms.tree {
             content = Some(x))
             .closeTag
         case None =>
-      }
-    }
-
-    private def getBasePattern(qn: QN) = {
-
-      qn match {
-        case QN(xs, XsdDecimal.name) => XsdDecimal.pattern
-        case QN(xs, XsdInteger.name) => XsdInteger.pattern
-        case QN(xs, XsdInt.name) => XsdInt.pattern
-        case QN(xs, XsdLong.name) => XsdLong.pattern
-        case QN(xs, XsdShort.name) => XsdShort.pattern
-        case QN(xs, XsdPositiveInteger.name) => XsdPositiveInteger.pattern
-        case QN(xs, XsdNonPositiveInteger.name) => XsdNonPositiveInteger.pattern
-        case QN(xs, XsdNegativeInteger.name) => XsdNegativeInteger.pattern
-        case QN(xs, XsdNonNegativeInteger.name) => XsdNonNegativeInteger.pattern
-        case QN(xs, XsdDouble.name) => XsdDouble.pattern
-        case QN(xs, XsdFloat.name) => XsdFloat.pattern
-        case _ => None
       }
     }
 
@@ -1260,10 +1212,10 @@ package com.github.davidmoten.xsdforms.tree {
 
     private def repeatingEnclosingIds(e: ElementWrapper,
       instances: Instances) =
-      repeats(e).map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
+      e.repeats.map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
 
-    private def getLabelFromNameOrAnnotation(e: Element): String = {
-      val name = getLabelFromName(e)
+    private def getLabelFromNameOrAnnotation(e: ElementWrapper): String = {
+      val name = e.getLabelFromName
       getAnnotation(e, Annotation.Label) match {
         case Some(x: String) => x
         case _ => name
@@ -1296,16 +1248,6 @@ package com.github.davidmoten.xsdforms.tree {
         if (mandatory) label + "<em>*</em>"
         else label
       }
-
-    private def getLabelFromName(e: Element) =
-      e.name.get
-        .replaceAll("-", " ")
-        .replaceAll("_", " ")
-        .split(" ")
-        .map(s =>
-          Character.toUpperCase(s.charAt(0))
-            + s.substring(1, s.length))
-        .mkString(" ")
 
     private def isMandatory(node: Node, r: Restriction): Boolean = {
       val e = node.element
@@ -1341,22 +1283,7 @@ package com.github.davidmoten.xsdforms.tree {
     private def restriction(node: NodeBaseType) =
       new MyRestriction(node.typ.qName)
 
-    private def numInstances(e: ElementWrapper): Int = {
-
-      val n = if (e.maxOccurs == "unbounded")
-        NumInstancesForMultiple
-      else
-        e.maxOccurs.toInt
-
-      e.get(Annotation.MaxRepeats) match {
-        case Some(m) => Math.min(n, m.toInt)
-        case _ => n
-      }
-    }
-
-    private def repeats(node: Node): Range = repeats(node.element)
-
-    private def repeats(e: ElementWrapper): Range = 1 to numInstances(e)
+    private def repeats(node: Node): Range = node.element.repeats
 
     private def getRepeatingEnclosingId(element: ElementWrapper,
       instances: Instances): String =
@@ -1404,13 +1331,6 @@ package com.github.davidmoten.xsdforms.tree {
       Ids.getItemErrorId(idPrefix, number, instances)
     private def getPathId(number: Int, instances: Instances) =
       idPrefix + "item-path-" + number + InstanceDelimiter + instances
-
-    private case class QN(namespace: String, localPart: String)
-
-    private def toQN(r: Restriction): QN = toQN(r.base.get)
-
-    private def toQN(qName: QName): QN =
-      QN(qName.getNamespaceURI(), qName.getLocalPart())
 
     def template = io.Source.fromInputStream(
       getClass.getResourceAsStream("/template.html")).mkString
