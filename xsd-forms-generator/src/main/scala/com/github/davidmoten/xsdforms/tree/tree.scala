@@ -83,6 +83,8 @@ package com.github.davidmoten.xsdforms.tree {
   }
   protected case class ElementWithNumber(element: ElementWrapper, number: Int)
 
+  protected case class HtmlJs(html:String, js:String)
+  
   /**
    * **************************************************************
    *
@@ -314,8 +316,6 @@ package com.github.davidmoten.xsdforms.tree {
       html.closeTag
       addMaxOccursScriptlet(e, instances)
     }
-
-    import scala.collection.mutable.MutableList
 
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
       {
@@ -562,8 +562,6 @@ package com.github.davidmoten.xsdforms.tree {
       addDescription(e)
 
       addPath(e, instances)
-
-      //addError(e, instances)
 
       addHelp(e)
 
@@ -1126,7 +1124,6 @@ package com.github.davidmoten.xsdforms.tree {
     private def repeatingEnclosingIds(e: ElementWrapper,
       instances: Instances) =
       e.repeats.map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
-
     private def getRepeatingEnclosingId(element: ElementWrapper,
       instances: Instances): String =
       Ids.getRepeatingEnclosingId(
@@ -1140,7 +1137,6 @@ package com.github.davidmoten.xsdforms.tree {
       getItemId(node.element.number, instances)
     private def getItemId(element: ElementWrapper, instances: Instances): String =
       getItemId(element.number, instances)
-
     private def choiceContentId(idPrefix: String, number: Int, index: Int,
       instances: Instances) =
       idPrefix + "choice-content-" + number + InstanceDelimiter +

@@ -53,7 +53,7 @@ package com.github.davidmoten.xsdforms.tree {
 
     def repeats: Range = 1 to numInstances
 
-    def numInstances: Int = {
+    private def numInstances: Int = {
 
       val n = if (e.maxOccurs == "unbounded")
         NumInstancesForMultiple
@@ -66,7 +66,7 @@ package com.github.davidmoten.xsdforms.tree {
       }
     }
 
-    def getLabelFromName =
+    private def getLabelFromName =
       e.name.get
         .replaceAll("-", " ")
         .replaceAll("_", " ")
@@ -104,6 +104,15 @@ package com.github.davidmoten.xsdforms.tree {
   protected class MyRestriction(qName: QName)
     extends Restriction(None, SimpleRestrictionModelSequence(),
       None, Some(qName), Map())
+
+  /**
+   * **************************************************************
+   *
+   *   ElementWrapper object
+   *
+   *
+   * **************************************************************
+   */
 
   protected object ElementWrapper {
 
