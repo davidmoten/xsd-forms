@@ -27,7 +27,10 @@ package com.github.davidmoten.xsdforms.tree {
 
   protected case class ElementWithNumber(element: ElementWrapper, number: Int)
 
-  protected case class HtmlJs(html: String, js: String)
+  protected case class HtmlJs(html: String, js: String) {
+    def addHtml(html: String) = HtmlJs(this.html + html, js)
+    def addJs(js: String) = HtmlJs(html, this.js + js)
+  }
 
   object Ids {
 

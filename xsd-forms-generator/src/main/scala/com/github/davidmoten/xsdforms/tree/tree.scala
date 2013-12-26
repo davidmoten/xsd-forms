@@ -45,7 +45,7 @@ package com.github.davidmoten.xsdforms.tree {
     private sealed trait Entry
     private sealed trait StackEntry
     private val html = new Html
-
+    
     //assign element numbers so that order of display on page 
     //will match order of element numbers. To do this must 
     //traverse children left to right before siblings
