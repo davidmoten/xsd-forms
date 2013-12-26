@@ -76,8 +76,34 @@ package com.github.davidmoten.xsdforms.tree {
             + s.substring(1, s.length))
         .mkString(" ")
 
+    def getLabelFromNameOrAnnotation: String = {
+      val name = getLabelFromName
+      get(Annotation.Label) match {
+        case Some(x: String) => x
+        case _ => name
+      }
+    }
+
   }
   protected case class QN(namespace: String, localPart: String)
+
+  protected sealed trait InputType {
+    val name: String;
+  }
+  protected case object Checkbox extends InputType {
+    val name = "checkbox";
+  }
+  protected case object TextBox extends InputType {
+    val name = "text"
+  }
+
+  import xsd.Restriction
+  import xsd.SimpleRestrictionModelSequence
+  import javax.xml.namespace.QName
+
+  protected class MyRestriction(qName: QName)
+    extends Restriction(None, SimpleRestrictionModelSequence(),
+      None, Some(qName), Map())
 
   protected object ElementWrapper {
 
@@ -85,9 +111,13 @@ package com.github.davidmoten.xsdforms.tree {
     import xsd.Annotatedable
     import xsd.Restriction
     import xsd.NoFixedFacet
+    import xsd.SimpleType
+    import xsd.Pattern
+    import xsd.ParticleOption
     import Util._
     import XsdUtil._
     import javax.xml.namespace.QName
+    import scalaxb.DataRecord
 
     implicit def unwrap(wrapped: ElementWrapper): Element = wrapped.element
 
@@ -157,6 +187,133 @@ package com.github.davidmoten.xsdforms.tree {
         case _ => None
       }
     }
+
+    def getLabel(node: Node, typ: Option[SimpleType]) =
+      {
+        val e = node.element
+        val label = e.getLabelFromNameOrAnnotation
+
+        val mustOccur = e.minOccurs.intValue > 0
+        val isText = e.typeValue match {
+          case Some(x: QName) => x == qn("string")
+          case _ => false
+        }
+        val mandatory = typ match {
+          case None => mustOccur && !isText
+          case Some(x) => (
+            x.simpleDerivationOption3.value match {
+              case y: Restriction =>
+                (getInputType(y) match {
+                  case Checkbox => true
+                  case TextBox => isMandatory(node, y)
+                })
+              case _ =>
+                !isText
+            })
+        }
+        if (mandatory) label + "<em>*</em>"
+        else label
+      }
+
+    def isMandatory(node: Node, r: Restriction): Boolean = {
+      val e = node.element
+      val patterns =
+        node match {
+          case b: NodeBasic => getPatterns(b)
+          case _ => getPatterns(r)
+        }
+      getInputType(r) == TextBox &&
+        e.minOccurs.intValue == 1 &&
+        ((patterns.size > 0 &&
+          !patterns.exists(java.util.regex.Pattern.matches(_, ""))) || isEnum(r))
+    }
+
+    def isEnum(r: Restriction) =
+      r.simpleRestrictionModelSequence3
+        .facetsOption2
+        .filter(x => toQName(x) == qn("enumeration"))
+        .size > 0
+
+    def restriction(node: NodeBasic): Restriction =
+      node match {
+        case n: NodeSimpleType => restriction(n)
+        case n: NodeBaseType => restriction(n)
+      }
+
+    def restriction(node: NodeSimpleType): Restriction =
+      node.typ.simpleDerivationOption3.value match {
+        case x: Restriction => x
+        case _ => Util.unexpected
+      }
+
+    private def restriction(node: NodeBaseType) =
+      new MyRestriction(node.typ.qName)
+
+    def getPatterns(node: NodeBasic): Seq[String] =
+      {
+        val r = restriction(node)
+
+        val explicitPatterns = getPatterns(r)
+
+        val qn = toQN(r)
+
+        //calculate implicit patterns for dates, times, and datetimes
+        val implicitPatterns =
+          qn match {
+            case QN(xs, XsdDate.name) =>
+              Some("\\d\\d\\d\\d-\\d\\d-\\d\\d")
+            //TODO why spaces on end of time?
+            case QN(xs, XsdTime.name) =>
+              Some("\\d\\d:\\d\\d *")
+            case QN(xs, XsdDateTime.name) =>
+              Some("\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d")
+            case _ => None
+          }
+
+        explicitPatterns ++ implicitPatterns
+      }
+
+    private def getPatterns(r: Restriction): Seq[String] =
+      r.simpleRestrictionModelSequence3.facetsOption2.seq.flatMap(f => {
+        f match {
+          case DataRecord(xs, Some("pattern"), x: Pattern) =>
+            Some(x.valueAttribute)
+          case _ => None
+        }
+      })
+
+    def getInputType(r: Restriction): InputType = {
+      val qn = toQN(r)
+      qn match {
+        case QN(xs, XsdBoolean.name) => Checkbox
+        case _ => TextBox
+      }
+    }
+
+    def isCheckbox(node: NodeBasic) =
+      Checkbox == getInputType(restriction(node))
+
+    def displayChoiceInline(choice: Choice) =
+      "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
+
+    def getChoiceLabel(p: ParticleOption): String = {
+
+      val labels =
+        p match {
+          case x: Element => {
+            getAnnotation(x, Annotation.ChoiceLabel) ++
+              getAnnotation(x, Annotation.Label) ++
+              Some(ElementWrapper(x).getLabelFromNameOrAnnotation)
+          }
+          case _ => unexpected
+        }
+      labels.head
+    }
+
+    def isMultiple(node: Node): Boolean =
+      node.element.isMultiple
+
+    def repeats(node: Node): Range = node.element.repeats
 
   }
 
