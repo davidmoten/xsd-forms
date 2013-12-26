@@ -7,9 +7,6 @@ package com.github.davidmoten.xsdforms.tree {
   import Css._
   import com.github.davidmoten.xsdforms.html._
 
- 
-
-  
   /**
    * **************************************************************
    *
@@ -182,16 +179,12 @@ package com.github.davidmoten.xsdforms.tree {
       html.closeTag
 
       addMaxOccursScriptlet(e, instances)
-
     }
 
-    private def doNode(node: NodeSimpleType, instances: Instances) {
+    private def doNode(node: NodeBasic, instances: Instances) {
       val e = node.element
-      val typ = node.typ
-
       nonRepeatingSimpleType(e, instances)
       repeatButton(e, instances)
-      val t = Some(typ)
       val number = e.number
       for (instanceNo <- e.repeats) {
         val instNos = instances add instanceNo
@@ -199,47 +192,35 @@ package com.github.davidmoten.xsdforms.tree {
         itemTitle(e)
         addRemoveButton(e, instNos)
         itemBefore(e)
-        html.div(classes = List(ClassItemNumber),
-          content = Some(number.toString)).closeTag
-          .label(forInputName = getItemName(number, instNos),
-            classes = List(ClassItemLabel), content = Some(getLabel(node, t))).closeTag
-          .div(classes = List(ClassItemInput))
-
+        addNumberLabel(node,number,instNos)
         simpleType(node, instNos)
         html.closeTag
         addError(e, instNos)
         html closeTag
       }
-      html closeTag;
+      html.closeTag
       addMaxOccursScriptlet(e, instances)
     }
 
-    private def doNode(node: NodeBaseType, instances: Instances) {
-      val e = node.element
-      val typ = node.typ
-      nonRepeatingSimpleType(e, instances)
-      repeatButton(e, instances)
-      val t = None
-      val number = e.number
-      for (instanceNo <- e.repeats) {
-        val instNos = instances add instanceNo
-        repeatingEnclosing(e, instNos)
-        itemTitle(e)
-        addRemoveButton(e, instNos)
-        itemBefore(e)
-        html.div(classes = List(ClassItemNumber),
-          content = Some(number.toString)).closeTag
-          .label(forInputName = getItemName(number, instNos),
-            classes = List(ClassItemLabel), content = Some(getLabel(node, t))).closeTag
-          .div(classes = List(ClassItemInput))
-        simpleType(node, instNos)
-        html
-          .closeTag
-        addError(e, instNos)
-        html.closeTag
-      }
-      html.closeTag
-      addMaxOccursScriptlet(e, instances)
+    private def addNumberLabel(node:NodeBasic, number:Int, instNos:Instances) {
+      node match {
+          case n: NodeBaseType => {
+            val t = None
+            html.div(classes = List(ClassItemNumber),
+              content = Some(number.toString)).closeTag
+              .label(forInputName = getItemName(number, instNos),
+                classes = List(ClassItemLabel), content = Some(getLabel(node, t))).closeTag
+              .div(classes = List(ClassItemInput))
+          }
+          case n: NodeSimpleType => {
+            val t = Some(n.typ)
+            html.div(classes = List(ClassItemNumber),
+              content = Some(number.toString)).closeTag
+              .label(forInputName = getItemName(number, instNos),
+                classes = List(ClassItemLabel), content = Some(getLabel(node, t))).closeTag
+              .div(classes = List(ClassItemInput))
+          }
+        }
     }
 
     private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
@@ -521,13 +502,6 @@ package com.github.davidmoten.xsdforms.tree {
       addWidthScript(e, instances)
 
       addCssScript(e, instances)
-    }
-
-    private def getExtraClasses(qn: QN) = qn match {
-      case QN(xs, XsdDate.name) => ClassDatePicker + " "
-      case QN(xs, XsdDateTime.name) => ClassDateTimePicker + " "
-      case QN(xs, XsdTime.name) => ClassTimePicker + " "
-      case _ => ""
     }
 
     private def addTextField(

@@ -118,6 +118,7 @@ package com.github.davidmoten.xsdforms.tree {
   protected object ElementWrapper {
 
     import com.github.davidmoten.xsdforms.presentation._
+    import Css._
     import xsd.Annotatedable
     import xsd.Restriction
     import xsd.NoFixedFacet
@@ -324,6 +325,13 @@ package com.github.davidmoten.xsdforms.tree {
       node.element.isMultiple
 
     def repeats(node: Node): Range = node.element.repeats
+    
+     def getExtraClasses(qn: QN) = qn match {
+      case QN(xs, XsdDate.name) => ClassDatePicker + " "
+      case QN(xs, XsdDateTime.name) => ClassDateTimePicker + " "
+      case QN(xs, XsdTime.name) => ClassTimePicker + " "
+      case _ => ""
+    }
 
   }
 
