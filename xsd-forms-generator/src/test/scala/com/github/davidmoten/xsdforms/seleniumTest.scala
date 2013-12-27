@@ -535,12 +535,12 @@ package com.github.davidmoten.xsdforms {
       import javax.xml.validation._
       import javax.xml._
       import javax.xml.transform.stream._
-
       import java.io._
-      val factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-      val schema = factory.newSchema(new StreamSource(this.getClass.getResourceAsStream(xsdPath)))
-      val validator = schema.newValidator
-      validator.validate(new StreamSource(new StringReader(xml)))
+      
+      SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+        .newSchema(new StreamSource(this.getClass.getResourceAsStream(xsdPath)))
+        .newValidator
+        .validate(new StreamSource(new StringReader(xml)))
     }
   }
 
