@@ -196,7 +196,6 @@ package com.github.davidmoten.xsdforms.tree {
       val q = toQName(cc.complexcontentoption)
 
       val value = cc.complexcontentoption.value
-      println("cc " + q + "=" + value)
       if (QnXsdExtension == q)
         value match {
           case et: ExtensionType => {
@@ -208,10 +207,8 @@ package com.github.davidmoten.xsdforms.tree {
     }
 
     private def process(e: Element, et: ExtensionTypable) {
-      println("startExtension")
       extensionStack.push(et)
       process(e, MyType(getType(et.base)))
-      println("stopExtension")
     }
 
     private def process(e: Element, x: BaseType) {

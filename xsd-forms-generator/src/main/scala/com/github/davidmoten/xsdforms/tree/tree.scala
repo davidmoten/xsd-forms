@@ -545,7 +545,6 @@ package com.github.davidmoten.xsdforms.tree {
       val number = e.number
       val makeVisibleString = e.get(Annotation.MakeVisible);
       val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
-      println(e.name + ",makeVisibleMap=" + makeVisibleMapOnElement)
       for (value <- List("true", "false")) {
         //get the makeVisible annotation from the named element or the
         // enumeration element in that order.
