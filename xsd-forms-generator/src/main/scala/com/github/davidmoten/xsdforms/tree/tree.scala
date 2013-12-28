@@ -61,8 +61,7 @@ class TreeToHtmlConverter(options: Options,
 
   private def doNode(node: Node, instances: Instances) {
     node match {
-      case n: NodeSimpleType => doNode(n, instances)
-      case n: NodeBaseType => doNode(n, instances)
+      case n: NodeBasic => doNode(n, instances)
       case n: NodeSequence => doNode(n, instances)
       case n: NodeChoice => doNode(n, instances)
       case _ => Util.unexpected
