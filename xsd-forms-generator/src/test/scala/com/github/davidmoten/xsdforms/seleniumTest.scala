@@ -536,7 +536,7 @@ package com.github.davidmoten.xsdforms {
       import javax.xml._
       import javax.xml.transform.stream._
       import java.io._
-      
+
       SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
         .newSchema(new StreamSource(this.getClass.getResourceAsStream(xsdPath)))
         .newValidator
