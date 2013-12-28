@@ -31,20 +31,29 @@ public class GeneratorServlet extends HttpServlet {
 
 		String action = req.getParameter("action");
 		if (ACTION_ZIP.equals(action)) {
-			resp.setContentType("application/zip");
-			resp.setHeader("Content-Disposition",
-					"attachment; filename=site.zip");
-			Generator.generateZip(schemaIn, resp.getOutputStream(), idPrefix,
-					rootElement);
+			returnZip(resp, schemaIn, idPrefix, rootElement);
 		} else {
-			resp.setContentType("text/html");
-			Generator.generateHtml(schemaIn, resp.getOutputStream(), idPrefix,
-					rootElement);
+			returnHtml(resp, schemaIn, idPrefix, rootElement);
 		}
 	}
-	
+
+	private void returnZip(HttpServletResponse resp, InputStream schemaIn,
+			String idPrefix, Option<String> rootElement) throws IOException {
+		resp.setContentType("application/zip");
+		resp.setHeader("Content-Disposition",
+				"attachment; filename=site.zip");
+		Generator.generateZip(schemaIn, resp.getOutputStream(), idPrefix,
+				rootElement);
+	}
 	
 
+	private void returnHtml(HttpServletResponse resp, InputStream schemaIn,
+			String idPrefix, Option<String> rootElement) throws IOException {
+		resp.setContentType("text/html");
+		Generator.generateHtml(schemaIn, resp.getOutputStream(), idPrefix,
+				rootElement);
+	}
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
