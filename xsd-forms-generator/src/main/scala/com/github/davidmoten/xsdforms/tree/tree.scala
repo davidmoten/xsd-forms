@@ -36,15 +36,15 @@ class TreeToHtmlConverter(options: Options,
   import Util._
   import TreeUtil._
   import ElementWrapper._
-  private val script = new StringBuilder
-  private val idPrefix = options.idPrefix
 
-  private val margin = "  "
+  private val idPrefix = options.idPrefix
+  private val html = new Html
+
+  private val Margin = "  "
   private val Plus = " + "
 
   private sealed trait Entry
   private sealed trait StackEntry
-  private val html = new Html
 
   //assign element numbers so that order of display on page 
   //will match order of element numbers. To do this must 
@@ -362,7 +362,7 @@ class TreeToHtmlConverter(options: Options,
       ""
 
   private def addScript(s: String) {
-    script.append(s)
+    html.appendScript(s)
   }
 
   private def addScript(js: JS) {
@@ -867,7 +867,7 @@ class TreeToHtmlConverter(options: Options,
 
   def text =
     template
-      .replace("//GENERATED_SCRIPT", script.toString)
+      .replace("//GENERATED_SCRIPT", html.script)
       .replace("//EXTRA_SCRIPT", configuration.flatMap(_.extraScript).mkString(""))
       .replace("<!--HEADER-->", configuration.flatMap(_.header).mkString(""))
       .replace("<!--FOOTER-->", configuration.flatMap(_.footer).mkString(""))
@@ -1014,7 +1014,7 @@ class TreeToHtmlConverter(options: Options,
   }
 
   private def insertMargin(s: String) =
-    s.stripMargin.replaceAll("\n", "\n" + margin)
+    s.stripMargin.replaceAll("\n", "\n" + Margin)
 
   private def repeatingEnclosingIds(e: ElementWrapper,
     instances: Instances) =

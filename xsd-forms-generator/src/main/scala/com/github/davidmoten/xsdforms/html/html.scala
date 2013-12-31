@@ -35,8 +35,11 @@ class Html {
   import Html._
   private case class HtmlElement(name: String, hasContent: Boolean)
   private val stack = new scala.collection.mutable.Stack[HtmlElement]
-  private var s = new StringBuffer
-
+  //mutable! 
+  private val s = new StringBuffer
+  //mutable!
+  private val scriptBuffer = new StringBuffer
+  
   def div(id: Option[String] = None,
     classes: List[String] = List(), enabledAttr: Option[String] = None,
     content: Option[String] = None) =
@@ -173,6 +176,14 @@ class Html {
     this
   }
 
+  def appendScript(s:String) {
+    scriptBuffer append s
+  }
+
+  def script() = 
+    scriptBuffer.toString
+  
+  
   override def toString = s.toString
 
 }
