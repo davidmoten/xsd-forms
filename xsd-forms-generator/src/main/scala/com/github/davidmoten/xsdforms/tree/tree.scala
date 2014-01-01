@@ -141,7 +141,7 @@ class TreeToHtmlConverter(override val options: Options,
     val particles = choice.group.particleOption3.map(_.value)
     addChoiceHideOnStartScriptlet(particles, e.number, instNos)
     addChoiceShowHideOnSelectionScriptlet(particles, e.number, instNos)
-    val label = getAnnotation(choice.group, Annotation.Label)
+    val label =  Annotation.Label.from(choice.group)
     if (label.isDefined)
       html.div(
         classes = List(ClassChoiceLabel),

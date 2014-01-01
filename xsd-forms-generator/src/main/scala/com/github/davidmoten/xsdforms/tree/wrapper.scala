@@ -137,14 +137,7 @@ protected object ElementWrapper {
   def valById(id: String) = "encodedValueById(\"" + id + "\")"
 
   def getAnnotation(e: Annotatedable, key: XsdFormsAnnotation) =
-    e.annotation match {
-      case Some(x) =>
-        x.attributes.get("@{" + XsdUtil.AppInfoSchema + "}" + key.name) match {
-          case Some(y) => Some(y.value.toString)
-          case None => None
-        }
-      case None => None
-    }
+    key.from(e)
 
   def defaultValue(value: Option[String], r: Restriction): Option[String] = {
     value match {
