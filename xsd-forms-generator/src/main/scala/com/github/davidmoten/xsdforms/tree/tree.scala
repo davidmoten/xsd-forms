@@ -60,7 +60,6 @@ class TreeToHtmlConverter(override val options: Options,
       case n: NodeBasic => doNode(n, instances)
       case n: NodeSequence => doNode(n, instances)
       case n: NodeChoice => doNode(n, instances)
-      case _ => Util.unexpected
     }
   }
 
@@ -69,7 +68,6 @@ class TreeToHtmlConverter(override val options: Options,
       case n: NodeBasic => addXmlExtractScriptlet(n, instances)
       case n: NodeSequence => addXmlExtractScriptlet(n, instances)
       case n: NodeChoice => addXmlExtractScriptlet(n, instances)
-      case _ => Util.unexpected
     }
   }
 
@@ -545,7 +543,7 @@ class TreeToHtmlConverter(override val options: Options,
             .line
           addScript(js)
         }
-        case _ =>
+        case None =>
       }
     }
   }
@@ -707,7 +705,7 @@ class TreeToHtmlConverter(override val options: Options,
               .line
             addScript(js)
           }
-          case _ =>
+          case None =>
         }
       }
       html.closeTag
@@ -860,13 +858,13 @@ class TreeToHtmlConverter(override val options: Options,
   private def xmlStart(node: Node) =
     node.element.name match {
       case Some(name) => "'<" + name + namespace(node) + ">'"
-      case _ => "''"
+      case None => "''"
     }
 
   private def xmlEnd(node: Node) =
     node.element.name match {
       case Some(name) => "'</" + name + ">'"
-      case _ => "''"
+      case None => "''"
     }
 
   private def xml(node: Node, value: String) =
@@ -881,7 +879,7 @@ class TreeToHtmlConverter(override val options: Options,
       case Some(x) =>
         html.div(classes = List(ClassItemTitle),
           content = Some(x)).closeTag
-      case _ =>
+      case None =>
     }
   }
 
@@ -890,7 +888,7 @@ class TreeToHtmlConverter(override val options: Options,
       case Some(x) =>
         html.div(classes = List(ClassItemBefore),
           content = Some(x)).closeTag
-      case _ =>
+      case None =>
     }
   }
 
@@ -988,7 +986,7 @@ class TreeToHtmlConverter(override val options: Options,
     basePattern match {
       case Some(pattern) =>
         js.line("  ok &= matchesPattern(v,/^%s$/);", pattern)
-      case _ =>
+      case None =>
     }
     js.toString
   }
