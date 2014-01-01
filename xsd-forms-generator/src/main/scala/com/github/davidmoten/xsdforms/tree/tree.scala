@@ -36,8 +36,15 @@ class TreeToHtmlConverter(options: Options,
   import Util._
   import TreeUtil._
   import ElementWrapper._
+  import Ids.getPathId
+  import Ids.getItemEnclosingId
+  import Ids.getMinOccursZeroId
+  import Ids.getMinOccursZeroName
+  import Ids.getRepeatButtonId
+  import Ids.getRemoveButtonId
+  import Ids.{getChoiceItemName,getChoiceItemId,getItemId,getItemName,choiceContentId}
 
-  private val idPrefix = options.idPrefix
+  private implicit val idPrefix = options.idPrefix
   private val html = new Html
 
   private val Margin = "  "
@@ -166,7 +173,7 @@ class TreeToHtmlConverter(options: Options,
 
       node.children.zipWithIndex.foreach {
         case (n, index) => {
-          html.div(id = Some(choiceContentId(idPrefix, number, (index + 1), instNos)),
+          html.div(id = Some(choiceContentId(number, (index + 1), instNos)),
             classes = List(ClassInvisible))
           doNode(n, instNos)
           html.closeTag
@@ -239,7 +246,7 @@ class TreeToHtmlConverter(options: Options,
 
       for (instanceNo <- repeats(node)) {
         val instNos = instances add (instanceNo, node.isAnonymous)
-        js.line("    if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
+        js.line("    if (idVisible('%s')) {", Ids.getRepeatingEnclosingId(number, instNos))
         node.children.foreach { n =>
           js.line("      xml += %s();", xmlFunctionName(n, instNos))
           addXmlExtractScriptlet(n, instNos)
@@ -265,11 +272,11 @@ class TreeToHtmlConverter(options: Options,
     for (instanceNo <- repeats(node)) {
       val instNos = instances add (instanceNo, node.isAnonymous)
       js.line("    var checked = $(':input[name=%s]:checked').attr('id');",
-        getChoiceItemName(node, instNos))
+        getChoiceItemName(node.element.number, instNos))
 
       node.children.zipWithIndex.foreach {
         case (n, index) =>
-          js.line("    if (checked == \"%s\")", getChoiceItemId(node, index + 1, instNos))
+          js.line("    if (checked == \"%s\")", getChoiceItemId(node.element.number, index + 1, instNos))
             .line("    xml += %s();", xmlFunctionName(n, instNos))
           addXmlExtractScriptlet(n, instNos)
       }
@@ -297,14 +304,14 @@ class TreeToHtmlConverter(options: Options,
     for (instanceNo <- repeats(node)) {
       val instNos = instances add instanceNo
       js
-        .line("  if (idVisible('%s')) {", getRepeatingEnclosingId(number, instNos))
+        .line("  if (idVisible('%s')) {", Ids.getRepeatingEnclosingId(number, instNos))
       if (node.element.isRadio)
         js.line("    var v = encodeHTML($('input[name=%s]:radio:checked').val());",
           getItemName(number, instNos))
       else if (isCheckbox(node))
-        js.line("    var v = $('#%s').is(':checked');", getItemId(node, instNos))
+        js.line("    var v = $('#%s').is(':checked');", itemId(node, instNos))
       else
-        js.line("    var v = %s;", valById(getItemId(node, instNos)))
+        js.line("    var v = %s;", valById(itemId(node, instNos)))
 
       val extraIndent =
         if (node.element.minOccurs.intValue == 0) {
@@ -395,7 +402,7 @@ class TreeToHtmlConverter(options: Options,
       for (instanceNo <- e.repeats) {
         js
           .line("  changeMinOccursZeroCheckbox($(this),$('#%s'));",
-            getRepeatingEnclosingId(number, instances add instanceNo))
+            Ids.getRepeatingEnclosingId(number, instances add instanceNo))
       }
 
       js.line("})")
@@ -432,7 +439,7 @@ class TreeToHtmlConverter(options: Options,
 
   private def repeatingEnclosing(e: ElementWrapper, instances: Instances) {
     val number = e.number
-    val id = getRepeatingEnclosingId(number, instances)
+    val id = Ids.getRepeatingEnclosingId(number, instances)
     html.div(
       id = Some(id),
       classes = List(ClassRepeatingEnclosing))
@@ -571,16 +578,16 @@ class TreeToHtmlConverter(options: Options,
   }
 
   private def addWidthScript(e: ElementWrapper, instances: Instances) {
-    val itemId = getItemId(e, instances)
+    val itmId = itemId(e, instances)
     e.get(Annotation.Width) match {
       case Some(x) =>
-        addScript(JS().line("  $('#%s').width('%s');", itemId, x))
+        addScript(JS().line("  $('#%s').width('%s');", itmId, x))
       case None =>
     }
   }
 
   private def addCssScript(e: ElementWrapper, instances: Instances) {
-    val itemId = getItemId(e, instances)
+    val itmId = itemId(e, instances)
     e.get(Annotation.Css) match {
       case Some(x) => {
         val items = x.split(';')
@@ -590,7 +597,7 @@ class TreeToHtmlConverter(options: Options,
               if (pair.size != 2)
                 unexpected("css properties incorrect syntax\n" + pair)
               addScript(JS().line("  $('#%s').css('%s','%s');",
-                itemId, pair(0), pair(1)))
+                itmId, pair(0), pair(1)))
             })
       }
       case None =>
@@ -631,7 +638,7 @@ class TreeToHtmlConverter(options: Options,
       val index = x._2 + 1
       addScript(
         JS().line("  $('#%s').hide();",
-          choiceContentId(idPrefix, number, index, instances)))
+          choiceContentId(number, index, instances)))
     })
   }
 
@@ -654,7 +661,7 @@ class TreeToHtmlConverter(options: Options,
     forEachParticle(x => {
       val index = x._2 + 1
       val ccId =
-        choiceContentId(idPrefix, number, index, instances)
+        choiceContentId(number, index, instances)
       js.line("      if (checked == '%s') {",
         getChoiceItemId(number, index, instances))
         .line("        $('#%s').show();", ccId)
@@ -682,7 +689,7 @@ class TreeToHtmlConverter(options: Options,
       //TODO add makeVisible logic for radio buttons
       en.zipWithIndex.foreach(x => {
         html.input(
-          id = Some(getItemId(number, x._2, instances)),
+          id = Some(itemId(number, x._2, instances)),
           name = getItemName(number, instances),
           classes = List(ClassSelect),
           typ = Some("radio"),
@@ -747,7 +754,7 @@ class TreeToHtmlConverter(options: Options,
   }
 
   private def addError(e: ElementWrapper, instances: Instances) {
-    val itemErrorId = getItemErrorId(e.number, instances)
+    val itemErrorId:String = Ids.getItemErrorId(e.number, instances)
     html.div(classes = List(ClassClear)).closeTag
     html.div(
       id = Some(itemErrorId),
@@ -832,7 +839,7 @@ class TreeToHtmlConverter(options: Options,
         changeReference(e, instances))
       .line("  var ok = validate%sinstance%s();",
         number.toString, instances)
-      .line("  showError('%s',ok);", getItemErrorId(number, instances))
+      .line("  showError('%s',ok);", Ids.getItemErrorId(number, instances))
       .line("});")
       .line
     if (e.minOccurs.intValue == 0 && e.default.isEmpty)
@@ -1019,52 +1026,20 @@ class TreeToHtmlConverter(options: Options,
   private def repeatingEnclosingIds(e: ElementWrapper,
     instances: Instances) =
     e.repeats.map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
-  private def getRepeatingEnclosingId(element: ElementWrapper,
-    instances: Instances): String =
-    Ids.getRepeatingEnclosingId(
-      idPrefix, element.number, instances)
-  private def getChoiceItemName(node: Node, instances: Instances): String =
-    getChoiceItemName(node.element.number, instances)
-  private def getChoiceItemId(node: Node, index: Int,
-    instances: Instances): String =
-    getChoiceItemId(node.element.number, index, instances)
-  private def getItemId(node: Node, instances: Instances): String =
+  
+  private def itemId(node: Node, instances: Instances): String =
     getItemId(node.element.number, instances)
-  private def getItemId(element: ElementWrapper, instances: Instances): String =
+    
+  private def itemId(element: ElementWrapper, instances: Instances): String =
     getItemId(element.number, instances)
-  private def choiceContentId(idPrefix:Prefix, number: Int, index: Int,
-    instances: Instances) =
-    idPrefix + "choice-content-" + number + InstanceDelimiter +
-      instances + ChoiceIndexDelimiter + index
-  private def getMinOccursZeroId(number: Int, instances: Instances) =
-    Ids.getMinOccursZeroId(idPrefix, number, instances)
-  private def getMinOccursZeroName(number: Int, instances: Instances) =
-    Ids.getMinOccursZeroName(idPrefix, number, instances)
-  private def getRepeatButtonId(number: Int, instances: Instances) =
-    Ids.getRepeatButtonId(idPrefix, number, instances)
-  private def getRemoveButtonId(number: Int, instances: Instances) =
-    Ids.getRemoveButtonId(idPrefix, number, instances)
-  private def getRepeatingEnclosingId(number: Int, instances: Instances) =
-    Ids.getRepeatingEnclosingId(idPrefix, number, instances)
-  private def getChoiceItemName(number: Int, instances: Instances): String =
-    Ids.getChoiceItemName(idPrefix, number, instances)
-  private def getChoiceItemId(number: Int, index: Int,
-    instances: Instances): String =
-    Ids.getChoiceItemId(idPrefix, number, index, instances)
-  private def getItemId(number: Int, instances: Instances): String =
-    Ids.getItemId(number, instances)(idPrefix)
-  private def getItemId(number: Int, enumeration: Integer,
+  
+  private def itemId(number: Int, enumeration: Integer,
     instances: Instances): String =
     getItemId(number, instances) + "-" + enumeration
-  private def getItemName(number: Int, instances: Instances) =
-    Ids.getItemName(idPrefix, number, instances)
-  private def getItemEnclosingId(number: Int, instances: Instances) =
-    idPrefix + "item-enclosing-" + number + InstanceDelimiter + instances
-  private def getItemErrorId(number: Int, instances: Instances) =
-    Ids.getItemErrorId(idPrefix, number, instances)
-  private def getPathId(number: Int, instances: Instances) =
-    idPrefix + "item-path-" + number + InstanceDelimiter + instances
-
+  
+  private def getRepeatingEnclosingId(e:ElementWrapper, instances:Instances):String = 
+    Ids.getRepeatingEnclosingId(e.number, instances)
+  
   def template = io.Source.fromInputStream(
     getClass.getResourceAsStream("/template.html")).mkString
 

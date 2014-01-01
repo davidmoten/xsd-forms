@@ -112,10 +112,10 @@ package com.github.davidmoten.xsdforms {
     }
 
     private def getError(driver: WebDriver, itemNo: Int, instanceNos: Instances = Instances(List(1, 1))) =
-      driver.findElement(By.id(getItemErrorId(idPrefix, itemNo, instanceNos)))
+      driver.findElement(By.id(getItemErrorId(itemNo, instanceNos)))
 
     private def testDateDefaultSet(driver: WebDriver, itemNo: Int) {
-      val name = getItemName(idPrefix, itemNo, Instances(List(1, 1)))
+      val name = getItemName(itemNo, Instances(List(1, 1)))
       val input = driver.findElement(By.name(name))
       assertEquals("1973-06-12", input.getText)
     }
@@ -334,9 +334,9 @@ package com.github.davidmoten.xsdforms {
 
     private def testChoice(driver: WebDriver, itemNo: Int) {
       val instanceNos = Instances(List(1, 1))
-      val input = driver.findElement(By.name(getChoiceItemName(idPrefix, itemNo, instanceNos)));
-      val option1 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo, index = 1, instanceNos)))
-      val option2 = driver.findElement(By.id(getChoiceItemId(idPrefix, itemNo, index = 2, instanceNos)))
+      val input = driver.findElement(By.name(getChoiceItemName(itemNo, instanceNos)));
+      val option1 = driver.findElement(By.id(getChoiceItemId(itemNo, index = 1, instanceNos)))
+      val option2 = driver.findElement(By.id(getChoiceItemId(itemNo, index = 2, instanceNos)))
       assertFalse(input.isSelected)
       option1.click
       assertTrue(getInput(driver, itemNo + 1, instanceNos add 1).isDisplayed)
@@ -353,27 +353,27 @@ package com.github.davidmoten.xsdforms {
 
     private def testRepeat(driver: WebDriver, itemNo: Int) {
       val instanceNos = Instances(List(1))
-      val button = elementById(driver, getRepeatButtonId(idPrefix, itemNo, instanceNos))
-      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo, instanceNos add 1))
-      checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo, instanceNos add 2))
-      checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo, instanceNos add 3))
+      val button = elementById(driver, getRepeatButtonId(itemNo, instanceNos))
+      checkDisplayedById(driver, getRepeatingEnclosingId(itemNo, instanceNos add 1))
+      checkNotDisplayedById(driver, getRepeatingEnclosingId(itemNo, instanceNos add 2))
+      checkNotDisplayedById(driver, getRepeatingEnclosingId(itemNo, instanceNos add 3))
       button.click;
-      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo, instanceNos add 1))
-      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo, instanceNos add 2))
-      checkNotDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo, instanceNos add 3))
+      checkDisplayedById(driver, getRepeatingEnclosingId(itemNo, instanceNos add 1))
+      checkDisplayedById(driver, getRepeatingEnclosingId(itemNo, instanceNos add 2))
+      checkNotDisplayedById(driver, getRepeatingEnclosingId(itemNo, instanceNos add 3))
       button.click
-      checkDisplayedById(driver, getRepeatingEnclosingId(idPrefix, itemNo, instanceNos add 3))
-      checkDisplayedById(driver, getItemId( itemNo, instanceNos add 3))
+      checkDisplayedById(driver, getRepeatingEnclosingId(itemNo, instanceNos add 3))
+      checkDisplayedById(driver, getItemId(itemNo, instanceNos add 3))
 
       //clear validation for integer value
-      val input = driver.findElement(By.id(getItemId( itemNo, instanceNos add 1)))
+      val input = driver.findElement(By.id(getItemId(itemNo, instanceNos add 1)))
       //put integer in so passes validation on submission
       input.sendKeys("456\n")
 
-      val input1 = driver.findElement(By.id(getItemId( itemNo, instanceNos add 2)))
-      val error1 = driver.findElement(By.id(getItemErrorId(idPrefix, itemNo, instanceNos add 2)))
-      val input2 = driver.findElement(By.id(getItemId( itemNo, instanceNos add 3)))
-      val error2 = driver.findElement(By.id(getItemErrorId(idPrefix, itemNo, instanceNos add 3)))
+      val input1 = driver.findElement(By.id(getItemId(itemNo, instanceNos add 2)))
+      val error1 = driver.findElement(By.id(getItemErrorId(itemNo, instanceNos add 2)))
+      val input2 = driver.findElement(By.id(getItemId(itemNo, instanceNos add 3)))
+      val error2 = driver.findElement(By.id(getItemErrorId(itemNo, instanceNos add 3)))
 
       input1.sendKeys("123\n")
       assertFalse(error1.isDisplayed)
@@ -389,9 +389,9 @@ package com.github.davidmoten.xsdforms {
     private def testRepeatWhenMinOccursIsZero(driver: WebDriver, itemNo: Int) {
       val instanceNos = Instances(List(1))
       //default input should not be visible because minOccurs=0
-      val input = driver.findElement(By.id(getRepeatingEnclosingId(idPrefix, itemNo, instanceNos add 1)))
+      val input = driver.findElement(By.id(getRepeatingEnclosingId(itemNo, instanceNos add 1)))
       assertFalse(input.isDisplayed)
-      val button = driver.findElement(By.id(getRepeatButtonId(idPrefix, itemNo, instanceNos)))
+      val button = driver.findElement(By.id(getRepeatButtonId(itemNo, instanceNos)))
       button.click;
       val input1 = driver.findElement(By.id(getItemId(itemNo, instanceNos add 1)))
       assertTrue(input1.isDisplayed)
@@ -401,9 +401,9 @@ package com.github.davidmoten.xsdforms {
 
     private def testChoiceRepeat(driver: WebDriver, itemNo: Int) {
       val instanceNos = Instances(List(1))
-      val input = driver.findElement(By.id(getRepeatingEnclosingId(idPrefix, itemNo, instanceNos add 1)))
+      val input = driver.findElement(By.id(getRepeatingEnclosingId(itemNo, instanceNos add 1)))
       assertTrue(input.isDisplayed)
-      val button = driver.findElement(By.id(getRepeatButtonId(idPrefix, itemNo, instanceNos)))
+      val button = driver.findElement(By.id(getRepeatButtonId(itemNo, instanceNos)))
       button.click;
 
       //TODO 
@@ -415,8 +415,8 @@ package com.github.davidmoten.xsdforms {
       val instanceNos = Instances(List(1))
 
       //test boolean make visible on true
-      val input1 = driver.findElement(By.id(getItemId( itemNo, instanceNos add 1)))
-      val input1plus1 = driver.findElement(By.id(getItemId( itemNo + 1, instanceNos add 1)))
+      val input1 = driver.findElement(By.id(getItemId(itemNo, instanceNos add 1)))
+      val input1plus1 = driver.findElement(By.id(getItemId(itemNo + 1, instanceNos add 1)))
       //TODO check that input1 is not selected
       assertFalse(input1plus1.isDisplayed)
       input1.click
@@ -425,9 +425,9 @@ package com.github.davidmoten.xsdforms {
       assertFalse(input1plus1.isDisplayed)
 
       //test boolean make visible on true default true
-      val input2 = driver.findElement(By.id(getItemId( itemNo + 2, instanceNos add 1)))
+      val input2 = driver.findElement(By.id(getItemId(itemNo + 2, instanceNos add 1)))
       //TODO check that input2 is selected
-      val input2plus1 = driver.findElement(By.id(getItemId( itemNo + 3, instanceNos add 1)))
+      val input2plus1 = driver.findElement(By.id(getItemId(itemNo + 3, instanceNos add 1)))
       assertTrue(input2plus1.isDisplayed)
       input2.click
       assertFalse(input2plus1.isDisplayed)
@@ -435,7 +435,7 @@ package com.github.davidmoten.xsdforms {
       assertTrue(input2plus1.isDisplayed)
 
       //test boolean make visible on false
-      val input3 = driver.findElement(By.id(getItemId( itemNo + 4, instanceNos add 1)))
+      val input3 = driver.findElement(By.id(getItemId(itemNo + 4, instanceNos add 1)))
       //TODO check that input3 is not selected
       val input3plus1 = driver.findElement(By.id(getItemId(itemNo + 5, instanceNos add 1)))
       assertTrue(input3plus1.isDisplayed)
@@ -502,14 +502,14 @@ package com.github.davidmoten.xsdforms {
       setInput(driver, 40, "1234")
       setInput(driver, 51, "1901-11-30", Instances(List(1, 1, 1)))
 
-      val id = getChoiceItemId(idPrefix, 58, index = 1, Instances(List(1, 1)))
+      val id = getChoiceItemId(58, index = 1, Instances(List(1, 1)))
       println("58 id=" + id)
       val elem = driver.findElement(By.id(id))
       elem.click
       elem.click
       assertTrue(elem.isSelected())
 
-      driver.findElement(By.id(Ids.getMinOccursZeroId(idPrefix, 89, Instances(List(1))))).click
+      driver.findElement(By.id(Ids.getMinOccursZeroId(89, Instances(List(1))))).click
 
       submit.click
       submit.click

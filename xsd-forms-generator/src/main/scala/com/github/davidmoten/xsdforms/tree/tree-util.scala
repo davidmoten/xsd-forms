@@ -38,37 +38,48 @@ object Ids {
   val InstanceDelimiter = "-instance-"
   val ChoiceIndexDelimiter = "-choice-"
 
-  def getItemId( number: Int, instances: Instances)(implicit idPrefix: Prefix) =
+  def getItemId(number: Int, instances: Instances)(implicit idPrefix: Prefix) =
     idPrefix + "item-" + number + InstanceDelimiter + instances
 
-  def getItemName(idPrefix: Prefix, number: Int, instances: Instances) =
+  def getItemName(number: Int, instances: Instances)(implicit idPrefix: Prefix): String =
     idPrefix + "item-input-" + number + InstanceDelimiter + instances;
 
-  def getItemErrorId(idPrefix: Prefix, number: Int, instances: Instances) =
+  def getItemErrorId(number: Int, instances: Instances)(implicit idPrefix: Prefix): String =
     idPrefix + "item-error-" + number + InstanceDelimiter + instances
 
-  def getChoiceItemId(idPrefix: Prefix, number: Int, index: Int,
-    instances: Instances): String =
-    getItemId( number, instances)(idPrefix) + ChoiceIndexDelimiter + index
+  def getChoiceItemId(number: Int, index: Int,
+    instances: Instances)(implicit idPrefix: Prefix): String =
+    getItemId(number, instances)(idPrefix) + ChoiceIndexDelimiter + index
 
-  def getChoiceItemName(idPrefix: Prefix, number: Int, instances: Instances) =
+  def getChoiceItemName(number: Int, instances: Instances)(implicit idPrefix: Prefix): String =
     idPrefix + "item-input-" + number + InstanceDelimiter + instances
 
-  def getRepeatButtonId(idPrefix: Prefix, number: Int, instances: Instances) =
+  def choiceContentId(number: Int, index: Int,
+    instances: Instances)(implicit idPrefix: Prefix): String =
+    idPrefix + "choice-content-" + number + InstanceDelimiter +
+      instances + ChoiceIndexDelimiter + index
+
+  def getRepeatButtonId(number: Int, instances: Instances)(implicit idPrefix: Prefix): String =
     idPrefix + "repeat-button-" + number + InstanceDelimiter + instances
 
-  def getRemoveButtonId(idPrefix: Prefix, number: Int, instances: Instances) =
+  def getRemoveButtonId(number: Int, instances: Instances)(implicit idPrefix: Prefix): String =
     idPrefix + "remove-button-" + number + InstanceDelimiter + instances
 
-  def getRepeatingEnclosingId(idPrefix: Prefix, number: Int,
-    instances: Instances): String =
+  def getRepeatingEnclosingId(number: Int,
+    instances: Instances)(implicit idPrefix: Prefix): String =
     idPrefix + "repeating-enclosing-" + number + InstanceDelimiter + instances
 
-  def getMinOccursZeroId(idPrefix: Prefix, number: Int, instances: Instances): String =
+  def getMinOccursZeroId(number: Int, instances: Instances)(implicit idPrefix: Prefix): String =
     idPrefix + "min-occurs-zero-" + number + InstanceDelimiter + instances
 
-  def getMinOccursZeroName(idPrefix: Prefix, number: Int,
-    instances: Instances): String =
+  def getMinOccursZeroName(number: Int,
+    instances: Instances)(implicit idPrefix: Prefix): String =
     idPrefix + "min-occurs-zero-name" + number + InstanceDelimiter + instances
+
+  def getItemEnclosingId(number: Int, instances: Instances)(implicit idPrefix: Prefix) =
+    idPrefix + "item-enclosing-" + number + InstanceDelimiter + instances
+
+  def getPathId(number: Int, instances: Instances)(implicit idPrefix: Prefix) =
+    idPrefix + "item-path-" + number + InstanceDelimiter + instances
 }
 
