@@ -17,7 +17,7 @@ import com.github.davidmoten.xsdforms.html._
  */
 
 class TreeToHtmlConverter(override val options: Options,
-  configuration: Option[Configuration], override val tree: Node) 
+  configuration: Option[Configuration], override val tree: Node)
   extends TreeState {
 
   import xsd.Element
@@ -272,7 +272,7 @@ class TreeToHtmlConverter(override val options: Options,
       addXmlExtractScriptlet(node, js.toString(), instances);
     }
   }
-  
+
   private def addXmlExtractScriptlet(node: NodeBasic,
     instances: Instances) {
     val number = node.element.number
@@ -432,7 +432,6 @@ class TreeToHtmlConverter(override val options: Options,
     nonRepeatingTitle(e, instances)
   }
 
-  
   private def simpleType(node: NodeBasic, instances: Instances) {
     val e = node.element
 
@@ -654,62 +653,87 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def enumeration(e: ElementWrapper,
     en: Seq[(String, NoFixedFacet)],
-    number: Int, isRadio: Boolean, initializeBlank: Boolean,
+    number: Int, isRadio: Boolean,
     instances: Instances) {
-    if (isRadio) {
-      //TODO add makeVisible logic for radio buttons
-      en.zipWithIndex.foreach(x => {
-        html.input(
-          id = Some(itemId(number, x._2, instances)),
-          name = getItemName(number, instances),
-          classes = List(ClassSelect),
-          typ = Some("radio"),
-          value = Some(x._1._2.valueAttribute),
-          content = Some(x._1._1),
-          number = Some(number)).closeTag
-      })
-    } else {
-      html.select(
-        id = Some(getItemId(number, instances)),
+    if (isRadio)
+      radio(en, number, instances)
+    else
+      dropDown(e, en, number, instances)
+  }
+
+  private def radio(
+    en: Seq[(String, NoFixedFacet)],
+    number: Int,
+    instances: Instances) {
+    //TODO add makeVisible logic for radio buttons
+    en.zipWithIndex.foreach(x => {
+      html.input(
+        id = Some(itemId(number, x._2, instances)),
         name = getItemName(number, instances),
         classes = List(ClassSelect),
-        number = Some(number))
-      if (initializeBlank)
-        html.option(content = Some("Select one..."), value = "")
-          .closeTag
-      val makeVisibleString = e.get(Annotation.MakeVisible);
-      val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
-      en.foreach { x =>
-        val value = x._2.valueAttribute
+        typ = Some("radio"),
+        value = Some(x._1._2.valueAttribute),
+        content = Some(x._1._1),
+        number = Some(number)).closeTag
+    })
+  }
 
-        //get the makeVisible annotation from the named element or the enumeration element in that order.
-        val makeVisible = makeVisibleMapOnElement.get(value) match {
-          case Some(y: Int) => Some(y.toString)
-          case None => getAnnotation(x._2, Annotation.MakeVisible)
-        }
-        html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
-        makeVisible match {
-          case Some(y: String) => {
-            val refersTo = number + y.toInt
-            val js = JS()
-              .line("  $('#%s').change( function() {",
-                getItemId(number, instances))
-              .line("    var v = $('#%s');", getItemId(number, instances))
-              .line("    var refersTo = $('#%s');",
-                getItemEnclosingId(refersTo, instances))
-              .line("    if ('%s' == v.val())", x._2.valueAttribute)
-              .line("      refersTo.show();")
-              .line("    else")
-              .line("      refersTo.hide();")
-              .line("  });")
-              .line
-            addScript(js)
-          }
-          case None =>
-        }
-      }
-      html.closeTag
+  private def dropDown(
+    e: ElementWrapper,
+    en: Seq[(String, NoFixedFacet)],
+    number: Int,
+    instances: Instances) {
+
+    html.select(
+      id = Some(getItemId(number, instances)),
+      name = getItemName(number, instances),
+      classes = List(ClassSelect),
+      number = Some(number))
+
+    if (initializeBlank(e))
+      html.option(content = Some("Select one..."), value = "")
+        .closeTag
+    val makeVisibleString = e.get(Annotation.MakeVisible);
+    val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
+    en.foreach { x =>
+      dropDownValue(x, number, makeVisibleMapOnElement, instances)
     }
+    html.closeTag
+  }
+
+  private def dropDownValue(x: (String, NoFixedFacet), number: Int,
+    makeVisibleMapOnElement: Map[String, Int], instances: Instances) {
+    val value = x._2.valueAttribute
+
+    //get the makeVisible annotation from the named element or the enumeration element in that order.
+    val makeVisible = makeVisibleMapOnElement.get(value) match {
+      case Some(y: Int) => Some(y.toString)
+      case None => getAnnotation(x._2, Annotation.MakeVisible)
+    }
+    html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
+    makeVisible match {
+      case Some(y: String) => {
+        addShowHideRefersTo(x, number, y, instances)
+      }
+      case None =>
+    }
+  }
+
+  private def addShowHideRefersTo(x: (String, NoFixedFacet), number: Int, y: String, instances: Instances) {
+    val refersTo = number + y.toInt
+    val js = JS()
+      .line("  $('#%s').change( function() {",
+        getItemId(number, instances))
+      .line("    var v = $('#%s');", getItemId(number, instances))
+      .line("    var refersTo = $('#%s');",
+        getItemEnclosingId(refersTo, instances))
+      .line("    if ('%s' == v.val())", x._2.valueAttribute)
+      .line("      refersTo.show();")
+      .line("    else")
+      .line("      refersTo.hide();")
+      .line("  });")
+      .line
+    addScript(js)
   }
 
   private def addEnumeration(e: ElementWrapper, r: Restriction,
@@ -717,11 +741,7 @@ class TreeToHtmlConverter(override val options: Options,
     val number = e.number
     val en = getEnumeration(r)
 
-    val initializeBlank = e.get(Annotation.AddBlank) match {
-      case Some("true") => true
-      case _ => false
-    }
-    enumeration(e, en, number, e.isRadio, initializeBlank, instances)
+    enumeration(e, en, number, e.isRadio, instances)
   }
 
   private def addError(e: ElementWrapper, instances: Instances) {
@@ -990,6 +1010,12 @@ class TreeToHtmlConverter(override val options: Options,
     }
     js.toString
   }
+
+  private def initializeBlank(e: ElementWrapper) =
+    e.get(Annotation.AddBlank) match {
+      case Some("true") => true
+      case _ => false
+    }
 
   private def insertMargin(s: String) =
     s.stripMargin.replaceAll("\n", "\n" + Margin)
