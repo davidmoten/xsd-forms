@@ -13,7 +13,7 @@ package com.github.davidmoten.xsdforms {
 
     import org.apache.commons.io._
 
-    val idPrefix = Prefix("c-")
+    implicit val idPrefix = Prefix("c-")
 
     def generate(
       idPrefix: String,

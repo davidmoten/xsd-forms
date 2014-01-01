@@ -1052,7 +1052,7 @@ class TreeToHtmlConverter(options: Options,
     instances: Instances): String =
     Ids.getChoiceItemId(idPrefix, number, index, instances)
   private def getItemId(number: Int, instances: Instances): String =
-    Ids.getItemId(idPrefix, number, instances)
+    Ids.getItemId(number, instances)(idPrefix)
   private def getItemId(number: Int, enumeration: Integer,
     instances: Instances): String =
     getItemId(number, instances) + "-" + enumeration

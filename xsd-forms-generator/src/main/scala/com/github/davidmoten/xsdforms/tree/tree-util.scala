@@ -38,7 +38,7 @@ object Ids {
   val InstanceDelimiter = "-instance-"
   val ChoiceIndexDelimiter = "-choice-"
 
-  def getItemId(idPrefix: Prefix, number: Int, instances: Instances) =
+  def getItemId( number: Int, instances: Instances)(implicit idPrefix: Prefix) =
     idPrefix + "item-" + number + InstanceDelimiter + instances
 
   def getItemName(idPrefix: Prefix, number: Int, instances: Instances) =
@@ -49,7 +49,7 @@ object Ids {
 
   def getChoiceItemId(idPrefix: Prefix, number: Int, index: Int,
     instances: Instances): String =
-    getItemId(idPrefix, number, instances) + ChoiceIndexDelimiter + index
+    getItemId( number, instances)(idPrefix) + ChoiceIndexDelimiter + index
 
   def getChoiceItemName(idPrefix: Prefix, number: Int, instances: Instances) =
     idPrefix + "item-input-" + number + InstanceDelimiter + instances
