@@ -88,6 +88,16 @@ protected trait TreeState {
   implicit val idPrefix = options.idPrefix
   import com.github.davidmoten.xsdforms.html.Html
   val html: Html
+  val elementNumbers: Map[ElementWrapper, Int]
+  implicit def toElementWithNumber(element: ElementWrapper): ElementWithNumber =
+    ElementWithNumber(element, elementNumber(element))
+
+  def elementNumber(node: Node): Int = node.element.number
+
+  def elementNumber(e: ElementWrapper): Int = {
+    elementNumbers.get(e).get;
+  }
+
 }
 
   

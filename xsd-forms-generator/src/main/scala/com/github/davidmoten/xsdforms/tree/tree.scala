@@ -50,16 +50,10 @@ class TreeToHtmlConverter(override val options: Options,
   private val Margin = "  "
   private val Plus = " + "
 
-  private sealed trait Entry
-  private sealed trait StackEntry
-
   //assign element numbers so that order of display on page 
   //will match order of element numbers. To do this must 
   //traverse children left to right before siblings
-  private val elementNumbers = new ElementNumbersAssigner(tree).assignments
-
-  implicit def toElementWithNumber(element: ElementWrapper): ElementWithNumber =
-    ElementWithNumber(element, elementNumber(element))
+  override val elementNumbers = new ElementNumbersAssigner(tree).assignments
 
   //process the abstract syntax tree
   doNode(tree, new Instances)
@@ -456,12 +450,7 @@ class TreeToHtmlConverter(override val options: Options,
     nonRepeatingTitle(e, instances)
   }
 
-  private def elementNumber(node: Node): Int = node.element.number
-
-  private def elementNumber(e: ElementWrapper): Int = {
-    elementNumbers.get(e).get;
-  }
-
+  
   private def simpleType(node: NodeBasic, instances: Instances) {
     val e = node.element
 
