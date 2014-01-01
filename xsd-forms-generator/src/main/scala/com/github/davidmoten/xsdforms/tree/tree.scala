@@ -74,10 +74,6 @@ class TreeToHtmlConverter(override val options: Options,
   private def doNode(node: NodeSequence, instances: Instances) {
     val e = node.element
     val number = e.number
-    val legend = e.get(Annotation.Legend)
-    val usesFieldset = legend.isDefined
-
-    val label = e.get(Annotation.Label)
 
     html
       .div(id = Some(getItemEnclosingId(number, instances add 1)),
@@ -86,35 +82,41 @@ class TreeToHtmlConverter(override val options: Options,
     minOccursZeroCheckbox(e, instances)
     repeatButton(e, instances)
     for (instanceNo <- e.repeats) {
-      val instNos = instances add instanceNo
-      repeatingEnclosing(e, instNos)
-      if (label.isDefined)
-        html
-          .div(classes = List(ClassSequenceLabel), content = label).closeTag
-      html.div(id = Some(idPrefix + "sequence-" + number + InstanceDelimiter + instanceNo),
-        classes = List(ClassSequenceContent))
-      addRemoveButton(e, instNos)
-      if (usesFieldset)
-        html.fieldset(legend = legend, classes = List(ClassFieldset), id =
-          Some(idPrefix + "fieldset-" + number + InstanceDelimiter + instanceNo))
-
-      node.children.foreach(x => doNode(x, instNos))
-
-      if (usesFieldset)
-        html closeTag
-
-      html closeTag 2
-
+      doInstance(node, instances, instanceNo)
     }
     html closeTag
 
     addMaxOccursScriptlet(e, instances)
   }
 
-  private def doNode(node: NodeChoice, instances: Instances) {
-    val choice = node.choice
+  private def doInstance(node: NodeSequence, instances: Instances, instanceNo: Int) {
     val e = node.element
-    val choiceInline = displayChoiceInline(choice)
+    val label = e.get(Annotation.Label)
+    val legend = e.get(Annotation.Legend)
+    val usesFieldset = legend.isDefined
+    val instNos = instances add instanceNo
+    repeatingEnclosing(e, instNos)
+    if (label.isDefined)
+      html
+        .div(classes = List(ClassSequenceLabel), content = label).closeTag
+    html.div(id = Some(idPrefix + "sequence-" + e.number + InstanceDelimiter + instanceNo),
+      classes = List(ClassSequenceContent))
+    addRemoveButton(e, instNos)
+    if (usesFieldset)
+      html.fieldset(legend = legend, classes = List(ClassFieldset), id =
+        Some(idPrefix + "fieldset-" + e.number + InstanceDelimiter + instanceNo))
+
+    node.children.foreach(x => doNode(x, instNos))
+
+    if (usesFieldset)
+      html.closeTag
+
+    html closeTag 2
+  }
+
+  private def doNode(node: NodeChoice, instances: Instances) {
+    val e = node.element
+    val choiceInline = displayChoiceInline(node.choice)
 
     val number = e.number
 
@@ -124,53 +126,59 @@ class TreeToHtmlConverter(override val options: Options,
     minOccursZeroCheckbox(e, instances)
     repeatButton(e, instances)
     for (instanceNo <- e.repeats) {
-      val instNos = instances add instanceNo
-      repeatingEnclosing(e, instNos)
-      val particles = choice.group.particleOption3.map(_.value)
-      addChoiceHideOnStartScriptlet(particles, number, instNos)
-      addChoiceShowHideOnSelectionScriptlet(particles, number, instNos)
-      val label = getAnnotation(choice.group, Annotation.Label)
-      if (label.isDefined)
-        html.div(
-          classes = List(ClassChoiceLabel),
-          content = label)
-          .closeTag
-      addRemoveButton(e, instNos)
-
-      val forEachParticle = particles.zipWithIndex.foreach _
-
-      forEachParticle(x => {
-        val particle = x._1
-        val index = x._2 + 1
-        html.div(
-          id = Some(idPrefix + "div-choice-item-" + number + InstanceDelimiter +
-            instanceNo + ChoiceIndexDelimiter + index),
-          classes = List(ClassDivChoiceItem))
-        html.input(
-          id = Some(getChoiceItemId(number, index, instNos)),
-          name = getChoiceItemName(number, instNos),
-          classes = List(ClassChoiceItem),
-          typ = Some("radio"),
-          value = Some("number"),
-          content = Some(getChoiceLabel(particle)),
-          number = Some(number))
-        html.closeTag(2)
-      })
-
-      node.children.zipWithIndex.foreach {
-        case (n, index) => {
-          html.div(id = Some(choiceContentId(number, (index + 1), instNos)),
-            classes = List(ClassInvisible))
-          doNode(n, instNos)
-          html.closeTag
-        }
-      }
-
-      html.closeTag
+      doInstance(node, instances, instanceNo)
     }
     html.closeTag
 
     addMaxOccursScriptlet(e, instances)
+  }
+
+  private def doInstance(node: NodeChoice, instances: Instances, instanceNo: Int) {
+    val e = node.element
+    val choice = node.choice
+    val instNos = instances add instanceNo
+    repeatingEnclosing(e, instNos)
+    val particles = choice.group.particleOption3.map(_.value)
+    addChoiceHideOnStartScriptlet(particles, e.number, instNos)
+    addChoiceShowHideOnSelectionScriptlet(particles, e.number, instNos)
+    val label = getAnnotation(choice.group, Annotation.Label)
+    if (label.isDefined)
+      html.div(
+        classes = List(ClassChoiceLabel),
+        content = label)
+        .closeTag
+    addRemoveButton(e, instNos)
+
+    val forEachParticle = particles.zipWithIndex.foreach _
+
+    forEachParticle(x => {
+      val particle = x._1
+      val index = x._2 + 1
+      html.div(
+        id = Some(idPrefix + "div-choice-item-" + e.number + InstanceDelimiter +
+          instanceNo + ChoiceIndexDelimiter + index),
+        classes = List(ClassDivChoiceItem))
+      html.input(
+        id = Some(getChoiceItemId(e.number, index, instNos)),
+        name = getChoiceItemName(e.number, instNos),
+        classes = List(ClassChoiceItem),
+        typ = Some("radio"),
+        value = Some("number"),
+        content = Some(getChoiceLabel(particle)),
+        number = Some(e.number))
+      html.closeTag(2)
+    })
+
+    node.children.zipWithIndex.foreach {
+      case (n, index) => {
+        html.div(id = Some(choiceContentId(e.number, (index + 1), instNos)),
+          classes = List(ClassInvisible))
+        doNode(n, instNos)
+        html.closeTag
+      }
+    }
+
+    html.closeTag
   }
 
   private def doNode(node: NodeBasic, instances: Instances) {
