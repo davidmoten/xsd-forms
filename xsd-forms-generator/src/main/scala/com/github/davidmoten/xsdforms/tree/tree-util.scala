@@ -84,20 +84,26 @@ object Ids {
 }
 
 protected trait TreeState {
-  val options: Options
-  implicit val idPrefix = options.idPrefix
   import com.github.davidmoten.xsdforms.html.Html
+
+  val options: Options
+
+  val tree: Node
+
+  implicit val idPrefix = options.idPrefix
+
   val html: Html
-  val elementNumbers: Map[ElementWrapper, Int]
+
+  //assign element numbers so that order of display on page 
+  //will match order of element numbers. To do this must 
+  //traverse children left to right before siblings
+  private val elementNumbers = new ElementNumbersAssigner(tree).assignments
+
   implicit def toElementWithNumber(element: ElementWrapper): ElementWithNumber =
     ElementWithNumber(element, elementNumber(element))
 
-  def elementNumber(node: Node): Int = node.element.number
-
-  def elementNumber(e: ElementWrapper): Int = {
+  private def elementNumber(e: ElementWrapper): Int =
     elementNumbers.get(e).get;
-  }
-
 }
 
   

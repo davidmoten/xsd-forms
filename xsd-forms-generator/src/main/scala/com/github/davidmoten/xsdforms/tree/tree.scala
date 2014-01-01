@@ -17,7 +17,7 @@ import com.github.davidmoten.xsdforms.html._
  */
 
 class TreeToHtmlConverter(override val options: Options,
-  configuration: Option[Configuration], tree: Node) 
+  configuration: Option[Configuration], override val tree: Node) 
   extends TreeState {
 
   import xsd.Element
@@ -49,11 +49,6 @@ class TreeToHtmlConverter(override val options: Options,
 
   private val Margin = "  "
   private val Plus = " + "
-
-  //assign element numbers so that order of display on page 
-  //will match order of element numbers. To do this must 
-  //traverse children left to right before siblings
-  override val elementNumbers = new ElementNumbersAssigner(tree).assignments
 
   //process the abstract syntax tree
   doNode(tree, new Instances)
