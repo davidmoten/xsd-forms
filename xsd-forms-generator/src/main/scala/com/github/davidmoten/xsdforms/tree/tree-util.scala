@@ -59,6 +59,11 @@ object Ids {
     idPrefix + "choice-content-" + number + InstanceDelimiter +
       instances + ChoiceIndexDelimiter + index
 
+def getItemId(number: Int, enumeration: Integer,
+    instances: Instances)(implicit idPrefix:Prefix): String =
+    getItemId(number, instances) + "-" + enumeration
+
+      
   def getRepeatButtonId(number: Int, instances: Instances)(implicit idPrefix: Prefix): String =
     idPrefix + "repeat-button-" + number + InstanceDelimiter + instances
 

@@ -116,6 +116,7 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def doNode(node: NodeChoice, instances: Instances) {
     val e = node.element
+    //TODO choiceInline not used!
     val choiceInline = displayChoiceInline(node.choice)
 
     val number = e.number
@@ -676,7 +677,7 @@ class TreeToHtmlConverter(override val options: Options,
     //TODO add makeVisible logic for radio buttons
     en.zipWithIndex.foreach(x => {
       html.input(
-        id = Some(itemId(number, x._2, instances)),
+        id = Some(getItemId(number, x._2, instances)),
         name = getItemName(number, instances),
         classes = List(ClassSelect),
         typ = Some("radio"),
@@ -1037,10 +1038,6 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def itemId(element: ElementWrapper, instances: Instances): String =
     getItemId(element.number, instances)
-
-  private def itemId(number: Int, enumeration: Integer,
-    instances: Instances): String =
-    getItemId(number, instances) + "-" + enumeration
 
   private def getRepeatingEnclosingId(e: ElementWrapper, instances: Instances): String =
     Ids.getRepeatingEnclosingId(e.number, instances)
