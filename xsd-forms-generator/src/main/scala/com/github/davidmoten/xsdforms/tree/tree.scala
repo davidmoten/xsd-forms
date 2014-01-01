@@ -16,8 +16,8 @@ import com.github.davidmoten.xsdforms.html._
  * **************************************************************
  */
 
-class TreeToHtmlConverter(options: Options,
-  configuration: Option[Configuration], tree: Node) {
+class TreeToHtmlConverter(override val options: Options,
+  configuration: Option[Configuration], tree: Node) extends HasOptions with HasHtml {
 
   import xsd.Element
   import xsd.Restriction
@@ -42,10 +42,9 @@ class TreeToHtmlConverter(options: Options,
   import Ids.getMinOccursZeroName
   import Ids.getRepeatButtonId
   import Ids.getRemoveButtonId
-  import Ids.{getChoiceItemName,getChoiceItemId,getItemId,getItemName,choiceContentId}
+  import Ids.{ getChoiceItemName, getChoiceItemId, getItemId, getItemName, choiceContentId }
 
-  private implicit val idPrefix = options.idPrefix
-  private val html = new Html
+  override val html = new Html
 
   private val Margin = "  "
   private val Plus = " + "
@@ -58,8 +57,8 @@ class TreeToHtmlConverter(options: Options,
   //traverse children left to right before siblings
   private val elementNumbers = new ElementNumbersAssigner(tree).assignments
 
-  implicit def toElementWithNumber(element: ElementWrapper): ElementWithNumber = ElementWithNumber(element, elementNumber(element))
-  implicit def toElementWithNumber(node: Node): ElementWithNumber = toElementWithNumber(node.element)
+  implicit def toElementWithNumber(element: ElementWrapper): ElementWithNumber =
+    ElementWithNumber(element, elementNumber(element))
 
   //process the abstract syntax tree
   doNode(tree, new Instances)
@@ -87,7 +86,7 @@ class TreeToHtmlConverter(options: Options,
 
   private def doNode(node: NodeSequence, instances: Instances) {
     val e = node.element
-    val number = node.number
+    val number = e.number
     val legend = e.get(Annotation.Legend)
     val usesFieldset = legend.isDefined
 
@@ -232,7 +231,7 @@ class TreeToHtmlConverter(options: Options,
   private def addXmlExtractScriptlet(node: NodeSequence, instances: Instances) {
     {
       val js = JS()
-      val number = node.number
+      val number = node.element.number
       if (node.element.isMinOccursZero) {
         js.line("if (!$('#%s').is(':checked')) return '';",
           getMinOccursZeroId(number, instances))
@@ -299,7 +298,7 @@ class TreeToHtmlConverter(options: Options,
 
   private def addXmlExtractScriptletForSimpleOrBase(node: NodeBasic,
     instances: Instances) {
-    val number = node.number
+    val number = node.element.number
     val js = JS().line("  var xml='';")
     for (instanceNo <- repeats(node)) {
       val instNos = instances add instanceNo
@@ -754,7 +753,7 @@ class TreeToHtmlConverter(options: Options,
   }
 
   private def addError(e: ElementWrapper, instances: Instances) {
-    val itemErrorId:String = Ids.getItemErrorId(e.number, instances)
+    val itemErrorId: String = Ids.getItemErrorId(e.number, instances)
     html.div(classes = List(ClassClear)).closeTag
     html.div(
       id = Some(itemErrorId),
@@ -813,7 +812,7 @@ class TreeToHtmlConverter(options: Options,
       js.line("  //enumeration test")
       if (node.element.isRadio)
         js.line("  var radioInput=$('input:radio[name=%s]');",
-          getItemName(node.number, instances))
+          getItemName(node.element.number, instances))
           .line("  if (! radioInput.is(':checked')) ok = false;")
       else
         js.line("  if ($.trim(v.val()).length ==0) ok = false;")
@@ -1026,20 +1025,20 @@ class TreeToHtmlConverter(options: Options,
   private def repeatingEnclosingIds(e: ElementWrapper,
     instances: Instances) =
     e.repeats.map(instances.add(_)).map(getRepeatingEnclosingId(e, _))
-  
+
   private def itemId(node: Node, instances: Instances): String =
     getItemId(node.element.number, instances)
-    
+
   private def itemId(element: ElementWrapper, instances: Instances): String =
     getItemId(element.number, instances)
-  
+
   private def itemId(number: Int, enumeration: Integer,
     instances: Instances): String =
     getItemId(number, instances) + "-" + enumeration
-  
-  private def getRepeatingEnclosingId(e:ElementWrapper, instances:Instances):String = 
+
+  private def getRepeatingEnclosingId(e: ElementWrapper, instances: Instances): String =
     Ids.getRepeatingEnclosingId(e.number, instances)
-  
+
   def template = io.Source.fromInputStream(
     getClass.getResourceAsStream("/template.html")).mkString
 

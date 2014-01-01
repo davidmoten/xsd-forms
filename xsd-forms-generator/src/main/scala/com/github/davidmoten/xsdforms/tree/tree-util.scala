@@ -83,3 +83,12 @@ object Ids {
     idPrefix + "item-path-" + number + InstanceDelimiter + instances
 }
 
+protected trait HasOptions {
+  val options: Options
+  implicit val idPrefix = options.idPrefix
+}
+
+protected trait HasHtml {
+  import com.github.davidmoten.xsdforms.html.Html
+  val html: Html
+}
