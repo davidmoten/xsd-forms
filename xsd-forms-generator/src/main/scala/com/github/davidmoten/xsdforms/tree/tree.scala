@@ -71,8 +71,7 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def addXmlExtractScriptlet(node: Node, instances: Instances) {
     node match {
-      case n: NodeSimpleType => addXmlExtractScriptlet(n, instances)
-      case n: NodeBaseType => addXmlExtractScriptlet(n, instances)
+      case n: NodeBasic => addXmlExtractScriptlet(n, instances)
       case n: NodeSequence => addXmlExtractScriptlet(n, instances)
       case n: NodeChoice => addXmlExtractScriptlet(n, instances)
       case _ => Util.unexpected
@@ -280,18 +279,8 @@ class TreeToHtmlConverter(override val options: Options,
       addXmlExtractScriptlet(node, js.toString(), instances);
     }
   }
-
-  private def addXmlExtractScriptlet(node: NodeSimpleType,
-    instances: Instances) {
-    addXmlExtractScriptletForSimpleOrBase(node, instances)
-  }
-
-  private def addXmlExtractScriptlet(node: NodeBaseType,
-    instances: Instances) {
-    addXmlExtractScriptletForSimpleOrBase(node, instances)
-  }
-
-  private def addXmlExtractScriptletForSimpleOrBase(node: NodeBasic,
+  
+  private def addXmlExtractScriptlet(node: NodeBasic,
     instances: Instances) {
     val number = node.element.number
     val js = JS().line("  var xml='';")
