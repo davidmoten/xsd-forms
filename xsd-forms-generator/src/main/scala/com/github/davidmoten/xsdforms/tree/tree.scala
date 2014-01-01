@@ -641,16 +641,11 @@ class TreeToHtmlConverter(override val options: Options,
       val index = x._2 + 1
       val ccId =
         choiceContentId(number, index, instances)
-      js.line("      if (checked == '%s') {",
+      js.line("      if (checked == '%s') ",
         getChoiceItemId(number, index, instances))
-        .line("        $('#%s').show();", ccId)
-        .line("        $('#%s').find('.item-path').attr('enabled','true');", ccId)
-        .line("      }")
-        .line("      else {")
-        .line("        $('#%s').hide();", ccId)
-        .line("        $('#%s').find('.item-path').attr('enabled','false');", ccId)
-        .line("      }")
-
+        .line("        showChoiceItem($('#%s'));", ccId)
+        .line("      else")
+        .line("        hideChoiceItem($('#%s'))", ccId)
     })
     js.line("    });")
       .line("  }")
