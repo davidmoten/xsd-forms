@@ -24,10 +24,10 @@ protected case class ElementWrapper(element: Element,
     e.maxOccurs != "1" && e.minOccurs.toString != e.maxOccurs
 
   def get(key: XsdFormsAnnotation) =
-    getAnnotation(this, key)
+    key.from(this)
 
   def visibility =
-    getAnnotation(e, Annotation.Visible) match {
+   get(Annotation.Visible) match {
       case Some("false") => Some(ClassInvisible)
       case _ => None
     }
@@ -136,9 +136,6 @@ protected object ElementWrapper {
 
   def valById(id: String) = "encodedValueById(\"" + id + "\")"
 
-  def getAnnotation(e: Annotatedable, key: XsdFormsAnnotation) =
-    key.from(e)
-
   def defaultValue(value: Option[String], r: Restriction): Option[String] = {
     value match {
       case Some(v) => {
@@ -160,7 +157,7 @@ protected object ElementWrapper {
     r.simpleRestrictionModelSequence3.facetsOption2.seq.map(
       _.value match {
         case y: NoFixedFacet => {
-          val label = getAnnotation(y, Annotation.Label) match {
+          val label = Annotation.Label.from(y) match {
             case Some(x) => x
             case None => y.valueAttribute
           }
@@ -298,15 +295,15 @@ protected object ElementWrapper {
     Checkbox == getInputType(restriction(node))
 
   def displayChoiceInline(choice: Choice) =
-    "inline" == getAnnotation(choice.group, Annotation.Choice).mkString
+    "inline" == Annotation.Choice.from(choice.group).mkString
 
   def getChoiceLabel(p: ParticleOption): String = {
 
     val labels =
       p match {
         case x: Element => {
-          getAnnotation(x, Annotation.ChoiceLabel) ++
-            getAnnotation(x, Annotation.Label) ++
+          Annotation.ChoiceLabel.from(x) ++
+            Annotation.Label.from(x) ++
             Some(ElementWrapper(x).getLabelFromNameOrAnnotation)
         }
         case _ => unexpected

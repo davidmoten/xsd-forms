@@ -716,7 +716,7 @@ class TreeToHtmlConverter(override val options: Options,
     //get the makeVisible annotation from the named element or the enumeration element in that order.
     val makeVisible = makeVisibleMapOnElement.get(value) match {
       case Some(y: Int) => Some(y.toString)
-      case None => getAnnotation(x._2, Annotation.MakeVisible)
+      case None =>  Annotation.MakeVisible.from(x._2)
     }
     html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
     makeVisible match {
