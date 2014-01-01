@@ -13,7 +13,7 @@ package com.github.davidmoten.xsdforms {
 
     import org.apache.commons.io._
 
-    val idPrefix = "c-"
+    val idPrefix = Prefix("c-")
 
     def generate(
       idPrefix: String,
@@ -32,7 +32,7 @@ package com.github.davidmoten.xsdforms {
     def generateDemoForm(file: File) {
       println("generating demo form")
       generate(
-        idPrefix = idPrefix,
+        idPrefix = idPrefix.toString,
         schemaInputStream = TstUtil.getClass().getResourceAsStream("/demo.xsd"),
         rootElement = "main",
         outputFile = file)

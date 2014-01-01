@@ -149,7 +149,7 @@ object Generator {
     new SchemaTraversor(schemaXb, rootElement, visitor).traverse
     println("tree:\n" + visitor)
 
-    new TreeToHtmlConverter(Options(ns, idPrefix),
+    new TreeToHtmlConverter(Options(ns, Prefix(idPrefix)),
       visitor.configuration,
       visitor.rootNode).text
   }

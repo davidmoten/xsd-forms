@@ -38,36 +38,36 @@ object Ids {
   val InstanceDelimiter = "-instance-"
   val ChoiceIndexDelimiter = "-choice-"
 
-  def getItemId(idPrefix: String, number: Int, instances: Instances) =
+  def getItemId(idPrefix: Prefix, number: Int, instances: Instances) =
     idPrefix + "item-" + number + InstanceDelimiter + instances
 
-  def getItemName(idPrefix: String, number: Int, instances: Instances) =
+  def getItemName(idPrefix: Prefix, number: Int, instances: Instances) =
     idPrefix + "item-input-" + number + InstanceDelimiter + instances;
 
-  def getItemErrorId(idPrefix: String, number: Int, instances: Instances) =
+  def getItemErrorId(idPrefix: Prefix, number: Int, instances: Instances) =
     idPrefix + "item-error-" + number + InstanceDelimiter + instances
 
-  def getChoiceItemId(idPrefix: String, number: Int, index: Int,
+  def getChoiceItemId(idPrefix: Prefix, number: Int, index: Int,
     instances: Instances): String =
     getItemId(idPrefix, number, instances) + ChoiceIndexDelimiter + index
 
-  def getChoiceItemName(idPrefix: String, number: Int, instances: Instances) =
+  def getChoiceItemName(idPrefix: Prefix, number: Int, instances: Instances) =
     idPrefix + "item-input-" + number + InstanceDelimiter + instances
 
-  def getRepeatButtonId(idPrefix: String, number: Int, instances: Instances) =
+  def getRepeatButtonId(idPrefix: Prefix, number: Int, instances: Instances) =
     idPrefix + "repeat-button-" + number + InstanceDelimiter + instances
 
-  def getRemoveButtonId(idPrefix: String, number: Int, instances: Instances) =
+  def getRemoveButtonId(idPrefix: Prefix, number: Int, instances: Instances) =
     idPrefix + "remove-button-" + number + InstanceDelimiter + instances
 
-  def getRepeatingEnclosingId(idPrefix: String, number: Int,
+  def getRepeatingEnclosingId(idPrefix: Prefix, number: Int,
     instances: Instances): String =
     idPrefix + "repeating-enclosing-" + number + InstanceDelimiter + instances
 
-  def getMinOccursZeroId(idPrefix: String, number: Int, instances: Instances): String =
+  def getMinOccursZeroId(idPrefix: Prefix, number: Int, instances: Instances): String =
     idPrefix + "min-occurs-zero-" + number + InstanceDelimiter + instances
 
-  def getMinOccursZeroName(idPrefix: String, number: Int,
+  def getMinOccursZeroName(idPrefix: Prefix, number: Int,
     instances: Instances): String =
     idPrefix + "min-occurs-zero-name" + number + InstanceDelimiter + instances
 }

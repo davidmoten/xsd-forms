@@ -287,4 +287,7 @@ case class JS() {
   override def toString = b.toString
 }
 
-case class Options(targetNamespace: String, idPrefix: String)
+case class Prefix(value:String) {
+  override def toString = value
+}
+case class Options(targetNamespace: String, idPrefix: Prefix)

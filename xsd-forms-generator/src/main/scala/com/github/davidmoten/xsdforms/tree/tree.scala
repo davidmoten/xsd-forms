@@ -1032,7 +1032,7 @@ class TreeToHtmlConverter(options: Options,
     getItemId(node.element.number, instances)
   private def getItemId(element: ElementWrapper, instances: Instances): String =
     getItemId(element.number, instances)
-  private def choiceContentId(idPrefix: String, number: Int, index: Int,
+  private def choiceContentId(idPrefix:Prefix, number: Int, index: Int,
     instances: Instances) =
     idPrefix + "choice-content-" + number + InstanceDelimiter +
       instances + ChoiceIndexDelimiter + index
