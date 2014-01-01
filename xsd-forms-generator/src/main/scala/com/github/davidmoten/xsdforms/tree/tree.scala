@@ -17,7 +17,8 @@ import com.github.davidmoten.xsdforms.html._
  */
 
 class TreeToHtmlConverter(override val options: Options,
-  configuration: Option[Configuration], tree: Node) extends HasOptions with HasHtml {
+  configuration: Option[Configuration], tree: Node) 
+  extends HasOptions with HasHtml {
 
   import xsd.Element
   import xsd.Restriction
