@@ -20,30 +20,14 @@ class TreeToHtmlConverter(override val options: Options,
   configuration: Option[Configuration], override val tree: Node)
   extends TreeState {
 
-  import xsd.Element
-  import xsd.Restriction
-  import xsd.ParticleOption
-  import xsd.NoFixedFacet
-  import xsd.SimpleRestrictionModelSequence
-  import xsd.NumFacet
-  import xsd.Pattern
-  import xsd.Annotatedable
-  import xsd.SimpleType
-  import xsd.Facet
-  import Ids.ChoiceIndexDelimiter
-  import Ids.InstanceDelimiter
+  import xsd.{Element,Restriction,ParticleOption,NoFixedFacet,
+    SimpleRestrictionModelSequence,NumFacet,Pattern,Annotatedable,SimpleType,Facet}
 
   import XsdUtil._
   import Util._
   import TreeUtil._
   import ElementWrapper._
-  import Ids.getPathId
-  import Ids.getItemEnclosingId
-  import Ids.getMinOccursZeroId
-  import Ids.getMinOccursZeroName
-  import Ids.getRepeatButtonId
-  import Ids.getRemoveButtonId
-  import Ids.{ getChoiceItemName, getChoiceItemId, getItemId, getItemName, choiceContentId }
+  import Ids._
 
   override val html = new Html
 
