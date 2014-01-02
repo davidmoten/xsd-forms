@@ -13,10 +13,16 @@ import scalaxb._
  * **************************************************************
  */
 
+private case class DataRecordWithQName[T](d: DataRecord[T]) {
+  import XsdUtil._
+  def qName = toQName(d)
+}
+
 class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) {
   import Util._
   import XsdUtil._
   import com.github.davidmoten.xsdforms.presentation._
+  private implicit def toDataRecordWithQName[T](d:DataRecord[T]) = DataRecordWithQName(d)
 
   val extensionStack = new scala.collection.mutable.Stack[ExtensionTypable]
   val extensionsIncludedInBaseSequence = new scala.collection.mutable.Stack[Boolean]
@@ -63,9 +69,6 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
     }
   }
 
-  private def matches[T](d: DataRecord[T], q: QName) =
-    toQName(d).equals(q)
-
   private case class MyType(typeValue: AnyRef)
 
   /**
@@ -75,7 +78,6 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
     topLevelAnnotations
     val element =
       if (rootElement.isDefined)
-
         topLevelElements.find(
           _.name match {
             case Some(y) => y equals rootElement.get
@@ -92,7 +94,7 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
   private def topLevelAnnotations {
     //first get the children of the annotation - appinfo element
     val children = s.schemaoption
-      .filter(toQName(_) == qn(XsdAnnotation))
+      .filter(_.qName == qn(XsdAnnotation))
       .map(_.value)
       .map(x => x match {
         case y: Annotation => y
@@ -112,7 +114,7 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
     def extract(elementName: String) =
       children
         .filter(_.key.isDefined)
-        .filter(toQName(_) == qn(AppInfoSchema, elementName))
+        .filter(_.qName == qn(AppInfoSchema, elementName))
         .map(_.value)
         .map(x => scala.xml.XML.loadString(x.toString))
         .map(x => x.text).headOption
@@ -162,7 +164,7 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
       case x: ComplexContent =>
         process(e, x)
       case x: SimpleContent => {
-        val q = toQName(x.simplecontentoption)
+        val q = x.simplecontentoption.qName
         if (QnXsdExtension == q) {
           x.simplecontentoption.value match {
             case t: SimpleExtensionType =>
@@ -183,9 +185,9 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
       case y: GroupRef =>
         unexpected
       case y: ExplicitGroupable =>
-        if (matches(x, QnXsdSequence))
+        if (x.qName == QnXsdSequence)
           process(e, Sequence(y))
-        else if (matches(x, QnXsdChoice))
+        else if (x.qName == QnXsdChoice)
           process(e, Choice(y))
         else unexpected
       case _ => unexpected
@@ -193,7 +195,7 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
   }
 
   private def process(e: Element, cc: ComplexContent) {
-    val q = toQName(cc.complexcontentoption)
+    val q = cc.complexcontentoption.qName
 
     val value = cc.complexcontentoption.value
     if (QnXsdExtension == q)
@@ -224,7 +226,7 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
     val extensions = extensionStack.toList
     extensionStack.clear
     extensionsIncludedInBaseSequence.push(false)
-    x.group.particleOption3.foreach(y => process(e, toQName(y), y.value))
+    x.group.particleOption3.foreach(y => process(e, y.qName, y.value))
     extensionsIncludedInBaseSequence.pop
     extensionsIncludedInBaseSequence.push(true)
     extensions.foreach { y =>
@@ -253,7 +255,7 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
     x.group.particleOption3.foreach(y => {
       index = index + 1
       visitor.startChoiceItem(subElement, y.value, index)
-      process(subElement, toQName(y), y.value)
+      process(subElement, y.qName, y.value)
       visitor.endChoiceItem
     })
     extensionsIncludedInBaseSequence.pop
