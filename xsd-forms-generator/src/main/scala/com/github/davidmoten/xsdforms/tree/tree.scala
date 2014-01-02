@@ -73,10 +73,8 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def doNode(node: NodeSequence, instances: Instances) {
     val e = node.element
-    val number = e.number
-
     html
-      .div(id = Some(getItemEnclosingId(number, instances add 1)),
+      .div(id = Some(getItemEnclosingId(e.number, instances add 1)),
         classes = List(ClassSequence) ++ e.visibility)
     nonRepeatingTitle(e, instances)
     minOccursZeroCheckbox(e, instances)
@@ -119,9 +117,7 @@ class TreeToHtmlConverter(override val options: Options,
     //TODO choiceInline not used!
     val choiceInline = displayChoiceInline(node.choice)
 
-    val number = e.number
-
-    html.div(id = Some(getItemEnclosingId(number, instances add 1)),
+    html.div(id = Some(getItemEnclosingId(e.number, instances add 1)),
       classes = List(ClassChoice) ++ e.visibility)
     nonRepeatingTitle(e, instances)
     minOccursZeroCheckbox(e, instances)
@@ -142,7 +138,7 @@ class TreeToHtmlConverter(override val options: Options,
     val particles = choice.group.particleOption3.map(_.value)
     addChoiceHideOnStartScriptlet(particles, e.number, instNos)
     addChoiceShowHideOnSelectionScriptlet(particles, e.number, instNos)
-    val label =  Annotation.Label.from(choice.group)
+    val label = Annotation.Label.from(choice.group)
     if (label.isDefined)
       html.div(
         classes = List(ClassChoiceLabel),
@@ -186,14 +182,13 @@ class TreeToHtmlConverter(override val options: Options,
     val e = node.element
     nonRepeatingSimpleType(e, instances)
     repeatButton(e, instances)
-    val number = e.number
     for (instanceNo <- e.repeats) {
       val instNos = instances add instanceNo
       repeatingEnclosing(e, instNos)
       itemTitle(e)
       addRemoveButton(e, instNos)
       itemBefore(e)
-      addNumberLabel(node, number, instNos)
+      addNumberLabel(node, e.number, instNos)
       simpleType(node, instNos)
       html.closeTag
       addError(e, instNos)
@@ -362,7 +357,6 @@ class TreeToHtmlConverter(override val options: Options,
   }
 
   private def minOccursZeroCheckbox(e: ElementWrapper, instances: Instances) {
-    val number = e.number
     if (e.isMinOccursZero) {
       html.div(classes = List(ClassMinOccursZeroContainer))
       html
@@ -372,27 +366,27 @@ class TreeToHtmlConverter(override val options: Options,
             .getOrElse("Click to enable")))
         .closeTag
       html.input(
-        id = Some(getMinOccursZeroId(number, instances)),
-        name = getMinOccursZeroName(number, instances),
+        id = Some(getMinOccursZeroId(e.number, instances)),
+        name = getMinOccursZeroName(e.number, instances),
         classes = List(ClassMinOccursZero),
         typ = Some("checkbox"),
         checked = None,
         value = None,
-        number = Some(number))
+        number = Some(e.number))
         .closeTag
       html.closeTag
       val js = JS()
         .line("$('#%s').change( function () {",
-          getMinOccursZeroId(number, instances))
+          getMinOccursZeroId(e.number, instances))
       for (instanceNo <- e.repeats) {
         js
           .line("  changeMinOccursZeroCheckbox($(this),$('#%s'));",
-            Ids.getRepeatingEnclosingId(number, instances add instanceNo))
+            Ids.getRepeatingEnclosingId(e.number, instances add instanceNo))
       }
 
       js.line("})")
         .line
-        .line("$('#%s').change();", getMinOccursZeroId(number, instances))
+        .line("$('#%s').change();", getMinOccursZeroId(e.number, instances))
 
       addScript(js)
     }
@@ -400,7 +394,6 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def nonRepeatingTitle(e: ElementWrapper, instances: Instances) {
     //there's only one of these so use instanceNo = 1
-    val number = e.number
     val content = e.get(Annotation.NonRepeatingTitle)
     if (content.isDefined)
       html
@@ -411,10 +404,9 @@ class TreeToHtmlConverter(override val options: Options,
   }
 
   private def repeatButton(e: ElementWrapper, instances: Instances) {
-    val number = e.number
     if (e.hasButton) {
       html.div(
-        id = Some(getRepeatButtonId(number, instances)),
+        id = Some(getRepeatButtonId(e.number, instances)),
         classes = List(ClassRepeatButton, ClassWhite, ClassSmall),
         content = Some(e.get(Annotation.RepeatLabel)
           .getOrElse("+"))).closeTag
@@ -423,8 +415,7 @@ class TreeToHtmlConverter(override val options: Options,
   }
 
   private def repeatingEnclosing(e: ElementWrapper, instances: Instances) {
-    val number = e.number
-    val id = Ids.getRepeatingEnclosingId(number, instances)
+    val id = Ids.getRepeatingEnclosingId(e.number, instances)
     html.div(
       id = Some(id),
       classes = List(ClassRepeatingEnclosing))
@@ -433,11 +424,10 @@ class TreeToHtmlConverter(override val options: Options,
   }
 
   private def nonRepeatingSimpleType(e: ElementWrapper, instances: Instances) {
-    val number = e.number
     html
       .div(
         classes = List(ClassItemEnclosing) ++ e.visibility,
-        id = Some(getItemEnclosingId(number, instances add 1)))
+        id = Some(getItemEnclosingId(e.number, instances add 1)))
     nonRepeatingTitle(e, instances)
   }
 
@@ -482,52 +472,56 @@ class TreeToHtmlConverter(override val options: Options,
     if (isEnumeration(r))
       addEnumeration(e, r, instances)
     else
-      addTextField(e, r, getExtraClasses(qn), instances)
+      addTextOrCheckbox(e, r, getExtraClasses(qn), instances)
 
     addWidthScript(e, instances)
-
     addCssScript(e, instances)
   }
 
-  private def addTextField(
+  private def addTextOrCheckbox(
     e: ElementWrapper, r: Restriction,
     extraClasses: String, instances: Instances) {
-    val number = e.number
-    val inputType = getInputType(r)
-    val itemId = getItemId(number, instances)
-    if (e.isTextArea) {
-      html.textarea(
-        id = Some(itemId),
-        name = getItemName(number, instances),
-        classes = List(extraClasses, ClassItemInputTextarea),
-        content = Some(e.default.mkString),
-        number = Some(number))
-        .closeTag
-    } else {
-      //text or boolean
-      val isChecked = inputType == Checkbox &&
-        e.default.isDefined && e.default.get == "true"
-      val v = if (isChecked) None else defaultValue(e.default, r)
-      html.input(
-        id = Some(itemId),
-        name = getItemName(number, instances),
-        classes = List(extraClasses, ClassItemInputText),
-        typ = Some(inputType.name),
-        checked = None,
-        value = v,
-        number = Some(number))
-        .closeTag
-      addScript(JS().line("  $('#%s').prop('checked',%s);",
-        itemId, isChecked + "").line)
-      if (inputType == Checkbox) {
-        addCheckboxScript(e, instances)
-      }
-    }
+    if (e.isTextArea)
+      addTextArea(e, extraClasses, instances)
+    else
+      addTextFieldOrCheckbox(e, r, extraClasses, instances)
+  }
 
+  private def addTextArea(e: ElementWrapper, extraClasses: String, instances: Instances) {
+    val itemId = getItemId(e.number, instances)
+    html.textarea(
+      id = Some(itemId),
+      name = getItemName(e.number, instances),
+      classes = List(extraClasses, ClassItemInputTextarea),
+      content = Some(e.default.mkString),
+      number = Some(e.number))
+      .closeTag
+  }
+
+  private def addTextFieldOrCheckbox(e: ElementWrapper, r: Restriction, extraClasses: String, instances: Instances) {
+    val inputType = getInputType(r)
+    val itemId = getItemId(e.number, instances)
+    //text or checkbox
+    val isChecked = inputType == Checkbox &&
+      e.default.isDefined && e.default.get == "true"
+    val v = if (isChecked) None else defaultValue(e.default, r)
+    html.input(
+      id = Some(itemId),
+      name = getItemName(e.number, instances),
+      classes = List(extraClasses, ClassItemInputText),
+      typ = Some(inputType.name),
+      checked = None,
+      value = v,
+      number = Some(e.number))
+      .closeTag
+    addScript(JS().line("  $('#%s').prop('checked',%s);",
+      itemId, isChecked + "").line)
+    if (inputType == Checkbox) {
+      addCheckboxScript(e, instances)
+    }
   }
 
   private def addCheckboxScript(e: ElementWrapper, instances: Instances) {
-    val number = e.number
     val makeVisibleString = e.get(Annotation.MakeVisible);
     val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
     for (value <- List("true", "false")) {
@@ -536,11 +530,11 @@ class TreeToHtmlConverter(override val options: Options,
       val makeVisible = makeVisibleMapOnElement.get(value)
       makeVisible match {
         case Some(y: Int) => {
-          val refersTo = number + y
+          val refersTo = e.number + y
           val js = JS()
             .line("  $('#%s').change( function() {",
-              getItemId(number, instances))
-            .line("    var v = $('#%s');", getItemId(number, instances))
+              getItemId(e.number, instances))
+            .line("    var v = $('#%s');", getItemId(e.number, instances))
             .line("    var refersTo = $('#%s');",
               getItemEnclosingId(refersTo, instances))
             .line("    if (%s v.is(':checked'))", if (value == "true") "" else "!")
@@ -584,15 +578,14 @@ class TreeToHtmlConverter(override val options: Options,
   }
 
   private def addRemoveButton(e: ElementWrapper, instances: Instances) {
-    val number = e.number
-    val removeButtonId = getRemoveButtonId(number, instances)
+    val removeButtonId = getRemoveButtonId(e.number, instances)
     val canRemove =
       (instances.last != 1 && e.maxOccurs != e.minOccurs.toString)
     if (canRemove)
       html
         .div(classes = List(ClassRemoveButtonContainer))
         .div(
-          id = Some(getRemoveButtonId(number, instances)),
+          id = Some(getRemoveButtonId(e.number, instances)),
           classes = List(ClassRemoveButton, ClassWhite, ClassSmall),
           content = Some(e.get(Annotation.RemoveLabel)
             .getOrElse("-")))
@@ -657,12 +650,12 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def enumeration(e: ElementWrapper,
     en: Seq[(String, NoFixedFacet)],
-    number: Int, isRadio: Boolean,
+    isRadio: Boolean,
     instances: Instances) {
     if (isRadio)
-      radio(en, number, instances)
+      radio(en, e.number, instances)
     else
-      dropDown(e, en, number, instances)
+      dropDown(e, en, instances)
   }
 
   private def radio(
@@ -685,14 +678,13 @@ class TreeToHtmlConverter(override val options: Options,
   private def dropDown(
     e: ElementWrapper,
     en: Seq[(String, NoFixedFacet)],
-    number: Int,
     instances: Instances) {
 
     html.select(
-      id = Some(getItemId(number, instances)),
-      name = getItemName(number, instances),
+      id = Some(getItemId(e.number, instances)),
+      name = getItemName(e.number, instances),
       classes = List(ClassSelect),
-      number = Some(number))
+      number = Some(e.number))
 
     if (initializeBlank(e))
       html.option(content = Some("Select one..."), value = "")
@@ -700,7 +692,7 @@ class TreeToHtmlConverter(override val options: Options,
     val makeVisibleString = e.get(Annotation.MakeVisible);
     val makeVisibleMapOnElement = parseMakeVisibleMap(makeVisibleString)
     en.foreach { x =>
-      dropDownValue(x, number, makeVisibleMapOnElement, instances)
+      dropDownValue(x, e.number, makeVisibleMapOnElement, instances)
     }
     html.closeTag
   }
@@ -712,7 +704,7 @@ class TreeToHtmlConverter(override val options: Options,
     //get the makeVisible annotation from the named element or the enumeration element in that order.
     val makeVisible = makeVisibleMapOnElement.get(value) match {
       case Some(y: Int) => Some(y.toString)
-      case None =>  Annotation.MakeVisible.from(x._2)
+      case None => Annotation.MakeVisible.from(x._2)
     }
     html.option(content = Some(x._1), value = x._2.valueAttribute).closeTag
     makeVisible match {
@@ -742,10 +734,9 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def addEnumeration(e: ElementWrapper, r: Restriction,
     instances: Instances) {
-    val number = e.number
     val en = getEnumeration(r)
 
-    enumeration(e, en, number, e.isRadio, instances)
+    enumeration(e, en, e.isRadio, instances)
   }
 
   private def addError(e: ElementWrapper, instances: Instances) {
@@ -789,15 +780,14 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def createDeclarationScriptlet(e: ElementWrapper, qn: QN,
     instances: Instances) = {
-    val number = e.number
-    val itemId = getItemId(number, instances)
+    val itemId = getItemId(e.number, instances)
     JS()
       .line("// %s", e.name.get)
       .line("var validate%sinstance%s = function () {",
-        number.toString, instances)
+        e.number.toString, instances)
       .line("  var ok = true;")
       .line("  var v = $('#%s');", itemId)
-      .line("  var pathDiv = $('#%s');", getPathId(number, instances))
+      .line("  var pathDiv = $('#%s');", getPathId(e.number, instances))
       .toString
   }
 
@@ -824,7 +814,6 @@ class TreeToHtmlConverter(override val options: Options,
 
   private def createClosingScriptlet(e: ElementWrapper,
     qn: QN, instances: Instances) = {
-    val number = e.number
     val changeMethod = "change("
     val js = JS()
       .line("  return ok;")
@@ -833,22 +822,21 @@ class TreeToHtmlConverter(override val options: Options,
       .line("$('%s').change( function() {",
         changeReference(e, instances))
       .line("  var ok = validate%sinstance%s();",
-        number.toString, instances)
-      .line("  showError('%s',ok);", Ids.getItemErrorId(number, instances))
+        e.number.toString, instances)
+      .line("  showError('%s',ok);", Ids.getItemErrorId(e.number, instances))
       .line("});")
       .line
     if (e.minOccurs.intValue == 0 && e.default.isEmpty)
       js.line("//disable item-path due to minOccurs=0 and default is empty")
         .line("$('#%s').attr('enabled','false');",
-          getPathId(number, instances))
+          getPathId(e.number, instances))
     js.toString
   }
 
   private def addMaxOccursScriptlet(e: ElementWrapper,
     instances: Instances) {
-    val number = e.number
     if (e.isMultiple) {
-      val repeatButtonId = getRepeatButtonId(number, instances)
+      val repeatButtonId = getRepeatButtonId(e.number, instances)
       val js = JS()
         .line("  $('#%s').click( function() {", repeatButtonId)
         .line("    // loop through all repeats until find first nonInvisible repeat and make it visible")
