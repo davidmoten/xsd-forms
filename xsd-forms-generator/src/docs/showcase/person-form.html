@@ -109,6 +109,16 @@ function toJson(xml) {
   var json = x2js.xml_str2json(xml);
   return JSON.stringify(json);
 }
+
+function showChoiceItem(elem) {
+  elem.show();
+  elem.find('.item-path').attr('enabled','true');
+}
+
+function hideChoiceItem(elem) {
+  elem.hide();
+  elem.find('.item-path').attr('enabled','false');
+}
           
 $(function() {
   //run js unit tests        
@@ -527,22 +537,14 @@ $(function() {
   var choiceChange11instance1_1 = function addChoiceChange11instance1_1() {
     $(':input[@name=a-item-input-11-instance-1_1]').change(function() {
       var checked = $(':input[name=a-item-input-11-instance-1_1]:checked').attr('id');
-      if (checked == 'a-item-11-instance-1_1-choice-1') {
-        $('#a-choice-content-11-instance-1_1-choice-1').show();
-        $('#a-choice-content-11-instance-1_1-choice-1').find('.item-path').attr('enabled','true');
-      }
-      else {
-        $('#a-choice-content-11-instance-1_1-choice-1').hide();
-        $('#a-choice-content-11-instance-1_1-choice-1').find('.item-path').attr('enabled','false');
-      }
-      if (checked == 'a-item-11-instance-1_1-choice-2') {
-        $('#a-choice-content-11-instance-1_1-choice-2').show();
-        $('#a-choice-content-11-instance-1_1-choice-2').find('.item-path').attr('enabled','true');
-      }
-      else {
-        $('#a-choice-content-11-instance-1_1-choice-2').hide();
-        $('#a-choice-content-11-instance-1_1-choice-2').find('.item-path').attr('enabled','false');
-      }
+      if (checked == 'a-item-11-instance-1_1-choice-1') 
+        showChoiceItem($('#a-choice-content-11-instance-1_1-choice-1'));
+      else
+        hideChoiceItem($('#a-choice-content-11-instance-1_1-choice-1'))
+      if (checked == 'a-item-11-instance-1_1-choice-2') 
+        showChoiceItem($('#a-choice-content-11-instance-1_1-choice-2'));
+      else
+        hideChoiceItem($('#a-choice-content-11-instance-1_1-choice-2'))
     });
   }
 

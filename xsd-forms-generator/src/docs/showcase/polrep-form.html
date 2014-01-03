@@ -109,6 +109,16 @@ function toJson(xml) {
   var json = x2js.xml_str2json(xml);
   return JSON.stringify(json);
 }
+
+function showChoiceItem(elem) {
+  elem.show();
+  elem.find('.item-path').attr('enabled','true');
+}
+
+function hideChoiceItem(elem) {
+  elem.hide();
+  elem.find('.item-path').attr('enabled','false');
+}
           
 $(function() {
   //run js unit tests        
