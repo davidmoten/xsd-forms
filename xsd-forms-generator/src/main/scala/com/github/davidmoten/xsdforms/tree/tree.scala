@@ -1,6 +1,5 @@
 package com.github.davidmoten.xsdforms.tree
 
-//  import xsd._
 import javax.xml.namespace.QName
 import scalaxb._
 import com.github.davidmoten.xsdforms.presentation._
@@ -10,13 +9,13 @@ import com.github.davidmoten.xsdforms.html._
 /**
  * **************************************************************
  *
- *   TreeToHtmlConverter class
+ *   FormCreator class
  *
  *
  * **************************************************************
  */
 
-class TreeToHtmlConverter(override val options: Options,
+class FormCreator(override val options: Options,
   configuration: Option[Configuration], override val tree: Node)
   extends TreeState {
 
