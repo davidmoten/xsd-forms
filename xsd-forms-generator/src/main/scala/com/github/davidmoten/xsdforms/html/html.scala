@@ -31,7 +31,7 @@ private object Html {
   val Name = "name"
 }
 
-class Html {
+private[xsdforms] class Html {
   import Html._
   private case class HtmlElement(name: String, hasContent: Boolean)
   private val stack = new scala.collection.mutable.Stack[HtmlElement]

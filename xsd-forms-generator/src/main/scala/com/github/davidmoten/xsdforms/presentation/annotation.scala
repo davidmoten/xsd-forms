@@ -7,7 +7,7 @@ import xsd.Annotatedable
  */
 object `package` {}
 
-object Annotation {
+private[xsdforms] object Annotation {
   //TODO document each of the annotations in scaladoc
 
   /**

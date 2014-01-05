@@ -18,7 +18,7 @@ private case class DataRecordWithQName[T](d: DataRecord[T]) {
   def qName = toQName(d)
 }
 
-class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) {
+private[xsdforms] class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) {
   import Util._
   import XsdUtil._
   import com.github.davidmoten.xsdforms.presentation._
@@ -292,7 +292,7 @@ class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) 
   }
 }
 
-protected case class MyElement(name: Option[String] = None,
+private[tree] case class MyElement(name: Option[String] = None,
   default: Option[String] = None, minOccurs: BigInt = BigInt(1),
   maxOccurs: String = "1") extends Element {
   val annotation: Option[xsd.Annotation] = None

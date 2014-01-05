@@ -1,6 +1,6 @@
 package com.github.davidmoten.xsdforms.tree
 
-class ElementNumbersAssigner(node: Node) {
+private[tree] class ElementNumbersAssigner(node: Node) {
 
   private def assign(node: Node, number: Int): Map[ElementWrapper, Int] = {
     val m = Map(node.element -> (number + 1))

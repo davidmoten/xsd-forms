@@ -1,6 +1,6 @@
 package com.github.davidmoten.xsdforms.tree
 
-object TreeUtil {
+private[xsdforms] object TreeUtil {
   import xsd.Annotatedable
   import XsdUtil.AppInfoSchema
 

@@ -1,6 +1,6 @@
 package com.github.davidmoten.xsdforms.presentation
 
-object Css {
+private[xsdforms] object Css {
   val ClassInvisible = "invisible"
   val ClassSequence = "sequence"
   val ClassSequenceLabel = "sequence-label"
