@@ -108,16 +108,16 @@ private[xsdforms] class SchemaTraversor(s: Schema, rootElement: Option[String], 
         case y: Appinfo => y
         case _ => unexpected
       })
-      .map(x => x.mixed)
+      .map(_.mixed)
       .flatten
 
-    def extract(elementName: String) =
+    def extract(elementName: String):Option[String] =
       children
         .filter(_.key.isDefined)
         .filter(_.qName == qn(AppInfoSchema, elementName))
         .map(_.value)
         .map(x => scala.xml.XML.loadString(x.toString))
-        .map(x => x.text).headOption
+        .map(_.text).headOption
 
     val header = extract(Annotation.Header.name)
     val footer = extract(Annotation.Footer.name)
