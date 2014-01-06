@@ -19,19 +19,13 @@ import scalaxb._
  * Utility methods.
  *
  */
-object Util {
+private[xsdforms] object Util {
   def unexpected(s: String) = throw new RuntimeException(s)
   def unexpected = throw new RuntimeException
 }
 
-case class XsdDatatype(name: String, pattern: Option[String] = None)
+private[tree] case class XsdDatatype(name: String, pattern: Option[String] = None)
 case class XsdElement(name: String)
-
-
-
-case class Configuration(header: Option[String], footer: Option[String],
-  extraImports: Option[String], extraScript: Option[String], extraCss: Option[String])
-
 
 
 /**
@@ -43,7 +37,7 @@ case class Configuration(header: Option[String], footer: Option[String],
  * **************************************************************
  */
 
-case class Instances(heirarchy: Seq[Int] = List(), indentsDelta: Int = 0) {
+private[xsdforms] case class Instances(heirarchy: Seq[Int] = List(), indentsDelta: Int = 0) {
   def add(instance: Int): Instances = Instances(heirarchy :+ instance, indentsDelta)
   def add(instance: Int, suppressIndent: Boolean) =
     Instances(heirarchy :+ instance, indentsDelta - (if (suppressIndent) 1 else 0))
@@ -52,38 +46,13 @@ case class Instances(heirarchy: Seq[Int] = List(), indentsDelta: Int = 0) {
   def indentCount = heirarchy.size + indentsDelta
 }
 
-/**
- * **************************************************************
- *
- *   JS
- *
- *
- * **************************************************************
- */
-
-/**
- * Utility class for building javascript statements.
- */
-case class JS() {
-  val b = new StringBuffer()
-
-  def line: JS = line("")
-
-  def line(s: String, params: Object*): JS = {
-    b append "\n"
-    b append String.format(s, params: _*)
-    this
-  }
-
-  def append(s: String, params: Object*): JS = {
-    b append String.format(s, params: _*)
-    this
-  }
-
-  override def toString = b.toString
-}
-
 case class Prefix(value: String) {
   override def toString = value
 }
+
 case class Options(targetNamespace: String, idPrefix: Prefix)
+
+case class Configuration(header: Option[String], footer: Option[String],
+  extraImports: Option[String], extraScript: Option[String], extraCss: Option[String])
+
+

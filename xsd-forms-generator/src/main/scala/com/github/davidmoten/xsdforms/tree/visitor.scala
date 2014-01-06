@@ -9,7 +9,7 @@ package com.github.davidmoten.xsdforms.tree
  * **************************************************************
  */
 
-trait Visitor {
+private[xsdforms] trait Visitor {
   import xsd._
   def configuration(configuration: Configuration)
   def startSequence(e: Element)
@@ -31,7 +31,7 @@ trait Visitor {
  * **************************************************************
  */
 
-class TreeCreatingVisitor extends Visitor {
+private[xsdforms] class TreeCreatingVisitor extends Visitor {
   import xsd._
   import Util._
 

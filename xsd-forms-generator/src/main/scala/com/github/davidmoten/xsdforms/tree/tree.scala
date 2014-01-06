@@ -5,6 +5,7 @@ import scalaxb._
 import com.github.davidmoten.xsdforms.presentation._
 import Css._
 import com.github.davidmoten.xsdforms.html._
+import com.github.davidmoten.util.JS
 
 /**
  * **************************************************************

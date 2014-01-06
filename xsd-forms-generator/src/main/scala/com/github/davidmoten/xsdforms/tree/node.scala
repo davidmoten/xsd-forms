@@ -10,30 +10,30 @@ import xsd._
 // or be an enumeration. all elements may have  minOccurs and maxOccurs
 //attributes.
 
-case class Sequence(group: ExplicitGroupable)
-case class Choice(group: ExplicitGroupable)
-case class BaseType(qName: QName)
+private[tree] case class Sequence(group: ExplicitGroupable)
+private[tree] case class Choice(group: ExplicitGroupable)
+private[tree] case class BaseType(qName: QName)
 
-sealed trait Node {
+private[tree] sealed trait Node {
   val element: ElementWrapper
   def isAnonymous = element.name.isEmpty
 }
 
-sealed trait NodeGroup extends Node {
+private[tree] sealed trait NodeGroup extends Node {
   val children: MutableList[Node] = MutableList()
 }
 
 // immutable would be preferrable but should be safe because not changed after tree created
-sealed trait NodeBasic extends Node
+private[tree] sealed trait NodeBasic extends Node
 
-sealed trait BasicType
-case class BasicTypeSimple(typ: SimpleType) extends BasicType
-case class BasicTypeBase(typ: BaseType) extends BasicType
+private[tree] sealed trait BasicType
+private[tree] case class BasicTypeSimple(typ: SimpleType) extends BasicType
+private[tree] case class BasicTypeBase(typ: BaseType) extends BasicType
 
 //TODO stop using mutable types
-case class NodeSequence(element: ElementWrapper,
+private[tree] case class NodeSequence(element: ElementWrapper,
   override val children: MutableList[Node]) extends NodeGroup
-case class NodeChoice(element: ElementWrapper, choice: Choice,
+private[tree] case class NodeChoice(element: ElementWrapper, choice: Choice,
   override val children: MutableList[Node]) extends NodeGroup
-case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic
-case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic
+private[tree] case class NodeSimpleType(element: ElementWrapper, typ: SimpleType) extends NodeBasic
+private[tree] case class NodeBaseType(element: ElementWrapper, typ: BaseType) extends NodeBasic

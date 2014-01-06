@@ -1,6 +1,6 @@
 package com.github.davidmoten.xsdforms.tree
 
-private[xsdforms] object TreeUtil {
+private[tree] object TreeUtil {
   import xsd.Annotatedable
   import XsdUtil.AppInfoSchema
 
@@ -25,15 +25,15 @@ private[xsdforms] object TreeUtil {
 
 }
 
-protected case class ElementWithNumber(element: ElementWrapper, number: Int)
+private[tree] case class ElementWithNumber(element: ElementWrapper, number: Int)
 
 //Use Vector because has O(1) append
-protected case class HtmlJs(html: Vector[String], js: Vector[String]) {
+private[tree] case class HtmlJs(html: Vector[String], js: Vector[String]) {
   def addHtml(html2: String) = HtmlJs(html.+:(html2), js)
   def addJs(js2: String) = HtmlJs(html, js.+:(js2))
 }
 
-protected trait TreeState {
+private[tree] trait TreeState {
   import com.github.davidmoten.xsdforms.html.Html
 
   val options: Options

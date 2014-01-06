@@ -1,12 +1,16 @@
-package com.github.davidmoten.xsdforms {
+package com.github.davidmoten.xsdforms.tree
 
   import org.junit.Test
+import TreeUtil.parseMakeVisibleMap
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 
   @Test
   class TreeUtilTest {
     import org.junit.Assert._
 
-    import tree.TreeUtil._
+    import TreeUtil._
 
     @Test
     def testParseSingle {
@@ -38,4 +42,3 @@ package com.github.davidmoten.xsdforms {
     }
 
   }
-}

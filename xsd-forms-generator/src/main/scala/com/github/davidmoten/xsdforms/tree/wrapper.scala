@@ -11,14 +11,14 @@ package com.github.davidmoten.xsdforms.tree
 
 import xsd.Element
 
-protected case class ElementWrapper(element: Element,
+private[tree] case class ElementWrapper(element: Element,
   uniqueId: String = java.util.UUID.randomUUID.toString) {
 
   import com.github.davidmoten.xsdforms.presentation._
   import com.github.davidmoten.xsdforms.presentation.Css._
   import ElementWrapper._
 
-  val e = element
+  private val e = element
 
   def hasButton =
     e.maxOccurs != "1" && e.minOccurs.toString != e.maxOccurs
@@ -27,7 +27,7 @@ protected case class ElementWrapper(element: Element,
     key.from(this)
 
   def visibility =
-   get(Annotation.Visible) match {
+    get(Annotation.Visible) match {
       case Some("false") => Some(ClassInvisible)
       case _ => None
     }
@@ -86,15 +86,15 @@ protected case class ElementWrapper(element: Element,
 
 }
 
-protected case class QN(namespace: String, localPart: String)
+private[tree] case class QN(namespace: String, localPart: String)
 
-protected sealed trait InputType {
+private[tree] sealed trait InputType {
   val name: String;
 }
-protected case object Checkbox extends InputType {
+private[tree] case object Checkbox extends InputType {
   val name = "checkbox";
 }
-protected case object TextBox extends InputType {
+private[tree] case object TextBox extends InputType {
   val name = "text"
 }
 
@@ -102,7 +102,7 @@ import xsd.Restriction
 import xsd.SimpleRestrictionModelSequence
 import javax.xml.namespace.QName
 
-protected class MyRestriction(qName: QName)
+private[tree] class MyRestriction(qName: QName)
   extends Restriction(None, SimpleRestrictionModelSequence(),
     None, Some(qName), Map())
 
@@ -115,7 +115,7 @@ protected class MyRestriction(qName: QName)
  * **************************************************************
  */
 
-protected object ElementWrapper {
+private[tree] object ElementWrapper {
 
   import com.github.davidmoten.xsdforms.presentation._
   import Css._

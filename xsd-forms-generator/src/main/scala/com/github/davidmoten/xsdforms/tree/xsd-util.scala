@@ -3,7 +3,7 @@ package com.github.davidmoten.xsdforms.tree
 /**
  * Utility methods and constants for XML Schemas (XSD).
  */
-object XsdUtil {
+private[xsdforms] object XsdUtil {
   
   import scalaxb.DataRecord
   import javax.xml.namespace.QName
