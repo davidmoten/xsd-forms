@@ -18,10 +18,12 @@ private case class DataRecordWithQName[T](d: DataRecord[T]) {
   def qName = toQName(d)
 }
 
+
 private[xsdforms] class SchemaTraversor(s: Schema, rootElement: Option[String], visitor: Visitor) {
   import Util._
   import XsdUtil._
   import com.github.davidmoten.xsdforms.presentation._
+  import com.github.davidmoten.xsdforms.Configuration
   private implicit def toDataRecordWithQName[T](d:DataRecord[T]) = DataRecordWithQName(d)
 
   val extensionStack = new scala.collection.mutable.Stack[ExtensionTypable]

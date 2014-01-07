@@ -1,18 +1,11 @@
-package com.github.davidmoten.xsdforms.html
+package com.github.davidmoten.xsdforms.tree.html
+
+import scala.Option.option2Iterable
 
 /**
  * Builds html specifically for xsd-forms.
  */
 object `package` {}
-
-/**
- * **************************************************************
- *
- *   Html
- *
- *
- * **************************************************************
- */
 
 private object Html {
   val Legend = "legend"
@@ -31,7 +24,7 @@ private object Html {
   val Name = "name"
 }
 
-private[xsdforms] class Html {
+private[tree] class Html {
   import Html._
   private case class HtmlElement(name: String, hasContent: Boolean)
   private val stack = new scala.collection.mutable.Stack[HtmlElement]
@@ -39,7 +32,7 @@ private[xsdforms] class Html {
   private val s = new StringBuffer
   //mutable!
   private val scriptBuffer = new StringBuffer
-  
+
   def div(id: Option[String] = None,
     classes: List[String] = List(), enabledAttr: Option[String] = None,
     content: Option[String] = None) =
@@ -176,14 +169,12 @@ private[xsdforms] class Html {
     this
   }
 
-  def appendScript(s:String) {
+  def appendScript(s: String) {
     scriptBuffer append s
   }
 
-  def script() = 
-    scriptBuffer.toString
-  
-  
+  def script = scriptBuffer.toString
+
   override def toString = s.toString
 
 }

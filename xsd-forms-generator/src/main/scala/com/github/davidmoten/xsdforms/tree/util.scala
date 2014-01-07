@@ -46,13 +46,4 @@ private[xsdforms] case class Instances(heirarchy: Seq[Int] = List(), indentsDelt
   def indentCount = heirarchy.size + indentsDelta
 }
 
-case class Prefix(value: String) {
-  override def toString = value
-}
-
-case class Options(targetNamespace: String, idPrefix: Prefix)
-
-case class Configuration(header: Option[String], footer: Option[String],
-  extraImports: Option[String], extraScript: Option[String], extraCss: Option[String])
-
 

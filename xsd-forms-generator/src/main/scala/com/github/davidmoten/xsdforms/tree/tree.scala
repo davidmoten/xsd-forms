@@ -4,8 +4,10 @@ import javax.xml.namespace.QName
 import scalaxb._
 import com.github.davidmoten.xsdforms.presentation._
 import Css._
-import com.github.davidmoten.xsdforms.html._
+import com.github.davidmoten.xsdforms.tree.html._
 import com.github.davidmoten.util.JS
+import com.github.davidmoten.xsdforms.tree.html.Html
+import com.github.davidmoten.xsdforms.{Configuration,Options}
 
 /**
  * **************************************************************

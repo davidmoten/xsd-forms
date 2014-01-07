@@ -34,7 +34,8 @@ private[tree] case class HtmlJs(html: Vector[String], js: Vector[String]) {
 }
 
 private[tree] trait TreeState {
-  import com.github.davidmoten.xsdforms.html.Html
+  import com.github.davidmoten.xsdforms.tree.html.Html
+  import com.github.davidmoten.xsdforms.Options
 
   val options: Options
 

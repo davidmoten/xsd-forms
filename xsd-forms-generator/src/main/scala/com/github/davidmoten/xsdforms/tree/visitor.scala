@@ -1,5 +1,7 @@
 package com.github.davidmoten.xsdforms.tree
 
+import com.github.davidmoten.xsdforms.Configuration
+
 /**
  * **************************************************************
  *
@@ -11,6 +13,7 @@ package com.github.davidmoten.xsdforms.tree
 
 private[xsdforms] trait Visitor {
   import xsd._
+    
   def configuration(configuration: Configuration)
   def startSequence(e: Element)
   def endSequence

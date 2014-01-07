@@ -174,7 +174,7 @@ private[xsdforms] object Annotation {
   val ExtraScript = XsdFormsAnnotation("extraScript")
 }
 
-case class XsdFormsAnnotation(name: String) {
+private[xsdforms] case class XsdFormsAnnotation(name: String) {
   //TODO move dep to a util package
   import com.github.davidmoten.xsdforms.tree.XsdUtil
   

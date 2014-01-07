@@ -5,18 +5,6 @@ package com.github.davidmoten.xsdforms
  */
 object `package` {}
 
-import xsd._
-import tree._
-
-/**
- * **************************************************************
- *
- *   Generator
- *
- *
- * **************************************************************
- */
-
 /**
  * Generates html and javascript based on XML schema (XSD).
  */
@@ -25,6 +13,8 @@ object Generator {
   import java.util.UUID
   import java.util.zip._
   import org.apache.commons.io._
+  import xsd._
+  import tree._
 
   /**
    *  Using the given xml schema generates html and js files and copies
@@ -87,8 +77,6 @@ object Generator {
     copyJsCssAndGeneratedForm(schema, action, idPrefix, rootElement)
   }
 
-  import scala.io.Source
-
   private def copyJsCssAndGeneratedForm(
     schema: InputStream,
     action: (Array[Byte], String, Boolean) => Unit,
@@ -96,7 +84,7 @@ object Generator {
     rootElement: Option[String] = None) {
     val text = generateHtmlAsString(schema, idPrefix, rootElement)
 
-    val list = Source.fromInputStream(getClass.getResourceAsStream("/file-list.txt"))
+    val list = io.Source.fromInputStream(getClass.getResourceAsStream("/file-list.txt"))
     list.getLines.foreach { path =>
       val bytes = IOUtils.toByteArray(getClass.getResourceAsStream("/" + path))
       action(bytes, path, false)
@@ -155,4 +143,3 @@ object Generator {
   }
 
 }
-

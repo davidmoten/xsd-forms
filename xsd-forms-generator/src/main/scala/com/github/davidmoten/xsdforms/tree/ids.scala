@@ -1,6 +1,8 @@
 package com.github.davidmoten.xsdforms.tree
 
 private[xsdforms] object Ids {
+  
+  import com.github.davidmoten.xsdforms.{Prefix}
 
   val InstanceDelimiter = "-instance-"
   val ChoiceIndexDelimiter = "-choice-"
