@@ -18,9 +18,9 @@ import com.github.davidmoten.xsdforms.{Configuration,Options}
  * **************************************************************
  */
 
-class FormCreator(override val options: Options,
+private[xsdforms] class FormCreator(override val options: Options,
   configuration: Option[Configuration], override val tree: Node)
-  extends TreeState {
+  extends FormCreatorState {
 
   import xsd.{Element,Restriction,ParticleOption,NoFixedFacet,
     SimpleRestrictionModelSequence,NumFacet,Pattern,Annotatedable,SimpleType,Facet}
