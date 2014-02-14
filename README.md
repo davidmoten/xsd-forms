@@ -142,9 +142,9 @@ Then go to [http://localhost:8080](http://localhost:8080) and fill in the form.
 Add the following maven dependency to your pom.xml (you will need to have built the project from source so that the dependency is available in your local repository):
 ```
 <dependency>
-  <groupId>org.moten.david</groupId>
+  <groupId>com.github.davidmoten.xsdforms</groupId>
   <artifactId>xsd-forms-generator</artifactId>
-  <version>${project.parent.version}</version>
+  <version>0.1-SNAPSHOT</version>
 </dependency>
 ```
 
