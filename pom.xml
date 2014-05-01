@@ -370,16 +370,4 @@
 		</pluginManagement>
 	</build>
 
-	<!-- <repositories> <repository> <id>scala-tools.org</id> <name>Scala-Tools 
-		Maven2 Repository</name> <url>https://oss.sonatype.org/content/groups/scala-tools</url> 
-		</repository> </repositories> <pluginRepositories> <pluginRepository> <id>scala-tools.org</id> 
-		<name>Scala-Tools Maven2 Repository</name> <url>https://oss.sonatype.org/content/groups/scala-tools</url> 
-		</pluginRepository> </pluginRepositories> -->
-
-	<distributionManagement>
-		<site>
-			<id>site</id>
-			<url>${site.url}</url>
-		</site>
-	</distributionManagement>
 </project>
