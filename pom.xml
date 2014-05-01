@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>com.github.davidmoten.xsdforms</groupId>
 	<artifactId>xsd-forms</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.2</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 
