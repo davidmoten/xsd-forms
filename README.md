@@ -12,7 +12,7 @@ The form is javascript/html only and performs all validation using javascript.
 
 This project is written in Scala with a small amount of Java. 
 
-**Status:** alpha. 
+**Status:** Release to Maven Central
 
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
@@ -144,7 +144,7 @@ Add the following maven dependency to your pom.xml (you will need to have built 
 <dependency>
   <groupId>com.github.davidmoten.xsdforms</groupId>
   <artifactId>xsd-forms-generator</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2</version>
 </dependency>
 ```
 
@@ -164,7 +164,7 @@ or
 <plugin>
   <groupId>com.github.davidmoten.xsdforms</groupId>
   <artifactId>xsd-forms-maven-plugin</artifactId>
-  <version>${project.parent.version}</version>
+  <version>0.2</version>
   <executions>
     <execution>
 	  <goals>
