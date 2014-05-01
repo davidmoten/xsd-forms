@@ -2,13 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 	<groupId>com.github.davidmoten.xsdforms</groupId>
 	<artifactId>xsd-forms</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 
+	<url>http://github.com/davidmoten/xsd-forms</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<scala.version>2.10.3</scala.version>
@@ -37,6 +42,44 @@
 		<coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
 	</properties>
 
+    <licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+    <ciManagement>
+		<system>CloudBees</system>
+		<url>https://xuml-tools.ci.cloudbees.com</url>
+	</ciManagement>
+
+    <issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/davidmoten/xsd-forms/issues</url>
+	</issueManagement>
+
+	<inceptionYear>2013</inceptionYear>
+	<developers>
+		<developer>
+			<id>dave</id>
+			<name>Dave Moten</name>
+			<url>https://github.com/davidmoten/</url>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+10</timezone>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:davidmoten/xsd-forms.git</connection>
+		<developerConnection>scm:git:git@github.com:davidmoten/xsd-forms.git</developerConnection>
+		<url>scm:git:git@github.com:davidmoten/xsd-forms.git</url>
+	</scm>
 
 	<profiles>
 		<profile>
