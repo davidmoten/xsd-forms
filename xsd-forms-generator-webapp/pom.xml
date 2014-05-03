@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.github.davidmoten.xsdforms</groupId>
 		<artifactId>xsd-forms</artifactId>
-		<version>0.3-SNAPSHOT</version>
+		<version>0.2.1</version>
 	</parent>
 	<artifactId>xsd-forms-generator-webapp</artifactId>
 	<name>${project.artifactId}</name>
