@@ -14,7 +14,7 @@ This project is written in Scala with a small amount of Java.
 
 **Status:** Released to Maven Central
 
-Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
+Continuous integration with Jenkins: <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/xuml-tools/badge/icon"/></a>
 
 ## Design
 
