@@ -6,7 +6,7 @@ You want to make a web form that submits structured data (XML/JSON).
 
 *xsd-forms* generates a web form for you based on an xml schema (XSD) that has been annotated with some presentation information. 
 
-*xsd-forms* has been deployed to a freely available [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) for your convenience and immediate testing.
+*xsd-forms* has been deployed to a freely available [web service](https://xsd-forms.herokuapp.com/) for your convenience and immediate testing.
 
 The form is javascript/html only and performs all validation using javascript.
 
@@ -104,7 +104,7 @@ You need to make a schema using only the elements and types that are supported b
 </xs:schema>
 ```
 
-Deploying this simple schema to the web service mentioned below gives you [this form](http://xsd-forms-generator.xuml-tools.cloudbees.net/generate?schema=<xs%3Aschema+targetNamespace%3D"http%3A%2F%2Forg.moten.david%2Fexample"%0D%0A++xmlns%3D"http%3A%2F%2Forg.moten.david%2Fexample"+xmlns%3Axs%3D"http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema"%0D%0A++xmlns%3Ai%3D"http%3A%2F%2Fmoten.david.org%2Fxsd-forms">%0D%0A++<xs%3Aannotation+i%3AnumberItems%3D"true">%0D%0A++++<xs%3Aappinfo>%0D%0A++++++<i%3Aheader><%21%5BCDATA%5B%0D%0A<h2>Title+of+the+form<%2Fh2>%0D%0A%5D%5D><%2Fi%3Aheader>%0D%0A++++++<i%3Afooter><%21%5BCDATA%5B%0D%0A++++<p>Thanks+for+your+time.<%2Fp>%0D%0A%5D%5D><%2Fi%3Afooter>%0D%0A++++++<i%3AextraImports><%21%5BCDATA%5B%0D%0A++++<%21--+more+imports+here+-->%0D%0A%5D%5D><%2Fi%3AextraImports>%0D%0A++++++<i%3AextraScript><%21%5BCDATA%5B%0D%0A++%2F%2F+extra+script+would+go+here%0D%0A%5D%5D><%2Fi%3AextraScript>%0D%0A++++<%2Fxs%3Aappinfo>%0D%0A++<%2Fxs%3Aannotation>%0D%0A++<xs%3Aelement+name%3D"name"+type%3D"xs%3Astring">%0D%0A++++<xs%3Aannotation+i%3Alabel%3D"Full+name"+%2F>%0D%0A++<%2Fxs%3Aelement>%0D%0A<%2Fxs%3Aschema>&rootElement=&idPrefix=&action=view&method=get&submit=Submit).
+Deploying this simple schema to the web service mentioned below gives you [this form](https://xsd-forms.herokuapp.com/generate?schema=<xs%3Aschema+targetNamespace%3D"http%3A%2F%2Forg.moten.david%2Fexample"%0D%0A++xmlns%3D"http%3A%2F%2Forg.moten.david%2Fexample"+xmlns%3Axs%3D"http%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema"%0D%0A++xmlns%3Ai%3D"http%3A%2F%2Fmoten.david.org%2Fxsd-forms">%0D%0A++<xs%3Aannotation+i%3AnumberItems%3D"true">%0D%0A++++<xs%3Aappinfo>%0D%0A++++++<i%3Aheader><%21%5BCDATA%5B%0D%0A<h2>Title+of+the+form<%2Fh2>%0D%0A%5D%5D><%2Fi%3Aheader>%0D%0A++++++<i%3Afooter><%21%5BCDATA%5B%0D%0A++++<p>Thanks+for+your+time.<%2Fp>%0D%0A%5D%5D><%2Fi%3Afooter>%0D%0A++++++<i%3AextraImports><%21%5BCDATA%5B%0D%0A++++<%21--+more+imports+here+-->%0D%0A%5D%5D><%2Fi%3AextraImports>%0D%0A++++++<i%3AextraScript><%21%5BCDATA%5B%0D%0A++%2F%2F+extra+script+would+go+here%0D%0A%5D%5D><%2Fi%3AextraScript>%0D%0A++++<%2Fxs%3Aappinfo>%0D%0A++<%2Fxs%3Aannotation>%0D%0A++<xs%3Aelement+name%3D"name"+type%3D"xs%3Astring">%0D%0A++++<xs%3Aannotation+i%3Alabel%3D"Full+name"+%2F>%0D%0A++<%2Fxs%3Aelement>%0D%0A<%2Fxs%3Aschema>&rootElement=&idPrefix=&action=view&method=get&submit=Submit).
 
 #### How do I annotate my schema?
 
@@ -119,7 +119,7 @@ This is what the form from annotations-demo.xsd looks like:
 <img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/screen1.png"/>
 
 #### Generate using web service 
-A [web service](http://xsd-forms-generator.xuml-tools.cloudbees.net/) is available. At this service you can 
+A [web service](https://xsd-forms.herokuapp.com/) is available. At this service you can 
 
   * Submit a schema document to the service and receive a zip archive of the generated site.
   * Submit a schema document and view the generated form 
