@@ -76,6 +76,20 @@
                         <phase>package</phase>
                         <goals><goal>copy-dependencies</goal></goals>
                     </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>copy</goal></goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                     <groupId>org.eclipse.jetty</groupId>
+		                            <artifactId>jetty-runner</artifactId>
+		                            <version>9.2.10.v20150310</version>
+		                            <destFileName>jetty-runner.jar</destFileName>
+		                        </artifactItem>
+		                    </artifactItems>
+		                </configuration>
+		            </execution>
 				</executions>
 			</plugin>
 		</plugins>
