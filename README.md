@@ -1,6 +1,7 @@
 # xsd-forms
 <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/xuml-tools/badge/icon"/></a><br/>
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/xsd-forms)<br/></br/>
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/rtree/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.davidmoten/xsd-forms)<br/></br/><br/>
+
 <img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/diagram01.png"/>
 
 You want to make a web form that submits structured data (XML/JSON). 
