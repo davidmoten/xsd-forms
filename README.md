@@ -1,5 +1,5 @@
 # xsd-forms
-
+<a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/xuml-tools/badge/icon"/></a><br/>
 <img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/diagram01.png"/>
 
 You want to make a web form that submits structured data (XML/JSON). 
@@ -13,8 +13,6 @@ The form is javascript/html only and performs all validation using javascript.
 This project is written in Scala with a small amount of Java. 
 
 **Status:** Released to Maven Central
-
-Continuous integration with Jenkins: <a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/xuml-tools/badge/icon"/></a>
 
 ## Design
 
