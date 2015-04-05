@@ -1,5 +1,5 @@
 # xsd-forms
-<a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/xuml-tools/badge/icon"/></a><br/>
+<a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/xuml-tools/badge/icon"/></a><br/><br/>
 <img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/diagram01.png"/>
 
 You want to make a web form that submits structured data (XML/JSON). 
