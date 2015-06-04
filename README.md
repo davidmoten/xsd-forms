@@ -1,5 +1,5 @@
 # xsd-forms
-<a href="https://xuml-tools.ci.cloudbees.com/"><img src="https://xuml-tools.ci.cloudbees.com/job/xuml-tools/badge/icon"/></a><br/><br/>
+<a href="https://travis-ci.org/davidmoten/xsd-forms"><img src="https://travis-ci.org/davidmoten/xsd-forms.svg"/></a><br/>
 
 <img src="https://raw.github.com/davidmoten/xsd-forms/master/xsd-forms-generator/src/docs/diagram01.png"/>
 
