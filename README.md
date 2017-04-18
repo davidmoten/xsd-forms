@@ -180,7 +180,7 @@ or
 
 Here is a [demonstration](https://github.com/davidmoten/xsd-forms/tree/master/xsd-forms-maven-plugin-demo) using *xsd-forms-maven-plugin*.
 
-###What do I need to do after I have designed a schema?
+### What do I need to do after I have designed a schema?
 
 The default generated form just displays the captured xml on the page under the submit button. You will likely want to post the generated xml to a web server or perhaps email the xml to an address. To do that just set *extraScript* to the script below to override the submit behaviour:
 
@@ -189,7 +189,7 @@ The default generated form just displays the captured xml on the page under the 
       alert(xml);
     } 
 
-###Can I submit JSON instead?
+### Can I submit JSON instead?
 Yep. Use this *extraScript* (using [xml2json.js](https://code.google.com/p/x2js/)):
 
     //for example, display json in an alert box
@@ -199,7 +199,7 @@ Yep. Use this *extraScript* (using [xml2json.js](https://code.google.com/p/x2js/
       alert(result);
     }
 
-###How do I override the appearance of the generated form?
+### How do I override the appearance of the generated form?
 
 Easy, just use javascript (jquery) in the *extraScript*. For instance, building on the above example:
 
@@ -213,7 +213,7 @@ $('#item-6-instance-1_1_1').val("bingo");
 
 An alternative is to put your own css overrides in xsd-forms-overrides.css.
 
-###How can I do my own thing with the xml?
+### How can I do my own thing with the xml?
 Use this *extraScript*:
 ```
 //override the processXml function
@@ -222,7 +222,7 @@ processXml = function(xml) {
 };
 ```
 
-###How do I submit the xml/json to a web server?
+### How do I submit the xml/json to a web server?
 Use this *extraScript*:
 ```
 processXml = postXml('http://posttestserver456.com/post.php');
@@ -253,11 +253,11 @@ processXml = function (xml) {
 }
 ```
 
-###How do I pre-populate a form?
+### How do I pre-populate a form?
 
 Schema default values will be set but if you want to for instance restore a form so a user can edit it then you need to write the necessary javascript as in the above examples. Using javascript/jquery you can call web services or extract parameters from the current url to populate the form.
 
-###Can I use the same schema for multiple different forms?
+### Can I use the same schema for multiple different forms?
 
 Yes. Just choose a different root element for each form.
 
