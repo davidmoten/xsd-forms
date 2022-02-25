@@ -23,7 +23,7 @@
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jetty.plugin.version>8.1.12.v20130726</jetty.plugin.version>
+		<jetty.plugin.version>8.1.16.v20140903</jetty.plugin.version>
 		<jetty.stop.port>9998</jetty.stop.port>
 	</properties>
 	<build>
