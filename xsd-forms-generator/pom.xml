@@ -8,7 +8,7 @@
   <artifactId>xsd-forms-generator</artifactId>
   <name>${project.artifactId}</name>
   <properties>
-    <selenium.version>2.37.1</selenium.version>
+    <selenium.version>2.53.1</selenium.version>
     <webdriver.chrome.driver>/usr/local/bin/chromedriver</webdriver.chrome.driver>
     <m3.site.version>3.3</m3.site.version>
     <cobertura.version>2.6</cobertura.version>
